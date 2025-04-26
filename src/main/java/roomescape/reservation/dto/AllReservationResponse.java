@@ -1,7 +1,7 @@
 package roomescape.reservation.dto;
 
 import java.util.List;
-import roomescape.reservation.Reservation;
+import roomescape.reservation.domain.Reservation;
 
 public record AllReservationResponse(List<ReservationResponse> reservations) {
     public static AllReservationResponse from(List<Reservation> allResponse) {

@@ -11,7 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.common.Dao;
-import roomescape.reservationTime.ReservationTime;
+import roomescape.reservationTime.domain.ReservationTime;
 
 @Repository
 public class ReservationTimeDao implements Dao<ReservationTime> {

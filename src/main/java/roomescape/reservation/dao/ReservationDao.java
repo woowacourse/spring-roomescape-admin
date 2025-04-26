@@ -8,8 +8,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.common.Dao;
-import roomescape.reservation.Reservation;
-import roomescape.reservationTime.ReservationTime;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservationTime.domain.ReservationTime;
 
 @Repository
 public class ReservationDao implements Dao<Reservation> {

@@ -3,7 +3,6 @@ package roomescape.reservation.repository;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
@@ -32,10 +31,6 @@ public class FakeReservationRepository implements ReservationRepository {
         return reservations.remove(id) != null;
     }
 
-    @Override
-    public Optional<Reservation> findById(final long id) {
-        return Optional.ofNullable(reservations.get(id));
-    }
 
     @Override
     public Long getCachedId(final Reservation reservation) {

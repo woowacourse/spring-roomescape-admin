@@ -5,7 +5,7 @@ import java.time.LocalTime;
 
 public record TimeResponse(
 
-        Long id,
+        long id,
 
         @JsonFormat(pattern = "HH:mm")
         LocalTime startAt

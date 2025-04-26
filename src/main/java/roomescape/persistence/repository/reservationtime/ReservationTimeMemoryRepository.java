@@ -28,7 +28,6 @@ public class ReservationTimeMemoryRepository implements ReservationTimeRepositor
 
     @Override
     public ReservationTime findById(Long id) {
-        // TODO: 예외 발생 처리 필요
         return reservationTimes.stream()
                 .filter(reservationTime -> reservationTime.getId().equals(id))
                 .findAny()

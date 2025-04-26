@@ -40,7 +40,6 @@ public class ReservationMemoryRepository implements ReservationRepository {
 
     @Override
     public Reservation findById(Long id) {
-        // TODO: 예외 발생 처리 필요
         return reservations.stream()
                 .filter(reservation -> reservation.getId().equals(id))
                 .findAny()

@@ -32,8 +32,9 @@ public class ReservationService {
     }
 
     public Long addReservation(ReservationRequestDto reservationDto) {
+        ReservationTime reservationTime = reservationTimeRepository.findById(reservationDto.reservationTimeId());
         return reservationRepository.add(
-                new Reservation(reservationDto.name(), reservationDto.date(), reservationDto.time()));
+                new Reservation(reservationDto.name(), reservationDto.date(), reservationTime));
     }
 
     public void deleteReservation(Long id) {

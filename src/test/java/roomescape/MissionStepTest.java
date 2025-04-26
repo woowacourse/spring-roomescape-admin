@@ -15,12 +15,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.user.domain.Reservation;
+import roomescape.user.controller.dto.ReservationV1Response;
 import roomescape.user.repository.ReservationRepository;
 import roomescape.user.repository.ReservationTimeRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class MissionStepTest {
+public class MissionStepTest {  // 미션에서 제공한 요구사항 테스트
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -69,13 +69,13 @@ public class MissionStepTest {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
-                .when().post("/reservations")
+                .when().post("/v1/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("id", is(1));
 
         RestAssured.given().log().all()
-                .when().get("/reservations")
+                .when().get("/v1/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
@@ -86,7 +86,7 @@ public class MissionStepTest {
                 .statusCode(200);
 
         RestAssured.given().log().all()
-                .when().get("/reservations")
+                .when().get("/v1/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
@@ -105,17 +105,25 @@ public class MissionStepTest {
 
     @Test
     void 오단계() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "15:40");
 
-        List<Reservation> reservations = RestAssured.given().log().all()
-                .when().get("/reservations")
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("v1/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        List<ReservationV1Response> reservationV1Responses = RestAssured.given().log().all()
+                .when().get("/v1/reservations")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", Reservation.class);
+                .jsonPath().getList(".", ReservationV1Response.class);
 
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-
-        assertThat(reservations.size()).isEqualTo(count);
+        assertThat(reservationV1Responses.size()).isEqualTo(1);
     }
 
     @Test
@@ -128,7 +136,7 @@ public class MissionStepTest {
         int createdId = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
-                .when().post("/reservations")
+                .when().post("/v1/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .extract().jsonPath().getInt("id");
@@ -150,12 +158,13 @@ public class MissionStepTest {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
-        RestAssured.given().log().all()
+        int createdId = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(200)
+                .extract().jsonPath().getInt("id");
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -164,8 +173,40 @@ public class MissionStepTest {
                 .body("size()", is(1));
 
         RestAssured.given().log().all()
-                .when().delete("/times/1")
+                .when().delete("/times/" + createdId)
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    @Test
+    void 팔단계() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        int createdId = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200)
+                .extract().jsonPath().getInt("id");
+
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", createdId);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 }

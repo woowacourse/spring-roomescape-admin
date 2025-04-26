@@ -1,7 +1,6 @@
 package roomescape.user.repository;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,7 @@ public class ReservationRepository {
             rs.getLong("id"),
             rs.getString("name"),
             LocalDate.parse(rs.getString("date")),
-            LocalTime.parse(rs.getString("time"))
+            rs.getLong("time_id")
     );
 
     public ReservationRepository(final JdbcTemplate jdbcTemplate) {
@@ -38,7 +37,7 @@ public class ReservationRepository {
         final Map<String, Object> params = new HashMap<>();
         params.put("name", reservation.getName());
         params.put("date", reservation.getDate().toString());
-        params.put("time", reservation.getTime().toString());
+        params.put("time_id", reservation.getTimeId().toString());
 
         final Number key = simpleJdbcInsert.executeAndReturnKey(params);
 
@@ -47,14 +46,14 @@ public class ReservationRepository {
 
     @Transactional(readOnly = true)
     public Optional<Reservation> findById(final Long id) {
-        final String sql = "SELECT id, name, date, time FROM reservation WHERE id = ?";
+        final String sql = "SELECT id, name, date, time_id FROM reservation WHERE id = ?";
 
         return jdbcTemplate.query(sql, rowMapper, id).stream().findFirst();
     }
 
     @Transactional(readOnly = true)
     public List<Reservation> findAll() {
-        final String sql = "SELECT id, name, date, time FROM reservation";
+        final String sql = "SELECT id, name, date, time_id FROM reservation";
 
         return jdbcTemplate.query(sql, rowMapper);
     }

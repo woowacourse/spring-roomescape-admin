@@ -17,15 +17,15 @@ public class ReservationTime {
         this.startAt = time;
     }
 
+    public boolean isSameTime(ReservationTime reservationTime) {
+        return this.startAt.equals(reservationTime.startAt);
+    }
+
     public Long getId() {
         return id;
     }
 
     public LocalTime getStartAt() {
         return startAt;
-    }
-
-    public boolean isSameTime(ReservationTime reservationTime) {
-        return this.startAt.equals(reservationTime.startAt);
     }
 }

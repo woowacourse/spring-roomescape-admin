@@ -1,58 +1,37 @@
 package roomescape.reservation;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.time.ReservationTime;
 
 public class ReservationTest {
 
-    @DisplayName("이미 id가 존재한다면, 예외가 발생한다.")
+    @DisplayName("id가 존재하지 않을 때 조회하면 예외가 발생한다.")
     @Test
-    void writeId1() {
+    void id() {
         // given
-        final Reservation reservation = new Reservation(1,
-                "", LocalDate.of(2025, 04, 19), LocalTime.of(10, 25, 0));
+        final Reservation reservation = new Reservation(null, "", LocalDate.of(2024, 12, 06),
+                new ReservationTime(1L, LocalTime.of(12, 40)));
 
         // when & then
-        assertThatCode(() -> {
-            reservation.writeId(2);
-        })
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("[ERROR]");
+        assertThatThrownBy(() -> {
+            reservation.id();
+        }).isInstanceOf(NullPointerException.class);
     }
 
-    @DisplayName("작성할 id가 비어있다면, 예외가 발생한다.")
+    @DisplayName("time이 존재하지 않을 때 조회하면 예외가 발생한다.")
     @Test
-    void writeId2() {
+    void time() {
         // given
-        final long emptyId = 0;
-        final Reservation reservation = new Reservation(1,
-                "", LocalDate.of(2025, 04, 19), LocalTime.of(10, 25, 0));
+        final Reservation reservation = new Reservation(1L, "", LocalDate.of(2024, 12, 06), null);
 
         // when & then
-        assertThatCode(() -> {
-            reservation.writeId(emptyId);
-        })
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("[ERROR]");
-    }
-
-    @DisplayName("id를 기록한다.")
-    @Test
-    void writeId3() {
-        // given
-        final Reservation reservation = new Reservation(0,
-                "", LocalDate.of(2025, 04, 19), LocalTime.of(10, 25, 0));
-
-        // when
-        final Reservation actual = reservation.writeId(1);
-
-        // then
-        assertThat(actual).isEqualTo(new Reservation(1,
-                "", LocalDate.of(2025, 04, 19), LocalTime.of(10, 25, 0)));
+        assertThatThrownBy(() -> {
+            reservation.reservationTime();
+        }).isInstanceOf(NullPointerException.class);
     }
 }

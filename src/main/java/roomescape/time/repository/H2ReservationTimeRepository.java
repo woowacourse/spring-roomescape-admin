@@ -19,7 +19,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     @Override
     public Long save(final ReservationTime reservationTime) {
-        String sql = "INSERT INTO reservation_times (start_at) VALUE (?)";
+        String sql = "INSERT INTO reservation_times (start_at) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         int rowAffected = jdbcTemplate.update(connection -> {

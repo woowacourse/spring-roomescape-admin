@@ -30,6 +30,6 @@ public final class ConsoleReservationTimeController {
         showReservationTimes();
         Long id = View.readDeleteReservationTimeId();
         reservationTimeService.deleteReservationTime(id);
-        View.printDeleteReservation(id);
+        View.printReservationTimeDeleteSuccess(id);
     }
 }

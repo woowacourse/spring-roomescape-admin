@@ -34,6 +34,6 @@ public final class ConsoleReservationController {
         View.printReservations(reservationService.getAllReservations());
         Long id = View.readCancelReservationId();
         reservationService.cancelReservation(id);
-        System.out.println("예약이 취소되었습니다.");
+        View.printReservationDeleteSuccess(id);
     }
 }

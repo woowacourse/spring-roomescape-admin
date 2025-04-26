@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.entity.ReservationTime;
 
 @Repository
-public class ReservationTimeDao {
+public class ReservationTimeDao implements ReservationTimeDaoInterface {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;

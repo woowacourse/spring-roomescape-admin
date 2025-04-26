@@ -12,12 +12,12 @@ import roomescape.entity.ReservationTime;
 import roomescape.entity.ReservationWithTimeId;
 
 @Repository
-public class ReservationDao {
+public class ReservationDaoDao implements ReservationDaoInterface {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationDao(JdbcTemplate jdbcTemplate, ReservationTimeDao reservationTimeDao) {
+    public ReservationDaoDao(JdbcTemplate jdbcTemplate, ReservationTimeDao reservationTimeDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("reservation")
                 .usingGeneratedKeyColumns("id");

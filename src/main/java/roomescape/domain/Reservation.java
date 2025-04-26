@@ -1,23 +1,30 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.Objects;
-import roomescape.exception.ValidationExceptionMessage;
+import roomescape.exception.BadRequestException;
 
 public final class Reservation {
+
+    private static final long DEFAULT_ID = 0L;
+    private static final int MAX_NAME_LENGTH = 255;
 
     private final Long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
-        validate(name, date, time);
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
+        validateField(id, name, date, time);
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public static Reservation createWithoutId(String name, LocalDate date, ReservationTime time) {
+        return new Reservation(DEFAULT_ID, name, date, time);
     }
 
     public long getId() {
@@ -32,32 +39,8 @@ public final class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
-    }
-
-    private void validate(String name, LocalDate date, LocalTime time) {
-        validateName(name);
-        validateDate(date);
-        validateTime(time);
-    }
-
-    private void validateName(String name) {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException(ValidationExceptionMessage.NULL_OR_BLANK_NAME.getContent());
-        }
-    }
-
-    private void validateDate(LocalDate date) {
-        if (date == null) {
-            throw new IllegalArgumentException(ValidationExceptionMessage.NULL_DATE.getContent());
-        }
-    }
-
-    private void validateTime(LocalTime time) {
-        if (time == null) {
-            throw new IllegalArgumentException(ValidationExceptionMessage.NULL_TIME.getContent());
-        }
     }
 
     @Override
@@ -73,5 +56,52 @@ public final class Reservation {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, date, time);
+    }
+
+    public void validatePastDateTime() {
+        LocalDateTime dateTime = LocalDateTime.of(date, time.getStartAt());
+        LocalDateTime now = LocalDateTime.now();
+        if (dateTime.isBefore(now)) {
+            throw new BadRequestException("[ERROR] 이미 과거의 날짜와 시간입니다.");
+        }
+    }
+
+    private void validateField(Long id, String name, LocalDate date, ReservationTime time) {
+        validateNullId(id);
+        validateBlankName(name);
+        validateNameLength(name);
+        validateNullDate(date);
+        validateNullTime(time);
+    }
+
+    private void validateBlankName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("[ERROR] 비어있는 이름으로 예약을 생성할 수 없습니다.");
+        }
+    }
+
+    private void validateNameLength(String name) {
+        if (name.length() > MAX_NAME_LENGTH) {
+            String message = String.format("[ERROR] 이름으로 입력된 문자열의 길이가 최대값(%s자)을 초과했습니다.", MAX_NAME_LENGTH);
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    private void validateNullId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("[ERROR] 비어있는 ID로 예약을 생성할 수 없습니다.");
+        }
+    }
+
+    private void validateNullDate(LocalDate date) {
+        if (date == null) {
+            throw new IllegalArgumentException("[ERROR] 비어있는 예약날짜로 예약을 생성할 수 없습니다.");
+        }
+    }
+
+    private void validateNullTime(ReservationTime reservationTime) {
+        if (reservationTime == null) {
+            throw new IllegalArgumentException("[ERROR] 비어있는 예약시간으로는 예약을 생성할 수 없습니다.");
+        }
     }
 }

@@ -15,7 +15,6 @@ public record ReservationOutput(Long id, String name, LocalDate date, Reservatio
                         reservation.getReservationTime().getId(),
                         reservation.getReservationTime().getStart_at()
                 )
-
         );
     }
 }

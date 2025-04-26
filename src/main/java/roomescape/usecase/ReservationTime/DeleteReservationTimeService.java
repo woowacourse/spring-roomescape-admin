@@ -22,15 +22,4 @@ public class DeleteReservationTimeService implements DeleteReservationTimeUsecas
 
         reservationTimeRepository.deleteReservationTime(id);
     }
-
-//    @Override
-//    public void deleteReservationTime(long id) {
-//        List<ReservationTimeOutput> reservationTimeOutputs = getReservationTimeUseCase.getAllReservationTimes();
-//        reservationTimeOutputs.stream()
-//                .filter(reservationTimeOutput -> reservationTimeOutput.id().equals(id))
-//                .findAny()
-//                .orElseThrow(() -> new IllegalArgumentException("해당 시간이 존재하지 않습니다"));
-//        reservationTimeRepository.deleteReservationTime(id);
-//    }
-
 }

@@ -69,12 +69,4 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
         Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
         return count != null && count > 0;
     }
-
-//
-//    @DeleteMapping("/times/{id}")
-//    public ResponseEntity<Void> deleteReservationTime(@PathVariable long id) {
-//        String sql = "delete from reservation_time where id = ?";
-//        jdbcTemplate.update(sql, id);
-//        return ResponseEntity.ok().build();
-//    }
 }

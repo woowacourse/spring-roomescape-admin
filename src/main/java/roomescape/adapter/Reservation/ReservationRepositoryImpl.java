@@ -39,7 +39,6 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
         return new Reservation(id, reservation.getName(), reservation.getDate(),
                 reservation.getReservationTime());
-
     }
 
     @Override
@@ -53,6 +52,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                 + "FROM reservation as r \n"
                 + "inner join reservation_time as t \n"
                 + "on r.time_id = t.id";
+
         List<Reservation> reservations = jdbcTemplate.query(sql, (rs, rowNum) -> new Reservation(
                 rs.getLong("id"),
                 rs.getString("name"),
@@ -66,9 +66,9 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                 .map(ReservationOutput::from)
                 .toList();
     }
-
     @Override
     public void deleteReservation(final long id) {
         jdbcTemplate.update("delete from reservation where id = ?", id);
     }
 }
+

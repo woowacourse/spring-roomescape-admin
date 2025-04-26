@@ -8,4 +8,5 @@ public record ReservationResponseDto(Long id,
                                      String name,
                                      LocalDate date,
                                      ReservationTimeResponseDto time) {
+
 }

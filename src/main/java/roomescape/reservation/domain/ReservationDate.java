@@ -15,5 +15,4 @@ public final class ReservationDate {
     public static ReservationDate from(final LocalDate date) {
         return new ReservationDate(date);
     }
-
 }

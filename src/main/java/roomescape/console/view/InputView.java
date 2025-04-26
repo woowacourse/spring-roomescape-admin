@@ -14,6 +14,7 @@ public class InputView {
         System.out.println("이용하려는 기능을 선택해 주세요.");
         System.out.println("1. 예약 관리");
         System.out.println("2. 예약 시간 관리");
+        System.out.println("3. 콘솔 서비스 종료");
         int value = scanner.nextInt();
         scanner.nextLine();
         return value;

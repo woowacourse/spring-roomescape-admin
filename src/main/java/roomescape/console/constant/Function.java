@@ -7,6 +7,7 @@ public enum Function {
 
     RESERVATION(1),
     RESERVATION_TIME(2),
+    QUIT(3),
 
     ADD_RESERVATION(1),
     GET_RESERVATIONS(2),
@@ -24,7 +25,7 @@ public enum Function {
     }
 
     public static Function getSystemFunction(int value) {
-        List<Function> functions = List.of(RESERVATION, RESERVATION_TIME);
+        List<Function> functions = List.of(RESERVATION, RESERVATION_TIME, QUIT);
         return getFilteredFunction(value, functions);
     }
 

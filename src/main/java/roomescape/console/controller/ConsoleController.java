@@ -21,6 +21,8 @@ public class ConsoleController {
     private final ReservationService reservationService;
     private final ReservationTimeService reservationTimeService;
 
+    private boolean quitFlag = false;
+
     public ConsoleController(InputView inputView, OutputView outputView,
                              @Qualifier("consoleReservationService") ReservationService reservationService,
                              @Qualifier("consoleReservationTimeService") ReservationTimeService reservationTimeService) {
@@ -32,7 +34,7 @@ public class ConsoleController {
 
     public void run() {
         outputView.printStartMessage();
-        while (true) {
+        while (!quitFlag) {
             try {
                 Function function = Function.getSystemFunction(inputView.selectAdminFunction());
                 processSystemFunction(function);
@@ -40,6 +42,7 @@ public class ConsoleController {
                 System.out.println(e.getMessage());
             }
         }
+        outputView.printEndMessage();
     }
 
     private void processSystemFunction(Function function) {
@@ -51,6 +54,8 @@ public class ConsoleController {
             Function reservationTimeFunction = Function.getReservationTimeFunction(
                     inputView.selectReservationTimeFunction());
             processReservationTimeFunction(reservationTimeFunction);
+        } else if (function == Function.QUIT) {
+            quitFlag = true;
         }
     }
 

@@ -58,4 +58,9 @@ public class OutputView {
         System.out.println("예약 삭제를 완료했습니다.");
         System.out.println();
     }
+
+    public void printEndMessage() {
+        System.out.println("콘솔 버전을 종료합니다.");
+        System.out.println();
+    }
 }

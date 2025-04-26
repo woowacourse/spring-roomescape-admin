@@ -3,7 +3,9 @@ package roomescape.controller;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +40,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> addReservation(@RequestBody @Valid ReservationRequest request) {
+    public ResponseEntity<ReservationResponse> addReservation(final @RequestBody @Valid ReservationRequest request) {
 
         ReservationWithTimeId reservationWithTimeId = request.toReservationWithId();
         Reservation addedReservation;
@@ -56,7 +58,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteReservation(final @PathVariable("id") Long id) {
 
         int effectedRow = reservationService.deleteReservationById(id);
 
@@ -65,5 +67,10 @@ public class ReservationController {
         }
 
         return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleValidateDtoException(MethodArgumentNotValidException exception) {
+        return ResponseEntity.ok().body(exception.getBindingResult().getFieldErrors().get(0).getDefaultMessage());
     }
 }

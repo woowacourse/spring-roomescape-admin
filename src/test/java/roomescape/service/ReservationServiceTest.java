@@ -124,7 +124,7 @@ class ReservationServiceTest {
         }
 
         @Override
-        public boolean selectByDateAndTime(LocalDate date, Long timeId) {
+        public boolean isDuplicateDateAndTime(LocalDate date, Long timeId) {
             return reservations.stream().anyMatch(
                     reservation -> reservation.getDate().equals(date) && reservation.getTime().getId().equals(timeId)
             );

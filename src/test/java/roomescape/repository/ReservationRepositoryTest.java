@@ -122,8 +122,9 @@ public class ReservationRepositoryTest {
         Long unduplicatedTimeId = 1L;
 
         // when
-        boolean isDuplicatedDateAndTime = reservationRepository.selectByDateAndTime(duplicatedDate, duplicatedTimeId);
-        boolean unDuplicatedDateAndTime = reservationRepository.selectByDateAndTime(date, unduplicatedTimeId);
+        boolean isDuplicatedDateAndTime = reservationRepository.isDuplicateDateAndTime(duplicatedDate,
+                duplicatedTimeId);
+        boolean unDuplicatedDateAndTime = reservationRepository.isDuplicateDateAndTime(date, unduplicatedTimeId);
 
         // then
         SoftAssertions.assertSoftly(softAssertions -> {

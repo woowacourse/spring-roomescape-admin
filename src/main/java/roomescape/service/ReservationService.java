@@ -27,7 +27,7 @@ public class ReservationService {
         String name = reservationRequest.name();
         LocalDate date = reservationRequest.date();
         Long timeId = reservationRequest.timeId();
-        if (reservationRepository.selectByDateAndTime(date, timeId)) {
+        if (reservationRepository.isDuplicateDateAndTime(date, timeId)) {
             throw new IllegalArgumentException("해당 시간에는 예약이 존재합니다.");
         }
 

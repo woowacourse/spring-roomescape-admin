@@ -98,7 +98,7 @@ public class H2ReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean selectByDateAndTime(LocalDate date, Long timeId) {
+    public boolean isDuplicateDateAndTime(LocalDate date, Long timeId) {
         final String sql = "SELECT COUNT(*) FROM reservation as r"
                 + " INNER JOIN reservation_time as t"
                 + " WHERE r.date = ? and t.id =?";

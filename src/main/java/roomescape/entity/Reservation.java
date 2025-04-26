@@ -9,6 +9,10 @@ public class Reservation {
     private final LocalDate reservationDate;
     private final ReservationTime reservationTime;
 
+    private Reservation(final String customerName, final LocalDate reservationDate, final ReservationTime reservationTime) {
+        this(null, customerName, reservationDate, reservationTime);
+    }
+
     private Reservation(final Long id, final String customerName, final LocalDate reservationDate, final ReservationTime reservationTime) {
         validate(customerName, reservationDate);
         this.id = id;
@@ -18,7 +22,7 @@ public class Reservation {
     }
 
     public static Reservation of(final String customerName, final LocalDate reservationDate, final ReservationTime reservationTime) {
-        return new Reservation(null, customerName, reservationDate, reservationTime);
+        return new Reservation(customerName, reservationDate, reservationTime);
     }
 
     public static Reservation of(final Long id, final String customerName, final LocalDate reservationDate, final ReservationTime reservationTime) {

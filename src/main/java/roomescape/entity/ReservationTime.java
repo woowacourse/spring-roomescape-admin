@@ -8,6 +8,10 @@ public class ReservationTime {
     private final Long id;
     private final LocalTime startAt;
 
+    private ReservationTime(final LocalTime startAt) {
+        this(null, startAt);
+    }
+
     private ReservationTime(final Long id, final LocalTime startAt) {
         validateTime(startAt);
         this.id = id;
@@ -15,7 +19,7 @@ public class ReservationTime {
     }
 
     public static ReservationTime of(final LocalTime startAt) {
-        return new ReservationTime(null, startAt);
+        return new ReservationTime(startAt);
     }
 
     public static ReservationTime of(final Long id, final LocalTime startAt) {

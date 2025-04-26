@@ -2,8 +2,6 @@ package roomescape.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static roomescape.test.utility.HttpResponseTestUtility.checkLocationHeader;
-import static roomescape.test.utility.HttpResponseTestUtility.checkStatusCode;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,10 +15,10 @@ class PageControllerTest {
     @DisplayName("웹컴페이지 요청시 메인페이지로 리다이렉션한다")
     @Test
     void requestWelcomePage() {
-        ResponseEntity<Void> welcomePageResponse = pageController.getWelcomePage();
+        ResponseEntity<Void> response = pageController.getWelcomePage();
         assertAll(
-                () -> checkStatusCode(welcomePageResponse, HttpStatus.PERMANENT_REDIRECT),
-                () -> checkLocationHeader(welcomePageResponse, "/admin")
+                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.PERMANENT_REDIRECT),
+                () -> assertThat(response.getHeaders().getLocation().getPath()).isEqualTo("/admin")
         );
     }
 

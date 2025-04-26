@@ -4,8 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static roomescape.test.fixture.ReservationTimeFixture.addReservationTimeInRepository;
-import static roomescape.test.utility.HttpResponseTestUtility.checkLocationHeader;
-import static roomescape.test.utility.HttpResponseTestUtility.checkStatusCode;
 import static roomescape.test.utility.ReservationTestUtility.checkDeleteReservation;
 import static roomescape.test.utility.ReservationTestUtility.checkReservationFieldWithoutId;
 import static roomescape.test.utility.ReservationTestUtility.checkReservationId;
@@ -64,8 +62,9 @@ class ReservationControllerTest {
         assertAll(
                 () -> checkReservationId(newReservation.getId(), 1L),
                 () -> checkReservationFieldWithoutId(newReservation, request),
-                () -> checkStatusCode(response, HttpStatus.CREATED),
-                () -> checkLocationHeader(response, "reservations/" + newReservation.getId()),
+                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED),
+                () -> assertThat(response.getHeaders().getLocation().getPath()).isEqualTo(
+                        "reservations/" + newReservation.getId()),
                 () -> checkReservationId(response.getBody().getId(), 1L),
                 () -> checkReservationFieldWithoutId(response.getBody(), request)
         );
@@ -113,7 +112,7 @@ class ReservationControllerTest {
         List<Reservation> reservations = reservationRepository.findAll();
         assertAll(
                 () -> checkDeleteReservation(reservations, deleteReservationId),
-                () -> checkStatusCode(response, HttpStatus.NO_CONTENT)
+                () -> assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT)
         );
     }
 

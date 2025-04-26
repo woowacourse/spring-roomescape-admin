@@ -24,16 +24,6 @@ class ReservationServiceTest {
     private final ReservationRepository fakeReservationRepository = new FakeReservationRepository();
     private final ReservationService reservationService = new ReservationService(fakeReservationRepository);
 
-    @DisplayName("존재하지 않는 아이디를 삭제시 예외 발생")
-    void deleteException() {
-        // given
-        long invalidId = 1;
-
-        // when & then
-        assertThatThrownBy(() -> reservationService.delete(invalidId)).
-                isInstanceOf(NoSuchElementException.class);
-    }
-
     @Test
     @DisplayName("날짜와 시간이 모두 중복되면 예외가 발생한다.")
     void whenDuplicateDateAndTimeThrowException() {
@@ -51,20 +41,6 @@ class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("아이디를 통해 예약을 삭제한다.")
-    void deleteReservationById() {
-        // given
-        long validId = 1;
-        // when
-        reservationService.delete(validId);
-
-        // then
-        Reservation deletedReservation = fakeReservationRepository.findById(validId);
-        Assertions.assertThat(deletedReservation).isNull();
-    }
-
-
-    @Test
     @DisplayName("전체 예약 목록을 가져온다..")
     void findAllReservations() {
         // given
@@ -79,6 +55,30 @@ class ReservationServiceTest {
             softAssertions.assertThat(reservations.getFirst().date()).isEqualTo(LocalDate.of(2025, 4, 22));
             softAssertions.assertThat(reservations.getFirst().time().startAt()).isEqualTo(LocalTime.of(10, 0));
         });
+    }
+
+    @Test
+    @DisplayName("아이디를 통해 예약을 삭제한다.")
+    void deleteReservationById() {
+        // given
+        long validId = 1;
+        // when
+        reservationService.delete(validId);
+
+        // then
+        Reservation deletedReservation = fakeReservationRepository.findById(validId);
+        Assertions.assertThat(deletedReservation).isNull();
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 아이디를 삭제시 예외 발생")
+    void deleteException() {
+        // given
+        Long invalidId = 1231L;
+
+        // when & then
+        assertThatThrownBy(() -> reservationService.delete(invalidId)).
+                isInstanceOf(NoSuchElementException.class);
     }
 
     //todo: @ActiveProfiles(value = "test") 로 테스트시 의존성을 부여하는 방법에 대해 찾아보기

@@ -7,17 +7,16 @@ import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
 import roomescape.common.exception.EntityNotFoundException;
-import roomescape.reservation.repository.ReservationRepository;
-import roomescape.reservation.repository.ReservationTimeRepository;
+import roomescape.reservation.repository.EntityRepository;
 
 @Service
 public class ReservationService {
 
-    private final ReservationRepository reservationRepository;
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final EntityRepository<Reservation> reservationRepository;
+    private final EntityRepository<ReservationTime> reservationTimeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository,
-                              ReservationTimeRepository reservationTimeRepository) {
+    public ReservationService(EntityRepository<Reservation> reservationRepository,
+                              EntityRepository<ReservationTime> reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
         this.reservationTimeRepository = reservationTimeRepository;
     }

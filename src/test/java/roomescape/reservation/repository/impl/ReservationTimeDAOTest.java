@@ -17,13 +17,13 @@ import roomescape.common.exception.AlreadyInUseException;
 import roomescape.common.exception.EntityNotFoundException;
 import roomescape.config.TestConfig;
 import roomescape.reservation.entity.ReservationTime;
-import roomescape.reservation.repository.ReservationTimeRepository;
+import roomescape.reservation.repository.EntityRepository;
 import roomescape.utils.JdbcTemplateUtils;
 
 class ReservationTimeDAOTest {
 
     private JdbcTemplate jdbcTemplate;
-    private ReservationTimeRepository reservationTimeRepository;
+    private EntityRepository<ReservationTime> reservationTimeRepository;
 
     @BeforeEach
     void init() {

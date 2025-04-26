@@ -17,7 +17,7 @@ import roomescape.common.exception.EntityNotFoundException;
 import roomescape.config.TestConfig;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
-import roomescape.reservation.repository.ReservationRepository;
+import roomescape.reservation.repository.EntityRepository;
 import roomescape.utils.JdbcTemplateUtils;
 
 class ReservationDAOTest {
@@ -26,7 +26,7 @@ class ReservationDAOTest {
     private static final LocalTime RESERVATION_TIME_START_TIME = LocalTime.of(8, 0);
 
     private JdbcTemplate jdbcTemplate;
-    private ReservationRepository reservationRepository;
+    private EntityRepository<Reservation> reservationRepository;
 
     @BeforeEach
     void init() {

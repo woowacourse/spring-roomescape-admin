@@ -180,7 +180,7 @@ public class ReservationControllerTest {
         assertThat(isJdbcTemplateInjected).isFalse();
     }
 
-    private String formatStartAt(LocalTime time) {
+    private static String formatStartAt(LocalTime time) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
         return time.format(formatter);

@@ -13,6 +13,7 @@ import roomescape.common.exception.EntityNotFoundException;
 import roomescape.reservation.dto.ReservationTimeRequest;
 import roomescape.reservation.dto.ReservationTimeResponse;
 import roomescape.reservation.entity.ReservationTime;
+import roomescape.reservation.repository.EntityRepository;
 import roomescape.reservation.repository.fake.FakeReservationTimeRepository;
 
 public class ReservationTimeServiceTest {

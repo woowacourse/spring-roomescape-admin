@@ -17,20 +17,19 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
-import roomescape.reservation.repository.ReservationRepository;
-import roomescape.reservation.repository.ReservationTimeRepository;
+import roomescape.reservation.repository.EntityRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 public class ReservationTimeApiTest {
 
     @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
+    private EntityRepository<ReservationTime> reservationTimeRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private ReservationRepository reservationRepository;
+    private EntityRepository<Reservation> reservationRepository;
 
     @BeforeEach
     void setUp() {

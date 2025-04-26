@@ -6,10 +6,11 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.common.exception.EntityNotFoundException;
+import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
-import roomescape.reservation.repository.ReservationTimeRepository;
+import roomescape.reservation.repository.EntityRepository;
 
-public class FakeReservationTimeRepository implements ReservationTimeRepository {
+public class FakeReservationTimeRepository implements EntityRepository<ReservationTime> {
 
     private static final Long INITIAL_ID = 1L;
 

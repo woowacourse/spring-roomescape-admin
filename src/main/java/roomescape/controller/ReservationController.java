@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,19 +38,21 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest request) {
+    public ResponseEntity<ReservationResponse> addReservation(@RequestBody @Valid ReservationRequest request) {
 
         ReservationWithTimeId reservationWithTimeId = request.toReservationWithId();
+        Reservation addedReservation;
 
         try {
-            Reservation addedReservation = reservationService.addReservation(reservationWithTimeId);
-            ReservationResponse reservationResponse = ReservationResponse.toDto(addedReservation);
-
-            return ResponseEntity.ok().body(reservationResponse);
+            addedReservation = reservationService.addReservation(reservationWithTimeId);
         } catch (IllegalArgumentException e) {
 
             return ResponseEntity.noContent().build();
         }
+
+        ReservationResponse reservationResponse = ReservationResponse.toDto(addedReservation);
+
+        return ResponseEntity.ok().body(reservationResponse);
     }
 
     @DeleteMapping("/{id}")

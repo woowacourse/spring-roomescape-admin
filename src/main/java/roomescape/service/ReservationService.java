@@ -1,12 +1,13 @@
 package roomescape.service;
 
 import java.util.List;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
-import roomescape.model.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.entity.ReservationWithTimeId;
+import roomescape.model.Reservation;
 
 @Service
 public class ReservationService {
@@ -28,10 +29,11 @@ public class ReservationService {
 
     public Reservation addReservation(ReservationWithTimeId reservationWithTimeId) {
 
-        ReservationTime reservationTime = reservationTimeDao.findTimeById(reservationWithTimeId.getTimeId());
-
-        if (reservationTime==null){
-            throw new IllegalArgumentException("없는 timeId 입니다.");
+        ReservationTime reservationTime;
+        try {
+            reservationTime = reservationTimeDao.findTimeById(reservationWithTimeId.getTimeId());
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException(e.getMessage());
         }
 
         Long reservationId = reservationDao.addReservation(reservationWithTimeId);

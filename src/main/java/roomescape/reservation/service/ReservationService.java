@@ -33,9 +33,9 @@ public class ReservationService {
     }
 
     public void delete(long id) {
-        reservationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("요청한 id와 일치하는 예약 정보가 없습니다."));
-        reservationRepository.deleteById(id);
+        if (reservationRepository.deleteById(id) == 0) {
+            throw new IllegalArgumentException("요청한 id와 일치하는 예약 시간 정보가 없습니다.");
+        }
     }
 
     public ReservationResponse create(final ReservationCreateRequest request) {

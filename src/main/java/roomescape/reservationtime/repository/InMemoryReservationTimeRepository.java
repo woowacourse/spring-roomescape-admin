@@ -29,8 +29,11 @@ public class InMemoryReservationTimeRepository implements ReservationTimeReposit
     }
 
     @Override
-    public void deleteById(final long id) {
-        reservationTimes.remove(id);
+    public int deleteById(final long id) {
+        if (reservationTimes.remove(id) != null) {
+            return 1;
+        }
+        return 0;
     }
 
     @Override

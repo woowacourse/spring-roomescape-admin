@@ -3,6 +3,7 @@ package roomescape.dao;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -15,7 +16,32 @@ import roomescape.mapper.TimeMapper;
 public class TimeDao {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public TimeDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public List<ReservationTime> findAll() {
+        String sql = "select id, start_at from reservation_time";
+        return jdbcTemplate.query(
+                sql,
+                new TimeMapper()
+        );
+    }
+
+    public ReservationTime findById(long id) {
+        try {
+            String sql = "select id, start_at from reservation_time where id = ?";
+            return jdbcTemplate.queryForObject(
+                    sql,
+                    new TimeMapper(),
+                    id
+            );
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("존재하지 않는 시간 데이터입니다.");
+        }
+    }
 
     public long create(ReservationTime time) {
         String sql = "insert into reservation_time (start_at) values (?)";
@@ -31,23 +57,6 @@ public class TimeDao {
                 }, keyHolder
         );
         return keyHolder.getKey().longValue();
-    }
-
-    public List<ReservationTime> findAll() {
-        String sql = "select id, start_at from reservation_time";
-        return jdbcTemplate.query(
-                sql,
-                new TimeMapper()
-        );
-    }
-
-    public ReservationTime findById(long id) {
-        String sql = "select id, start_at from reservation_time where id = ?";
-        return jdbcTemplate.queryForObject(
-                sql,
-                new TimeMapper(),
-                id
-        );
     }
 
     public void deleteById(Id id) {

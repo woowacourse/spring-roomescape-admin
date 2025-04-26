@@ -15,7 +15,11 @@ import roomescape.mapper.ReservationMapper;
 public class ReservationDao {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public List<Reservation> findAll() {
         String sql = """

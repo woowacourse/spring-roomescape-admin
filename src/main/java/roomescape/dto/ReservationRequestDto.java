@@ -6,7 +6,9 @@ import roomescape.domain_entity.Id;
 import roomescape.domain_entity.Reservation;
 import roomescape.domain_entity.ReservationTime;
 
-public record ReservationRequestDto(String name, LocalDate date, long timeId) {
+public record ReservationRequestDto(
+        String name, LocalDate date, long timeId
+) {
     public ReservationRequestDto {
         validateNotNull(name, date, timeId);
     }

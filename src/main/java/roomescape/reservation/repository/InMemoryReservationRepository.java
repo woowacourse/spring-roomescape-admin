@@ -28,11 +28,8 @@ public class InMemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public int deleteById(final long id) {
-        if (reservations.remove(id) != null) {
-            return 1;
-        }
-        return 0;
+    public boolean deleteById(final long id) {
+        return reservations.remove(id) != null;
     }
 
     @Override

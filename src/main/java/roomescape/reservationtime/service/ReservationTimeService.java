@@ -24,7 +24,7 @@ public class ReservationTimeService {
     }
 
     public void delete(long id) {
-        if (reservationTimeRepository.deleteById(id) == 0) {
+        if (!reservationTimeRepository.deleteById(id)) {
             throw new IllegalArgumentException("요청한 id와 일치하는 예약 시간 정보가 없습니다.");
         }
     }

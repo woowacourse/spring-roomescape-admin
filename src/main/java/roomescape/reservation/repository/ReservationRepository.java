@@ -9,7 +9,7 @@ public interface ReservationRepository {
 
     Reservation put(Reservation reservation);
 
-    int deleteById(long id);
+    boolean deleteById(long id);
 
     Optional<Reservation> findById(long id);
 

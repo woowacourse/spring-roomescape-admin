@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.controller.ReservationAPIController;
 import roomescape.domain.Reservation;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -22,6 +24,8 @@ public class ReservationAPITest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private ReservationAPIController reservationAPIController;
 
     @Test
     @DisplayName("예약 목록 조회 요청 시 예약 목록을 반환한다.")
@@ -153,5 +157,20 @@ public class ReservationAPITest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
+
+    @Test
+    @DisplayName("레이어드 아키텍처를 적용하여 컨트롤러 이외의 클래스로 로직을 분리한다.")
+    void LayeredArchitectureTest() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : reservationAPIController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
     }
 }

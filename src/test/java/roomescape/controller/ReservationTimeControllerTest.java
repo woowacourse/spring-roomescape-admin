@@ -3,7 +3,6 @@ package roomescape.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static roomescape.test.fixture.ReservationFixture.addReservationInRepository;
 import static roomescape.test.fixture.ReservationTimeFixture.addReservationTimeInRepository;
 import static roomescape.test.utility.HttpResponseTestUtility.checkLocationHeader;
 import static roomescape.test.utility.HttpResponseTestUtility.checkStatusCode;
@@ -18,6 +17,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeCreationRequest;
 import roomescape.exception.BadRequestException;
@@ -107,7 +107,7 @@ class ReservationTimeControllerTest {
     @Test
     void canNotDeleteBecauseReservations() {
         ReservationTime savedTime = addReservationTimeInRepository(timeRepository, LocalTime.of(10, 0));
-        addReservationInRepository(reservationRepository, LocalDate.now().plusDays(1), savedTime);
+        reservationRepository.add(Reservation.createWithoutId("reservation2", LocalDate.now().plusDays(1), savedTime));
 
         assertThatThrownBy(() -> controller.deleteReservationTime(savedTime.getId()))
                 .isInstanceOf(BadRequestException.class)

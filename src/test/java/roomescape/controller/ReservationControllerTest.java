@@ -3,7 +3,6 @@ package roomescape.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static roomescape.test.fixture.ReservationFixture.addReservationInRepository;
 import static roomescape.test.fixture.ReservationTimeFixture.addReservationTimeInRepository;
 import static roomescape.test.utility.HttpResponseTestUtility.checkLocationHeader;
 import static roomescape.test.utility.HttpResponseTestUtility.checkStatusCode;
@@ -43,9 +42,9 @@ class ReservationControllerTest {
     @Test
     void getReservations() {
         ReservationTime reservationTime = addReservationTimeInRepository(timeRepository, LocalTime.now());
-        addReservationInRepository(reservationRepository, NEXT_DATE, reservationTime);
-        addReservationInRepository(reservationRepository, NEXT_DATE, reservationTime);
-        addReservationInRepository(reservationRepository, NEXT_DATE, reservationTime);
+        reservationRepository.add(Reservation.createWithoutId("reservation1", NEXT_DATE, reservationTime));
+        reservationRepository.add(Reservation.createWithoutId("reservation2", NEXT_DATE, reservationTime));
+        reservationRepository.add(Reservation.createWithoutId("reservation3", NEXT_DATE, reservationTime));
 
         List<Reservation> responseBody = controller.getReservations();
 
@@ -90,7 +89,8 @@ class ReservationControllerTest {
     void canNotCreateReservationWithSameDateTime() {
         LocalDate sameDate = NEXT_DATE;
         ReservationTime sameTime = addReservationTimeInRepository(timeRepository, LocalTime.of(10, 0));
-        Reservation reservationInTime = addReservationInRepository(reservationRepository, sameDate, sameTime);
+        reservationRepository.add(Reservation.createWithoutId("reservation1", sameDate, sameTime));
+
         ReservationCreationRequest request =
                 new ReservationCreationRequest("reservation1", sameDate, sameTime.getId());
 
@@ -103,9 +103,9 @@ class ReservationControllerTest {
     @Test
     void deleteReservation() {
         ReservationTime reservationTime = addReservationTimeInRepository(timeRepository, LocalTime.now());
-        addReservationInRepository(reservationRepository, NEXT_DATE, reservationTime);
-        addReservationInRepository(reservationRepository, NEXT_DATE, reservationTime);
-        addReservationInRepository(reservationRepository, NEXT_DATE, reservationTime);
+        reservationRepository.add(Reservation.createWithoutId("reservation1", NEXT_DATE, reservationTime));
+        reservationRepository.add(Reservation.createWithoutId("reservation2", NEXT_DATE, reservationTime));
+        reservationRepository.add(Reservation.createWithoutId("reservation3", NEXT_DATE, reservationTime));
         long deleteReservationId = reservationRepository.findAll().getFirst().getId();
 
         ResponseEntity<Void> response = controller.deleteReservation(deleteReservationId);

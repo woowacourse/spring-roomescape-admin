@@ -3,7 +3,6 @@ package roomescape.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static roomescape.test.fixture.ReservationFixture.addReservationInRepository;
 import static roomescape.test.fixture.ReservationTimeFixture.addReservationTimeInRepository;
 import static roomescape.test.utility.ReservationTimeTestUtility.checkDeleteReservationTime;
 import static roomescape.test.utility.ReservationTimeTestUtility.checkReservationTimeFieldWithoutId;
@@ -96,7 +95,7 @@ class ReservationTimeServiceTest {
     @Test
     void canNotDeleteBecauseReservations() {
         ReservationTime savedTime = addReservationTimeInRepository(timeRepository, LocalTime.of(10, 0));
-        Reservation reservationInTime = addReservationInRepository(reservationRepository, LocalDate.now(), savedTime);
+        reservationRepository.add(Reservation.createWithoutId("reservation1", LocalDate.now(), savedTime));
 
         assertThatThrownBy(() -> reservationTimeService.deleteReservationTime(savedTime.getId()))
                 .isInstanceOf(BadRequestException.class)

@@ -13,7 +13,6 @@ import roomescape.reservation.exception.ReservationTimeNotFoundException;
 import roomescape.reservation.model.ReservationTime;
 import roomescape.reservation.service.ReservationTimeService;
 
-import java.net.URI;
 import java.util.List;
 
 @RequestMapping("/times")
@@ -31,9 +30,7 @@ public class ReservationTimeController {
     @PostMapping
     public ResponseEntity<ReservationTime> create(@RequestBody ReservationTimeReqDTO timeDto) {
         try {
-            ReservationTime created = reservationTimeService.create(timeDto);
-            URI location = URI.create("/times/" + created.getId());
-            return ResponseEntity.created(location).body(created);
+            return ResponseEntity.ok(reservationTimeService.create(timeDto));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }

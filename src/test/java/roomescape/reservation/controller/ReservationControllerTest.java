@@ -87,7 +87,7 @@ public class ReservationControllerTest {
                 .body(reservationTime)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(201);
+                .statusCode(200);
     }
 
     private void createNewReservation() {
@@ -101,7 +101,7 @@ public class ReservationControllerTest {
                 .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(201);
+                .statusCode(200);
     }
 
     @Test

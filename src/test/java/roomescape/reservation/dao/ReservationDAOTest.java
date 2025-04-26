@@ -144,7 +144,7 @@ class ReservationDAOTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(201);
+                .statusCode(200);
 
         Integer count = countReservations();
         assertThat(count).isEqualTo(1);

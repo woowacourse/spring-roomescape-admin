@@ -11,10 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.annotation.DirtiesContext;
 
-@SpringBootTest(
-        webEnvironment = WebEnvironment.DEFINED_PORT,
-        properties = "spring.datasource.url=jdbc:h2:mem:testdb"
-)
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationTimeControllerTest {
 

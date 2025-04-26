@@ -17,10 +17,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
-@SpringBootTest(
-        webEnvironment = WebEnvironment.DEFINED_PORT,
-        properties = "spring.datasource.url=jdbc:h2:mem:testdb"
-)
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationDaoTest {
 

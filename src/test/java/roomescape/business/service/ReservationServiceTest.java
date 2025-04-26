@@ -1,6 +1,7 @@
 package roomescape.business.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -49,5 +50,33 @@ public class ReservationServiceTest {
         // when & then
         assertThat(reservationService.create(reservationRequest))
                 .isEqualTo(expected);
+    }
+
+    @DisplayName("저장하려는 예약에 해당하는 방탈출 시간이 없다면 예외가 발생한다.")
+    @Test
+    void createOrThrowIfTimeIdNotExists() {
+        // given
+        final ReservationRequest reservationRequest = new ReservationRequest(
+                "hotteok", FORMATTED_MAX_LOCAL_DATE, 2L
+        );
+
+        // when & then
+        assertThatThrownBy(() -> reservationService.create(reservationRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("해당하는 id가 없습니다.");
+    }
+
+    @DisplayName("저장하려는 예약이 현재 날짜/시간보다 과거라면 예외가 발생한다.")
+    @Test
+    void createOrThrowIfFuture() {
+        // given
+        final ReservationRequest reservationRequest = new ReservationRequest(
+                "hotteok", LocalDate.of(0 ,1, 1), 1L
+        );
+
+        // when & then
+        assertThatThrownBy(() -> reservationService.create(reservationRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("예약 날짜 및 시간이 현재보다 과거일 수 없습니다.");
     }
 }

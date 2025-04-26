@@ -29,8 +29,7 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> readReservations() {
-        final List<Reservation> reservations = reservationService.findAll();
-        final List<ReservationResponse> dtos = ReservationResponse.from(reservations);
+        final List<ReservationResponse> dtos = reservationService.findAll();
         return ResponseEntity.ok(dtos);
     }
 
@@ -48,8 +47,8 @@ public class ReservationController {
 
     private Reservation makeReservation(final ReservationRequest reservationRequest) {
         try {
-            return reservationService.insert(reservationRequest.name(), reservationRequest.date(),
-                    reservationRequest.timeId());
+            final Reservation reservation = reservationRequest.fromEntity();
+            return reservationService.insert(reservation);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }

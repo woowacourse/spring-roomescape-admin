@@ -37,7 +37,7 @@ public class ReservationDao {
                 on r.time_id = t.id
                 """;
         List<Reservation> query = jdbcTemplate.query(sql, (resultSet, rowNumber) -> {
-            long id = resultSet.getInt("id");
+            long id = resultSet.getLong("id");
             String name = resultSet.getString("name");
             LocalDate date = LocalDate.parse(resultSet.getString("date"));
             long timeId = resultSet.getLong("time_id");
@@ -53,12 +53,11 @@ public class ReservationDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public long insertReservation(final String name, final LocalDate date, final long timeId) {
+    public long insertReservation(final Reservation reservation) {
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("name", name);
-        parameters.put("date", date.toString());
-        parameters.put("time_id", timeId);
-        Number key = simpleJdbcInsert.executeAndReturnKey(parameters);
-        return key.longValue();
+        parameters.put("name", reservation.getName());
+        parameters.put("date", reservation.getDate().toString());
+        parameters.put("time_id", reservation.getTime().getId());
+        return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 }

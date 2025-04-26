@@ -3,15 +3,12 @@ package roomescape.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.fixture.TextFixture;
@@ -55,7 +52,9 @@ class ReservationRepositoryImplTest {
     @Test
     void insert() {
         LocalDate now = LocalDate.now();
-        reservationRepository.insert("밍트", now, 1);
+        ReservationTime reservationTime = new ReservationTime(1L, null);
+        Reservation reservation = new Reservation(null, "밍트", now, reservationTime);
+        reservationRepository.insert(reservation);
 
         List<Reservation> reservations = reservationRepository.findAll();
         assertThat(reservations.size()).isEqualTo(2);
@@ -63,5 +62,9 @@ class ReservationRepositoryImplTest {
 
     @Test
     void delete() {
+        reservationRepository.delete(1);
+
+        List<Reservation> reservations = reservationRepository.findAll();
+        assertThat(reservations).isEmpty();
     }
 }

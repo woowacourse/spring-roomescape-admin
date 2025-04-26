@@ -1,9 +1,9 @@
 package roomescape.service;
 
-import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
+import roomescape.dto.response.ReservationResponse;
 import roomescape.repository.ReservationRepository;
 
 @Service
@@ -15,12 +15,13 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public List<Reservation> findAll() {
-        return reservationRepository.findAll();
+    public List<ReservationResponse> findAll() {
+        final List<Reservation> reservations = reservationRepository.findAll();
+        return ReservationResponse.from(reservations);
     }
 
-    public Reservation insert(final String name, final LocalDate date, final long timeId) {
-        return reservationRepository.insert(name, date, timeId);
+    public Reservation insert(final Reservation reservation) {
+        return reservationRepository.insert(reservation);
     }
 
     public void delete(final long id) {

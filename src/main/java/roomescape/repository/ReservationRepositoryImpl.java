@@ -1,6 +1,5 @@
 package roomescape.repository;
 
-import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
@@ -23,10 +22,10 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public Reservation insert(final String name, final LocalDate date, final long timeId) {
-        long reservationId = reservationDao.insertReservation(name, date, timeId);
-        ReservationTime reservationTime = reservationTimeDao.findById(timeId);
-        return new Reservation(reservationId, name, date, reservationTime);
+    public Reservation insert(final Reservation reservation) {
+        long reservationId = reservationDao.insertReservation(reservation);
+        ReservationTime reservationTime = reservationTimeDao.findById(reservation.getTime().getId());
+        return new Reservation(reservationId, reservation.getName(), reservation.getDate(), reservationTime);
     }
 
     @Override

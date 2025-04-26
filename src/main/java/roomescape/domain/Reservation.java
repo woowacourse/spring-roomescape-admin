@@ -6,12 +6,12 @@ public class Reservation {
 
     private static final int NAME_MAX_LENGTH = 10;
 
-    private final long id;
+    private final Long id;
     private final String name;
     private final LocalDate date;
     private final ReservationTime time;
 
-    public Reservation(final long id, final String name, final LocalDate date, final ReservationTime time) {
+    public Reservation(final Long id, final String name, final LocalDate date, final ReservationTime time) {
         validate(name, date, time);
         this.id = id;
         this.name = name;

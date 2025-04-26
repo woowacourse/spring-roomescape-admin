@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.fixture.TextFixture;
 
 @JdbcTest
@@ -49,7 +50,9 @@ class ReservationDaoImplTest {
 
     @Test
     void insert() {
-        long reservationId = reservationDao.insertReservation("mint", LocalDate.now(), 1L);
+        final ReservationTime reservationTime = new ReservationTime(1L, null);
+        final Reservation reservation = new Reservation(null, "mint", LocalDate.now(), reservationTime);
+        final long reservationId = reservationDao.insertReservation(reservation);
 
         List<Reservation> reservations = reservationDao.findAll();
         Assertions.assertAll(

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Repository;
 
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
-import roomescape.model.exception.ReservationNotFoundException;
 
 @Repository
 public class ReservationDao {
@@ -65,14 +64,11 @@ public class ReservationDao {
                 reservation.getDate(), reservation.getTime());
     }
 
-    public void deleteById(final Long id) {
+    public int deleteById(final Long id) {
         String deleteSql = """
                 DELETE FROM reservation
                 WHERE id = ?
                 """;
-        int updatedRow = jdbcTemplate.update(deleteSql, id);
-        if (updatedRow == 0) {
-            throw new ReservationNotFoundException("존재하지 않는 예약번호 입니다.");
-        }
+        return jdbcTemplate.update(deleteSql, id);
     }
 }

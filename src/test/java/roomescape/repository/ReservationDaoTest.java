@@ -1,7 +1,6 @@
 package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,7 +16,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
-import roomescape.model.exception.ReservationNotFoundException;
 
 @JdbcTest
 @Import({ReservationDao.class, ReservationTimeDao.class})
@@ -61,15 +59,12 @@ class ReservationDaoTest {
                 LocalDate.of(2025, 4, 23), new ReservationTime(1L, LocalTime.of(10, 0)));
         Reservation insertedReservation = reservationDao.insert(reservation);
 
-        reservationDao.deleteById(insertedReservation.getId());
-
-        assertThat(reservationDao.findAll()).isEmpty();
+        assertThat(reservationDao.deleteById(insertedReservation.getId())).isEqualTo(1);
     }
 
     @DisplayName("존재하지 않는 예약은 삭제할 수 없다.")
     @Test
     void deleteReservationByNonExistsId() {
-        assertThatThrownBy(() -> reservationDao.deleteById(1L))
-                .isInstanceOf(ReservationNotFoundException.class);
+        assertThat(reservationDao.deleteById(1L)).isZero();
     }
 }

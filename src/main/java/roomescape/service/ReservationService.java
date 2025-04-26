@@ -8,6 +8,7 @@ import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
+import roomescape.model.exception.ReservationNotFoundException;
 import roomescape.repository.ReservationDao;
 import roomescape.repository.ReservationTimeDao;
 
@@ -32,7 +33,11 @@ public class ReservationService {
     }
 
     public void deleteReservation(final Long id) {
-        reservationDao.deleteById(id);
+        int updatedRow = reservationDao.deleteById(id);
+
+        if (updatedRow == 0) {
+            throw new ReservationNotFoundException("존재하지 않는 예약번호 입니다.");
+        }
     }
 
     public List<ReservationResponse> findAllReservations() {

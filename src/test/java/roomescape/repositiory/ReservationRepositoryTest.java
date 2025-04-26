@@ -4,34 +4,30 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 @JdbcTest
-@Import({ReservationTimeRepository.class})
-class ReservationH2RepositoryTest {
+@Import({ReservationRepository.class, ReservationTimeRepository.class})
+class ReservationRepositoryTest {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private ReservationRepository reservationRepository;
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
 
-    private ReservationRepository reservationRepository;
     private ReservationTime reservationTime;
 
     @BeforeEach
     void setUp() {
         Long reservationTimeId = reservationTimeRepository.add(new ReservationTime(LocalTime.now()));
         reservationTime = reservationTimeRepository.findById(reservationTimeId);
-        reservationRepository = new ReservationRepository(jdbcTemplate);
     }
 
     @DisplayName("예약 객체를 추가한다")

@@ -6,23 +6,24 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import javax.sql.DataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class ReservationDaoTest {
 
-    @Autowired
     private ReservationDao reservationDao;
-    @Autowired
+
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
+        DataSource dataSource = DataSourceBuilder.create().url("jdbc:h2:mem:database-test").username("sa").build();
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        reservationDao = new ReservationDao(dataSource);
         String createTableSql = """
                 DROP TABLE IF EXISTS reservation, reservation_time;
                 

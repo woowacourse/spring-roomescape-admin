@@ -9,53 +9,24 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class ReservationTest {
+@ActiveProfiles("test")
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+public class ReservationControllerTest {
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
+    @LocalServerPort
+    private int port;
 
     @BeforeEach
     void setUp() {
-        String createTableSql = """
-                DROP TABLE IF EXISTS reservation, reservation_time;
-                
-                CREATE TABLE reservation_time
-                (
-                    id       BIGINT       NOT NULL AUTO_INCREMENT,
-                    start_at VARCHAR(255) NOT NULL,
-                    PRIMARY KEY (id)
-                );
-                
-                CREATE TABLE reservation
-                (
-                    id      BIGINT       NOT NULL AUTO_INCREMENT,
-                    name    VARCHAR(255) NOT NULL,
-                    date    VARCHAR(255) NOT NULL,
-                    time_id BIGINT,
-                    PRIMARY KEY (id),
-                    FOREIGN KEY (time_id) REFERENCES reservation_time (id)
-                );
-                """;
-        jdbcTemplate.execute(createTableSql);
-        String insertSql = """
-                INSERT INTO RESERVATION_TIME(id, start_at) VALUES 
-                   ('1', '13:40'), 
-                   ('2', '14:40'),
-                   ('3', '15:40')
-                ;
-                
-                INSERT INTO RESERVATION(name, date, time_id) VALUES
-                    ('브라운', '2023-03-03', '1'),
-                    ('솔라', '2023-03-03', '2'),
-                    ('네오', '2023-03-05', '3')
-                ;
-                """;
-        jdbcTemplate.update(insertSql);
+        RestAssured.port = port;
     }
 
     @Test

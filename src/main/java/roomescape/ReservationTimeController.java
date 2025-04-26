@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/times")
 @RestController
-public class TimeController {
+public class ReservationTimeController {
 
     private final ReservationTimeDao reservationTimeRepository;
 
-    public TimeController(ReservationTimeDao reservationTimeRepository) {
+    public ReservationTimeController(ReservationTimeDao reservationTimeRepository) {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 

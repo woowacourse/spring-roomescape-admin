@@ -13,16 +13,21 @@ public class Reservation {
     }
 
     public Reservation(final String name, final LocalDate date, final ReservationTime time) {
+        validateTime(time);
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
     public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
+        this(name, date, time);
         this.id = id;
-        this.name = name;
-        this.date = date;
-        this.time = time;
+    }
+
+    private void validateTime(ReservationTime time) {
+        if (time == null) {
+            throw new IllegalArgumentException("존재하지 않는 시간입니다.");
+        }
     }
 
     public Long getId() {

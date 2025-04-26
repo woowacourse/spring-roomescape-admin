@@ -4,12 +4,12 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
+import roomescape.reservation.exception.ReservationTimeNotFoundException;
 import roomescape.reservation.model.ReservationTime;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 @Component
 public class ReservationTimeDAO {
@@ -46,7 +46,7 @@ public class ReservationTimeDAO {
         String sql = "delete from reservation_time where id = ?";
         int deletedCount = jdbcTemplate.update(sql, id);
         if (deletedCount == 0) {
-            throw new NoSuchElementException("해당 ID의 예약 시간이 존재하지 않습니다. " + id);
+            throw new ReservationTimeNotFoundException(id);
         }
     }
 
@@ -59,7 +59,7 @@ public class ReservationTimeDAO {
                             rs.getTime("start_at").toLocalTime()
                     ), id);
         } catch (EmptyResultDataAccessException e) {
-            throw new NoSuchElementException("해당 ID의 예약 시간이 존재하지 않습니다. id = " + id);
+            throw new ReservationTimeNotFoundException(id);
         }
     }
 }

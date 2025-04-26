@@ -6,13 +6,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import roomescape.reservation.exception.ReservationNotFoundException;
 import roomescape.reservation.model.Reservation;
 import roomescape.reservation.model.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Component
 public class ReservationDAO {
@@ -59,7 +59,7 @@ public class ReservationDAO {
                             new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())
                     ), id);
         } catch (EmptyResultDataAccessException e) {
-            throw new NoSuchElementException("해당 ID의 예약이 존재하지 않습니다. id = " + id);
+            throw new ReservationNotFoundException(id);
         }
     }
 
@@ -78,7 +78,7 @@ public class ReservationDAO {
         String sql = "delete from reservation where id = ?";
         int deletedCount = jdbcTemplate.update(sql, id);
         if (deletedCount == 0) {
-            throw new NoSuchElementException("해당 ID의 예약이 존재하지 않습니다. " + id);
+            throw new ReservationNotFoundException(id);
         }
     }
 

@@ -1,67 +1,14 @@
 package roomescape.reservationtime.dao;
 
-import java.sql.PreparedStatement;
-import java.time.LocalTime;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
 import roomescape.reservationtime.ReservationTime;
 
-@Repository
-public class ReservationTimeDao {
+public interface ReservationTimeDao {
+    List<ReservationTime> findAll();
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    Long create(ReservationTime reservationTime);
 
-    public List<ReservationTime> findAll() {
-        String sql = "select * from reservation_time";
-        return this.jdbcTemplate.query(sql,
-                (resultSet, rowNum) -> {
-                    String timeString = resultSet.getString("start_at");
+    int delete(Long id);
 
-                    return new ReservationTime(
-                            resultSet.getLong("id"),
-                            LocalTime.parse(timeString)
-                    );
-                });
-    }
-
-    public Long create(ReservationTime reservationTime) {
-        String sql = "insert into reservation_time (start_at) values (?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        this.jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(
-                    sql,
-                    new String[]{"id"}
-            );
-            LocalTime startAt = reservationTime.getStartAt();
-            ps.setString(1, startAt.toString());
-            return ps;
-        }, keyHolder);
-
-        return keyHolder.getKey().longValue();
-    }
-
-    public int delete(Long id) {
-        String sql = "delete from reservation_time where id = ?";
-        return this.jdbcTemplate.update(sql, id);
-    }
-
-    public ReservationTime findById(Long id) {
-        String sql = "select * from reservation_time where id = ?";
-
-        return this.jdbcTemplate.queryForObject(sql,
-                (resultSet, rowNum) -> {
-                    ReservationTime reservationTime = new ReservationTime(
-                            resultSet.getLong("id"),
-                            resultSet.getObject("start_at", LocalTime.class)
-                    );
-                    return reservationTime;
-                }, id
-        );
-    }
+    ReservationTime findById(Long id);
 }

@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.reservation.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -9,15 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.reservation.Reservation;
-import roomescape.reservation.dao.ReservationDao;
 import roomescape.reservationtime.ReservationTime;
 import roomescape.reservationtime.dao.ReservationTimeDao;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-@SpringBootTest
-class ReservationDaoTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+class JdbcReservationDaoTest {
     @Autowired
     private ReservationDao reservationDao;
 

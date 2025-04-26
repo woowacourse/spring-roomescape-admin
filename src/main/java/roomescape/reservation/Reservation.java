@@ -11,6 +11,7 @@ public class Reservation {
     private final ReservationTime reservationTime;
 
     public Reservation(final String name, final LocalDate date, final ReservationTime reservationTime) {
+        this.id = null;
         this.name = name;
         this.date = date;
         this.reservationTime = reservationTime;

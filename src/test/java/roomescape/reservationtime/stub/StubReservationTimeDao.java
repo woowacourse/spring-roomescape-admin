@@ -1,0 +1,45 @@
+package roomescape.reservationtime.stub;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+import roomescape.reservationtime.ReservationTime;
+import roomescape.reservationtime.dao.ReservationTimeDao;
+
+public class StubReservationTimeDao implements ReservationTimeDao {
+
+    private final List<ReservationTime> fakeReservationTimes = new ArrayList<>();
+    private final AtomicLong index = new AtomicLong(1);
+
+    public StubReservationTimeDao(ReservationTime... reservationTimes) {
+        Arrays.stream(reservationTimes)
+                .forEach(reservationTime -> fakeReservationTimes.add(reservationTime));
+    }
+
+    @Override
+    public List<ReservationTime> findAll() {
+        return new ArrayList<>(fakeReservationTimes);
+    }
+
+    @Override
+    public Long create(ReservationTime reservationTime) {
+        ReservationTime reservationTimeWithId = new ReservationTime(index.getAndIncrement(), reservationTime.getStartAt());
+        fakeReservationTimes.add(reservationTime);
+        return reservationTimeWithId.getId();
+    }
+
+    @Override
+    public int delete(Long id) {
+        fakeReservationTimes.removeIf(reservationTime -> reservationTime.getId().equals(id));
+        return fakeReservationTimes.size();
+    }
+
+    @Override
+    public ReservationTime findById(Long id) {
+        return fakeReservationTimes.stream()
+                .filter(reservationTime -> reservationTime.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+}

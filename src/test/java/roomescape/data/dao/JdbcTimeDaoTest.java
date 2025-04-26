@@ -113,7 +113,7 @@ class JdbcTimeDaoTest {
         );
     }
 
-    @DisplayName("데이터베이스에서 방탈출 시간을 삭제한다.")
+    @DisplayName("해당하는 방탈출 시간이 없다면 0을 반환한다.")
     @Test
     void removeNotExistsTime() {
         // given & when

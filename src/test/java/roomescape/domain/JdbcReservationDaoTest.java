@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import javax.sql.DataSource;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.ReservationTime;
 import roomescape.reservation.domain.repository.JdbcReservationDao;
-import roomescape.util.TestDataSourceFactory;
+import roomescape.util.TestDatabaseInitializer;
 
 class JdbcReservationDaoTest {
 
@@ -22,9 +23,17 @@ class JdbcReservationDaoTest {
 
     @BeforeEach
     void setup() {
-        DataSource dataSource = TestDataSourceFactory.getEmbeddedDataSource();
+        DataSource dataSource = TestDatabaseInitializer.getTestDataSource();
         jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcReservationDao = new JdbcReservationDao(jdbcTemplate);
+    }
+
+    @AfterEach
+    void dropTable(){
+        String dropReservationSql = "DROP TABLE IF EXISTS reservation";
+        String dropReservationTimeSql = "DROP TABLE IF EXISTS reservation_time";
+        jdbcTemplate.execute(dropReservationSql);
+        jdbcTemplate.execute(dropReservationTimeSql);
     }
 
     @DisplayName("Reservation 객체를 저장한다")

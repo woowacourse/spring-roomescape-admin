@@ -4,14 +4,13 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
-public class TestDataSourceFactory {
+public class TestDatabaseInitializer {
 
-    public static DataSource getEmbeddedDataSource() {
+    public static DataSource getTestDataSource() {
         return new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
-                .addScript("reset-table.sql")
+                .addScript("schema.sql")
                 .addScript("data.sql")
                 .build();
     }
-
 }

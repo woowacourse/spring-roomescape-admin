@@ -12,7 +12,7 @@
 ### 예약 관리 페이지
 
 - [x] /admin/reservation 요청 시 예약 관리 페이지가 응답한다.
-  - [ ] templates/admin/reservation.html 파일을 이용한다.
+  - [x] templates/admin/reservation.html 파일을 이용한다.
 
 ### 시간 관리 페이지
 

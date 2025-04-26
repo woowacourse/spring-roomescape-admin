@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
@@ -71,30 +70,9 @@ class ReservationRestControllerTest {
     }
 
     @Test
-    void 예약_정보_삭제에_성공한_경우_ok를_반환한다() {
-        final Map<String, String> params
-                = createReservationRequestJsonMap("헤일러", "2025-04-15", "2");
-
-        final Response response = RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value())
-                .extract().response();
-        final long id = response.jsonPath().getLong("id");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .when().delete("/reservations/" + id)
-                .then().log().all()
-                .statusCode(HttpStatus.OK.value());
-    }
-
-    @Test
     void 예약_정보를_삭제한다() {
         final Map<String, String> params
-                = createReservationRequestJsonMap("브라운", "2023-08-05", "1");
+                = createReservationRequestJsonMap("포스티", "2023-08-05", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

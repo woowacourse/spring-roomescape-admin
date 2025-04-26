@@ -1,7 +1,6 @@
-package roomescape.user.controller;
+package roomescape.user.reservationtime.controller;
 
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,8 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.user.domain.ReservationTime;
-import roomescape.user.repository.ReservationTimeRepository;
+import roomescape.user.reservationtime.domain.ReservationTime;
+import roomescape.user.reservationtime.domain.ReservationTimeRepository;
 
 @RequiredArgsConstructor
 @RestController
@@ -42,10 +41,10 @@ public class UserReservationTimeRestController {
     @PostMapping
     public ResponseEntity<ReservationTime> persistReservationTime(@RequestBody final ReservationTime reservationTime) {
         final Long id = reservationTimeRepository.save(reservationTime);
-        final Optional<ReservationTime> found = reservationTimeRepository.findById(id);
+        final ReservationTime found = reservationTimeRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("Reservation time not found"));
 
-        return found.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.ok(found);
     }
 
     @DeleteMapping("/{id}")

@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -15,9 +16,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.user.controller.dto.ReservationV1Response;
-import roomescape.user.repository.ReservationRepository;
-import roomescape.user.repository.ReservationTimeRepository;
+import roomescape.user.reservation.infra.dao.JdbcReservationDao;
+import roomescape.user.reservation.presentation.UserReservationRestController;
+import roomescape.user.reservation.presentation.dto.ReservationV1Response;
+import roomescape.user.reservationtime.infra.dao.JdbcReservationTimeDao;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class MissionStepTest {  // 미션에서 제공한 요구사항 테스트
@@ -26,15 +28,18 @@ public class MissionStepTest {  // 미션에서 제공한 요구사항 테스트
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private ReservationRepository reservationRepository;
+    private UserReservationRestController userReservationRestController;
 
     @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
+    private JdbcReservationDao jdbcReservationDao;
+
+    @Autowired
+    private JdbcReservationTimeDao jdbcReservationTimeDao;
 
     @BeforeEach
     void setUp() {
-        reservationRepository.clear();
-        reservationTimeRepository.clear();
+        jdbcReservationDao.clear();
+        jdbcReservationTimeDao.clear();
     }
 
     @Test
@@ -208,5 +213,19 @@ public class MissionStepTest {  // 미션에서 제공한 요구사항 테스트
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
+
+    @Test
+    void 구단계() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : userReservationRestController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
     }
 }

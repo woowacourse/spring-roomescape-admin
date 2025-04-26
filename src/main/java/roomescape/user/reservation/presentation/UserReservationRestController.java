@@ -1,6 +1,7 @@
-package roomescape.user.controller;
+package roomescape.user.reservation.presentation;
 
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,19 +12,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.user.controller.dto.ReservationResponse;
-import roomescape.user.domain.Reservation;
-import roomescape.user.domain.ReservationTime;
-import roomescape.user.repository.ReservationRepository;
-import roomescape.user.repository.ReservationTimeRepository;
+import roomescape.user.reservation.domain.Reservation;
+import roomescape.user.reservation.domain.ReservationService;
+import roomescape.user.reservation.presentation.dto.ReservationResponse;
+import roomescape.user.reservationtime.domain.ReservationTime;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/reservations")
 public class UserReservationRestController {
 
-    private final ReservationRepository reservationRepository;
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationService reservationService;
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Void> handleIllegalArgumentException(final IllegalArgumentException e) {
@@ -37,30 +36,27 @@ public class UserReservationRestController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> retrieveReservations() {
-        final List<Reservation> reservations = reservationRepository.findAll();
-        final List<ReservationResponse> reservationRespons = reservations.stream()
-                .map(reservation -> ReservationResponse.of(reservation,
-                        reservationTimeRepository.findById(reservation.getTimeId())
-                                .orElseThrow(() -> new IllegalStateException("Reservation time not found"))))
+        final Map<Reservation, ReservationTime> foundReservationsWithTimes = reservationService.findReservationsWithTimes();
+        final List<ReservationResponse> reservationResponses = foundReservationsWithTimes.entrySet().stream()
+                .map(foundReservationsWithTime -> ReservationResponse.of(
+                        foundReservationsWithTime.getKey(), foundReservationsWithTime.getValue()))
                 .toList();
 
-        return ResponseEntity.ok(reservationRespons);
+        return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> persistReservation(@RequestBody final Reservation reservation) {
-        final Long id = reservationRepository.save(reservation);
-        final Reservation foundReservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("Reservation not found"));
-        final ReservationTime foundReservationTime = reservationTimeRepository.findById(foundReservation.getTimeId())
-                .orElseThrow(() -> new IllegalStateException("Reservation time not found"));
+        final Long savedReservationId = reservationService.saveReservationWithTime(reservation);
+        final Map.Entry<Reservation, ReservationTime> foundReservationWithTime = reservationService.findReservationWithTime(
+                savedReservationId);
 
-        return ResponseEntity.ok(ReservationResponse.of(foundReservation, foundReservationTime));
+        return ResponseEntity.ok(ReservationResponse.of(foundReservationWithTime.getKey(), foundReservationWithTime.getValue()));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeReservation(@PathVariable final Long id) {
-        reservationRepository.deleteById(id);
+        reservationService.deleteReservation(id);
 
         return ResponseEntity.ok().build();
     }

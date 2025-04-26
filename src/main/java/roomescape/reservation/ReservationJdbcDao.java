@@ -74,7 +74,7 @@ public class ReservationJdbcDao implements ReservationDao {
         validateUpdateSuccess(updatedCount);
     }
 
-    private static void validateUpdateSuccess(final int updatedCount) {
+    private void validateUpdateSuccess(final int updatedCount) {
         if (updatedCount == 0) {
             throw new IllegalArgumentException("수정/삭제된 reservation이 존재하지 않습니다.");
         }

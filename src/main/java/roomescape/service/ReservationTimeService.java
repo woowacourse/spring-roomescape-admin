@@ -2,6 +2,7 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.ReservationTime;
 import roomescape.domain.exception.ReservationTimeException;
 import roomescape.persist.repository.ReservationTimeRepository;
@@ -9,7 +10,7 @@ import roomescape.presentation.dto.ReservationTimeRequestDto;
 import roomescape.presentation.dto.ReservationTimeResponseDto;
 
 @Service
-public final class ReservationTimeService {
+public class ReservationTimeService {
 
     private final ReservationTimeRepository reservationTimeRepository;
 
@@ -17,6 +18,7 @@ public final class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<ReservationTimeResponseDto> getAllReservationTimes() {
         return reservationTimeRepository.findAll().stream()
                 .map(reservationTime -> new ReservationTimeResponseDto(
@@ -25,6 +27,7 @@ public final class ReservationTimeService {
                 .toList();
     }
 
+    @Transactional
     public ReservationTimeResponseDto addReservationTime(ReservationTimeRequestDto reservationTimeRequestDto) {
         if (reservationTimeRepository.existsByStartTime(reservationTimeRequestDto.startAt())) {
             throw new ReservationTimeException("예약 가능한 시간은 중복될 수 없습니다.");
@@ -33,6 +36,7 @@ public final class ReservationTimeService {
         return new ReservationTimeResponseDto(reservationTime.getId(), reservationTime.getStartTime());
     }
 
+    @Transactional
     public void deleteReservationTime(long id) {
         reservationTimeRepository.removeById(id);
     }

@@ -4,6 +4,7 @@ import static org.hamcrest.core.Is.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.controller.ReservationCommandController;
+import roomescape.controller.ReservationQueryController;
 import roomescape.domain.Reservation;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -198,5 +201,34 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
+
+    @Autowired
+    private ReservationCommandController reservationCommandController;
+    @Autowired
+    private ReservationQueryController reservationQueryController;
+
+    @DisplayName("계층 분리 테스트(jdbcTemplate 의존성 분리)")
+    @Test
+    void 구단계() {
+        boolean isJdbcTemplateInjectedInCommand = false;
+        boolean isJdbcTemplateInjectedInQuery = false;
+
+        for (Field field : reservationCommandController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjectedInCommand = true;
+                break;
+            }
+        }
+
+        for (Field field : reservationQueryController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjectedInQuery = true;
+                break;
+            }
+        }
+
+        Assertions.assertThat(isJdbcTemplateInjectedInCommand).isFalse();
+        Assertions.assertThat(isJdbcTemplateInjectedInQuery).isFalse();
     }
 }

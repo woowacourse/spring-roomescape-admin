@@ -12,6 +12,8 @@ import roomescape.domain.ReservationTime;
 import roomescape.domain.dto.ReservationRequestDto;
 import roomescape.domain.dto.ReservationTimeRequestDto;
 import roomescape.repositiory.GeneralRepository;
+import roomescape.service.fakerepository.FakeReservationRepository;
+import roomescape.service.fakerepository.FakeReservationTimeRepository;
 
 class ReservationServiceTest {
 

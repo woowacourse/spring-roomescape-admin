@@ -61,6 +61,6 @@ public class ReservationTimeController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleValidateDtoException(MethodArgumentNotValidException exception) {
-        return ResponseEntity.ok().body(exception.getBindingResult().getFieldErrors().get(0).getDefaultMessage());
+        return ResponseEntity.badRequest().body(exception.getBindingResult().getFieldErrors().get(0).getDefaultMessage());
     }
 }

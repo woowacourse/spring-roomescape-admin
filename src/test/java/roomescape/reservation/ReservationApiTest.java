@@ -56,6 +56,23 @@ public class ReservationApiTest {
     }
 
     @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
+    @DisplayName("존재하지 않는 시간을 선택하면, 400을 응답한다.")
+    @Test
+    void post2() {
+        // given
+        givenCreateTime();
+        givenDeleteTime();
+
+        // when & then
+        RestAssured.given().port(port).log().all()
+                .contentType(ContentType.JSON)
+                .body(RESERVATION_BODY)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     @DisplayName("존재하는 모든 예약과 200 OK를 응답")
     @Test
     void get1() {
@@ -122,6 +139,15 @@ public class ReservationApiTest {
                 .contentType(ContentType.JSON)
                 .body(RESERVATION_BODY)
                 .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    private void givenDeleteTime(){
+        RestAssured.given().port(port).log().all()
+                .contentType(ContentType.JSON)
+                .body(TIME_BODY)
+                .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(200);
     }

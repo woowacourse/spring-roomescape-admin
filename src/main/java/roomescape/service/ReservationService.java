@@ -36,11 +36,11 @@ public class ReservationService {
     public Reservation addReservationAndReturn(String name, LocalDate date, Long timeId) {
         ReservationTime reservationTime = reservationTimeRepository.findById(timeId);
         Reservation reservation = new Reservation(name, date, reservationTime);
-        return reservationRepository.insertAndReturn(reservation);
+        return reservationRepository.insert(reservation);
     }
 
     public void deleteReservationById(Long id) {
-        int affectedRows = reservationRepository.deleteByIdAndCountAffected(id);
+        int affectedRows = reservationRepository.deleteById(id);
         if (affectedRows == 0) {
             throw new IllegalArgumentException("존재하지 않는 예약 id입니다.");
         }
@@ -58,11 +58,11 @@ public class ReservationService {
 
     public ReservationTime addReservationTimeAndReturn(LocalTime startAt) {
         ReservationTime reservationTime = new ReservationTime(startAt);
-        return reservationTimeRepository.insertAndReturn(reservationTime);
+        return reservationTimeRepository.insert(reservationTime);
     }
 
     public void deleteReservationTimeById(Long id) {
-        int affectedRows = reservationTimeRepository.deleteByIdAndCountAffected(id);
+        int affectedRows = reservationTimeRepository.deleteById(id);
         if (affectedRows == 0) {
             throw new IllegalArgumentException("존재하지 않는 예약 시간 id입니다.");
         }

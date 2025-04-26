@@ -25,14 +25,14 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTime insertAndReturn(ReservationTime reservationTime) {
+    public ReservationTime insert(ReservationTime reservationTime) {
         ReservationTime reservationTimeEntity = reservationTime.toEntity(index.getAndIncrement());
         reservationTimes.add(reservationTimeEntity);
         return reservationTimeEntity;
     }
 
     @Override
-    public int deleteByIdAndCountAffected(Long id) {
+    public int deleteById(Long id) {
         ReservationTime deleteReservationTime = findById(id);
         if (deleteReservationTime != null) {
             reservationTimes.remove(deleteReservationTime);

@@ -19,7 +19,7 @@ public class FakeReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation insertAndReturn(Reservation reservation) {
+    public Reservation insert(Reservation reservation) {
         Reservation reservationEntity = reservation.toEntity(index.getAndIncrement());
         reservations.add(reservationEntity);
         return reservationEntity;
@@ -32,7 +32,7 @@ public class FakeReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public int deleteByIdAndCountAffected(Long id) {
+    public int deleteById(Long id) {
         Reservation deleteReservation = findById(id);
         if (deleteReservation != null) {
             reservations.remove(deleteReservation);

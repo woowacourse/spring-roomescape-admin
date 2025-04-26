@@ -48,7 +48,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation insertAndReturn(Reservation reservation) {
+    public Reservation insert(Reservation reservation) {
         String sql ="INSERT INTO reservation(name, date, time_id) VALUES(?, ?, ?)";
         jdbcTemplate.update((Connection con) -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
@@ -61,7 +61,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public int deleteByIdAndCountAffected(Long id) {
+    public int deleteById(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         return jdbcTemplate.update(sql, id);
     }

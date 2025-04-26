@@ -42,7 +42,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTime insertAndReturn(ReservationTime reservationTime) {
+    public ReservationTime insert(ReservationTime reservationTime) {
         Map<String, Object> params = new HashMap<>();
         params.put("start_at", reservationTime.getStartAt());
         Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
@@ -50,7 +50,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public int deleteByIdAndCountAffected(Long id) {
+    public int deleteById(Long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
         return jdbcTemplate.update(sql, id);
     }

@@ -11,7 +11,7 @@ public interface ReservationRepository {
 
     boolean existByDateAndTimeId(LocalDate date, Long timeId);
 
-    Reservation insertAndReturn(Reservation reservation);
+    Reservation insert(Reservation reservation);
 
-    int deleteByIdAndCountAffected(Long id);
+    int deleteById(Long id);
 }

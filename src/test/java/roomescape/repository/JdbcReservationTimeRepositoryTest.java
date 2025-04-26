@@ -41,7 +41,7 @@ public class JdbcReservationTimeRepositoryTest {
         ReservationTime reservationTime = new ReservationTime(time);
 
         // When
-        ReservationTime reservationTimeEntity = jdbcReservationTimeRepository.insertAndReturn(reservationTime);
+        ReservationTime reservationTimeEntity = jdbcReservationTimeRepository.insert(reservationTime);
 
         // Then
         assertThat(reservationTimeEntity.getId()).isEqualTo(1L);
@@ -53,10 +53,10 @@ public class JdbcReservationTimeRepositoryTest {
         // Given
         LocalTime time1 = LocalTime.of(10, 0);
         ReservationTime reservationTime1 = new ReservationTime(time1);
-        ReservationTime reservationTime1Entity = jdbcReservationTimeRepository.insertAndReturn(reservationTime1);
+        ReservationTime reservationTime1Entity = jdbcReservationTimeRepository.insert(reservationTime1);
         LocalTime time2 = LocalTime.of(11, 0);
         ReservationTime reservationTime2 = new ReservationTime(time2);
-        ReservationTime reservationTime2Entity = jdbcReservationTimeRepository.insertAndReturn(reservationTime2);
+        ReservationTime reservationTime2Entity = jdbcReservationTimeRepository.insert(reservationTime2);
 
         // When & Then
         assertThat(jdbcReservationTimeRepository.findAll()).containsExactlyInAnyOrder(reservationTime1Entity, reservationTime2Entity);
@@ -76,10 +76,10 @@ public class JdbcReservationTimeRepositoryTest {
         // Given
         LocalTime time1 = LocalTime.of(10, 0);
         ReservationTime reservationTime1 = new ReservationTime(time1);
-        ReservationTime reservationTime1Entity = jdbcReservationTimeRepository.insertAndReturn(reservationTime1);
+        ReservationTime reservationTime1Entity = jdbcReservationTimeRepository.insert(reservationTime1);
         LocalTime time2 = LocalTime.of(11, 0);
         ReservationTime reservationTime2 = new ReservationTime(time2);
-        ReservationTime reservationTime2Entity = jdbcReservationTimeRepository.insertAndReturn(reservationTime2);
+        ReservationTime reservationTime2Entity = jdbcReservationTimeRepository.insert(reservationTime2);
 
         // When & Then
         assertThat(jdbcReservationTimeRepository.findById(1L)).isEqualTo(reservationTime1Entity);
@@ -101,14 +101,14 @@ public class JdbcReservationTimeRepositoryTest {
         // Given
         LocalTime time1 = LocalTime.of(10, 0);
         ReservationTime reservationTime1 = new ReservationTime(time1);
-        jdbcReservationTimeRepository.insertAndReturn(reservationTime1);
+        jdbcReservationTimeRepository.insert(reservationTime1);
         LocalTime time2 = LocalTime.of(11, 0);
         ReservationTime reservationTime2 = new ReservationTime(time2);
-        ReservationTime reservationTime2Entity = jdbcReservationTimeRepository.insertAndReturn(reservationTime2);
+        ReservationTime reservationTime2Entity = jdbcReservationTimeRepository.insert(reservationTime2);
         Long deleteId = 1L;
 
         // When
-        int rowsAffected = jdbcReservationTimeRepository.deleteByIdAndCountAffected(deleteId);
+        int rowsAffected = jdbcReservationTimeRepository.deleteById(deleteId);
 
         // Then
         assertThat(rowsAffected).isEqualTo(1);
@@ -120,7 +120,7 @@ public class JdbcReservationTimeRepositoryTest {
         // Given
         LocalTime time = LocalTime.of(10, 0);
         ReservationTime reservationTime = new ReservationTime(time);
-        jdbcReservationTimeRepository.insertAndReturn(reservationTime);
+        jdbcReservationTimeRepository.insert(reservationTime);
 
         // When & Then
         assertThat(jdbcReservationTimeRepository.existByStartAt(time)).isTrue();

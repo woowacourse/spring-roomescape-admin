@@ -47,7 +47,7 @@ public class UserReservationTimeRestController {
         return ResponseEntity.ok(found);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}")  // TODO. 이미 존재하는 Reservaiton에 대한 고려
     public ResponseEntity<Void> removeReservationTime(@PathVariable final Long id) {
         reservationTimeRepository.deleteById(id);
 

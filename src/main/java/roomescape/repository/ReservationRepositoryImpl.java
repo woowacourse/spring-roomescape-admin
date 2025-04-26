@@ -1,11 +1,11 @@
 package roomescape.repository;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
 import roomescape.domain.Reservations;
 
-@Component
+@Repository
 public class ReservationRepositoryImpl implements ReservationRepository {
 
     private final ReservationDao reservationDao;

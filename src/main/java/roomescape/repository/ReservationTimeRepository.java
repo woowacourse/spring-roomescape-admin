@@ -12,20 +12,19 @@ import roomescape.model.ReservationTime;
 @Repository
 public class ReservationTimeRepository {
 
-    private static final String DUPLICATE_TIME_EXCEPTION = "해당 시간대는 이미 추가되어 있습니다.";
-    private static final String INVALID_ID_EXCEPTION = "해당 아이디는 존재하지 않습니다.";
+    private static final String DUPLICATE_TIME_EXCEPTION_MESSAGE = "해당 시간대는 이미 추가되어 있습니다.";
+    private static final String INVALID_ID_EXCEPTION_MESSAGE = "해당 아이디는 존재하지 않습니다.";
     private static final int EMPTY_ROW_COUNT = 0;
-
-    private final JdbcTemplate jdbcTemplate;
-
-    public ReservationTimeRepository(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     private final RowMapper<ReservationTime> rowMapper = (resultSet, rowNum) -> new ReservationTime(
             resultSet.getLong("id"),
             LocalTime.parse(resultSet.getString("start_at"))
     );
+    private final JdbcTemplate jdbcTemplate;
+
+    public ReservationTimeRepository(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public List<ReservationTime> readAllReservationTimes() {
         String sql = "select id, start_at from reservation_time";
@@ -52,7 +51,7 @@ public class ReservationTimeRepository {
         int rowCount = jdbcTemplate.update(sql, id);
 
         if (rowCount == EMPTY_ROW_COUNT) {
-            throw new IllegalArgumentException(INVALID_ID_EXCEPTION);
+            throw new IllegalArgumentException(INVALID_ID_EXCEPTION_MESSAGE);
         }
     }
 
@@ -65,7 +64,7 @@ public class ReservationTimeRepository {
                 );
 
         if (isDuplicate) {
-            throw new IllegalArgumentException(DUPLICATE_TIME_EXCEPTION);
+            throw new IllegalArgumentException(DUPLICATE_TIME_EXCEPTION_MESSAGE);
         }
     }
 }

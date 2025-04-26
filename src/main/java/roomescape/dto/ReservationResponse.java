@@ -10,8 +10,8 @@ public record ReservationResponse(long id, String name, String date, Reservation
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getDate().toString(),
-                new ReservationTimeResponse(reservation.getTime().getId(),
-                        String.valueOf(reservation.getTime().getStartAt()))
+                new ReservationTimeResponse(reservation.getTimeId(),
+                        String.valueOf(reservation.getTimeStartAt()))
         );
     }
 

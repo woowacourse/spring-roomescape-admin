@@ -23,18 +23,18 @@ import roomescape.model.ReservationTime;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationRepositoryTest {
 
+    private static final ReservationRequest REQUEST_INPUT = new ReservationRequest(
+            "kim",
+            "2025-04-19",
+            1L
+    );
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
     @Autowired
     private ReservationRepository reservationRepository;
-
-    private static final ReservationRequest REQUEST_INPUT = new ReservationRequest(
-            "kim",
-            "2025-04-19",
-            1L
-    );
 
     @BeforeEach
     void setUp() {

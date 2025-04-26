@@ -14,15 +14,9 @@ import roomescape.model.ReservationTime;
 @Repository
 public class ReservationRepository {
 
-    private static final String DUPLICATE_TIME_EXCEPTION = "해당 시간대는 이미 예약되어 있습니다.";
-    private static final String INVALID_ID_EXCEPTION = "해당 아이디는 존재하지 않습니다.";
+    private static final String DUPLICATE_TIME_EXCEPTION_MESSAGE = "해당 시간대는 이미 예약되어 있습니다.";
+    private static final String INVALID_ID_EXCEPTION_MESSAGE = "해당 아이디는 존재하지 않습니다.";
     private static final int EMPTY_ROW_COUNT = 0;
-
-    private final JdbcTemplate jdbcTemplate;
-
-    public ReservationRepository(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     private final RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("reservation_id"),
@@ -33,6 +27,11 @@ public class ReservationRepository {
                     LocalTime.parse(resultSet.getString("time_value"))
             )
     );
+    private final JdbcTemplate jdbcTemplate;
+
+    public ReservationRepository(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public Reservation readReservationById(final Long id) {
         String sql = """
@@ -75,7 +74,7 @@ public class ReservationRepository {
                         Map.of(
                                 "name", reservation.getName(),
                                 "date", reservation.getDate().toString(),
-                                "time_id", reservation.getTime().getId()
+                                "time_id", reservation.getTimeId()
                         )
                 );
         return readReservationById(id.longValue());
@@ -86,7 +85,7 @@ public class ReservationRepository {
         int rowCount = jdbcTemplate.update(sql, id);
 
         if (rowCount == EMPTY_ROW_COUNT) {
-            throw new IllegalArgumentException(INVALID_ID_EXCEPTION);
+            throw new IllegalArgumentException(INVALID_ID_EXCEPTION_MESSAGE);
         }
     }
 
@@ -94,12 +93,12 @@ public class ReservationRepository {
         List<Reservation> reservations = readAllReservations();
 
         boolean isDuplicate = reservations.stream()
-                .anyMatch(reserve -> reserve.getDate().equals(reservation.getDate()) &&
-                        reserve.getTime().getId().equals(reservation.getTime().getId())
+                .anyMatch(reserve -> reserve.isSameDate(reservation) &&
+                        reserve.isSameTimeId(reservation)
                 );
 
         if (isDuplicate) {
-            throw new IllegalArgumentException(DUPLICATE_TIME_EXCEPTION);
+            throw new IllegalArgumentException(DUPLICATE_TIME_EXCEPTION_MESSAGE);
         }
     }
 }

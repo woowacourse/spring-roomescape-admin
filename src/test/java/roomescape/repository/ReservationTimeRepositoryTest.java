@@ -18,14 +18,14 @@ import roomescape.dto.ReservationTimeRequest;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationTimeRepositoryTest {
 
+    private static final ReservationTimeRequest REQUEST_INPUT = new ReservationTimeRequest(
+            "18:00"
+    );
+    
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
-
-    private static final ReservationTimeRequest REQUEST_INPUT = new ReservationTimeRequest(
-            "18:00"
-    );
 
     @DisplayName("시간 관리 내역을 조회하는 기능을 구현한다")
     @Test

@@ -44,7 +44,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public void deleteReservation(Long id) {
+    public void deleteReservation(final Long id) {
         reservationRepository.deleteById(id);
     }
 }

@@ -10,10 +10,6 @@ public record ReservationResponse(
         LocalDate date,
         ReservationTimeResponse time) {
 
-    public static ReservationResponse of(final long id, final Reservation reservation, final ReservationTimeResponse timeResponse) {
-        return new ReservationResponse(id, reservation.getName(), reservation.getDate(), timeResponse);
-    }
-
     public static ReservationResponse of(final Reservation reservation, final ReservationTimeResponse timeResponse) {
         return new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(), timeResponse);
     }

@@ -12,10 +12,6 @@ public record ReservationTimeResponse(Long id, @JsonFormat(pattern = "HH:mm") Lo
         return new ReservationTimeResponse(time.getId(), time.getStartAt());
     }
 
-    public static ReservationTimeResponse of(final long id, final ReservationTime time) {
-        return new ReservationTimeResponse(id, time.getStartAt());
-    }
-
     public static List<ReservationTimeResponse> from(final List<ReservationTime> times) {
         return times.stream()
                 .map(reservation -> new ReservationTimeResponse(reservation.getId(), reservation.getStartAt()))

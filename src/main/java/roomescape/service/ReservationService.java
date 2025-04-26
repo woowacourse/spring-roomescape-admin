@@ -30,7 +30,7 @@ public class ReservationService {
         Reservation reservation = new Reservation(request.name(), request.date(), time);
         long id = reservationDao.save(reservation);
         reservation.setId(id);
-        return ReservationResponse.of(id, reservation, timeResponse);
+        return ReservationResponse.of(reservation, timeResponse);
     }
 
     public List<ReservationResponse> findAllReservations() {
@@ -56,7 +56,7 @@ public class ReservationService {
         ReservationTime reservationTime = request.toReservationTime();
         long id = reservationTimeDao.save(reservationTime);
         reservationTime.setId(id);
-        return ReservationTimeResponse.of(id, reservationTime);
+        return ReservationTimeResponse.of(reservationTime);
     }
 
     public List<ReservationTimeResponse> findAllReservationTimes() {

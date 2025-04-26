@@ -12,3 +12,7 @@ CREATE TABLE reservation (
     PRIMARY KEY (id),
     FOREIGN KEY (time_id) REFERENCES reservation_time (id)
 );
+
+CREATE INDEX idx_reservation_date_time_id ON reservation(date, time_id);
+
+CREATE INDEX idx_reservation_time_start_at ON reservation_time(start_at);

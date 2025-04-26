@@ -47,19 +47,19 @@ public class Reservation {
 
     private void validateName(String value) {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException("[ERROR] 이름을 입력해주세요.");
+            throw new IllegalArgumentException("이름을 입력해주세요.");
         }
     }
 
     private void validateDate(LocalDate date) {
         if (date == null) {
-            throw new IllegalArgumentException("[ERROR] 날짜를 입력해주세요.");
+            throw new IllegalArgumentException("날짜를 입력해주세요.");
         }
     }
 
     private void validateTime(ReservationTime time) {
         if (time == null) {
-            throw new IllegalArgumentException("[ERROR] 시간을 입력해주세요.");
+            throw new IllegalArgumentException("시간을 입력해주세요.");
         }
     }
 }

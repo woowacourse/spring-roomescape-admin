@@ -3,7 +3,7 @@ package roomescape.reservation.dao;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import roomescape.reservation.exception.ReservationTimeNotFoundException;
 import roomescape.reservation.model.ReservationTime;
 
@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Repository
 public class ReservationTimeDAO {
 
     private final JdbcTemplate jdbcTemplate;

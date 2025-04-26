@@ -27,7 +27,7 @@ class ReservationTest {
         // when & then
         assertThatThrownBy(() -> new Reservation(VALID_ID, invalidName, VALID_DATE, validTime))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 이름을 입력해주세요.");
+                .hasMessage("이름을 입력해주세요.");
     }
 
     @ParameterizedTest
@@ -40,7 +40,7 @@ class ReservationTest {
         // when & then
         assertThatThrownBy(() -> new Reservation(VALID_ID, VALID_NAME, invalidDate, validTime))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 날짜를 입력해주세요.");
+                .hasMessage("날짜를 입력해주세요.");
     }
 
     @ParameterizedTest
@@ -50,6 +50,6 @@ class ReservationTest {
         // when & then
         assertThatThrownBy(() -> new Reservation(VALID_ID, VALID_NAME, VALID_DATE, invalidTime))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 시간을 입력해주세요.");
+                .hasMessage("시간을 입력해주세요.");
     }
 }

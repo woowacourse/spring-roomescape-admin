@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.service.ReservationService;
 
 @RequestMapping("/reservations")
@@ -25,9 +25,9 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservation(@RequestBody @Valid ReservationRequest request) {
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody @Valid ReservationRequest request) {
         try {
-            Reservation saved = reservationService.createReservation(request);
+            ReservationResponse saved = reservationService.createReservation(request);
             return ResponseEntity.ok(saved);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
@@ -35,15 +35,15 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> getReservations() {
-        List<Reservation> reservations = reservationService.getAllReservations();
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        List<ReservationResponse> reservations = reservationService.getAllReservations();
         return ResponseEntity.ok(reservations);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Reservation> getReservation(@PathVariable Long id) {
+    public ResponseEntity<ReservationResponse> getReservation(@PathVariable Long id) {
         try {
-            Reservation reservation = reservationService.getReservation(id);
+            ReservationResponse reservation = reservationService.getReservation(id);
             return ResponseEntity.ok(reservation);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();

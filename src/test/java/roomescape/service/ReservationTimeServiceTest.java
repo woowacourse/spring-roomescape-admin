@@ -13,6 +13,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.ReservationTimeResponse;
 
 class ReservationTimeServiceTest {
 
@@ -36,20 +37,20 @@ class ReservationTimeServiceTest {
         ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(LocalTime.of(10, 0));
 
         // when
-        ReservationTime reservationTime = reservationTimeService.createReservationTime(reservationTimeRequest);
+        ReservationTimeResponse response = reservationTimeService.createReservationTime(reservationTimeRequest);
 
         // then
-        assertThat(reservationTime.getStartAt()).isEqualTo(LocalTime.of(10, 0));
+        assertThat(response.startAt()).isEqualTo(LocalTime.of(10, 0));
     }
 
     @Test
     @DisplayName("저장된 예약 시간을 모두 불러온다")
     void getReservationTimesTest() {
         // when
-        List<ReservationTime> reservationTimes = reservationTimeService.getReservationTimes();
+        List<ReservationTimeResponse> response = reservationTimeService.getReservationTimes();
 
         // then
-        assertThat(reservationTimes).hasSize(3);
+        assertThat(response).hasSize(3);
     }
 
     @Test

@@ -17,6 +17,7 @@ import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 
 public class ReservationServiceTest {
 
@@ -46,14 +47,14 @@ public class ReservationServiceTest {
         );
 
         // when
-        Reservation reservation = reservationService.createReservation(request);
+        ReservationResponse reservation = reservationService.createReservation(request);
 
         // then
         Optional<ReservationTime> time = reservationTimeDao.findById(1L);
         assertThat(time).isPresent();
-        assertThat(reservation.getTime().getStartAt()).isEqualTo(time.get().getStartAt());
-        assertThat(reservation.getName()).isEqualTo("검프");
-        assertThat(reservation.getDate()).isEqualTo(LocalDate.of(2025, 10, 1));
+        assertThat(reservation.time().startAt()).isEqualTo(time.get().getStartAt());
+        assertThat(reservation.name()).isEqualTo("검프");
+        assertThat(reservation.date()).isEqualTo(LocalDate.of(2025, 10, 1));
     }
 
     @Test
@@ -75,7 +76,7 @@ public class ReservationServiceTest {
     @DisplayName("모든 예약 내역 조회")
     void getAllReservationsTest() {
         // when
-        List<Reservation> allReservations = reservationService.getAllReservations();
+        List<ReservationResponse> allReservations = reservationService.getAllReservations();
 
         // then
         assertThat(allReservations).hasSize(3);
@@ -88,15 +89,15 @@ public class ReservationServiceTest {
         Long id = 1L;
 
         // when
-        Reservation reservation = reservationService.getReservation(id);
+        ReservationResponse reservation = reservationService.getReservation(id);
 
         // then
         assertThat(reservation).isNotNull();
         Optional<ReservationTime> time = reservationTimeDao.findById(1L);
         assertThat(time).isPresent();
-        assertThat(reservation.getTime().getStartAt()).isEqualTo(time.get().getStartAt());
-        assertThat(reservation.getName()).isEqualTo("브라운");
-        assertThat(reservation.getDate()).isEqualTo(LocalDate.of(2023, 3, 3));
+        assertThat(reservation.time().startAt()).isEqualTo(time.get().getStartAt());
+        assertThat(reservation.name()).isEqualTo("브라운");
+        assertThat(reservation.date()).isEqualTo(LocalDate.of(2023, 3, 3));
     }
 
     @Test

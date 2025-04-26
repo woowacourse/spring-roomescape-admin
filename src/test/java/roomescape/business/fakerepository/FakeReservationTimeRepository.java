@@ -1,10 +1,10 @@
-package roomescape.service.fakerepository;
+package roomescape.business.fakerepository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import roomescape.domain.ReservationTime;
-import roomescape.repositiory.GeneralRepository;
+import roomescape.business.ReservationTime;
+import roomescape.persistence.GeneralRepository;
 
 public class FakeReservationTimeRepository implements GeneralRepository<ReservationTime> {
 

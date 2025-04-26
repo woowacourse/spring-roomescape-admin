@@ -1,13 +1,13 @@
-package roomescape.service;
+package roomescape.business.service;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
-import roomescape.domain.dto.ReservationRequestDto;
-import roomescape.domain.dto.ReservationTimeRequestDto;
-import roomescape.repositiory.GeneralRepository;
+import roomescape.business.Reservation;
+import roomescape.business.ReservationTime;
+import roomescape.business.dto.ReservationRequestDto;
+import roomescape.business.dto.ReservationTimeRequestDto;
+import roomescape.persistence.GeneralRepository;
 
 @Service
 public class ReservationService {

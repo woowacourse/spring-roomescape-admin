@@ -1,4 +1,4 @@
-package roomescape.repositiory;
+package roomescape.persistence;
 
 import java.util.List;
 

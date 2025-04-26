@@ -1,4 +1,4 @@
-package roomescape.domain.dto;
+package roomescape.business.dto;
 
 import java.time.LocalDate;
 

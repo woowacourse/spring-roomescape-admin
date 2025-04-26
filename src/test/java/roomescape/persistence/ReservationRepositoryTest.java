@@ -1,4 +1,4 @@
-package roomescape.repositiory;
+package roomescape.persistence;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.business.Reservation;
+import roomescape.business.ReservationTime;
 
 @JdbcTest
 @Import({ReservationRepository.class, ReservationTimeRepository.class})

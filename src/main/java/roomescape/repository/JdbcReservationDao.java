@@ -3,6 +3,8 @@ package roomescape.repository;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
@@ -11,9 +13,7 @@ import roomescape.domain.ReservationTime;
 import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class JdbcReservationDao implements ReservationRepository {
@@ -57,12 +57,12 @@ public class JdbcReservationDao implements ReservationRepository {
     @Override
     public Reservation save(final Reservation reservation) {
         try {
-            Map<String, Object> params = new HashMap<>();
-            params.put("name", reservation.name());
-            params.put("date", reservation.date());
-            params.put("time_id", reservation.time().id());
+            SqlParameterSource parms = new MapSqlParameterSource()
+                    .addValue("name", reservation.name())
+                    .addValue("date", reservation.date())
+                    .addValue("time_id", reservation.time().id());
 
-            Long id = jdbcInsert.executeAndReturnKey(params).longValue();
+            Long id = jdbcInsert.executeAndReturnKey(parms).longValue();
             return findById(id);
         } catch (DuplicateKeyException e) {
             throw new IllegalArgumentException("[ERROR] 이미 등록된 예약 입니다.");

@@ -4,8 +4,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
@@ -35,7 +37,7 @@ public class ReservationService {
     public void deleteReservation(Long id) {
         boolean isDeleted = reservationRepository.delete(id);
         if (!isDeleted) {
-            throw new IllegalStateException("해당하는 id가 없습니다");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당하는 id가 없습니다");
         }
     }
 

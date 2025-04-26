@@ -1,7 +1,9 @@
 package roomescape.service;
 
 import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.model.ReservationTime;
@@ -24,7 +26,7 @@ public class ReservationTimeService {
     public void deleteTime(Long id) {
         boolean isDeleted = reservationTimeRepository.delete(id);
         if (!isDeleted) {
-            throw new IllegalStateException("해당하는 ID가 없습니다");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당하는 id가 없습니다");
         }
     }
 

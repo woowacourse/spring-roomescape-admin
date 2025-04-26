@@ -8,7 +8,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import roomescape.globalException.CustomException;
 import roomescape.reservation.fixture.ReservationFixture;
 import roomescape.reservationTime.domain.ReservationTime;
-import roomescape.reservationTime.domain.dto.ReservationTimeReqDto;
+import roomescape.reservationTime.fixture.ReservationTimeFixture;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,11 +28,11 @@ class ReservationTest {
             String dummyName = "kali";
             LocalDate dummyPastDate = LocalDate.of(2024, 4, 25);
             LocalTime dummyTime = LocalTime.of(11, 13);
-            ReservationTime reservationTime = ReservationTime.from(new ReservationTimeReqDto(dummyTime));
+            ReservationTime reservationTime = ReservationTimeFixture.create(dummyTime);
 
             // when & then
             Assertions.assertThatThrownBy(
-                    () -> ReservationFixture.createReservation(dummyName, dummyPastDate, reservationTime)
+                    () -> ReservationFixture.create(dummyName, dummyPastDate, reservationTime)
             ).isInstanceOf(CustomException.class);
         }
 
@@ -44,11 +44,11 @@ class ReservationTest {
             LocalDateTime dummyFuture = LocalDateTime.now().plusDays(1);
             LocalDate dummyPastDate = dummyFuture.toLocalDate();
             LocalTime dummyTime = dummyFuture.toLocalTime();
-            ReservationTime reservationTime = ReservationTime.from(new ReservationTimeReqDto(dummyTime));
+            ReservationTime reservationTime = ReservationTimeFixture.create(dummyTime);
 
             // when & then
             Assertions.assertThatCode(
-                    () -> ReservationFixture.createReservation(dummyName, dummyPastDate, reservationTime)
+                    () -> ReservationFixture.create(dummyName, dummyPastDate, reservationTime)
             ).doesNotThrowAnyException();
         }
 
@@ -56,14 +56,15 @@ class ReservationTest {
         @Test
         void isSameDateTime_false_bySameDateDifferenceTime() {
             // given
-            String dummyName = "kali";
-            LocalDateTime dateTime1 = LocalDateTime.now().plusDays(1);
-            ReservationTime duplicateReservationTime = ReservationTime.from(new ReservationTimeReqDto(dateTime1.toLocalTime()));
+            String dummyName1 = "kali";
+            LocalDateTime dummyDateTime1 = LocalDateTime.now().plusDays(1);
+            ReservationTime duplicateReservationTime = ReservationTimeFixture.create(dummyDateTime1.toLocalTime());
 
-            Reservation reservation1 = Reservation.of(dummyName, dateTime1.toLocalDate(), duplicateReservationTime);
+            Reservation reservation1 = ReservationFixture.create(dummyName1, dummyDateTime1.toLocalDate(), duplicateReservationTime);
 
-            LocalDateTime dateTime2 = LocalDateTime.now().plusDays(2);
-            Reservation reservation2 = Reservation.of("aa", dateTime2.toLocalDate(), duplicateReservationTime);
+            String dummyName2 = "pobi";
+            LocalDateTime dummyDateTime2 = LocalDateTime.now().plusDays(2);
+            Reservation reservation2 = ReservationFixture.create(dummyName2, dummyDateTime2.toLocalDate(), duplicateReservationTime);
 
             // when
             Assertions.assertThat(reservation1.isSameDateTime(reservation2)).isFalse();
@@ -78,7 +79,7 @@ class ReservationTest {
 
             LocalDateTime expected = LocalDateTime.of(localDate, localTime);
 
-            ReservationTime reservationTime = ReservationTime.from(new ReservationTimeReqDto(localTime));
+            ReservationTime reservationTime = ReservationTimeFixture.create(localTime);
 
             // when
             LocalDateTime actual = LocalDateTime.of(localDate, reservationTime.getStartAt());

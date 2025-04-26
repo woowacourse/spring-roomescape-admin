@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 public class ReservationFixture {
 
-    public static Reservation createReservation(String name, LocalDate date, ReservationTime reservationTime) {
+    public static Reservation create(String name, LocalDate date, ReservationTime reservationTime) {
         return Reservation.of(name, date, reservationTime);
     }
 

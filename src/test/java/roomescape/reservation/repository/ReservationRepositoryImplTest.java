@@ -11,7 +11,7 @@ import roomescape.reservation.database.ReservationRepositoryImpl;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.fixture.ReservationFixture;
 import roomescape.reservationTime.domain.ReservationTime;
-import roomescape.reservationTime.domain.dto.ReservationTimeReqDto;
+import roomescape.reservationTime.fixture.ReservationTimeFixture;
 import roomescape.reservationTime.repository.ReservationTimeRepositoryImpl;
 
 import java.time.LocalDate;
@@ -37,20 +37,20 @@ class ReservationRepositoryImplTest {
         LocalDate dummyDate = future1.toLocalDate();
         LocalTime dummyTime = LocalTime.of(10, 11);
 
-        ReservationTime reservationTime1 = ReservationTime.from(new ReservationTimeReqDto(dummyTime));
+        ReservationTime reservationTime1 = ReservationTimeFixture.create(dummyTime);
         ReservationTime savedReservationTime1 = reservationTimeRepository.add(reservationTime1);
 
-        Reservation reservation1 = ReservationFixture.createReservation(dummyName1, dummyDate, savedReservationTime1);
+        Reservation reservation1 = ReservationFixture.create(dummyName1, dummyDate, savedReservationTime1);
 
         String dummyName2 = "kali";
         LocalDateTime future2 = LocalDateTime.now().plusDays(2);
         LocalDate dummyDate2 = future2.toLocalDate();
         LocalTime dummyTime2 = LocalTime.of(10, 22);
 
-        ReservationTime reservationTime2 = ReservationTime.from(new ReservationTimeReqDto(dummyTime2));
+        ReservationTime reservationTime2 = ReservationTimeFixture.create(dummyTime2);
         ReservationTime savedReservationTime2 = reservationTimeRepository.add(reservationTime2);
 
-        Reservation reservation2 = ReservationFixture.createReservation(dummyName2, dummyDate2, savedReservationTime2);
+        Reservation reservation2 = ReservationFixture.create(dummyName2, dummyDate2, savedReservationTime2);
 
         List<Reservation> reservations = List.of(reservation1, reservation2);
 

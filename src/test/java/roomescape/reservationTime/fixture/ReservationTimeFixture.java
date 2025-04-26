@@ -7,12 +7,12 @@ import java.time.LocalTime;
 
 public class ReservationTimeFixture {
 
-    public static ReservationTimeReqDto createReservationTimeReqDto(LocalTime time) {
+    public static ReservationTimeReqDto createReqDto(LocalTime time) {
         return new ReservationTimeReqDto(time);
     }
 
-    public static ReservationTime createReservationTime(LocalTime time) {
-        ReservationTimeReqDto reqDto = createReservationTimeReqDto(time);
+    public static ReservationTime create(LocalTime time) {
+        ReservationTimeReqDto reqDto = createReqDto(time);
         return ReservationTime.from(reqDto);
     }
 }

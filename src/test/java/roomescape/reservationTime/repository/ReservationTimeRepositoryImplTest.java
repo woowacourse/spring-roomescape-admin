@@ -25,10 +25,10 @@ class ReservationTimeRepositoryImplTest {
     void findById_throwsExceptionByNonExistentId() {
         // given
         LocalTime dummyTime1 = LocalTime.of(12, 10, 13);
-        ReservationTime reservationTime1 = ReservationTimeFixture.createReservationTime(dummyTime1);
+        ReservationTime reservationTime1 = ReservationTimeFixture.create(dummyTime1);
 
         LocalTime dummyTime2 = LocalTime.of(14, 54, 32);
-        ReservationTime reservationTime2 = ReservationTimeFixture.createReservationTime(dummyTime2);
+        ReservationTime reservationTime2 = ReservationTimeFixture.create(dummyTime2);
 
         List<ReservationTime> reservationTimes = List.of(reservationTime1, reservationTime2);
 

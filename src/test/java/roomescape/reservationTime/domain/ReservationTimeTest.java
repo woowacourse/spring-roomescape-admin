@@ -19,8 +19,8 @@ class ReservationTimeTest {
         LocalTime inputStartAt = LocalTime.of(dummyHour, dummyMinute);
         LocalTime reservationStartAt = LocalTime.of(dummyHour, dummyMinute);
 
-        ReservationTime inputReservationTime = ReservationTimeFixture.createReservationTime(inputStartAt);
-        ReservationTime reservationTime = ReservationTimeFixture.createReservationTime(reservationStartAt);
+        ReservationTime inputReservationTime = ReservationTimeFixture.create(inputStartAt);
+        ReservationTime reservationTime = ReservationTimeFixture.create(reservationStartAt);
 
         // when
         boolean actual = reservationTime.isSameTime(inputReservationTime);

@@ -2,6 +2,7 @@ package roomescape.reservation.service;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import roomescape.reservation.ReservationMapper;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.dto.ReservationReqDto;
@@ -57,19 +58,11 @@ public class ReservationService {
 
     private Reservation convertReservation(ReservationReqDto dto) {
         ReservationTime reservationTime = reservationTimeRepository.findById(dto.timeId());
-        return Reservation.of(
-                dto.name(),
-                dto.date(),
-                reservationTime);
+        return ReservationMapper.toEntity(dto, reservationTime);
     }
 
     private ReservationResDto convertReservationResDto(Reservation reservation) {
         ReservationTimeResDto reservationTimeResDto = reservationTimeService.convertToReservationTimeResDto(reservation.getReservationTime());
-        return new ReservationResDto(
-                reservation.getId(),
-                reservation.getName(),
-                reservation.getDate(),
-                reservationTimeResDto
-        );
+        return ReservationMapper.toResDto(reservation, reservationTimeResDto);
     }
 }

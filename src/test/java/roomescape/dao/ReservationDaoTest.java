@@ -48,10 +48,10 @@ class ReservationDaoTest {
                 """;
         jdbcTemplate.execute(createTableSql);
         String insertSql = """
-                INSERT INTO RESERVATION_TIME(id, start_at) VALUES 
-                   ('1', '13:40'), 
-                   ('2', '14:40'),
-                   ('3', '15:40')
+                INSERT INTO RESERVATION_TIME(start_at) VALUES 
+                   ('13:40'), 
+                   ('14:40'),
+                   ('15:40')
                 ;
                 
                 INSERT INTO RESERVATION(name, date, time_id) VALUES

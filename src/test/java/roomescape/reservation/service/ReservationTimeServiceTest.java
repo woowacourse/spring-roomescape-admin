@@ -9,21 +9,20 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.common.exception.EntityNotFoundException;
 import roomescape.reservation.dto.ReservationTimeRequest;
 import roomescape.reservation.dto.ReservationTimeResponse;
 import roomescape.reservation.entity.ReservationTime;
-import roomescape.common.exception.EntityNotFoundException;
-import roomescape.reservation.repository.ReservationTimeRepository;
 import roomescape.reservation.repository.fake.FakeReservationTimeRepository;
 
 public class ReservationTimeServiceTest {
 
-    private ReservationTimeRepository reservationTimeRepository;
+    private final FakeReservationTimeRepository reservationTimeRepository = new FakeReservationTimeRepository();
     private ReservationTimeService reservationTimeService;
 
     @BeforeEach
     void setUp() {
-        reservationTimeRepository = new FakeReservationTimeRepository();
+        reservationTimeRepository.deleteAll();
         reservationTimeService = new ReservationTimeService(reservationTimeRepository);
     }
 
@@ -85,7 +84,7 @@ public class ReservationTimeServiceTest {
 
     @DisplayName("예약 시간이 존재하지 않으면 예외를 반환한다.")
     @Test
-    void test5(){
+    void test5() {
         Long id = 1L;
 
         assertThatThrownBy(() -> reservationTimeRepository.deleteById(id))

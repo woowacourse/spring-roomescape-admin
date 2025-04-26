@@ -19,6 +19,7 @@ import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.repository.ReservationTimeRepository;
+import roomescape.utils.JdbcTemplateUtils;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 class ReservationApiTest {
@@ -34,8 +35,7 @@ class ReservationApiTest {
 
     @BeforeEach
     void init() {
-        jdbcTemplate.update("TRUNCATE TABLE reservation");
-        jdbcTemplate.update("DELETE FROM reservation_time");
+        JdbcTemplateUtils.deleteAllTables(jdbcTemplate);
     }
 
     @DisplayName("어드민 페이지로 접근할 수 있다.")

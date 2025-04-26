@@ -17,8 +17,6 @@ import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.dto.ReservationTimeResponse;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
-import roomescape.reservation.repository.ReservationRepository;
-import roomescape.reservation.repository.ReservationTimeRepository;
 import roomescape.reservation.repository.fake.FakeReservationRepository;
 import roomescape.reservation.repository.fake.FakeReservationTimeRepository;
 
@@ -26,7 +24,9 @@ class ReservationServiceTest {
 
     private static final LocalTime time = LocalTime.of(20, 0);
 
-    private ReservationRepository reservationRepository;
+    private final FakeReservationRepository reservationRepository = new FakeReservationRepository();
+    private final FakeReservationTimeRepository reservationTimeRepository = new FakeReservationTimeRepository();
+
     private ReservationService reservationService;
     private ReservationTime reservationTime;
 
@@ -34,8 +34,9 @@ class ReservationServiceTest {
 
     @BeforeEach
     void setUp() {
-        reservationRepository = new FakeReservationRepository();
-        ReservationTimeRepository reservationTimeRepository = new FakeReservationTimeRepository();
+        reservationRepository.deleteAll();
+        reservationTimeRepository.deleteAll();
+
         reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
 
         ReservationTime saved = reservationTimeRepository.save(ReservationTime.withoutId(time));

@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.reservation.entity.Reservation;
 import roomescape.common.exception.EntityNotFoundException;
+import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.repository.ReservationRepository;
 
 public class FakeReservationRepository implements ReservationRepository {
@@ -57,5 +57,10 @@ public class FakeReservationRepository implements ReservationRepository {
         }
 
         reservations.remove(id);
+    }
+
+    public void deleteAll() {
+        reservations.clear();
+        id.set(INITIAL_ID);
     }
 }

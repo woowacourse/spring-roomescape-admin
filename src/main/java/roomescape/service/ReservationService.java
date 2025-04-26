@@ -18,14 +18,18 @@ public class ReservationService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public Reservation save(String name, String date, Long timeId) {
-        ReservationTime reservationTime = reservationTimeDao.findById(timeId);
-        Long reservationId = reservationDao.save(name, date, timeId);
-        return new Reservation(reservationId, name, date, reservationTime);
+    public Reservation save(Reservation reservation) {
+        ReservationTime reservationTime = reservationTimeDao.findById(reservation.getTime().getId());
+        Long reservationId = reservationDao.save(reservation);
+        return new Reservation(reservationId, reservation.getName(), reservation.getDate(), reservationTime);
     }
 
     public List<Reservation> findAll() {
         return reservationDao.findAll();
+    }
+
+    public ReservationTime findReservationTime(Long timeId) {
+        return reservationTimeDao.findById(timeId);
     }
 
     public void delete(Long reservationId) {

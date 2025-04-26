@@ -79,12 +79,6 @@ public class Reservation {
         }
     }
 
-    public boolean isSameDateAndTime(final LocalDate date, final Long timeId) {
-        boolean isSameDate = this.date.equals(date);
-        boolean isSameTime = this.time.isSameId(timeId);
-        return isSameDate && isSameTime;
-    }
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;

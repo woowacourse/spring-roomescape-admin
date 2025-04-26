@@ -42,7 +42,13 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     @Override
     public Optional<ReservationTime> findById(final Long id) {
-        String sql = "SELECT * FROM reservation_times WHERE id = ?";
+        String sql = """
+                SELECT
+                    id,
+                    start_at
+                FROM reservation_times 
+                WHERE id = ?
+                """;
         List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, (rs, rowNum) ->
                         new ReservationTime(rs.getLong("id"),
                                 rs.getTime("start_at").toLocalTime()),
@@ -57,7 +63,12 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     @Override
     public List<ReservationTime> findAll() {
-        String sql = "SELECT * FROM reservation_times";
+        String sql = """
+                SELECT
+                    id,
+                    start_at
+                FROM reservation_times
+                """;
         return jdbcTemplate.query(sql, (resultSet, rowCount) ->
                 new ReservationTime(resultSet.getLong("id"),
                         resultSet.getTime("start_at").toLocalTime())

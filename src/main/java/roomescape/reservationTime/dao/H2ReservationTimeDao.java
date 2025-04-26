@@ -18,7 +18,7 @@ import roomescape.reservationTime.ReservationTime;
 public class H2ReservationTimeDao implements Dao<ReservationTime> {
     private final JdbcTemplate jdbcTemplate;
 
-    public H2ReservationTimeDao(JdbcTemplate jdbcTemplate, ConnectionDetails connectionDetails) {
+    public H2ReservationTimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

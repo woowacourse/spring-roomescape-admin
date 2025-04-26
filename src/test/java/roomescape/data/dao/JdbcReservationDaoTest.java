@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -85,6 +86,23 @@ class JdbcReservationDaoTest {
                 "hotteok",
                 "2025-01-01",
                 TimeEntity.from(timeFixture))
+        );
+    }
+
+    @DisplayName("데이터베이스에서 모든 방탈출 예약을 조회한다.")
+    @Test
+    void findAll() {
+        // given
+        jdbcTemplate.update("INSERT INTO RESERVATION (name, date, time_id) values ('hotteok', '2025-01-01', 1)");
+        jdbcTemplate.update("INSERT INTO RESERVATION (name, date, time_id) values ('hotteok', '2025-01-02', 1)");
+
+        // when
+        final List<Reservation> actual = reservationDao.findAll();
+
+        // then
+        assertThat(actual).containsExactly(
+                new Reservation(1L, "hotteok", LocalDate.of(2025, 1, 1), timeFixture),
+                new Reservation(2L, "hotteok", LocalDate.of(2025, 1, 2), timeFixture)
         );
     }
 }

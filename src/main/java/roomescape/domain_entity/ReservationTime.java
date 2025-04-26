@@ -9,12 +9,12 @@ public class ReservationTime {
     public ReservationTime() {
     }
 
-    public ReservationTime(Id id) {
-        this.id = id;
+    public ReservationTime(LocalTime startAt) {
+        this(Id.empty(), startAt);
     }
 
-    public ReservationTime(LocalTime startAt) {
-        this.startAt = startAt;
+    public ReservationTime(Id id) {
+        this(id, null);
     }
 
     public ReservationTime(Id id, LocalTime startAt) {

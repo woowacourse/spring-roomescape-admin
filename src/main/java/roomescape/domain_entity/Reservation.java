@@ -12,10 +12,7 @@ public class Reservation {
     }
 
     public Reservation(String name, LocalDate date, ReservationTime time) {
-        this.id = Id.empty();
-        this.name = name;
-        this.date = date;
-        this.time = time;
+        this(Id.empty(), name, date, time);
     }
 
     public Reservation(Id id, String name, LocalDate date, ReservationTime time) {

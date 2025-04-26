@@ -2,8 +2,8 @@ package roomescape.data.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -67,5 +67,22 @@ class JdbcTimeDaoTest {
         // then
         assertThat(actual).isPresent();
         assertThat(actual.get()).isEqualTo(new Time(1L, LocalTime.of(10, 10)));
+    }
+
+    @DisplayName("데이터베이스에서 모든 방탈출 시간을 찾는다.")
+    @Test
+    void findAll() {
+        // given
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES ('10:10')");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES ('11:10')");
+
+        // when
+        final List<Time> actual = timeDao.findAll();
+
+        // then
+        assertThat(actual).containsExactly(
+                new Time(1L, LocalTime.of(10, 10)),
+                new Time(2L, LocalTime.of(11, 10))
+        );
     }
 }

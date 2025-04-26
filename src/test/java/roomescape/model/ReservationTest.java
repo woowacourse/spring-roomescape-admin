@@ -12,72 +12,58 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ReservationTest {
 
+    @Test
+    void 지정한_id를_가진_예약_엔티티를_생성한다() {
+        // Given
+        String name = "프리";
+        LocalDate date = LocalDate.of(2025, 4, 24);
+        LocalTime time = LocalTime.of(10, 0);
+        ReservationTime reservationTime = new ReservationTime(EntityId.generate(1L), time);
+
+        // When
+        Reservation reservation = new Reservation(EntityId.generate(1L), name, date, reservationTime);
+
+        // Then
+        assertThat(reservation.getId()).isEqualTo(1L);
+        assertThat(reservation.getName()).isEqualTo(name);
+        assertThat(reservation.getDate()).isEqualTo(date);
+        assertThat(reservation.getTime()).isEqualTo(reservationTime);
+    }
+
     @ValueSource(strings = {"", "   "})
     @ParameterizedTest
     void 예약자_이름은_공백일_수_없다(String name) {
         // Given
-        LocalTime time = LocalTime.now();
-        ReservationTime reservationTime = new ReservationTime(time);
+        LocalTime time = LocalTime.of(10, 0);
+        ReservationTime reservationTime = new ReservationTime(EntityId.generateUnassigned(), time);
 
         // When
         // Then
-        assertThatThrownBy(() -> new Reservation(name, LocalDate.now(), reservationTime))
+        assertThatThrownBy(() -> new Reservation(EntityId.generateUnassigned(), name, LocalDate.of(2025, 4, 24), reservationTime))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("예약자 이름은 빈 칸일 수 없습니다.");
     }
 
     @Test
-    void 예약자_이름과_예약_날짜_및_시간은_null일_수_없다() {
+    void id와_예약자_이름과_예약_날짜_및_시간은_null일_수_없다() {
         // Given
         String name = "프리";
-        LocalDate date = LocalDate.now();
-        LocalTime time = LocalTime.now();
-        ReservationTime reservationTime = new ReservationTime(time);
+        LocalDate date = LocalDate.of(2025, 4, 24);
+        LocalTime time = LocalTime.of(10, 0);
+        ReservationTime reservationTime = new ReservationTime(EntityId.generateUnassigned(), time);
         // When
         // Then
-        assertThatThrownBy(() -> new Reservation(name, date, null))
+        assertThatThrownBy(() -> new Reservation(null, name, date, reservationTime))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("예약자 이름과 예약 날짜, 시간을 올바르게 입력해 주세요.");
-        assertThatThrownBy(() -> new Reservation(name, null, reservationTime))
+                .hasMessage("id와 예약자 이름, 예약 날짜, 시간을 올바르게 입력해 주세요.");
+        assertThatThrownBy(() -> new Reservation(EntityId.generateUnassigned(), name, date, null))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("예약자 이름과 예약 날짜, 시간을 올바르게 입력해 주세요.");
-        assertThatThrownBy(() -> new Reservation(null, date, reservationTime))
+                .hasMessage("id와 예약자 이름, 예약 날짜, 시간을 올바르게 입력해 주세요.");
+        assertThatThrownBy(() -> new Reservation(EntityId.generateUnassigned(), name, null, reservationTime))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("예약자 이름과 예약 날짜, 시간을 올바르게 입력해 주세요.");
-    }
-
-    @Test
-    void 지정한_id를_가진_예약_엔티티를_생성한다() {
-        // Given
-        String name = "프리";
-        LocalDate date = LocalDate.now();
-        LocalTime time = LocalTime.now();
-        ReservationTime reservationTime = new ReservationTime(time);
-        Reservation reservation = new Reservation(name, date, reservationTime);
-
-        // When
-        Reservation reservationEntity = reservation.toEntity(1L);
-
-        // Then
-        assertThat(reservationEntity.getId()).isEqualTo(1L);
-        assertThat(reservationEntity.getName()).isEqualTo(name);
-        assertThat(reservationEntity.getDate()).isEqualTo(date);
-        assertThat(reservationEntity.getTime()).isEqualTo(reservationTime);
-    }
-
-    @Test
-    void 이미_엔티티화_되어있는_객체는_또다시_엔티티화_시킬_수_없다() {
-        // Given
-        String name = "프리";
-        LocalDate date = LocalDate.now();
-        LocalTime time = LocalTime.now();
-        ReservationTime reservationTime = new ReservationTime(time);
-        Reservation reservation = new Reservation(name, date, reservationTime);
-        Reservation reservationEntity = reservation.toEntity(1L);
-
-        // When & Then
-        assertThatThrownBy(() -> reservationEntity.toEntity(2L))
+                .hasMessage("id와 예약자 이름, 예약 날짜, 시간을 올바르게 입력해 주세요.");
+        assertThatThrownBy(() -> new Reservation(EntityId.generateUnassigned(), null, date, reservationTime))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이미 Entity화 되어있는 객체입니다.");
+                .hasMessage("id와 예약자 이름, 예약 날짜, 시간을 올바르게 입력해 주세요.");
     }
 }

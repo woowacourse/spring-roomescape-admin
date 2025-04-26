@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import roomescape.model.EntityId;
 import roomescape.model.Reservation;
 import roomescape.repository.ReservationRepository;
 
@@ -20,7 +21,8 @@ public class FakeReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation insert(Reservation reservation) {
-        Reservation reservationEntity = reservation.toEntity(index.getAndIncrement());
+        Reservation reservationEntity = new Reservation(
+                EntityId.generate(index.getAndIncrement()), reservation.getName(), reservation.getDate(), reservation.getTime());
         reservations.add(reservationEntity);
         return reservationEntity;
     }

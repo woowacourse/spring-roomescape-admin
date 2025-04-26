@@ -4,6 +4,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import roomescape.model.EntityId;
 import roomescape.model.ReservationTime;
 
 import java.time.LocalTime;
@@ -27,12 +28,9 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     @Override
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
-            Long id = resultSet.getLong("id");
-            LocalTime startAt = resultSet.getObject("start_at", LocalTime.class);
-            ReservationTime reservationTime = new ReservationTime(startAt);
-            return reservationTime.toEntity(id);
-        });
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(
+                EntityId.generate(resultSet.getLong("id")),
+                resultSet.getObject("start_at", LocalTime.class)));
     }
 
     @Override
@@ -46,7 +44,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         Map<String, Object> params = new HashMap<>();
         params.put("start_at", reservationTime.getStartAt());
         Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
-        return reservationTime.toEntity(id);
+        return new ReservationTime(EntityId.generate(id), reservationTime.getStartAt());
     }
 
     @Override
@@ -60,12 +58,9 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
         try {
             return jdbcTemplate.queryForObject(sql,
-                    (resultSet, rowNum) -> {
-                        Long timeId = resultSet.getLong("id");
-                        LocalTime startAt = resultSet.getObject("start_at", LocalTime.class);
-                        ReservationTime reservationTime = new ReservationTime(startAt);
-                        return reservationTime.toEntity(timeId);
-                    },
+                    (resultSet, rowNum) -> new ReservationTime(
+                            EntityId.generate(resultSet.getLong("id")),
+                            resultSet.getObject("start_at", LocalTime.class)),
                     id);
         } catch (EmptyResultDataAccessException exception) {
             throw new IllegalArgumentException("존재하지 않는 예약시간의 id입니다.");

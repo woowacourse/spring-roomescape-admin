@@ -10,39 +10,28 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class ReservationTimeTest {
 
     @Test
-    void 시간은_null일_수_없다() {
-        // Given
-        // When
-        // Then
-        assertThatThrownBy(() -> new ReservationTime(null))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("시간을 올바르게 입력해 주세요.");
-    }
-
-    @Test
     void 지정한_id를_가진_예약시간_엔티티를_생성한다() {
         // Given
-        LocalTime time = LocalTime.now();
-        ReservationTime reservationTime = new ReservationTime(time);
+        LocalTime time = LocalTime.of(10, 0);
 
         // When
-        ReservationTime reservationTimeEntity = reservationTime.toEntity(1L);
+        ReservationTime reservationTime = new ReservationTime(EntityId.generate(1L), time);
 
         // Then
-        assertThat(reservationTimeEntity.getId()).isEqualTo(1L);
-        assertThat(reservationTimeEntity.getStartAt()).isEqualTo(time);
+        assertThat(reservationTime.getId()).isEqualTo(1L);
+        assertThat(reservationTime.getStartAt()).isEqualTo(time);
     }
 
     @Test
-    void 이미_엔티티화_되어있는_객체는_또다시_엔티티화_시킬_수_없다() {
+    void id와_시간은_null일_수_없다() {
         // Given
-        LocalTime time = LocalTime.now();
-        ReservationTime reservationTime = new ReservationTime(time);
-        ReservationTime reservationTimeEntity = reservationTime.toEntity(1L);
-
-        // When & Then
-        assertThatThrownBy(() -> reservationTimeEntity.toEntity(2L))
+        // When
+        // Then
+        assertThatThrownBy(() -> new ReservationTime(null, LocalTime.of(10, 0)))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이미 Entity화 되어있는 객체입니다.");
+                .hasMessage("id를 올바르게 입력해 주세요.");
+        assertThatThrownBy(() -> new ReservationTime(EntityId.generateUnassigned(), null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("시간을 올바르게 입력해 주세요.");
     }
 }

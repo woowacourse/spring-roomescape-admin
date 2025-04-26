@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ReservationTimeCreateRequest;
+import roomescape.model.EntityId;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationRepository;
@@ -45,7 +46,7 @@ public class ReservationService {
 
     private Reservation addReservationAndReturn(String name, LocalDate date, Long timeId) {
         ReservationTime reservationTime = reservationTimeRepository.findById(timeId);
-        Reservation reservation = new Reservation(name, date, reservationTime);
+        Reservation reservation = new Reservation(EntityId.generateUnassigned(), name, date, reservationTime);
         return reservationRepository.insert(reservation);
     }
 
@@ -73,7 +74,7 @@ public class ReservationService {
     }
 
     private ReservationTime addReservationTimeAndReturn(LocalTime startAt) {
-        ReservationTime reservationTime = new ReservationTime(startAt);
+        ReservationTime reservationTime = new ReservationTime(EntityId.generateUnassigned(), startAt);
         return reservationTimeRepository.insert(reservationTime);
     }
 

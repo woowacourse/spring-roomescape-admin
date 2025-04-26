@@ -7,6 +7,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
+import roomescape.model.EntityId;
 import roomescape.model.ReservationTime;
 
 import javax.sql.DataSource;
@@ -38,7 +39,7 @@ public class JdbcReservationTimeRepositoryTest {
     void 예약시간_객체를_성공적으로_저장한_후_반환한다() {
         // Given
         LocalTime time = LocalTime.of(10, 0);
-        ReservationTime reservationTime = new ReservationTime(time);
+        ReservationTime reservationTime = new ReservationTime(EntityId.generateUnassigned(), time);
 
         // When
         ReservationTime reservationTimeEntity = jdbcReservationTimeRepository.insert(reservationTime);
@@ -52,10 +53,10 @@ public class JdbcReservationTimeRepositoryTest {
     void 저장된_예약시간_객체들을_모두_가져온다() {
         // Given
         LocalTime time1 = LocalTime.of(10, 0);
-        ReservationTime reservationTime1 = new ReservationTime(time1);
+        ReservationTime reservationTime1 = new ReservationTime(EntityId.generateUnassigned(), time1);
         ReservationTime reservationTime1Entity = jdbcReservationTimeRepository.insert(reservationTime1);
         LocalTime time2 = LocalTime.of(11, 0);
-        ReservationTime reservationTime2 = new ReservationTime(time2);
+        ReservationTime reservationTime2 = new ReservationTime(EntityId.generateUnassigned(), time2);
         ReservationTime reservationTime2Entity = jdbcReservationTimeRepository.insert(reservationTime2);
 
         // When & Then
@@ -75,10 +76,10 @@ public class JdbcReservationTimeRepositoryTest {
     void 주어진_id를_가진_예약시간을_반환한다() {
         // Given
         LocalTime time1 = LocalTime.of(10, 0);
-        ReservationTime reservationTime1 = new ReservationTime(time1);
+        ReservationTime reservationTime1 = new ReservationTime(EntityId.generateUnassigned(), time1);
         ReservationTime reservationTime1Entity = jdbcReservationTimeRepository.insert(reservationTime1);
         LocalTime time2 = LocalTime.of(11, 0);
-        ReservationTime reservationTime2 = new ReservationTime(time2);
+        ReservationTime reservationTime2 = new ReservationTime(EntityId.generateUnassigned(), time2);
         ReservationTime reservationTime2Entity = jdbcReservationTimeRepository.insert(reservationTime2);
 
         // When & Then
@@ -100,10 +101,10 @@ public class JdbcReservationTimeRepositoryTest {
     void 주어진_id의_예약시간을_삭제한다() {
         // Given
         LocalTime time1 = LocalTime.of(10, 0);
-        ReservationTime reservationTime1 = new ReservationTime(time1);
+        ReservationTime reservationTime1 = new ReservationTime(EntityId.generateUnassigned(), time1);
         jdbcReservationTimeRepository.insert(reservationTime1);
         LocalTime time2 = LocalTime.of(11, 0);
-        ReservationTime reservationTime2 = new ReservationTime(time2);
+        ReservationTime reservationTime2 = new ReservationTime(EntityId.generateUnassigned(), time2);
         ReservationTime reservationTime2Entity = jdbcReservationTimeRepository.insert(reservationTime2);
         Long deleteId = 1L;
 
@@ -119,7 +120,7 @@ public class JdbcReservationTimeRepositoryTest {
     void 주어진_시작시간을_가진_예약시간_객체가_있는지_검사한다() {
         // Given
         LocalTime time = LocalTime.of(10, 0);
-        ReservationTime reservationTime = new ReservationTime(time);
+        ReservationTime reservationTime = new ReservationTime(EntityId.generateUnassigned(), time);
         jdbcReservationTimeRepository.insert(reservationTime);
 
         // When & Then

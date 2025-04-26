@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.model.EntityId;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 
@@ -30,14 +31,14 @@ public class JdbcReservationRepository implements ReservationRepository {
     public List<Reservation> findAll() {
         String sql = "SELECT * FROM reservation INNER JOIN reservation_time ON reservation.time_id = reservation_time.id";
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
-            Long id = resultSet.getLong("id");
-            String name = resultSet.getString("name");
-            LocalDate date = resultSet.getObject("date", LocalDate.class);
-            Long timeId = resultSet.getLong("time_id");
-            LocalTime startAt = resultSet.getObject("start_at", LocalTime.class);
-            ReservationTime time = new ReservationTime(startAt);
-            Reservation reservation = new Reservation(name, date, time.toEntity(timeId));
-            return reservation.toEntity(id);
+            ReservationTime time = new ReservationTime(
+                    EntityId.generate(resultSet.getLong("time_id")),
+                    resultSet.getObject("start_at", LocalTime.class));
+            return new Reservation(
+                    EntityId.generate(resultSet.getLong("id")),
+                    resultSet.getString("name"),
+                    resultSet.getObject("date", LocalDate.class),
+                    time);
         });
     }
 
@@ -57,7 +58,9 @@ public class JdbcReservationRepository implements ReservationRepository {
             preparedStatement.setObject(3, reservation.getTime().getId());
             return preparedStatement;
         }, keyHolder);
-        return reservation.toEntity(keyHolder.getKeyAs(Long.class));
+        return new Reservation(
+                EntityId.generate(keyHolder.getKeyAs(Long.class)),
+                reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     @Override

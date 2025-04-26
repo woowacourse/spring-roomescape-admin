@@ -36,27 +36,34 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Reservation> createReservation(@RequestBody @Valid ReservationRequest request) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId())
-                .orElseThrow(() -> new IllegalArgumentException("예약 시간이 존재하지 않습니다."));
-        Reservation reservation = new Reservation(null, request.name(), request.date(), reservationTime);
-        Reservation saved = reservationRepository.save(reservation);
-        return ResponseEntity.ok(saved);
+        try {
+            ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId())
+                    .orElseThrow(() -> new IllegalArgumentException("예약 시간이 존재하지 않습니다."));
+            Reservation reservation = new Reservation(null, request.name(), request.date(), reservationTime);
+            Reservation saved = reservationRepository.save(reservation);
+            return ResponseEntity.ok(saved);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        int deleted = reservationRepository.delete(id);
-        if (deleted == 0) {
+        try {
+            reservationRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("예약이 존재하지 않습니다."));
+            reservationRepository.delete(id);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Reservation> getReservation(@PathVariable Long id) {
         try {
             Reservation reservation = reservationRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("값을 찾을 수 없습니다."));
+                    .orElseThrow(() -> new IllegalArgumentException("예약이 존재하지 않습니다."));
             return ResponseEntity.ok(reservation);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();

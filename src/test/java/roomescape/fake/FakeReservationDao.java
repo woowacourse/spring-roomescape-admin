@@ -36,7 +36,9 @@ public class FakeReservationDao implements ReservationDao {
     @Override
     public List<Reservation> findAll() {
         return reservations.stream()
+                .filter(reservationEntity -> reservationEntity.id() != null)
                 .filter(reservationEntity -> times.stream()
+                        .filter(timeEntity -> timeEntity.id() != null)
                         .anyMatch(timeEntity -> Objects.equals(reservationEntity.timeEntity().id(), timeEntity.id()))
                 )
                 .map(ReservationEntity::toDomain)

@@ -5,7 +5,9 @@ import java.sql.Statement;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -54,13 +56,15 @@ public class ReservationTimeDao {
         return jdbcTemplate.update(deleteByIdSql, id);
     }
 
-    public ReservationTime findById(final Long id) {
+    public Optional<ReservationTime> findById(final Long id) {
         String findByIdSql = """
                 SELECT id, start_at
                 FROM reservation_time
                 WHERE id = ?
                 """;
-        return jdbcTemplate.queryForObject(findByIdSql, getReservationTimeRowMapper(), id);
+        return DataAccessUtils.optionalResult(
+                jdbcTemplate.query(findByIdSql, getReservationTimeRowMapper(), id)
+        );
     }
 
     private RowMapper<ReservationTime> getReservationTimeRowMapper() {

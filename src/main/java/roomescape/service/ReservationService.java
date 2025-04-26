@@ -9,6 +9,7 @@ import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 import roomescape.model.exception.ReservationNotFoundException;
+import roomescape.model.exception.ReservationTimeNotFoundException;
 import roomescape.repository.ReservationDao;
 import roomescape.repository.ReservationTimeDao;
 
@@ -24,11 +25,13 @@ public class ReservationService {
     }
 
     public ReservationResponse createReservation(final ReservationCreateRequest request) {
-        ReservationTime reservationTime = reservationTimeDao.findById(request.timeId());
+        ReservationTime reservationTime = reservationTimeDao.findById(request.timeId())
+                .orElseThrow(() -> new ReservationTimeNotFoundException("존재하지 않는 예약 시간 번호입니다."));
 
         Reservation reservation = reservationDao.insert(
                 new Reservation(null, request.name(), request.date(), reservationTime)
         );
+
         return new ReservationResponse(reservation);
     }
 

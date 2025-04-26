@@ -29,7 +29,9 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     @Override
     public List<ReservationTime> findAll() {
-        String sql = "SELECT id, start_at FROM reservation_time";
+        String sql = """
+                SELECT id, start_at
+                FROM reservation_time""";
         RowMapper<ReservationTimeEntity> rowMapper = (rs, rowNum) -> new ReservationTimeEntity(
                 rs.getLong("id"),
                 rs.getString("start_at")
@@ -42,7 +44,10 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     @Override
     public Optional<ReservationTime> findById(long id) {
-        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+        String sql = """
+                SELECT id, start_at
+                FROM reservation_time
+                WHERE id = ?""";
         try {
             RowMapper<ReservationTimeEntity> rowMapper = (rs, rowNum) -> new ReservationTimeEntity(
                     rs.getLong("id"),
@@ -68,13 +73,19 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     @Override
     public void removeById(long id) {
-        String sql = "DELETE FROM reservation_time WHERE id = ?";
+        String sql = """
+                DELETE FROM reservation_time
+                WHERE id = ?""";
         jdbcTemplate.update(sql, id);
     }
 
     @Override
     public boolean existsByStartTime(LocalTime startAt) {
-        String sql = "SELECT EXISTS (SELECT 1 FROM reservation_time WHERE start_at = ?)";
+        String sql = """
+                SELECT EXISTS (
+                    SELECT 1
+                    FROM reservation_time
+                    WHERE start_at = ?)""";
         String formattedStartAt = ReservationDateTimeFormatter.formatTime(startAt);
         Boolean exists = jdbcTemplate.queryForObject(sql, Boolean.class, formattedStartAt);
         return Boolean.TRUE.equals(exists);

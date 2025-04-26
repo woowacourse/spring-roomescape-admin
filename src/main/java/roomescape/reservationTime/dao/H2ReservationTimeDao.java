@@ -41,7 +41,7 @@ public class H2ReservationTimeDao implements Dao<ReservationTime> {
     public Optional<ReservationTime> findById(Long id) {
         String sql = "select id, start_at from reservation_time where id = ?";
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+            return Optional.of(jdbcTemplate.queryForObject(sql,
                     (resultSet, rowNum) -> createReservationTime(resultSet), id));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();

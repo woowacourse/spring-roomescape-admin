@@ -1,7 +1,5 @@
 package roomescape.persist.entity;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
@@ -22,10 +20,7 @@ public final class ReservationEntity {
     }
 
     private ReservationEntity(String name, String date, ReservationTimeEntity timeEntity) {
-        this.id = null;
-        this.name = name;
-        this.date = date;
-        this.timeEntity = timeEntity;
+        this(null, name, date, timeEntity);
     }
 
     public ReservationEntity copyWithId(Long id) {

@@ -15,8 +15,7 @@ public final class ReservationTimeEntity {
     }
 
     private ReservationTimeEntity(String startAt) {
-        this.id = null;
-        this.startAt = startAt;
+        this(null, startAt);
     }
 
     public ReservationTimeEntity copyWithId(Long id) {

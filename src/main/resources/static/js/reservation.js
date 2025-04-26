@@ -1,6 +1,6 @@
 let isEditing = false;
 const RESERVATION_API_ENDPOINT = '/reservations';
-const TIME_API_ENDPOINT = '/times';
+const TIME_API_ENDPOINT = '/admin/times';
 const timesOptions = [];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -154,7 +154,7 @@ function requestCreate(reservation) {
 
   return fetch(RESERVATION_API_ENDPOINT, requestOptions)
       .then(response => {
-        if (response.status === 200) return response.json();
+        if (response.status === 201) return response.json();
         throw new Error('Create failed');
       });
 }
@@ -166,7 +166,7 @@ function requestDelete(id) {
 
   return fetch(`${RESERVATION_API_ENDPOINT}/${id}`, requestOptions)
       .then(response => {
-        if (response.status !== 200) throw new Error('Delete failed');
+        if (response.status !== 204) throw new Error('Delete failed');
       });
 }
 

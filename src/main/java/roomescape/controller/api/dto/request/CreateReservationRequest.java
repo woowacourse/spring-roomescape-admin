@@ -1,16 +1,14 @@
-package roomescape.controller.dto.request;
-
-import roomescape.domain.Reservation;
+package roomescape.controller.api.dto.request;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import roomescape.service.dto.command.CreateReservationCommand;
 
-public record ReservationCreateRequest(
+public record CreateReservationRequest(
         String name,
         LocalDate date,
-        LocalTime time
+        Long timeId
 ) {
-    public ReservationCreateRequest {
+    public CreateReservationRequest {
         if (name == null) {
             throw new IllegalArgumentException("이름은 필수값입니다.");
         }
@@ -20,12 +18,12 @@ public record ReservationCreateRequest(
         if (date == null) {
             throw new IllegalArgumentException("날짜는 필수값입니다.");
         }
-        if (time == null) {
-            throw new IllegalArgumentException("시간은 필수값입니다.");
+        if (timeId == null) {
+            throw new IllegalArgumentException("timeId는 필수값입니다.");
         }
     }
 
-    public Reservation toDomain() {
-        return new Reservation(name, date, time);
+    public CreateReservationCommand toCommand() {
+        return new CreateReservationCommand(name, date, timeId);
     }
 }

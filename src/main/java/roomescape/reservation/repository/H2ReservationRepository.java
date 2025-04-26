@@ -80,11 +80,11 @@ public class H2ReservationRepository implements ReservationRepository {
     public List<Reservation> findAll() {
         String sql = """
                 SELECT 
-                    r.id AS id, 
-                    r.name AS name, 
-                    date, 
-                    time_id, 
-                    start_at 
+                    r.id AS id,
+                    r.name AS name,
+                    r.date AS date,
+                    t.id AS time_id,
+                    t.start_at AS start_at
                 FROM reservations AS r
                 INNER JOIN reservation_times AS t
                 ON r.time_id = t.id

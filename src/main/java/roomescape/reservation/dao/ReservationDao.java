@@ -59,7 +59,7 @@ public class ReservationDao implements Dao<Reservation> {
                         resultSet.getDate("date").toLocalDate(),
                         new ReservationTime(
                                 resultSet.getLong("time_id"),
-                                resultSet.getTime("start_at").toLocalTime()
+                                resultSet.getString("start_at")
                         )
                 )
         );

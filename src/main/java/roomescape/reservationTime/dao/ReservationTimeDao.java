@@ -62,7 +62,7 @@ public class ReservationTimeDao implements Dao<ReservationTime> {
     private ReservationTime createReservationTime(ResultSet resultSet) throws SQLException {
         return new ReservationTime(
                 resultSet.getLong("id"),
-                resultSet.getTime("start_at").toLocalTime()
+                resultSet.getString("start_at")
         );
     }
 }

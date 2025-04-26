@@ -1,9 +1,9 @@
 package roomescape.reservation.service;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.common.Dao;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.dto.AllReservationResponse;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservationTime.domain.ReservationTime;
@@ -28,8 +28,10 @@ public class ReservationService {
         return ReservationResponse.from(savedReservation);
     }
 
-    public AllReservationResponse findAll() {
-        return AllReservationResponse.from(reservationDao.findAll());
+    public List<ReservationResponse> findAll() {
+        return reservationDao.findAll().stream()
+                .map(ReservationResponse::from)
+                .toList();
     }
 
     public void deleteById(Long id) {

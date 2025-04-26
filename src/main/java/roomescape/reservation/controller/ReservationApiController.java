@@ -1,5 +1,6 @@
 package roomescape.reservation.controller;
 
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
-import roomescape.reservation.dto.AllReservationResponse;
 import roomescape.reservation.service.ReservationService;
 
 @RestController
@@ -28,7 +28,7 @@ public class ReservationApiController {
     }
 
     @GetMapping
-    public ResponseEntity<AllReservationResponse> findAll() {
+    public ResponseEntity<List<ReservationResponse>> findAll() {
         return ResponseEntity.ok(reservationService.findAll());
     }
 

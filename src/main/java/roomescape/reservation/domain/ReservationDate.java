@@ -13,5 +13,4 @@ public class ReservationDate {
     public LocalDate getDate() {
         return reservationDate;
     }
-
 }

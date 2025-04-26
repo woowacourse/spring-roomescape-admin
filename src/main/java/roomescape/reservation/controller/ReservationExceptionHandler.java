@@ -18,5 +18,4 @@ public class ReservationExceptionHandler {
     public ResponseEntity<Void> handlePastReservationException(PastReservationException e) {
         return ResponseEntity.badRequest().build();
     }
-
 }

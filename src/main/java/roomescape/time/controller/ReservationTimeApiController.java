@@ -44,5 +44,4 @@ public class ReservationTimeApiController {
 
         return ResponseEntity.ok().build();
     }
-
 }

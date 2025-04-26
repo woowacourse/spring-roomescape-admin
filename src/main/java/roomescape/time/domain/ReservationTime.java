@@ -27,5 +27,4 @@ public class ReservationTime {
     public LocalTime getStartAt() {
         return startAt;
     }
-
 }

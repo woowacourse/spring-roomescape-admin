@@ -32,6 +32,7 @@ public class ReservationRestController {
                 reservationRequest.timeId()
         );
         final Reservation found = reservationService.getById(id);
+
         return ResponseEntity.ok(ReservationResponse.from(found));
     }
 

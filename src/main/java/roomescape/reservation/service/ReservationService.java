@@ -39,9 +39,9 @@ public class ReservationService {
     }
 
     public void deleteById(final Long id) {
-        Reservation found = reservationRepository.findById(id)
+        final Reservation found = reservationRepository.findById(id)
                 .orElseThrow(() -> new DataNotFoundException("해당 예약 데이터가 존재하지 않습니다. id = " + id));
-        
+
         reservationRepository.delete(found);
     }
 }

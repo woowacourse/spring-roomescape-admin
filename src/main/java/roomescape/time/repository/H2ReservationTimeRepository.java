@@ -24,10 +24,10 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     @Override
     public Long save(final ReservationTime reservationTime) {
-        String sql = "INSERT INTO reservation_times (start_at) VALUES (?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        final String sql = "INSERT INTO reservation_times (start_at) VALUES (?)";
+        final KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        int rowAffected = jdbcTemplate.update(connection -> {
+        final int rowAffected = jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setTime(1, Time.valueOf(reservationTime.getStartAt()));
             return ps;
@@ -37,7 +37,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
             throw new IllegalStateException("예약 시간 저장에 실패했습니다.");
         }
 
-        Number key = keyHolder.getKey();
+        final Number key = keyHolder.getKey();
         if (key == null) {
             throw new IllegalStateException("생성된 키가 존재하지 않습니다.");
         }
@@ -47,14 +47,14 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     @Override
     public Optional<ReservationTime> findById(final Long id) {
-        String sql = """
+        final String sql = """
                 SELECT
                     id,
                     start_at
                 FROM reservation_times 
                 WHERE id = ?
                 """;
-        List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, RESERVATION_TIME_ROW_MAPPER, id);
+        final List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, RESERVATION_TIME_ROW_MAPPER, id);
 
         if (!reservationTimes.isEmpty()) {
             return Optional.of(reservationTimes.getFirst());
@@ -64,7 +64,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     @Override
     public List<ReservationTime> findAll() {
-        String sql = """
+        final String sql = """
                 SELECT
                     id,
                     start_at

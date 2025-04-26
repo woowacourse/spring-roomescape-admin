@@ -28,6 +28,7 @@ public class ReservationTimeRestController {
     ) {
         final Long id = reservationTimeService.save(request.startAt());
         final ReservationTime found = reservationTimeService.getById(id);
+
         return ResponseEntity.ok(ReservationTimeResponse.from(found));
     }
 

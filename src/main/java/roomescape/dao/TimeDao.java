@@ -50,7 +50,7 @@ public class TimeDao {
         );
     }
 
-    public void delteById(Id id) {
+    public void deleteById(Id id) {
         String sql = "delete from reservation_time where id = ?";
         jdbcTemplate.update(
                 sql,

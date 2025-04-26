@@ -51,11 +51,7 @@ public class ReservationController {
     public ResponseEntity<String> deleteReservation(
             @PathVariable("id") long idRequest
     ) {
-        try {
-            reservationService.deleteReservation(idRequest);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        reservationService.deleteReservation(idRequest);
+        return ResponseEntity.ok().build();
     }
 }

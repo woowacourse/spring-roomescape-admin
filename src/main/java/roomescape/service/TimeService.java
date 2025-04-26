@@ -26,6 +26,6 @@ public class TimeService {
     }
 
     public void deleteTime(long id) {
-        timeDao.delteById(new Id(id));
+        timeDao.deleteById(new Id(id));
     }
 }

@@ -22,13 +22,15 @@ public class ReservationTimeService {
     public ReservationTimeResponse createReservationTime(final ReservationTimeCreateRequest request) {
         ReservationTime reservationTime = reservationTimeDao.insert(
                 new ReservationTime(null, request.startAt()));
-        return new ReservationTimeResponse(reservationTime);
+        return new ReservationTimeResponse(reservationTime.getId(), reservationTime.getStartAt());
     }
 
     public List<ReservationTimeResponse> findAllReservationTimes() {
         return reservationTimeDao.findAll()
                 .stream()
-                .map(ReservationTimeResponse::new)
+                .map(reservationTime -> new ReservationTimeResponse(
+                        reservationTime.getId(), reservationTime.getStartAt()
+                ))
                 .toList();
     }
 

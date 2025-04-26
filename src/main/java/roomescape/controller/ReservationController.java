@@ -1,7 +1,6 @@
 package roomescape.controller;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,54 +10,43 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.Reservation;
-import roomescape.domain.Reservations;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import roomescape.dto.request.ReservationCreateRequest;
+import roomescape.dto.response.ReservationCreateResponse;
 import roomescape.dto.response.ReservationResponse;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final Reservations reservations;
+    private final ReservationService reservationService;
 
-    public ReservationController() {
-        this.reservations = new Reservations(new ArrayList<>());
+    public ReservationController(final ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
-    
+
     @GetMapping
-    public ResponseEntity<List<ReservationResponse>> findAll() {
-        return ResponseEntity.ok().body(createReservationResponses(reservations.findAll()));
+    public List<ReservationResponse> findAll() {
+        return reservationService.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody ReservationCreateRequest reservationCreateRequest) {
+    public ResponseEntity<ReservationCreateResponse> create(
+            @RequestBody ReservationCreateRequest reservationCreateRequest) {
+        ReservationCreateResponse reservationCreateResponse = reservationService.create(reservationCreateRequest);
 
-        final Long id = reservations.add(
-                reservationCreateRequest.name(),
-                reservationCreateRequest.date(),
-                reservationCreateRequest.time()
-        );
-        return ResponseEntity.created(URI.create("/reservations/" + id)).build();
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(reservationCreateResponse.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(reservationCreateResponse);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        reservations.remove(id);
+        reservationService.delete(id);
         return ResponseEntity.noContent().build();
-    }
-
-    private List<ReservationResponse> createReservationResponses(List<Reservation> reservations) {
-        return reservations.stream()
-                .map(this::createReservationResponse)
-                .toList();
-    }
-
-    private ReservationResponse createReservationResponse(Reservation reservation) {
-        return new ReservationResponse(
-                reservation.getId(),
-                reservation.getName(),
-                reservation.getDate(),
-                reservation.getTime());
     }
 }

@@ -6,13 +6,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ViewController {
 
-    @GetMapping("admin")
+    @GetMapping("/admin")
     public String getHomePage() {
         return "admin/index";
     }
 
-    @GetMapping("/admin/reservation")
+    @GetMapping("reservation")
     public String getReservationPage() {
-        return "admin/reservation-legacy";
+        return "admin/reservation";
+    }
+
+    @GetMapping("time")
+    public String getTimePage() {
+        return "admin/time";
     }
 }

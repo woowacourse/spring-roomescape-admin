@@ -1,85 +1,44 @@
 package roomescape.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class ReservationTest {
 
-    @DisplayName("예약자 이름은 null이면 예외를 발생한다.")
-    @Test
-    void validateNameNullThrowExceptionTest() {
+    @DisplayName("아이디가 같으면 true를, 다르면 false를 반환한다.")
+    @ParameterizedTest
+    @CsvSource(value = {
+            "1, 1, true",
+            "1, 2, false"})
+    void equalIdTest(final long firstId, final long secondId, boolean result) {
 
         // given
-        final LocalDate date = LocalDate.now();
-        final LocalTime time = LocalTime.now().plusHours(1);
+        Reservation reservation = new Reservation(firstId, "체체", LocalDate.of(2024, 12, 12),
+                new ReservationTime(1L, LocalTime.of(10, 0)));
 
         // when & then
-        assertThatThrownBy(() -> new Reservation(1L, null, date, time))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이름은 비어있을 수 없습니다.");
+        assertThat(reservation.isEqualId(secondId)).isEqualTo(result);
     }
 
-    @DisplayName("예약자 이름이 비어있으면 예외를 발생한다.")
+    @DisplayName("이름은 255자 초과면 예외를 발생한다.")
     @Test
-    void validateNameBlankThrowExceptionTest() {
-
+    void inValidateNameLengthThrowExceptionTest() {
         // given
-        final String name = "";
-        final LocalDate date = LocalDate.now();
-        final LocalTime time = LocalTime.now().plusHours(1);
+        String nameOver255 = "a".repeat(256);
+        LocalDate date = LocalDate.of(2024, 12, 12);
+        ReservationTime time = new ReservationTime(1L, LocalTime.of(10, 0));
 
         // when & then
-        assertThatThrownBy(() -> new Reservation(1L, name, date, time))
+        assertThatThrownBy(() -> new Reservation(nameOver255, date, time))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이름은 비어있을 수 없습니다.");
+                .hasMessage("이름은 255자 이하로 입력해야 합니다.");
     }
 
-    @DisplayName("예약자 이름이 띄어쓰기면 예외를 발생한다.")
-    @Test
-    void validateNameSpacingThrowExceptionTest() {
-
-        // given
-        final String name = " ";
-        final LocalDate date = LocalDate.now();
-        final LocalTime time = LocalTime.now().plusHours(1);
-
-        // when & then
-        assertThatThrownBy(() -> new Reservation(1L, name, date, time))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이름은 비어있을 수 없습니다.");
-    }
-
-    @DisplayName("예약 날짜가 이전 날짜면 예외를 발생한다.")
-    @Test
-    void validateDatePreviousThrowExceptionTest() {
-
-        // given
-        final String name = "체체";
-        final LocalDate date = LocalDate.of(2023, 6, 6);
-        final LocalTime time = LocalTime.of(18, 0);
-
-        // when & then
-        assertThatThrownBy(() -> new Reservation(1L, name, date, time))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("예약 시간은 과거일 수 없습니다.");
-    }
-
-    @DisplayName("예약 날짜가 오늘이며 시간이 과거일 경우 예외를 발생한다.")
-    @Test
-    void validateDateSameAndPreviousTimeThrowExceptionTest() {
-
-        // given
-        final String name = "체체";
-        final LocalDate date = LocalDate.now();
-        final LocalTime time = LocalTime.now().minusHours(1);
-
-        // when & then
-        assertThatThrownBy(() -> new Reservation(1L, name, date, time))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("예약 시간은 과거일 수 없습니다.");
-    }
 }

@@ -68,14 +68,14 @@ class JdbcReservationDaoTest {
                 timeFixture
         ));
         final ReservationEntity actual = jdbcTemplate.queryForObject("""
-                SELECT\s
-                    r.id as reservation_id,\s
-                    r.name,\s
-                    r.date,\s
-                    t.id as time_id,\s
-                    t.start_at as time_value\s
-                    FROM reservation as r\s
-                    inner join reservation_time as t\s
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                    FROM reservation as r
+                    inner join reservation_time as t
                     on r.time_id = t.id
                     WHERE r.id = ?
                 """, ReservationEntity.getDefaultRowMapper(), id

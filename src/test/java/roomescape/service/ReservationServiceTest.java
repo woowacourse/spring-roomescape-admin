@@ -10,7 +10,6 @@ import java.time.LocalTime;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ReservationServiceTest {
@@ -28,11 +27,23 @@ public class ReservationServiceTest {
         LocalTime startAt = LocalTime.of(10, 0);
 
         // When
-        ReservationTime reservationTimeEntity = reservationService.addReservationTimeAndReturn(startAt);
+        ReservationTime reservationTimeEntity = reservationService.createNewReservationTime(startAt);
 
         // Then
         assertThat(reservationTimeEntity.getId()).isEqualTo(1L);
         assertThat(reservationTimeEntity.getStartAt()).isEqualTo(startAt);
+    }
+
+    @Test
+    void 중복된_예약시간은_생성할_수_없다() {
+        // Given
+        LocalTime startAt = LocalTime.of(10, 0);
+        reservationService.createNewReservationTime(startAt);
+
+        // When & Then
+        assertThatThrownBy(() -> reservationService.createNewReservationTime(startAt))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 존재하는 예약 시간입니다.");
     }
 
     @Test
@@ -42,32 +53,18 @@ public class ReservationServiceTest {
         LocalTime startAt2 = LocalTime.of(11, 0);
 
         // When
-        ReservationTime reservationTimeEntity1 = reservationService.addReservationTimeAndReturn(startAt1);
-        ReservationTime reservationTimeEntity2 = reservationService.addReservationTimeAndReturn(startAt2);
+        ReservationTime reservationTimeEntity1 = reservationService.createNewReservationTime(startAt1);
+        ReservationTime reservationTimeEntity2 = reservationService.createNewReservationTime(startAt2);
 
         // Then
         assertThat(reservationService.getAllReservationTime()).containsExactlyInAnyOrder(reservationTimeEntity1, reservationTimeEntity2);
     }
 
     @Test
-    void 중복된_시간이_저장되어_있지_않은지_검증한다() {
-        // Given
-        LocalTime startAt = LocalTime.of(10, 0);
-        reservationService.addReservationTimeAndReturn(startAt);
-
-        // When & Then
-        assertThatThrownBy(() -> reservationService.validateDuplicateStartTime(startAt))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이미 존재하는 예약 시간입니다.");
-        assertThatCode(() -> reservationService.validateDuplicateStartTime(LocalTime.of(11, 0)))
-                .doesNotThrowAnyException();
-    }
-
-    @Test
     void 주어진_id를_가진_예약시간을_삭제한다() {
         // Given
         LocalTime startAt = LocalTime.of(10, 0);
-        reservationService.addReservationTimeAndReturn(startAt);
+        reservationService.createNewReservationTime(startAt);
         Long deleteId = 1L;
 
         // When
@@ -91,13 +88,13 @@ public class ReservationServiceTest {
     void 예약이_성공적으로_생성되어_반환된다() {
         // Given
         LocalTime startAt = LocalTime.of(10, 0);
-        ReservationTime reservationTimeEntity = reservationService.addReservationTimeAndReturn(startAt);
+        ReservationTime reservationTimeEntity = reservationService.createNewReservationTime(startAt);
         String name = "프리";
         LocalDate date = LocalDate.of(2025, 4, 24);
         Long timeId = reservationTimeEntity.getId();
 
         // When
-        Reservation reservationEntity = reservationService.addReservationAndReturn(name, date, timeId);
+        Reservation reservationEntity = reservationService.reserveNewTime(name, date, timeId);
 
         // Then
         assertThat(reservationEntity.getId()).isEqualTo(1L);
@@ -107,48 +104,48 @@ public class ReservationServiceTest {
     }
 
     @Test
+    void 중복된_날짜와_시간에는_예약을_생성할_수_없다() {
+        // Given
+        LocalTime startAt = LocalTime.of(10, 0);
+        ReservationTime reservationTimeEntity = reservationService.createNewReservationTime(startAt);
+        String name = "프리";
+        LocalDate date = LocalDate.of(2025, 4, 24);
+        Long timeId = reservationTimeEntity.getId();
+        reservationService.reserveNewTime(name, date, timeId);
+
+        // When & Then
+        assertThatThrownBy(() -> reservationService.reserveNewTime(name, date, timeId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("해당 시간은 이미 예약되었습니다.");
+    }
+
+    @Test
     void 저장된_예약_객체들을_모두_반환한다() {
         // Given
         LocalTime startAt1 = LocalTime.of(10, 0);
-        ReservationTime reservationTimeEntity1 = reservationService.addReservationTimeAndReturn(startAt1);
+        ReservationTime reservationTimeEntity1 = reservationService.createNewReservationTime(startAt1);
         LocalTime startAt2 = LocalTime.of(11, 0);
-        ReservationTime reservationTimeEntity2 = reservationService.addReservationTimeAndReturn(startAt2);
+        ReservationTime reservationTimeEntity2 = reservationService.createNewReservationTime(startAt2);
         String name = "프리";
         LocalDate date = LocalDate.of(2025, 4, 24);
 
         // When
-        Reservation reservationEntity1 = reservationService.addReservationAndReturn(name, date, reservationTimeEntity1.getId());
-        Reservation reservationEntity2 = reservationService.addReservationAndReturn(name, date, reservationTimeEntity2.getId());
+        Reservation reservationEntity1 = reservationService.reserveNewTime(name, date, reservationTimeEntity1.getId());
+        Reservation reservationEntity2 = reservationService.reserveNewTime(name, date, reservationTimeEntity2.getId());
 
         // Then
         assertThat(reservationService.getAllReservation()).containsExactlyInAnyOrder(reservationEntity1, reservationEntity2);
     }
 
     @Test
-    void 중복된_날짜와_시간에_예약이_저장되어_있지_않은지_검증한다() {
-        // Given
-        LocalTime startAt = LocalTime.of(10, 0);
-        ReservationTime reservationTimeEntity = reservationService.addReservationTimeAndReturn(startAt);
-        String name = "프리";
-        LocalDate date = LocalDate.of(2025, 4, 24);
-        Long timeId = reservationTimeEntity.getId();
-        reservationService.addReservationAndReturn(name, date, timeId);
-
-        // When & Then
-        assertThatThrownBy(() -> reservationService.validateDuplicateReservationDateTime(date, timeId))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당 시간은 이미 예약되었습니다.");
-    }
-
-    @Test
     void 주어진_id를_가진_예약을_삭제한다() {
         // Given
         LocalTime startAt = LocalTime.of(10, 0);
-        ReservationTime reservationTimeEntity = reservationService.addReservationTimeAndReturn(startAt);
+        ReservationTime reservationTimeEntity = reservationService.createNewReservationTime(startAt);
         String name = "프리";
         LocalDate date = LocalDate.of(2025, 4, 24);
         Long timeId = reservationTimeEntity.getId();
-        reservationService.addReservationAndReturn(name, date, timeId);
+        reservationService.reserveNewTime(name, date, timeId);
         Long deleteId = 1L;
 
         // When

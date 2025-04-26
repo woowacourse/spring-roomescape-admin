@@ -41,8 +41,7 @@ public class ReservationTimeRestController {
     @PostMapping
     public ResponseEntity<ReservationTimeGetResponse> addReservationTime(@RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
         try {
-            reservationService.validateDuplicateStartTime(reservationTimeCreateRequest.startAt());
-            ReservationTime newReservationTime = reservationService.addReservationTimeAndReturn(reservationTimeCreateRequest.startAt());
+            ReservationTime newReservationTime = reservationService.createNewReservationTime(reservationTimeCreateRequest.startAt());
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(ReservationTimeGetResponse.from(newReservationTime));

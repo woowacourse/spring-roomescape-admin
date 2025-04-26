@@ -27,13 +27,18 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public void validateDuplicateReservationDateTime(LocalDate date, Long timeId) {
+    public Reservation reserveNewTime(String name, LocalDate date, Long timeId) {
+        validateDuplicateReservationDateTime(date, timeId);
+        return addReservationAndReturn(name, date, timeId);
+    }
+
+    private void validateDuplicateReservationDateTime(LocalDate date, Long timeId) {
         if (reservationRepository.existByDateAndTimeId(date, timeId)) {
             throw new IllegalArgumentException("해당 시간은 이미 예약되었습니다.");
         }
     }
 
-    public Reservation addReservationAndReturn(String name, LocalDate date, Long timeId) {
+    private Reservation addReservationAndReturn(String name, LocalDate date, Long timeId) {
         ReservationTime reservationTime = reservationTimeRepository.findById(timeId);
         Reservation reservation = new Reservation(name, date, reservationTime);
         return reservationRepository.insert(reservation);
@@ -50,13 +55,18 @@ public class ReservationService {
         return reservationTimeRepository.findAll();
     }
 
-    public void validateDuplicateStartTime(LocalTime startAt) {
+    public ReservationTime createNewReservationTime(LocalTime startAt) {
+        validateDuplicateStartTime(startAt);
+        return addReservationTimeAndReturn(startAt);
+    }
+
+    private void validateDuplicateStartTime(LocalTime startAt) {
         if (reservationTimeRepository.existByStartAt(startAt)) {
             throw new IllegalArgumentException("이미 존재하는 예약 시간입니다.");
         }
     }
 
-    public ReservationTime addReservationTimeAndReturn(LocalTime startAt) {
+    private ReservationTime addReservationTimeAndReturn(LocalTime startAt) {
         ReservationTime reservationTime = new ReservationTime(startAt);
         return reservationTimeRepository.insert(reservationTime);
     }

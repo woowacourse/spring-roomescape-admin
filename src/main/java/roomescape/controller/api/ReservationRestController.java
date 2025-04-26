@@ -44,8 +44,7 @@ public class ReservationRestController {
         LocalDate date = reservationCreateRequest.date();
         Long timeId = reservationCreateRequest.timeId();
         try {
-            reservationService.validateDuplicateReservationDateTime(date, timeId);
-            Reservation reservation = reservationService.addReservationAndReturn(reservationCreateRequest.name(), date, timeId);
+            Reservation reservation = reservationService.reserveNewTime(reservationCreateRequest.name(), date, timeId);
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(ReservationGetResponse.from(reservation));

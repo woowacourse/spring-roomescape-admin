@@ -39,7 +39,6 @@ class JdbcTimeDaoTest {
                     PRIMARY KEY (id)
                 );
                 """);
-
     }
 
     @DisplayName("데이터베이스에 방탈출 시간을 저장한다.")

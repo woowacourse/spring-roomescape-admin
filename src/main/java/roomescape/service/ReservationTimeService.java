@@ -18,6 +18,10 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse createReservationTime(final ReservationTimeRequest reservationTimeRequest) {
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+        reservationTimes
+                .forEach(reservationTime -> reservationTime.validateDuplicatedTime(reservationTimeRequest.startAt()));
+
         ReservationTime reservationTime = new ReservationTime(reservationTimeRequest.startAt());
         ReservationTime createdReservationTime = reservationTimeRepository.save(reservationTime);
         return ReservationTimeResponse.from(createdReservationTime);

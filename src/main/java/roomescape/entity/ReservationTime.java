@@ -33,6 +33,12 @@ public class ReservationTime {
         }
     }
 
+    public void validateDuplicatedTime(final LocalTime time) {
+        if (this.startAt == time) {
+            throw new IllegalArgumentException("중복된 시간입니다.");
+        }
+    }
+
     public Long getId() {
         return id;
     }

@@ -31,6 +31,21 @@ public class ReservationTimeServiceTest {
     }
 
     @Test
+    @DisplayName("중복된 시간을 저장시 예외가 발생한다..")
+    void throwExceptionWhenCreateDuplicatedReservationTime() {
+        // given
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(LocalTime.of(10, 0));
+        ReservationTimeRequest duplicatedReservationTimeRequest = new ReservationTimeRequest(LocalTime.of(10, 0));
+        // when
+        reservationTimeService.createReservationTime(reservationTimeRequest);
+
+        // then
+        Assertions.assertThatThrownBy(
+                        () -> reservationTimeService.createReservationTime(duplicatedReservationTimeRequest))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     @DisplayName("전체 시간 목록을 가져온다")
     void getAllReservationTime() {
 
@@ -54,6 +69,7 @@ public class ReservationTimeServiceTest {
         // then
         Assertions.assertThatNoException().isThrownBy(() -> reservationTimeService.delete(id));
     }
+
 
     static class FakeReservationTimeRepository implements ReservationTimeRepository {
 

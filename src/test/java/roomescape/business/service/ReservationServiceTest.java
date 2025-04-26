@@ -79,4 +79,23 @@ public class ReservationServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("예약 날짜 및 시간이 현재보다 과거일 수 없습니다.");
     }
+
+    @DisplayName("모든 방탈출 예약을 조회한다.")
+    @Test
+    void findAll() {
+        // given
+        reservationService.create(new ReservationRequest(
+                "hotteok", FORMATTED_MAX_LOCAL_DATE, 1L
+        ));
+        reservationService.create(new ReservationRequest(
+                "saba", FORMATTED_MAX_LOCAL_DATE.minusDays(1), 1L
+        ));
+
+        // when & then
+        assertThat(reservationService.findAll())
+                .containsExactly(
+                        new ReservationResponse(1L, "hotteok", FORMATTED_MAX_LOCAL_DATE, FORMATTED_MAX_LOCAL_TIME),
+                        new ReservationResponse(2L, "hotteok", FORMATTED_MAX_LOCAL_DATE.minusDays(1), FORMATTED_MAX_LOCAL_TIME)
+                );
+    }
 }

@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +15,8 @@ import roomescape.domain.Reservation;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
 import roomescape.service.ReservationService;
+import roomescape.valid.ValidationResult;
+import roomescape.valid.ValidationUtils;
 
 @RestController
 @RequestMapping("/reservations")
@@ -34,8 +35,12 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservation(
-            @Valid @RequestBody final ReservationRequest reservationRequest) {
+    public ResponseEntity<?> createReservation(@RequestBody final ReservationRequest reservationRequest) {
+        ValidationResult validationResult = ValidationUtils.validate(reservationRequest);
+        if (!validationResult.isValid()) {
+            return ResponseEntity.badRequest().body(validationResult.errorResponse());
+        }
+
         final Reservation reservation = makeReservation(reservationRequest);
         return ResponseEntity.ok(reservation);
     }

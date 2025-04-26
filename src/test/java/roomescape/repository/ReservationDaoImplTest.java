@@ -52,7 +52,7 @@ class ReservationDaoImplTest {
     void insert() {
         final ReservationTime reservationTime = new ReservationTime(1L, null);
         final Reservation reservation = new Reservation(null, "mint", LocalDate.now(), reservationTime);
-        final long reservationId = reservationDao.insertReservation(reservation);
+        final Long reservationId = reservationDao.insertReservation(reservation);
 
         List<Reservation> reservations = reservationDao.findAll();
         Assertions.assertAll(

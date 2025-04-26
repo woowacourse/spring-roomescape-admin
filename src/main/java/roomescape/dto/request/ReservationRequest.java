@@ -1,9 +1,9 @@
 package roomescape.dto.request;
 
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.valid.annotation.NotNull;
 
 public record ReservationRequest(
 
@@ -14,7 +14,7 @@ public record ReservationRequest(
         String name,
 
         @NotNull
-        long timeId
+        Long timeId
 ) {
     public Reservation fromEntity() {
         final ReservationTime reservationTime = new ReservationTime(timeId, null);

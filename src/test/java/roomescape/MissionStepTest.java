@@ -146,12 +146,7 @@ public class MissionStepTest {
                 params.put("date", makeTodayMessage());
                 params.put("timeId", null);
 
-                RestAssured.given().log().all()
-                        .contentType(ContentType.JSON)
-                        .body(params)
-                        .when().post("/reservations")
-                        .then().log().all()
-                        .statusCode(500);
+                createBadReservation(params);
             }
 
             private void createBadReservation(final Map<String, String> params) {

@@ -54,4 +54,18 @@ class JdbcTimeDaoTest {
         // then
         assertThat(actual).isEqualTo(new TimeEntity(1L, "10:10"));
     }
+
+    @DisplayName("데이터베이스에서 방탈출 시간을 찾는다.")
+    @Test
+    void find() {
+        // given
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES ('10:10')");
+
+        // when
+        final Optional<Time> actual = timeDao.find(1L);
+
+        // then
+        assertThat(actual).isPresent();
+        assertThat(actual.get()).isEqualTo(new Time(1L, LocalTime.of(10, 10)));
+    }
 }

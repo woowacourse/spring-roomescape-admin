@@ -95,7 +95,7 @@ public class ReservationServiceTest {
         assertThat(reservationService.findAll())
                 .containsExactly(
                         new ReservationResponse(1L, "hotteok", FORMATTED_MAX_LOCAL_DATE, FORMATTED_MAX_LOCAL_TIME),
-                        new ReservationResponse(2L, "hotteok", FORMATTED_MAX_LOCAL_DATE.minusDays(1),
+                        new ReservationResponse(2L, "saba", FORMATTED_MAX_LOCAL_DATE.minusDays(1),
                                 FORMATTED_MAX_LOCAL_TIME)
                 );
     }

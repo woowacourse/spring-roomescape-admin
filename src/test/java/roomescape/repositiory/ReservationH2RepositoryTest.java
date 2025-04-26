@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.domain.dto.ReservationRequestDto;
 
 @JdbcTest
@@ -23,7 +24,8 @@ class ReservationH2RepositoryTest {
     void add() {
         // given
         ReservationRepository reservationRepository = new ReservationRepository(jdbcTemplate);
-        ReservationRequestDto reservation = new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now());
+        ReservationRequestDto reservation = new ReservationRequestDto("예약자", LocalDate.now(),
+                new ReservationTime(LocalTime.now()));
 
         // when
         Long id = reservationRepository.add(
@@ -40,7 +42,7 @@ class ReservationH2RepositoryTest {
         // given
         ReservationRepository reservationRepository = new ReservationRepository(jdbcTemplate);
         ReservationRequestDto reservationRequestDto = new ReservationRequestDto("예약자", LocalDate.now(),
-                LocalTime.now());
+                new ReservationTime(LocalTime.now()));
         reservationRepository.add(new Reservation(reservationRequestDto.name(), reservationRequestDto.date(),
                 reservationRequestDto.time()));
 
@@ -56,7 +58,8 @@ class ReservationH2RepositoryTest {
     void findById() {
         // given
         ReservationRepository reservationRepository = new ReservationRepository(jdbcTemplate);
-        ReservationRequestDto reservationDto = new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now());
+        ReservationRequestDto reservationDto = new ReservationRequestDto("예약자", LocalDate.now(),
+                new ReservationTime(LocalTime.now()));
         Long id = reservationRepository.add(
                 new Reservation(reservationDto.name(), reservationDto.date(), reservationDto.time()));
 
@@ -72,7 +75,8 @@ class ReservationH2RepositoryTest {
     void delete() {
         // given
         ReservationRepository reservationRepository = new ReservationRepository(jdbcTemplate);
-        ReservationRequestDto reservationDto = new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now());
+        ReservationRequestDto reservationDto = new ReservationRequestDto("예약자", LocalDate.now(),
+                new ReservationTime(LocalTime.now()));
         Long id = reservationRepository.add(
                 new Reservation(reservationDto.name(), reservationDto.date(), reservationDto.time()));
 

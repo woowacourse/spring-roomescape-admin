@@ -2,7 +2,6 @@ package roomescape.repositiory;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,6 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationRepository implements GeneralRepository<Reservation> {
@@ -30,7 +30,7 @@ public class ReservationRepository implements GeneralRepository<Reservation> {
                         rs.getLong("id"),
                         rs.getString("name"),
                         rs.getObject("date", LocalDate.class),
-                        rs.getObject("time", LocalTime.class)));
+                        rs.getObject("time", ReservationTime.class)));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class ReservationRepository implements GeneralRepository<Reservation> {
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getObject("date", LocalDate.class),
-                rs.getObject("time", LocalTime.class)
+                rs.getObject("time", ReservationTime.class)
         ), id);
     }
 

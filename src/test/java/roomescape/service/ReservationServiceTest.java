@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
+import roomescape.domain.ReservationTime;
 import roomescape.domain.dto.ReservationRequestDto;
 import roomescape.repositiory.ReservationRepository;
 import roomescape.repositiory.ReservationTimeRepository;
@@ -31,7 +32,7 @@ class ReservationServiceTest {
 
         // when
         Long id = reservationService.addReservation(
-                new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now()));
+                new ReservationRequestDto("예약자", LocalDate.now(), new ReservationTime(LocalTime.now())));
 
         // then
         Assertions.assertThat(id).isNotNull();
@@ -45,7 +46,7 @@ class ReservationServiceTest {
                 reservationRepository,
                 reservationTimeRepository);
         Long id = reservationService.addReservation(
-                new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now()));
+                new ReservationRequestDto("예약자", LocalDate.now(), new ReservationTime(LocalTime.now())));
 
         // when
         reservationService.deleteReservation(id);
@@ -62,7 +63,7 @@ class ReservationServiceTest {
                 reservationRepository,
                 reservationTimeRepository);
         Long id = reservationService.addReservation(
-                new ReservationRequestDto("예약자", LocalDate.now(), LocalTime.now()));
+                new ReservationRequestDto("예약자", LocalDate.now(), new ReservationTime(LocalTime.now())));
 
         // when
         int firstReadSize = reservationService.readReservationAll().size();

@@ -38,7 +38,7 @@ public class TimeController {
     public ResponseEntity<ReservationTimeCreateResponse> create(
             @RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
         ReservationTime reservationTime = reservationTimeDao.create(
-                new ReservationTime(reservationTimeCreateRequest.startAt()));
+                new ReservationTime(reservationTimeCreateRequest.getLocalTime()));
         ReservationTimeCreateResponse reservationTimeCreateResponse = new ReservationTimeCreateResponse(
                 reservationTime);
 

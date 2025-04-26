@@ -17,4 +17,17 @@ class ReservationTimeCreateRequestTest {
                 .hasMessage("빈 값으로 예약할 수 없습니다.");
     }
 
+    @DisplayName("날짜 형식에 맞지 않으면 예외가 발생한다.")
+    @Test
+    void validateNonDateFormatThrowException() {
+
+        // given
+        final String startAt = "15;55";
+
+        // when & then
+        assertThatThrownBy(() -> new ReservationTimeCreateRequest(startAt))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("시간 형식이 올바르지 않습니다. HH:MM 형식으로 입력해주세요.");
+    }
+
 }

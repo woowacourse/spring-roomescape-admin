@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -21,5 +22,11 @@ class ReservationTest {
 
         // when & then
         assertThat(reservation.isEqualId(secondId)).isEqualTo(result);
+    }
+
+    @DisplayName("이름은 255자 이하여야 한다.")
+    @Test
+    void validateNameLengthTest() {
+
     }
 }

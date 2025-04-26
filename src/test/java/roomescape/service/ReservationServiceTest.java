@@ -2,7 +2,6 @@ package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ class ReservationServiceTest {
         // given
         ReservationTime savedReservationTime = reservationTimeDao.create(new ReservationTime(LocalTime.of(10, 10)));
         reservationService.create(
-                new ReservationCreateRequest("체체", LocalDate.of(2024, 10, 10), savedReservationTime.getId()));
+                new ReservationCreateRequest("체체", "2024-10-10", savedReservationTime.getId()));
 
         // when
         List<ReservationResponse> reservations = reservationService.findAll();
@@ -46,9 +45,9 @@ class ReservationServiceTest {
         // given
         ReservationTime savedReservationTime = reservationTimeDao.create(new ReservationTime(LocalTime.of(10, 10)));
         reservationService.create(
-                new ReservationCreateRequest("체체", LocalDate.of(2024, 10, 10), savedReservationTime.getId()));
+                new ReservationCreateRequest("체체", "2024-10-10", savedReservationTime.getId()));
         reservationService.create(
-                new ReservationCreateRequest("체체2", LocalDate.of(2024, 10, 11), savedReservationTime.getId()));
+                new ReservationCreateRequest("체체2", "2024-10-11", savedReservationTime.getId()));
 
         // when
         List<ReservationResponse> reservations = reservationService.findAll();
@@ -64,7 +63,7 @@ class ReservationServiceTest {
         // given
         ReservationTime savedReservationTime = reservationTimeDao.create(new ReservationTime(LocalTime.of(10, 10)));
         reservationService.create(
-                new ReservationCreateRequest("체체", LocalDate.of(2024, 10, 10), savedReservationTime.getId()));
+                new ReservationCreateRequest("체체", "2024-10-10", savedReservationTime.getId()));
 
         // when
         reservationService.delete(savedReservationTime.getId());

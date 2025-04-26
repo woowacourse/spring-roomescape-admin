@@ -23,7 +23,9 @@ public class ReservationService {
 
     public ReservationCreateResponse create(ReservationCreateRequest reservationCreateRequest) {
         ReservationTime time = reservationTimeDao.findById(reservationCreateRequest.timeId());
-        Reservation reservation = new Reservation(reservationCreateRequest.name(), reservationCreateRequest.date(),
+        Reservation reservation = new Reservation(
+                reservationCreateRequest.name(),
+                reservationCreateRequest.getLocalDate(),
                 time);
         Reservation savedReservation = reservationDao.create(reservation);
         return new ReservationCreateResponse(savedReservation);

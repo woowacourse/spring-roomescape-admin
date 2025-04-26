@@ -177,6 +177,11 @@ public class MissionStepTest {
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(204);
+
+        RestAssured.given().log().all()
+                .when().delete("/times/123123")
+                .then().log().all()
+                .statusCode(404);
     }
 
     @Test

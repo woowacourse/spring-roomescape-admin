@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import roomescape.reservationtime.dto.request.ReservationTimeCreateRequest;
 import roomescape.reservationtime.dto.response.ReservationTimeResponse;
-import roomescape.reservationtime.repository.InMemoryReservationTimeRepository;
+import roomescape.reservationtime.repository.FakeReservationTimeRepository;
 import roomescape.reservationtime.repository.ReservationTimeRepository;
 
 class ReservationTimeServiceTest {
@@ -19,7 +19,7 @@ class ReservationTimeServiceTest {
 
     @BeforeEach
     void setUp() {
-        reservationTimeRepository = new InMemoryReservationTimeRepository();
+        reservationTimeRepository = new FakeReservationTimeRepository();
         reservationTimeService = new ReservationTimeService(reservationTimeRepository);
     }
 

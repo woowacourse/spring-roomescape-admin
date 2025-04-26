@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.reservationtime.domain.ReservationTime;
 
 @Repository
-public class InMemoryReservationTimeRepository implements ReservationTimeRepository {
+public class FakeReservationTimeRepository implements ReservationTimeRepository {
     private final Map<Long, ReservationTime> reservationTimes = new ConcurrentHashMap<>();
     private final AtomicLong index = new AtomicLong(1);
 

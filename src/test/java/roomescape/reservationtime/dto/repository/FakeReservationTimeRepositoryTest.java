@@ -9,15 +9,15 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import roomescape.reservationtime.domain.ReservationTime;
-import roomescape.reservationtime.repository.InMemoryReservationTimeRepository;
+import roomescape.reservationtime.repository.FakeReservationTimeRepository;
 
-class InMemoryReservationTimeRepositoryTest {
+class FakeReservationTimeRepositoryTest {
 
-    private InMemoryReservationTimeRepository repository;
+    private FakeReservationTimeRepository repository;
 
     @BeforeEach
     void setUp() {
-        repository = new InMemoryReservationTimeRepository();
+        repository = new FakeReservationTimeRepository();
     }
 
     @Test

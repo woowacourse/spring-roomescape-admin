@@ -14,13 +14,13 @@ import roomescape.reservationtime.repository.ReservationTimeIdCache;
 
 @Repository
 @Primary
-public class H2ReservationRepository implements ReservationRepository {
+public class JDBCReservationRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
     private final ReservationIdCache reservationIdCache;
     private final ReservationTimeIdCache reservationTimeIdCache;
 
-    public H2ReservationRepository(final JdbcTemplate jdbcTemplate, final ReservationIdCache reservationIdCache,
-                                   final ReservationTimeIdCache reservationTimeIdCache) {
+    public JDBCReservationRepository(final JdbcTemplate jdbcTemplate, final ReservationIdCache reservationIdCache,
+                                     final ReservationTimeIdCache reservationTimeIdCache) {
         this.jdbcTemplate = jdbcTemplate;
         this.reservationIdCache = reservationIdCache;
         this.reservationTimeIdCache = reservationTimeIdCache;

@@ -9,14 +9,14 @@ import org.junit.jupiter.api.Test;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservationtime.domain.ReservationTime;
 
-class InMemoryReservationRepositoryTest {
+class FakeReservationRepositoryTest {
 
-    private InMemoryReservationRepository repository;
+    private FakeReservationRepository repository;
     private final LocalDate futureDate = LocalDate.now().plusDays(1);
 
     @BeforeEach
     void setUp() {
-        repository = new InMemoryReservationRepository();
+        repository = new FakeReservationRepository();
     }
 
     @Test

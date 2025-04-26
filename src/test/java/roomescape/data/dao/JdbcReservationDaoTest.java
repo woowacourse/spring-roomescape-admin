@@ -1,6 +1,7 @@
 package roomescape.data.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -104,5 +105,32 @@ class JdbcReservationDaoTest {
                 new Reservation(1L, "hotteok", LocalDate.of(2025, 1, 1), timeFixture),
                 new Reservation(2L, "hotteok", LocalDate.of(2025, 1, 2), timeFixture)
         );
+    }
+
+    @DisplayName("데이터베이스에서 방탈출 예약을 삭제한다.")
+    @Test
+    void remove() {
+        // given
+        jdbcTemplate.update("INSERT INTO RESERVATION (name, date, time_id) values ('hotteok', '2025-01-01', 1)");
+
+        // when
+        final int rowNum = reservationDao.remove(1L);
+        final List<Reservation> reservations = reservationDao.findAll();
+
+        // then
+        assertAll(
+                () -> assertThat(rowNum).isEqualTo(1),
+                () -> assertThat(reservations).isEmpty()
+        );
+    }
+
+    @DisplayName("해당하는 방탈출 예약이 없다면 0을 반환한다.")
+    @Test
+    void removeNotExistsReservation() {
+        // given & when
+        final int rowNum = reservationDao.remove(1L);
+
+        // then
+        assertThat(rowNum).isEqualTo(0);
     }
 }

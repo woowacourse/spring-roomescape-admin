@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.model.Reservation;
 import roomescape.entity.ReservationWithTimeId;
+import roomescape.model.Reservation;
 import roomescape.service.ReservationService;
 
 @RequestMapping("/reservations")
@@ -41,11 +41,15 @@ public class ReservationController {
 
         ReservationWithTimeId reservationWithTimeId = request.toReservationWithId();
 
-        Reservation addedReservation = reservationService.addReservation(reservationWithTimeId);
+        try {
+            Reservation addedReservation = reservationService.addReservation(reservationWithTimeId);
+            ReservationResponse reservationResponse = ReservationResponse.toDto(addedReservation);
 
-        ReservationResponse reservationResponse = ReservationResponse.toDto(addedReservation);
+            return ResponseEntity.ok().body(reservationResponse);
+        } catch (IllegalArgumentException e) {
 
-        return ResponseEntity.ok().body(reservationResponse);
+            return ResponseEntity.noContent().build();
+        }
     }
 
     @DeleteMapping("/{id}")

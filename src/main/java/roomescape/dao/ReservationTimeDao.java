@@ -32,6 +32,7 @@ public class ReservationTimeDao {
         List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, (resultSet, rowNum) -> {
             ReservationTime reservationTime = new ReservationTime(resultSet.getLong("id"),
                     LocalTime.parse(resultSet.getString("start_at")));
+
             return reservationTime;
         });
 
@@ -40,7 +41,6 @@ public class ReservationTimeDao {
 
     public int deleteTimeReservation(Long id) {
         String sql = "DELETE from reservation_time WHERE id = ?";
-
         int effectedRowCount = jdbcTemplate.update(sql,id);
 
         return effectedRowCount;
@@ -48,7 +48,6 @@ public class ReservationTimeDao {
 
     public ReservationTime findTimeById(Long reservationTimeId) {
         String sql = "SELECT id,start_at FROM reservation_time where id=?";
-
         ReservationTime reservationTime = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
             return new ReservationTime(rs.getLong("id"), LocalTime.parse(rs.getString("start_at"))
             );

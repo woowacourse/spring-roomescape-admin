@@ -28,9 +28,13 @@ public class ReservationService {
 
     public Reservation addReservation(ReservationWithTimeId reservationWithTimeId) {
 
-        Long reservationId = reservationDao.addReservation(reservationWithTimeId);
-
         ReservationTime reservationTime = reservationTimeDao.findTimeById(reservationWithTimeId.getTimeId());
+
+        if (reservationTime==null){
+            throw new IllegalArgumentException("없는 timeId 입니다.");
+        }
+
+        Long reservationId = reservationDao.addReservation(reservationWithTimeId);
 
         return new Reservation(reservationId, reservationWithTimeId.getName(), reservationWithTimeId.getDate(),
                 reservationTime);

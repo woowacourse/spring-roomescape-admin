@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,7 +15,6 @@ import roomescape.dao.ReservationTimeDaoInterface;
 import roomescape.entity.ReservationTime;
 import roomescape.entity.ReservationWithTimeId;
 import roomescape.model.Reservation;
-import roomescape.service.ReservationService;
 
 class ReservationServiceTest {
 

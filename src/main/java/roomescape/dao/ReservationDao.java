@@ -1,7 +1,6 @@
 package roomescape.dao;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
@@ -33,14 +32,14 @@ public class ReservationDao {
                     String name = rs.getString("name");
                     String date = rs.getString("date");
                     String time = rs.getString("time");
-                    return new Reservation(id, toPerson(name), toReservationTime(date, time));
+                    return new Reservation(id, toPerson(name), LocalDate.parse(date), toReservationTime(time));
                 }
         );
         return foundReservations;
     }
 
-    private ReservationTime toReservationTime(String date, String time) {
-        return new ReservationTime(LocalDateTime.of(LocalDate.parse(date), LocalTime.parse(time)));
+    private ReservationTime toReservationTime(String time) {
+        return new ReservationTime(LocalTime.parse(time));
     }
 
     private Person toPerson(String name) {
@@ -51,7 +50,7 @@ public class ReservationDao {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", reservation.getPersonName());
         parameters.put("date", reservation.getDate());
-        parameters.put("time", reservation.getTime());
+        parameters.put("time", reservation.getStartAt());
         long newId = insertReservation.executeAndReturnKey(parameters).longValue();
 
         return new Reservation(newId, reservation);

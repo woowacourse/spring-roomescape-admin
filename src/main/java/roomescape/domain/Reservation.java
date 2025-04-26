@@ -6,17 +6,21 @@ import java.time.LocalTime;
 public class Reservation {
     private long id;
     private Person person;
+    private LocalDate date;
     private ReservationTime reservationTime;
 
-    public Reservation(final long id, final Person person, final ReservationTime reservationTime) {
+    public Reservation(final long id, final Person person, final LocalDate date,
+                       final ReservationTime reservationTime) {
         this.id = id;
         this.person = person;
+        this.date = date;
         this.reservationTime = reservationTime;
     }
 
-    public Reservation(final Person person, final ReservationTime reservationTime) {
+    public Reservation(final Person person, final LocalDate date, final ReservationTime reservationTime) {
         this.id = 0L;
         this.person = person;
+        this.date = date;
         this.reservationTime = reservationTime;
     }
 
@@ -39,11 +43,11 @@ public class Reservation {
     }
 
     public LocalDate getDate() {
-        return reservationTime.getDate();
+        return this.date;
     }
 
-    public LocalTime getTime() {
-        return reservationTime.getTime();
+    public LocalTime getStartAt() {
+        return reservationTime.getStartAt();
     }
 
     public long getId() {

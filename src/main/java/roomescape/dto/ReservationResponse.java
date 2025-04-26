@@ -18,7 +18,7 @@ public record ReservationResponse(
                 reservation.getId(),
                 reservation.getPersonName(),
                 reservation.getDate(),
-                reservation.getTime()
+                reservation.getStartAt()
         );
     }
 }

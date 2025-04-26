@@ -3,7 +3,8 @@ package roomescape.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,8 +44,8 @@ class ReservationDaoTest {
     @Test
     void insertTest() {
         Person person = new Person("아마");
-        ReservationTime reservationTime = new ReservationTime(LocalDateTime.of(2024, 12, 25, 11, 0));
-        Reservation reservation = new Reservation(1, person, reservationTime);
+        ReservationTime reservationTime = new ReservationTime(LocalTime.of(11, 0));
+        Reservation reservation = new Reservation(1, person, LocalDate.of(2024, 2, 25), reservationTime);
 
         reservationDao.insert(reservation);
         int size = jdbcTemplate.queryForObject("select count(*) from reservation", Integer.class);

@@ -31,7 +31,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ReservationResponse createReservations(@RequestBody ReservationRequest reservationRequest) {
+    public ReservationResponse createReservation(@RequestBody ReservationRequest reservationRequest) {
         Reservation reservation = reservationRequest.toReservation();
         Reservation idWithReservation = reservationDao.insert(reservation);
         return ReservationResponse.from(idWithReservation);

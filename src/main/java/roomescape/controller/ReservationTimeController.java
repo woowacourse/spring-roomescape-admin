@@ -9,10 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dao.ReservationTimeDao;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
-import roomescape.entity.ReservationTime;
+import roomescape.service.ReservationTimeService;
 
 import java.util.List;
 
@@ -20,10 +19,10 @@ import java.util.List;
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private final ReservationTimeDao reservationTimeDao;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(final ReservationTimeDao reservationTimeDao) {
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationTimeController(final ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -33,22 +32,17 @@ public class ReservationTimeController {
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> getReservationTimes() {
-        List<ReservationTimeResponse> reservationTimes = reservationTimeDao.findAll()
-                .stream()
-                .map(ReservationTimeResponse::toDto)
-                .toList();
-        return ResponseEntity.ok().body(reservationTimes);
+        return ResponseEntity.ok().body(reservationTimeService.getAllReservationTimes());
     }
 
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> createReservationTime(@RequestBody final ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime newReservationTime = reservationTimeDao.insert(reservationTimeRequest.toEntity());
-        return ResponseEntity.ok().body(ReservationTimeResponse.toDto(newReservationTime));
+        return ResponseEntity.ok().body(reservationTimeService.createReservationTime(reservationTimeRequest));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservationTime(@PathVariable("id") final Long id) {
-        if (reservationTimeDao.deleteById(id)) {
+        if (reservationTimeService.deleteReservationTimeById(id)) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.noContent().build();

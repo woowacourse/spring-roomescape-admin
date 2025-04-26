@@ -37,7 +37,7 @@ class FakeReservationTimeDaoTest {
     }
 
     @Test
-    void 특정_예약시간을_삭제했을때_예약이_없으면_false를_반환한다() {
+    void 특정_예약시간을_삭제했을때_예약시간이_없으면_false를_반환한다() {
         assertThat(reservationTimeDao.deleteById(4L)).isFalse();
     }
 }

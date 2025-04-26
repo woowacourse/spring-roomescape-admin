@@ -44,7 +44,7 @@ public class ReservationDAO implements EntityRepository<Reservation> {
                 """;
 
         return jdbcTemplate.query(sql,
-                (resultSet, rowNum) -> getReservation(resultSet)
+                (resultSet, rowNum) -> parseReservation(resultSet)
         );
     }
 
@@ -58,29 +58,29 @@ public class ReservationDAO implements EntityRepository<Reservation> {
 
         Map<String, Long> params = Map.of("reservation_id", id);
 
-        return getReservation(sql, params);
+        return parseReservation(sql, params);
     }
 
-    private Optional<Reservation> getReservation(String sql, Map<String, Long> params) {
+    private Optional<Reservation> parseReservation(String sql, Map<String, Long> params) {
         try {
             Reservation reservation = jdbcTemplate.queryForObject(sql,
                     params,
-                    (resultSet, rowNum) -> getReservation(resultSet));
+                    (resultSet, rowNum) -> parseReservation(resultSet));
             return Optional.ofNullable(reservation);
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException("entity not found");
         }
     }
 
-    private Reservation getReservation(ResultSet resultSet) throws SQLException {
+    private Reservation parseReservation(ResultSet resultSet) throws SQLException {
         return new Reservation(
                 resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
                 LocalDate.parse(resultSet.getString("date")),
-                getReservationTime(resultSet));
+                parseReservationTime(resultSet));
     }
 
-    private ReservationTime getReservationTime(ResultSet resultSet) throws SQLException {
+    private ReservationTime parseReservationTime(ResultSet resultSet) throws SQLException {
         return new ReservationTime(
                 resultSet.getLong("reservation_time_id"),
                 LocalTime.parse(resultSet.getString("start_at")

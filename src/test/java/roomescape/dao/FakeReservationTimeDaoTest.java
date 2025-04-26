@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import roomescape.entity.ReservationTime;
+import roomescape.fake.FakeReservationTimeDao;
 
 import java.time.LocalTime;
 

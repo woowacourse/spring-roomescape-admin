@@ -1,5 +1,6 @@
-package roomescape.dao;
+package roomescape.fake;
 
+import roomescape.dao.ReservationTimeDao;
 import roomescape.entity.ReservationTime;
 
 import java.time.LocalTime;

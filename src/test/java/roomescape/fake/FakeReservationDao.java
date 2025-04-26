@@ -1,5 +1,6 @@
-package roomescape.dao;
+package roomescape.fake;
 
+import roomescape.dao.ReservationDao;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.request.TimeRequest;
-import roomescape.dto.response.TimeResponse;
+import roomescape.controller.dto.request.TimeRequest;
+import roomescape.controller.dto.response.TimeResponse;
 import roomescape.service.TimeService;
 
 @RestController

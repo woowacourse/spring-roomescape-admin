@@ -4,9 +4,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.request.ReservationRequest;
-import roomescape.dto.response.ReservationResponse;
-import roomescape.mapper.ReservationMapper;
+import roomescape.controller.dto.request.ReservationRequest;
+import roomescape.controller.dto.response.ReservationResponse;
+import roomescape.service.mapper.ReservationMapper;
 import roomescape.repository.ReservationRepository;
 
 @Service

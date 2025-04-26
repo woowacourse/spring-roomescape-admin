@@ -1,4 +1,4 @@
-package roomescape.mapper;
+package roomescape.service.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,8 +8,9 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.request.TimeRequest;
-import roomescape.dto.response.TimeResponse;
+import roomescape.controller.dto.request.TimeRequest;
+import roomescape.controller.dto.response.TimeResponse;
+import roomescape.service.mapper.ReservationTimeMapper;
 
 class ReservationTimeMapperTest {
 

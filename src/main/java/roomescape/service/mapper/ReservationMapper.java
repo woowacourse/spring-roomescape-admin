@@ -1,10 +1,10 @@
-package roomescape.mapper;
+package roomescape.service.mapper;
 
 import java.util.List;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.request.ReservationRequest;
-import roomescape.dto.response.ReservationResponse;
+import roomescape.controller.dto.request.ReservationRequest;
+import roomescape.controller.dto.response.ReservationResponse;
 
 public class ReservationMapper {
 

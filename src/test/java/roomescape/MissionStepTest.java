@@ -22,7 +22,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.controller.ReservationController;
-import roomescape.dto.response.ReservationResponse;
+import roomescape.controller.dto.response.ReservationResponse;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.TimeRepository;
 

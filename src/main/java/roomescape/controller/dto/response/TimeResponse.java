@@ -1,12 +1,13 @@
-package roomescape.dto.request;
+package roomescape.controller.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalTime;
 
-public record TimeRequest(
+public record TimeResponse(
+
+        long id,
+
         @JsonFormat(pattern = "HH:mm")
-        @NotNull
         LocalTime startAt
 ) {
 }

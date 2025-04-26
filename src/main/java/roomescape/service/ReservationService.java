@@ -7,18 +7,17 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.domain.dto.ReservationRequestDto;
 import roomescape.domain.dto.ReservationTimeRequestDto;
-import roomescape.repositiory.ReservationRepository;
-import roomescape.repositiory.ReservationTimeRepository;
+import roomescape.repositiory.GeneralRepository;
 
 @Service
 public class ReservationService {
 
-    private final ReservationRepository reservationRepository;
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final GeneralRepository<Reservation> reservationRepository;
+    private final GeneralRepository<ReservationTime> reservationTimeRepository;
 
     @Autowired
-    public ReservationService(ReservationRepository reservationRepository,
-                              ReservationTimeRepository reservationTimeRepository) {
+    public ReservationService(GeneralRepository<Reservation> reservationRepository,
+                              GeneralRepository<ReservationTime> reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
         this.reservationTimeRepository = reservationTimeRepository;
     }
@@ -53,7 +52,7 @@ public class ReservationService {
         return reservationTimeRepository.findById(id);
     }
 
-    public void deleteReservationTime(Long id) {
+    public void deleteTime(Long id) {
         reservationTimeRepository.delete(id);
     }
 }

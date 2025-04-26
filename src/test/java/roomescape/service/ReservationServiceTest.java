@@ -2,58 +2,44 @@ package roomescape.service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.context.annotation.Import;
+import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.domain.dto.ReservationRequestDto;
-import roomescape.repositiory.ReservationRepository;
-import roomescape.repositiory.ReservationTimeRepository;
+import roomescape.domain.dto.ReservationTimeRequestDto;
+import roomescape.repositiory.GeneralRepository;
 
-@JdbcTest
-@Import({ReservationRepository.class, ReservationTimeRepository.class})
 class ReservationServiceTest {
 
-    @Autowired
-    private ReservationRepository reservationRepository;
-    @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
-
+    private GeneralRepository<ReservationTime> reservationTimeRepository;
+    private ReservationService reservationService;
     private Long timeId;
 
     @BeforeEach
     void setUp() {
-        timeId = reservationTimeRepository.add(new ReservationTime(LocalTime.now()));
-    }
+        GeneralRepository<Reservation> reservationRepository = new FakeReservationRepository();
+        reservationTimeRepository = new FakeReservationTimeRepository();
 
+        reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
+
+        timeId = reservationTimeRepository.add(new ReservationTime(1L, LocalTime.now()));
+    }
 
     @DisplayName("예약한다")
     @Test
     void addReservation() {
-        // given
-        ReservationService reservationService = new ReservationService(
-                reservationRepository,
-                reservationTimeRepository);
-        // when
-        Long id = reservationService.addReservation(
-                new ReservationRequestDto("예약자", LocalDate.now(), timeId));
-
-        // then
-        Assertions.assertThat(id).isNotNull();
+        reservationService.addReservation(new ReservationRequestDto("예약자", LocalDate.now(), timeId));
+        Assertions.assertThat(reservationService.readReservationAll()).isNotEmpty();
     }
 
     @DisplayName("예약을 취소한다")
     @Test
     void deleteReservation() {
         // given
-        ReservationService reservationService = new ReservationService(
-                reservationRepository,
-                reservationTimeRepository);
-
         Long id = reservationService.addReservation(
                 new ReservationRequestDto("예약자", LocalDate.now(), timeId));
 
@@ -68,10 +54,6 @@ class ReservationServiceTest {
     @Test
     void readReservationAll() {
         // given
-        ReservationService reservationService = new ReservationService(
-                reservationRepository,
-                reservationTimeRepository);
-
         Long id = reservationService.addReservation(
                 new ReservationRequestDto("예약자", LocalDate.now(), timeId));
 
@@ -83,5 +65,39 @@ class ReservationServiceTest {
         // then
         Assertions.assertThat(firstReadSize).isEqualTo(1);
         Assertions.assertThat(secondReadSize).isEqualTo(0);
+    }
+
+    @DisplayName("아이디로 예약 가능한 시간을 조회한다")
+    @Test
+    void readTimeOne() {
+        ReservationTime reservationTime = reservationService.readTimeOne(1L);
+        Assertions.assertThat(reservationTime).isNotNull();
+    }
+
+    @DisplayName("모든 시간을 조회한다")
+    @Test
+    void readTimeAll() {
+        // given
+        Long two = reservationTimeRepository.add(new ReservationTime(2L, LocalTime.now()));
+
+        // when
+        List<ReservationTime> reservationTimes = reservationService.readTimeAll();
+
+        // then
+        Assertions.assertThat(reservationTimes).hasSize(2);
+    }
+
+    @DisplayName("예약 가능한 시간을 추가한다")
+    @Test
+    void addTime() {
+        Long timeId = reservationService.addTime(new ReservationTimeRequestDto(LocalTime.now()));
+        Assertions.assertThat(timeId).isEqualTo(1L);
+    }
+
+    @DisplayName("예약 시간대 하나를 삭제한다")
+    @Test
+    void deleteTime() {
+        reservationService.deleteTime(1L);
+        Assertions.assertThat(reservationService.readTimeAll()).isEmpty();
     }
 }

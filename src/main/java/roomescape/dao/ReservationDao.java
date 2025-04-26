@@ -7,17 +7,17 @@ import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.model.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.entity.ReservationWithTimeId;
+import roomescape.model.Reservation;
 
 @Repository
-public class ReservationDaoDao implements ReservationDaoInterface {
+public class ReservationDao implements ReservationDaoInterface {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationDaoDao(JdbcTemplate jdbcTemplate, ReservationTimeDao reservationTimeDao) {
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("reservation")
                 .usingGeneratedKeyColumns("id");

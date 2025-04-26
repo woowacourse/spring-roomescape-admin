@@ -73,4 +73,9 @@ public class ReservationController {
     public ResponseEntity<String> handleValidateDtoException(MethodArgumentNotValidException exception) {
         return ResponseEntity.badRequest().body(exception.getBindingResult().getFieldErrors().get(0).getDefaultMessage());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException exception) {
+        return ResponseEntity.noContent().build();
+    }
 }

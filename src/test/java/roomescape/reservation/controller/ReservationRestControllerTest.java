@@ -46,10 +46,8 @@ class ReservationRestControllerTest {
 
     @Test
     void 예약_정보_저장에_성공하는_경우_ok를_반환한다() {
-        final Map<String, String> params = new HashMap<>();
-        params.put("name", "헤일러");
-        params.put("date", "2025-04-15");
-        params.put("timeId", "1");
+        final Map<String, String> params
+                = createReservationRequestJsonMap("헤일러", "2025-04-15", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -61,10 +59,8 @@ class ReservationRestControllerTest {
 
     @Test
     void 요청_형식이_맞지_않아_예약_정보_저장에_실패하는_경우_bad_request를_반환한다() {
-        final Map<String, String> params = new HashMap<>();
-        params.put("name", "헤일러");
-        params.put("date", "2025 04 15");
-        params.put("time", "10 00");
+        final Map<String, String> params
+                = createReservationRequestJsonMap("헤일러", "2025 04 15", "10 00");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -76,10 +72,8 @@ class ReservationRestControllerTest {
 
     @Test
     void 예약_정보_삭제에_성공한_경우_ok를_반환한다() {
-        final Map<String, String> params = new HashMap<>();
-        params.put("name", "헤일러");
-        params.put("date", "2025-04-15");
-        params.put("timeId", "2");
+        final Map<String, String> params
+                = createReservationRequestJsonMap("헤일러", "2025-04-15", "2");
 
         final Response response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -99,10 +93,8 @@ class ReservationRestControllerTest {
 
     @Test
     void 예약_정보를_삭제한다() {
-        final Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("timeId", "1");
+        final Map<String, String> params
+                = createReservationRequestJsonMap("브라운", "2023-08-05", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -151,5 +143,13 @@ class ReservationRestControllerTest {
         }
 
         assertThat(isJdbcTemplateInjected).isFalse();
+    }
+
+    private Map<String, String> createReservationRequestJsonMap(String name, String date, String timeId) {
+        return Map.ofEntries(
+                Map.entry("name", name),
+                Map.entry("date", date),
+                Map.entry("timeId", timeId)
+        );
     }
 }

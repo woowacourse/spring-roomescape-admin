@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -26,7 +27,7 @@ public class ReservationTimeRepository {
                     PreparedStatement ps = connection.prepareStatement(
                             "INSERT INTO reservation_time(start_at) VALUES(?)",
                             new String[]{"id"});
-                    ps.setString(1, time.getStartAt().toString());
+                    ps.setTime(1, Time.valueOf(time.getStartAt()));
                     return ps;
                 }
                 , keyHolder);
@@ -42,7 +43,7 @@ public class ReservationTimeRepository {
                 (rs, rowNum) -> {
                     return new ReservationTimeResponse(
                             rs.getLong("id"),
-                            rs.getString("start_at")
+                            rs.getTime("start_at").toString()
                     );
                 }
         );
@@ -62,7 +63,7 @@ public class ReservationTimeRepository {
                 (rs, rowNum) -> {
                   return new ReservationTime(
                           rs.getLong("id"),
-                          LocalTime.parse(rs.getString("start_at"))
+                          rs.getTime("start_at").toLocalTime()
                   );
                 },
                 id

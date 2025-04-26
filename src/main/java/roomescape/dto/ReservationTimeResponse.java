@@ -10,7 +10,7 @@ public record ReservationTimeResponse(
     public static ReservationTimeResponse fromEntity(ReservationTime time) {
         return new ReservationTimeResponse(
                 time.getId(),
-                time.getStartAt().format(DateTimeFormatter.ofPattern("HH:mm"))
+                time.getStartAt().toString()
         );
     }
 }

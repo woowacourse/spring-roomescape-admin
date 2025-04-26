@@ -13,7 +13,7 @@ public record ReservationResponse(
         return new ReservationResponse(
                 reservation.getId(),
                 reservation.getName(),
-                reservation.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                reservation.getDate().toString(),
                 ReservationTimeResponse.fromEntity(reservation.getReservationTime())
         );
     }

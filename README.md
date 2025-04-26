@@ -19,18 +19,29 @@
 
 ## 5 단계
 
-- [x] bd 에서 데이터를 조회하는 기능을 구현한다.
+- [x] reservation 테이블에서 예약조회기능을 구현한다.
 
 ## 6 단계
 
-- [x] bd에 데이터를 추가하는 기능을 구현한다.
-- [x] bd에서 데이터를 삭제하는 기능을 구현한다.
+- [x] reservation 테이블에서 예약추가 기능을 구현한다.
+- [x] reservation 테이블에서 예약삭제 기능을 구현한다.
+
+## 7 단계
+
+- [x] reservation_time 테이블에서 예약시간조회 기능을 구현한다.
+- [x] reservation_time 테이블에서 예약시간추가 기능을 구현한다.
+- [x] reservation_time 테이블에서 예약시간삭제 기능을 구현한다.
 
 ## Database Schema
 
-### Reservation
+### RESERVATION
 
 | id(pk) | name | date | time |
 |--------|------|------|------|
+
+### RESERVATION_TIME
+
+| id(pk) | start_at |
+|--------|----------|
 			
 			

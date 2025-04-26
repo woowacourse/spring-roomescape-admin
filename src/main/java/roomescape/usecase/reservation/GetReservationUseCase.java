@@ -1,4 +1,4 @@
-package roomescape.usecase.Reservation;
+package roomescape.usecase.reservation;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package roomescape.adapter.Reservation;
+package roomescape.adapter.reservation;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.usecase.Reservation.AddReservationUseCase;
-import roomescape.usecase.Reservation.DeleteReservationUseCase;
-import roomescape.usecase.Reservation.GetReservationUseCase;
-import roomescape.usecase.Reservation.ReservationOutput;
+import roomescape.usecase.reservation.AddReservationUseCase;
+import roomescape.usecase.reservation.DeleteReservationUseCase;
+import roomescape.usecase.reservation.GetReservationUseCase;
+import roomescape.usecase.reservation.ReservationOutput;
 
 @RestController
 @RequestMapping("/reservations")

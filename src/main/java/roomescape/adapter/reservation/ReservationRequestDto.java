@@ -1,7 +1,7 @@
-package roomescape.adapter.Reservation;
+package roomescape.adapter.reservation;
 
 import java.time.LocalDate;
-import roomescape.usecase.Reservation.ReservationInput;
+import roomescape.usecase.reservation.ReservationInput;
 
 public record ReservationRequestDto(LocalDate date, String name, Long timeId) {
     public ReservationInput toInput() {

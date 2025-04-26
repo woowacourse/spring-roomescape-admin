@@ -1,4 +1,4 @@
-package roomescape.usecase.Reservation;
+package roomescape.usecase.reservation;
 
 public interface AddReservationUseCase {
 

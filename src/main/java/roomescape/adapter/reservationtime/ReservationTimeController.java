@@ -1,4 +1,4 @@
-package roomescape.adapter.ReservationTime;
+package roomescape.adapter.reservationtime;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.usecase.ReservationTime.AddReservationTimeUseCase;
-import roomescape.usecase.ReservationTime.DeleteReservationTimeUsecase;
-import roomescape.usecase.ReservationTime.GetReservationTimeUseCase;
-import roomescape.usecase.ReservationTime.ReservationTimeOutput;
+import roomescape.usecase.reservationTime.AddReservationTimeUseCase;
+import roomescape.usecase.reservationTime.DeleteReservationTimeUsecase;
+import roomescape.usecase.reservationTime.GetReservationTimeUseCase;
+import roomescape.usecase.reservationTime.ReservationTimeOutput;
 
 @RestController
 @RequestMapping("/times")

@@ -1,11 +1,11 @@
-package roomescape.usecase.Reservation;
+package roomescape.usecase.reservation;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.usecase.ReservationTime.ReservationTimeRepository;
+import roomescape.usecase.reservationTime.ReservationTimeRepository;
 
 
 @Service

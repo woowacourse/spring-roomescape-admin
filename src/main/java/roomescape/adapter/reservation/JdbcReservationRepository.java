@@ -1,4 +1,4 @@
-package roomescape.adapter.Reservation;
+package roomescape.adapter.reservation;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
@@ -10,14 +10,14 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.usecase.Reservation.ReservationOutput;
-import roomescape.usecase.Reservation.ReservationRepository;
+import roomescape.usecase.reservation.ReservationOutput;
+import roomescape.usecase.reservation.ReservationRepository;
 
 @Repository
-public class ReservationRepositoryImpl implements ReservationRepository {
+public class JdbcReservationRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationRepositoryImpl(final JdbcTemplate jdbcTemplate) {
+    public JdbcReservationRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -43,15 +43,17 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     @Override
     public List<ReservationOutput> getAllReservations() {
-        String sql = "SELECT \n"
-                + "    r.id as reservation_id, \n"
-                + "    r.name, \n"
-                + "    r.date, \n"
-                + "    t.id as time_id, \n"
-                + "    t.start_at as time_value \n"
-                + "FROM reservation as r \n"
-                + "inner join reservation_time as t \n"
-                + "on r.time_id = t.id";
+        String sql = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r 
+                inner join reservation_time as t 
+                on r.time_id = t.id
+                """;
 
         List<Reservation> reservations = jdbcTemplate.query(sql, (rs, rowNum) -> new Reservation(
                 rs.getLong("id"),
@@ -66,6 +68,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                 .map(ReservationOutput::from)
                 .toList();
     }
+
     @Override
     public void deleteReservation(final long id) {
         jdbcTemplate.update("delete from reservation where id = ?", id);

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -14,6 +15,10 @@ import roomescape.time.domain.ReservationTime;
 @Repository
 @RequiredArgsConstructor
 public class H2ReservationTimeRepository implements ReservationTimeRepository {
+
+    private static final RowMapper<ReservationTime> RESERVATION_TIME_ROW_MAPPER = (rs, rowNum) ->
+            new ReservationTime(rs.getLong("id"),
+                    rs.getTime("start_at").toLocalTime());
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -49,11 +54,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
                 FROM reservation_times 
                 WHERE id = ?
                 """;
-        List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, (rs, rowNum) ->
-                        new ReservationTime(rs.getLong("id"),
-                                rs.getTime("start_at").toLocalTime()),
-                id
-        );
+        List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, RESERVATION_TIME_ROW_MAPPER, id);
 
         if (!reservationTimes.isEmpty()) {
             return Optional.of(reservationTimes.getFirst());
@@ -69,10 +70,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
                     start_at
                 FROM reservation_times
                 """;
-        return jdbcTemplate.query(sql, (resultSet, rowCount) ->
-                new ReservationTime(resultSet.getLong("id"),
-                        resultSet.getTime("start_at").toLocalTime())
-        );
+        return jdbcTemplate.query(sql, RESERVATION_TIME_ROW_MAPPER);
     }
 
     @Override

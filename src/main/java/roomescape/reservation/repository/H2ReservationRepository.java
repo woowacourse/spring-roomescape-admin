@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,18 @@ import roomescape.time.domain.ReservationTime;
 @Repository
 @RequiredArgsConstructor
 public class H2ReservationRepository implements ReservationRepository {
+
+    private static final RowMapper<Reservation> RESERVATION_ROW_MAPPER = (rs, rowNum) ->
+            new Reservation(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getDate("date").toLocalDate(),
+                    new ReservationTime(
+                            rs.getLong("time_id"),
+                            rs.getTime("start_at").toLocalTime()
+                    )
+            );
+    ;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -57,18 +70,7 @@ public class H2ReservationRepository implements ReservationRepository {
                 ON r.time_id = t.id
                 WHERE r.id = ?
                 """;
-        List<Reservation> reservations = jdbcTemplate.query(sql, (rs, rowNum) ->
-                        new Reservation(
-                                rs.getLong("id"),
-                                rs.getString("name"),
-                                rs.getDate("date").toLocalDate(),
-                                new ReservationTime(
-                                        rs.getLong("time_id"),
-                                        rs.getTime("start_at").toLocalTime()
-                                )
-                        ),
-                id
-        );
+        List<Reservation> reservations = jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER, id);
         if (!reservations.isEmpty()) {
             return Optional.of(reservations.getFirst());
         }
@@ -89,17 +91,7 @@ public class H2ReservationRepository implements ReservationRepository {
                 ON r.time_id = t.id
                 """;
 
-        return jdbcTemplate.query(sql, (rs, rowNum) ->
-                new Reservation(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getDate("date").toLocalDate(),
-                        new ReservationTime(
-                                rs.getLong("time_id"),
-                                rs.getTime("start_at").toLocalTime()
-                        )
-                )
-        );
+        return jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER);
     }
 
     @Override

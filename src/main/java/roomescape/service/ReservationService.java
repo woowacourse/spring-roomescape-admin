@@ -24,10 +24,10 @@ public class ReservationService {
 
     public Reservation createReservation(ReservationRequestDto reservationRequest) {
         Reservation newReservation = reservationRequest.toReservation();
-        long reservationId = reservationDao.create(newReservation);
-        newReservation.setId(new Id(reservationId));
-
         ReservationTime reservationTime = timeDao.findById(reservationRequest.timeId());
+        long reservationId = reservationDao.create(newReservation);
+
+        newReservation.setId(new Id(reservationId));
         newReservation.setTime(reservationTime);
 
         return newReservation;

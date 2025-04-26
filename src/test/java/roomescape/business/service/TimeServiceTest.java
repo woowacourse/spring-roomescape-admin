@@ -51,7 +51,7 @@ class TimeServiceTest {
 
     @DisplayName("조회하려는 방탈출 시간 id가 없다면 예외가 발생한다.")
     @Test
-    void find2() {
+    void findOrThrowIfIdNotExists() {
         // given
         final Long id = 1L;
         final Time expected = new Time(1L, FORMATTED_MAX_LOCAL_TIME);
@@ -89,7 +89,7 @@ class TimeServiceTest {
 
     @DisplayName("삭제하려는 방탈출 시간 id가 없다면 예외가 발생한다.")
     @Test
-    void remove2() {
+    void removeOrThrowIfIdNotExists() {
         // given & when & then
         assertThatThrownBy(() -> timeService.remove(1L))
                 .isInstanceOf(IllegalArgumentException.class);

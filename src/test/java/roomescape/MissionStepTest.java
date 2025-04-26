@@ -62,8 +62,7 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(0));
     }
-
-
+    
     @Test
     void connectDatabaseNotNullTest() {
         assertThat(connection).isNotNull();

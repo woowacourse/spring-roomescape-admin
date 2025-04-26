@@ -71,7 +71,7 @@ public class MissionStepTest {
 
     @Test
     void validateDatabaseCatalogNameTest() throws SQLException {
-        assertThat(connection.getCatalog()).isEqualTo("DATABASE");
+        assertThat(connection.getCatalog()).isEqualTo("TEST-DATABASE");
     }
 
     @Test

@@ -5,35 +5,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.context.annotation.Import;
 import roomescape.dao.resetvationTime.JdbcReservationTimeDao;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
-@SpringBootTest
-@TestPropertySource(locations = "classpath:application-test.properties")
+@JdbcTest
+@Import({JdbcReservationTimeDao.class, JdbcReservationDao.class})
 class JdbcReservationDaoTest {
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private JdbcReservationDao jdbcReservationDao;
 
     @Autowired
     private JdbcReservationTimeDao jdbcReservationTimeDao;
-
-    @BeforeEach
-    void setUp() {
-        jdbcTemplate.update("DELETE FROM reservation");
-        jdbcTemplate.update("DELETE FROM reservation_time");
-    }
 
     @DisplayName("에약을 데이터베이스에 추가한다.")
     @Test

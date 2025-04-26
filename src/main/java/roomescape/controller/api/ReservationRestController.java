@@ -1,7 +1,6 @@
 package roomescape.controller.api;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,35 +27,27 @@ public class ReservationRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationGetResponse>> getAllReservations() {
+    public List<ReservationGetResponse> getAllReservations() {
         List<Reservation> reservations = reservationService.getAllReservation();
-        List<ReservationGetResponse> reservationGetResponses = reservations.stream()
+        return reservations.stream()
                 .map(ReservationGetResponse::from)
                 .toList();
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(reservationGetResponses);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationGetResponse> addReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
+    public ReservationGetResponse addReservation(@RequestBody ReservationCreateRequest reservationCreateRequest) {
         try {
             Reservation reservation = reservationService.reserveNewTime(reservationCreateRequest);
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(ReservationGetResponse.from(reservation));
+            return ReservationGetResponse.from(reservation);
         } catch (IllegalArgumentException exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
+    public void deleteReservation(@PathVariable("id") Long id) {
         try {
             reservationService.deleteReservationById(id);
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .build();
         } catch (IllegalArgumentException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

@@ -1,7 +1,6 @@
 package roomescape.controller.api;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,35 +27,27 @@ public class ReservationTimeRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTimeGetResponse>> getReservationTimes() {
+    public List<ReservationTimeGetResponse> getReservationTimes() {
         List<ReservationTime> reservationTimes = reservationService.getAllReservationTime();
-        List<ReservationTimeGetResponse> reservationTimeGetResponses = reservationTimes.stream()
+        return reservationTimes.stream()
                 .map(ReservationTimeGetResponse::from)
                 .toList();
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(reservationTimeGetResponses);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTimeGetResponse> addReservationTime(@RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
+    public ReservationTimeGetResponse addReservationTime(@RequestBody ReservationTimeCreateRequest reservationTimeCreateRequest) {
         try {
             ReservationTime newReservationTime = reservationService.createNewReservationTime(reservationTimeCreateRequest);
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(ReservationTimeGetResponse.from(newReservationTime));
+            return ReservationTimeGetResponse.from(newReservationTime);
         } catch (IllegalArgumentException exception) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservationTime(@PathVariable("id") Long id) {
+    public void deleteReservationTime(@PathVariable("id") Long id) {
         try {
             reservationService.deleteReservationTimeById(id);
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .build();
         } catch (IllegalArgumentException exception) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

@@ -32,9 +32,9 @@ public class ReservationController {
 
     @PostMapping
     public ReservationResponse createReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = reservationRequest.toReservation();
-        Reservation idWithReservation = reservationDao.insert(reservation);
-        return ReservationResponse.from(idWithReservation);
+        Reservation reservation = reservationRequest.toReservation(); // 이름과 날짜만 있는 예약
+        Reservation reservationWithId = reservationDao.insert(reservation, reservationRequest.timeId());
+        return ReservationResponse.from(reservationWithId);
     }
 
     @DeleteMapping("/{id}")

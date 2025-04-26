@@ -30,6 +30,18 @@ public class Reservation {
         this.reservationTime = reservation.getReservationTime();
     }
 
+    public Reservation(final long id, final Reservation reservation, final ReservationTime reservationTime) {
+        this.id = id;
+        this.person = reservation.getPerson();
+        this.date = reservation.getDate();
+        this.reservationTime = reservationTime;
+    }
+
+    public Reservation(final Person person, final LocalDate date) {
+        this.person = person;
+        this.date = date;
+    }
+
     public String getPersonName() {
         return person.name();
     }

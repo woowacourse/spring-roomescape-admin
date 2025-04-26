@@ -27,14 +27,22 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAll() {
-        String sql = "select id, name, date, time from reservation";
+        String sql = "SELECT \n"
+                + "    r.id as reservation_id, \n"
+                + "    r.name, \n"
+                + "    r.date, \n"
+                + "    t.id as time_id, \n"
+                + "    t.start_at as time_value \n"
+                + "FROM reservation as r \n"
+                + "inner join reservation_time as t \n"
+                + "on r.time_id = t.id\n";
         List<Reservation> foundReservations = jdbcTemplate.query(
                 sql, (rs, rowNum) -> {
                     long id = rs.getLong("id");
                     String name = rs.getString("name");
                     String date = rs.getString("date");
-                    String time = rs.getString("time");
-                    return new Reservation(id, toPerson(name), LocalDate.parse(date), toReservationTime(time));
+                    String startAt = rs.getString("start_at");
+                    return new Reservation(id, toPerson(name), LocalDate.parse(date), toReservationTime(startAt));
                 }
         );
         return foundReservations;

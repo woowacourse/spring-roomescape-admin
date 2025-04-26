@@ -24,6 +24,7 @@ class ReservationDaoTest {
 
     @BeforeEach
     void initialize() {
+        jdbcTemplate.execute("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
         reservationDao = new ReservationDao(jdbcTemplate);
         jdbcTemplate.update("insert into reservation_time (start_at) values (?)",
                 "10:00"
@@ -36,7 +37,7 @@ class ReservationDaoTest {
         jdbcTemplate.update("insert into reservation_time (start_at) values (?)",
                 "12:00"
         );
-        
+
         jdbcTemplate.update("insert into reservation (name, date, time_id) values (?, ?, ?)",
                 "아마",
                 "2024-12-25",

@@ -17,9 +17,7 @@ public final class MemoryReservationTimeRepository implements ReservationTimeRep
     @Override
     public List<ReservationTime> findAll() {
         return reservationTimes.stream()
-                .map(reservationTimeEntity -> new ReservationTime(
-                        reservationTimeEntity.getId(),
-                        LocalTime.parse(reservationTimeEntity.getStartAt())))
+                .map(ReservationTimeEntity::toDomain)
                 .toList();
     }
 
@@ -28,23 +26,15 @@ public final class MemoryReservationTimeRepository implements ReservationTimeRep
         return reservationTimes.stream()
                 .filter(reservationTimeEntity -> reservationTimeEntity.getId() == id)
                 .findFirst()
-                .map(reservationTimeEntity -> new ReservationTime(
-                        reservationTimeEntity.getId(),
-                        LocalTime.parse(reservationTimeEntity.getStartAt())));
+                .map(ReservationTimeEntity::toDomain);
     }
 
     @Override
     public ReservationTime add(ReservationTime reservationTime) {
         long id = idGenerator.getAndIncrement();
-        ReservationTimeEntity reservationTimeEntity = new ReservationTimeEntity(
-                id,
-                reservationTime.getStartTime().toString()
-        );
+        ReservationTimeEntity reservationTimeEntity = ReservationTimeEntity.fromDomain(reservationTime).copyWithId(id);
         reservationTimes.add(reservationTimeEntity);
-        return new ReservationTime(
-                id,
-                reservationTime.getStartTime()
-        );
+        return reservationTimeEntity.toDomain();
     }
 
     @Override

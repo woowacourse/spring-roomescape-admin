@@ -6,10 +6,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDate;
-import roomescape.domain.ReservationDateTimeFormatter;
 import roomescape.domain.ReservationTime;
 import roomescape.persist.entity.ReservationEntity;
-import roomescape.persist.entity.ReservationTimeEntity;
 import roomescape.persist.repository.ReservationRepository;
 
 public final class MemoryReservationRepository implements ReservationRepository {
@@ -20,35 +18,16 @@ public final class MemoryReservationRepository implements ReservationRepository 
     @Override
     public List<Reservation> findAll() {
         return reservations.values().stream()
-                .map(reservationEntity -> new Reservation(
-                        reservationEntity.getId(),
-                        reservationEntity.getName(),
-                        new ReservationDate(ReservationDateTimeFormatter.parseDate(reservationEntity.getDate())),
-                        new ReservationTime(reservationEntity.getTimeEntity().getId(),
-                                ReservationDateTimeFormatter.parseTime(reservationEntity.getTimeEntity().getStartAt()))
-                ))
+                .map(ReservationEntity::toDomain)
                 .toList();
     }
 
     @Override
     public Reservation add(Reservation reservation) {
         long id = idGenerator.getAndIncrement();
-        ReservationEntity reservationEntity = new ReservationEntity(
-                id,
-                reservation.getName(),
-                reservation.getDate().getStartDate().toString(),
-                new ReservationTimeEntity(
-                        reservation.getTime().getId(),
-                        reservation.getTime().getStartTime().toString()
-                )
-        );
+        ReservationEntity reservationEntity = ReservationEntity.fromDomain(reservation).copyWithId(id);
         reservations.put(id, reservationEntity);
-        return new Reservation(
-                id,
-                reservation.getName(),
-                reservation.getDate(),
-                reservation.getTime()
-        );
+        return reservationEntity.toDomain();
     }
 
     @Override

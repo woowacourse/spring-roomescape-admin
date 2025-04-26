@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import roomescape.reservation.reservation.ReservationRepository;
-import roomescape.time.service.ReservationTimeService;
 import roomescape.exception.DataNotFoundException;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.repository.ReservationRepository;
+import roomescape.time.service.ReservationTimeService;
 
 @Service
 public class ReservationService {

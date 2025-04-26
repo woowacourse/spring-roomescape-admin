@@ -1,4 +1,4 @@
-package roomescape.time.time;
+package roomescape.time.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Time;

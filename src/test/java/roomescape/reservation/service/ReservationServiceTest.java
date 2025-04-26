@@ -14,11 +14,11 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.reservation.H2ReservationRepository;
-import roomescape.reservation.reservation.ReservationRepository;
+import roomescape.reservation.repository.H2ReservationRepository;
+import roomescape.reservation.repository.ReservationRepository;
+import roomescape.time.repository.H2ReservationTimeRepository;
+import roomescape.time.repository.ReservationTimeRepository;
 import roomescape.time.service.ReservationTimeService;
-import roomescape.time.time.H2ReservationTimeRepository;
-import roomescape.time.time.ReservationTimeRepository;
 
 
 @JdbcTest

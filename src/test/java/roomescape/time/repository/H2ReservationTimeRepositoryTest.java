@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import roomescape.time.domain.ReservationTime;
-import roomescape.time.time.H2ReservationTimeRepository;
 
 @JdbcTest
 @Import(H2ReservationTimeRepository.class)

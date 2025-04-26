@@ -31,14 +31,12 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    @ResponseBody
     public ResponseEntity<List<Reservation>> readReservations() {
         List<Reservation> reservationResponseDtos = reservationService.findAllReservations();
         return ResponseEntity.ok().body(reservationResponseDtos);
     }
 
     @PostMapping("/reservations")
-    @ResponseBody
     public ResponseEntity<Reservation> createReservation(
             @RequestBody ReservationRequestDto reservationRequest
     ) {
@@ -47,7 +45,6 @@ public class ReservationController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    @ResponseBody
     public ResponseEntity<String> deleteReservation(
             @PathVariable("id") long idRequest
     ) {

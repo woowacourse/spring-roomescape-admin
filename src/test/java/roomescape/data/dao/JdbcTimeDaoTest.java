@@ -69,6 +69,16 @@ class JdbcTimeDaoTest {
         assertThat(actual.get()).isEqualTo(new Time(1L, LocalTime.of(10, 10)));
     }
 
+    @DisplayName("해당하는 방탈출 시간이 없다면 Optional Empty를 반환한다.")
+    @Test
+    void findNotExistsTime() {
+        // given & when
+        final Optional<Time> actual = timeDao.find(1L);
+
+        // then
+        assertThat(actual).isEmpty();
+    }
+
     @DisplayName("데이터베이스에서 모든 방탈출 시간을 찾는다.")
     @Test
     void findAll() {

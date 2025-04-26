@@ -8,7 +8,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import roomescape.reservationTime.domain.ReservationTime;
-import roomescape.reservationTime.domain.dto.ReservationTimeReqDto;
+import roomescape.reservationTime.fixture.ReservationTimeFixture;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -25,10 +25,10 @@ class ReservationTimeRepositoryImplTest {
     void findById_throwsExceptionByNonExistentId() {
         // given
         LocalTime dummyTime1 = LocalTime.of(12, 10, 13);
-        ReservationTime reservationTime1 = ReservationTime.from(new ReservationTimeReqDto(dummyTime1));
+        ReservationTime reservationTime1 = ReservationTimeFixture.createReservationTime(dummyTime1);
 
         LocalTime dummyTime2 = LocalTime.of(14, 54, 32);
-        ReservationTime reservationTime2 = ReservationTime.from(new ReservationTimeReqDto(dummyTime2));
+        ReservationTime reservationTime2 = ReservationTimeFixture.createReservationTime(dummyTime2);
 
         List<ReservationTime> reservationTimes = List.of(reservationTime1, reservationTime2);
 

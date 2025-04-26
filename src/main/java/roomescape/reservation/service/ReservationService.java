@@ -2,7 +2,6 @@ package roomescape.reservation.service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import roomescape.exception.DataNotFoundException;
@@ -40,11 +39,9 @@ public class ReservationService {
     }
 
     public void deleteById(final Long id) {
-        final Optional<Reservation> found = reservationRepository.findById(id);
-
-        if (found.isEmpty()) {
-            throw new DataNotFoundException("해당 예약 데이터가 존재하지 않습니다. id = " + id);
-        }
-        reservationRepository.delete(found.get());
+        Reservation found = reservationRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("해당 예약 데이터가 존재하지 않습니다. id = " + id));
+        
+        reservationRepository.delete(found);
     }
 }

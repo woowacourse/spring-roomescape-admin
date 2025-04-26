@@ -38,6 +38,7 @@ public class JdbcReservationTimeDao implements ReservationTimeRepository {
         params.put("start_at", reservationTime.getStartAt().toString());
 
         final Number key = simpleJdbcInsert.executeAndReturnKey(params);
+
         return key.longValue();
     }
 
@@ -45,6 +46,7 @@ public class JdbcReservationTimeDao implements ReservationTimeRepository {
     @Transactional(readOnly = true)
     public Optional<ReservationTime> findById(final Long id) {
         final String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+
         return jdbcTemplate.query(sql, rowMapper, id).stream().findFirst();
     }
 
@@ -52,6 +54,7 @@ public class JdbcReservationTimeDao implements ReservationTimeRepository {
     @Transactional(readOnly = true)
     public List<ReservationTime> findAll() {
         final String sql = "SELECT id, start_at FROM reservation_time";
+
         return jdbcTemplate.query(sql, rowMapper);
     }
 

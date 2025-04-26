@@ -49,6 +49,7 @@ public class JdbcReservationDao implements ReservationRepository {
     @Transactional(readOnly = true)
     public Optional<Reservation> findById(final Long id) {
         final String sql = "SELECT id, name, date, time_id FROM reservation WHERE id = ?";
+
         return jdbcTemplate.query(sql, rowMapper, id).stream().findFirst();
     }
 
@@ -56,6 +57,7 @@ public class JdbcReservationDao implements ReservationRepository {
     @Transactional(readOnly = true)
     public List<Reservation> findAll() {
         final String sql = "SELECT id, name, date, time_id FROM reservation";
+
         return jdbcTemplate.query(sql, rowMapper);
     }
 

@@ -13,7 +13,6 @@ public class ReservationTime {
     }
 
     private ReservationTime(final Long id, final LocalTime startAt) {
-        validateTime(startAt);
         this.id = id;
         this.startAt = startAt;
     }
@@ -24,12 +23,6 @@ public class ReservationTime {
 
     public static ReservationTime of(final Long id, final LocalTime startAt) {
         return new ReservationTime(id, startAt);
-    }
-
-    private void validateTime(final LocalTime startAt) {
-        if (startAt == null) {
-            throw new IllegalArgumentException("[ERROR] 예약시간은 반드시 입력해야 합니다.");
-        }
     }
 
     public Long getId() {

@@ -75,7 +75,7 @@ class ReservationDaoTest {
         // given
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.now());
         reservationDao.save(new Reservation("메이", LocalDate.now(), reservationTime));
-        reservationDao.save(new Reservation("may", LocalDate.now(), reservationTime));
+        reservationDao.save(new Reservation("may", LocalDate.now().plusDays(1), reservationTime));
 
         // when & then
         assertThat(reservationDao.getAll().size())
@@ -87,7 +87,7 @@ class ReservationDaoTest {
         // given
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.now());
         reservationDao.save(new Reservation("메이", LocalDate.now(), reservationTime));
-        reservationDao.save(new Reservation("메이", LocalDate.now(), reservationTime));
+        reservationDao.save(new Reservation("메이", LocalDate.now().plusDays(1), reservationTime));
 
         Long id = reservationDao.getAll().get(0).reservationId();
 

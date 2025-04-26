@@ -9,6 +9,7 @@ import roomescape.domain.Reservation;
 import roomescape.dto.ReservationDto;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -21,6 +22,8 @@ public class ReservationDao {
     }
 
     public long save(final Reservation reservation) {
+        checkReservationAlreadyExist(reservation.getDate(), reservation.getTime().getId());
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
         jdbcTemplate.update(connection -> {
@@ -50,6 +53,14 @@ public class ReservationDao {
     public void deleteAll() {
         String query = "DELETE FROM reservation";
         jdbcTemplate.update(query);
+    }
+
+    private void checkReservationAlreadyExist(final LocalDate date, final Long timeId) {
+        String query = "SELECT count(*) FROM reservation WHERE date = ? AND time_id = ?";
+        int count = jdbcTemplate.queryForObject(query, Integer.class, date, timeId);
+        if (count != 0) {
+            throw new IllegalArgumentException("[ERROR] 해당 날짜와 시간에 대한 예약 기록이 존재합니다.");
+        }
     }
 
     private RowMapper<ReservationDto> reservationRowMapper() {

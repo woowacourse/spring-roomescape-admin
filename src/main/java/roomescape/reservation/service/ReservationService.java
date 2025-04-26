@@ -19,22 +19,28 @@ public class ReservationService {
     }
 
     public ReservationResponse add(ReservationRequest reservationRequest) {
-        ReservationTime findReservationTime = reservationTimeDao
-                .findById(reservationRequest.timeId())
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 시간 id가 존재하지 않습니다."));
-
-        Reservation newReservation = reservationRequest.createReservation(findReservationTime);
+        ReservationTime findReservationTime = getReservationTime(reservationRequest);
+        Reservation newReservation = new Reservation(
+                null, reservationRequest.name(), reservationRequest.date(), findReservationTime);
         Reservation savedReservation = reservationDao.add(newReservation);
-        return ReservationResponse.from(savedReservation);
+        return new ReservationResponse(
+                savedReservation.id(), savedReservation.name(), savedReservation.date(), savedReservation.time());
     }
 
     public List<ReservationResponse> findAll() {
         return reservationDao.findAll().stream()
-                .map(ReservationResponse::from)
+                .map(reservation -> new ReservationResponse(
+                        reservation.id(), reservation.name(), reservation.date(), reservation.time()))
                 .toList();
     }
 
     public void deleteById(Long id) {
         reservationDao.deleteById(id);
+    }
+
+    private ReservationTime getReservationTime(ReservationRequest reservationRequest) {
+        return reservationTimeDao
+                .findById(reservationRequest.timeId())
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 시간 id가 존재하지 않습니다."));
     }
 }

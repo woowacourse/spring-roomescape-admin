@@ -29,10 +29,10 @@ public class ReservationService {
 
     public ReservationResponse add(ReservationRequest request) {
         ReservationTime findTime = reservationTimeRepository.findById(request.timeId());
-        Reservation reservation = request.toReservationWithoutId(findTime);
+        Reservation reservationWithoutId = request.toReservationWithoutId(findTime);
 
-        Long id = reservationRepository.saveAndReturnId(reservation);
-        return ReservationResponse.from(reservation.withId(id));
+        Long id = reservationRepository.saveAndReturnId(reservationWithoutId);
+        return ReservationResponse.from(reservationWithoutId.withId(id));
     }
 
     public void remove(Long id) {

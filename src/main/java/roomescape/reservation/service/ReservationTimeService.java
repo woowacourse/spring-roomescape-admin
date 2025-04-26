@@ -18,9 +18,9 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse add(ReservationTimeRequest request) {
-        ReservationTime newTime = request.toTimeWithoutId();
-        Long id = reservationTimeRepository.saveAndReturnId(request.toTimeWithoutId());
-        return ReservationTimeResponse.from(newTime.withId(id));
+        ReservationTime timeWithoutId = request.toTimeWithoutId();
+        Long id = reservationTimeRepository.saveAndReturnId(timeWithoutId);
+        return ReservationTimeResponse.from(timeWithoutId.withId(id));
     }
 
     public void remove(Long id) {

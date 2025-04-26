@@ -13,21 +13,39 @@ public class Reservation {
     private final ReservationDate reservationDate;
     private ReservationTime reservationTime;
 
-    public Reservation(Long id, String reserverName, LocalDate date, ReservationTime reservationTime) {
+    private Reservation(
+            Long id,
+            String reserverName,
+            LocalDate reservationDate,
+            ReservationTime reservationTime
+    ) {
         this.id = id;
         this.reserverName = new ReserverName(reserverName);
-        this.reservationDate = new ReservationDate(date);
+        this.reservationDate = new ReservationDate(reservationDate);
         this.reservationTime = reservationTime;
     }
 
-    public Reservation(String reserverName, LocalDate date, ReservationTime reservationTime) {
-        this(null, reserverName, date, reservationTime);
-        validatePast();
+    public static Reservation create(
+            Long id,
+            String reserverName,
+            LocalDate reservationDate,
+            ReservationTime reservationTime
+    ) {
+        return new Reservation(id, reserverName, reservationDate, reservationTime);
     }
 
-    private void validatePast() {
+    public static Reservation create(
+            String reserverName,
+            LocalDate reservationDate,
+            ReservationTime reservationTime
+    ) {
+        validatePast(reservationDate, reservationTime);
+        return new Reservation(null, reserverName, reservationDate, reservationTime);
+    }
+
+    private static void validatePast(LocalDate reservationDate, ReservationTime reservationTime) {
+        LocalDateTime reservationDateTime = LocalDateTime.of(reservationDate, reservationTime.getStartAt());
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime reservationDateTime = LocalDateTime.of(reservationDate.getDate(), reservationTime.getStartAt());
 
         if (reservationDateTime.isBefore(now) || reservationDateTime.isEqual(now)) {
             throw new PastReservationException("[ERROR] 현재 시간 이후로 예약할 수 있습니다.");

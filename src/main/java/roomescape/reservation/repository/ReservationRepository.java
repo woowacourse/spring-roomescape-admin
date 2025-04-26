@@ -30,7 +30,7 @@ public class ReservationRepository {
                 "on r.time_id = t.id";
 
         return jdbcTemplate.query(sql, (resultSet, rowNum) ->
-                new Reservation(
+                Reservation.create(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         LocalDate.parse(resultSet.getString("date")),
@@ -52,7 +52,7 @@ public class ReservationRepository {
                 .addValue("time_id", reservation.getTimeId());
         Long id = jdbcInsert.executeAndReturnKey(parameters).longValue();
 
-        return new Reservation(id, reservation.getReserverName(), reservation.getDate(),
+        return Reservation.create(id, reservation.getReserverName(), reservation.getDate(),
                 new ReservationTime(reservation.getTimeId(), reservation.getStartAt()));
     }
 
@@ -66,7 +66,7 @@ public class ReservationRepository {
         Reservation reservation;
         try {
             reservation = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
-                    new Reservation(
+                    Reservation.create(
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
                             LocalDate.parse(resultSet.getString("date")),

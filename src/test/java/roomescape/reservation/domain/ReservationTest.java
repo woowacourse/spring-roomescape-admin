@@ -20,7 +20,7 @@ public class ReservationTest {
         LocalTime time = LocalTime.now().minusMinutes(minuteOffset);
         ReservationTime reservationTime = new ReservationTime(time);
 
-        assertThatThrownBy(() -> new Reservation(
+        assertThatThrownBy(() -> Reservation.create(
                 "홍길동", today, reservationTime))
                 .isInstanceOf(PastReservationException.class);
     }
@@ -30,7 +30,7 @@ public class ReservationTest {
         LocalDate today = LocalDate.now();
         ReservationTime futureTime = new ReservationTime(LocalTime.now().plusMinutes(10));
 
-        assertThatCode(() -> new Reservation(
+        assertThatCode(() -> Reservation.create(
                 "홍길동", today, futureTime))
                 .doesNotThrowAnyException();
     }

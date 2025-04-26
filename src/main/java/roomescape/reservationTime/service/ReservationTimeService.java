@@ -3,6 +3,7 @@ package roomescape.reservationTime.service;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import roomescape.globalException.CustomException;
+import roomescape.reservationTime.ReservationTimeMapper;
 import roomescape.reservationTime.domain.ReservationTime;
 import roomescape.reservationTime.domain.dto.ReservationTimeReqDto;
 import roomescape.reservationTime.domain.dto.ReservationTimeResDto;
@@ -46,14 +47,11 @@ public class ReservationTimeService {
         }
     }
 
-    public ReservationTimeResDto convertToReservationTimeResDto(ReservationTime reservationTime) {
-        return new ReservationTimeResDto(
-                reservationTime.getId(),
-                reservationTime.getStartAt()
-        );
+    private ReservationTime convertToReservationTimeReqDto(ReservationTimeReqDto dto) {
+        return ReservationTimeMapper.toEntity(dto);
     }
 
-    private ReservationTime convertToReservationTimeReqDto(ReservationTimeReqDto dto) {
-        return ReservationTime.from(dto);
+    public ReservationTimeResDto convertToReservationTimeResDto(ReservationTime reservationTime) {
+        return ReservationTimeMapper.toResDto(reservationTime);
     }
 }

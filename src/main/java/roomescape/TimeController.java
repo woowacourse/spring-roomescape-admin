@@ -37,10 +37,11 @@ public class TimeController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            reservationTimeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("예약 시간을 찾을 수 없습니다."));
+            reservationTimeRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("예약 시간을 찾을 수 없습니다."));
             reservationTimeRepository.delete(id);
             return ResponseEntity.ok().build();
-        } catch (IllegalStateException e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }
     }

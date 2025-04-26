@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationTimeCreateRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.model.ReservationTime;
+import roomescape.model.exception.ReservationTimeNotFoundException;
 import roomescape.repository.ReservationTimeDao;
 
 @Service
@@ -32,6 +33,10 @@ public class ReservationTimeService {
     }
 
     public void deleteReservationTime(final Long id) {
-        reservationTimeDao.deleteById(id);
+        int updatedRow = reservationTimeDao.deleteById(id);
+
+        if (updatedRow == 0) {
+            throw new ReservationTimeNotFoundException("존재하지 않는 예약 시간 번호입니다.");
+        }
     }
 }

@@ -6,7 +6,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -14,7 +13,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import roomescape.model.ReservationTime;
-import roomescape.model.exception.ReservationTimeNotFoundException;
 
 @Repository
 public class ReservationTimeDao {
@@ -48,12 +46,12 @@ public class ReservationTimeDao {
         return jdbcTemplate.query(findAllSql, getReservationTimeRowMapper());
     }
 
-    public void deleteById(final Long id) {
+    public int deleteById(final Long id) {
         String deleteByIdSql = """
                 DELETE FROM reservation_time
                 WHERE id = ?
                 """;
-        jdbcTemplate.update(deleteByIdSql, id);
+        return jdbcTemplate.update(deleteByIdSql, id);
     }
 
     public ReservationTime findById(final Long id) {
@@ -62,11 +60,7 @@ public class ReservationTimeDao {
                 FROM reservation_time
                 WHERE id = ?
                 """;
-        try {
-            return jdbcTemplate.queryForObject(findByIdSql, getReservationTimeRowMapper(), id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new ReservationTimeNotFoundException("존재하지 않는 예약 시간 입니다.", e);
-        }
+        return jdbcTemplate.queryForObject(findByIdSql, getReservationTimeRowMapper(), id);
     }
 
     private RowMapper<ReservationTime> getReservationTimeRowMapper() {

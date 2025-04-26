@@ -33,17 +33,21 @@ public class RoomescapeConsoleApplication {
             View.printWelcomeMessage();
             View.printCommands();
             Command command = getCommand();
-            switch (command) {
-                case ADD_RESERVATION -> consoleReservationController.reserve();
-                case RESERVATIONS -> consoleReservationController.displayReservations();
-                case CANCEL_RESERVATION -> consoleReservationController.cancel();
-                case ADD_RESERVATION_TIME -> consoleReservationTimeController.addReservationTime();
-                case RESERVATION_TIMES -> consoleReservationTimeController.showReservationTimes();
-                case CANCEL_RESERVATION_TIME -> consoleReservationTimeController.deleteReservationTime();
-                case EXIT -> {
-                    View.printGoodbyeMessage();
-                    return;
+            try {
+                switch (command) {
+                    case ADD_RESERVATION -> consoleReservationController.reserve();
+                    case RESERVATIONS -> consoleReservationController.displayReservations();
+                    case CANCEL_RESERVATION -> consoleReservationController.cancel();
+                    case ADD_RESERVATION_TIME -> consoleReservationTimeController.addReservationTime();
+                    case RESERVATION_TIMES -> consoleReservationTimeController.showReservationTimes();
+                    case CANCEL_RESERVATION_TIME -> consoleReservationTimeController.deleteReservationTime();
+                    case EXIT -> {
+                        View.printGoodbyeMessage();
+                        return;
+                    }
                 }
+            } catch (IllegalArgumentException e) {
+                View.printErrorMessage(e.getMessage());
             }
         }
     }

@@ -14,7 +14,7 @@ public class ReservationTime {
         validateNullId(id);
         validateNullStartAt(startAt);
         this.id = id;
-        this.startAt = startAt;
+        this.startAt = removeNanoSecond(startAt);
     }
 
     public static ReservationTime createWithoutId(LocalTime time) {
@@ -53,5 +53,9 @@ public class ReservationTime {
         if (startAt == null) {
             throw new IllegalArgumentException("[ERROR] 비어있는 시작시간으로 예약 시간을 생성할 수 없습니다.");
         }
+    }
+
+    private LocalTime removeNanoSecond(LocalTime time) {
+        return time.withNano(0);
     }
 }

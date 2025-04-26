@@ -32,7 +32,7 @@ public class ReservationService {
     public ReservationResponse saveReservation(ReservationRequest request) {
         ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId());
 
-        Reservation newReservation = request.toReservation(null, reservationTime);
+        Reservation newReservation = request.toReservationWithNullId(reservationTime);
         Reservation savedReservation = reservationRepository.save(newReservation);
 
         return new ReservationResponse(savedReservation);

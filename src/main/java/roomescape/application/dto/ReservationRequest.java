@@ -10,9 +10,9 @@ public record ReservationRequest(
         Long timeId
 ) {
 
-    public Reservation toReservation(Long id, ReservationTime reservationTime) {
+    public Reservation toReservationWithNullId(ReservationTime reservationTime) {
         return new Reservation(
-                id,
+                null,
                 name,
                 date,
                 reservationTime

@@ -1,4 +1,4 @@
-package roomescape.user.service;
+package roomescape.reservation.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,13 +13,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.reservation.service.ReservationService;
-import roomescape.time.time.H2ReservationTimeRepository;
-import roomescape.time.time.ReservationTimeRepository;
-import roomescape.time.service.ReservationTimeService;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.reservation.H2ReservationRepository;
 import roomescape.reservation.reservation.ReservationRepository;
+import roomescape.time.service.ReservationTimeService;
+import roomescape.time.time.H2ReservationTimeRepository;
+import roomescape.time.time.ReservationTimeRepository;
 
 
 @JdbcTest

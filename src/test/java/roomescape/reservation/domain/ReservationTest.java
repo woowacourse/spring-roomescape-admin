@@ -1,10 +1,9 @@
-package roomescape.user.domain;
+package roomescape.reservation.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import roomescape.reservation.domain.Reservation;
 import roomescape.time.domain.ReservationTime;
 
 class ReservationTest {

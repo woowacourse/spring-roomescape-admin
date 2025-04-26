@@ -1,4 +1,4 @@
-package roomescape.admin.repository.time;
+package roomescape.time.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

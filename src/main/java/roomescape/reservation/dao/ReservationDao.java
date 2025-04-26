@@ -12,11 +12,11 @@ import roomescape.reservation.Reservation;
 import roomescape.reservationTime.ReservationTime;
 
 @Repository
-public class H2ReservationDao implements Dao<Reservation> {
+public class ReservationDao implements Dao<Reservation> {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public H2ReservationDao(JdbcTemplate jdbcTemplate) {
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

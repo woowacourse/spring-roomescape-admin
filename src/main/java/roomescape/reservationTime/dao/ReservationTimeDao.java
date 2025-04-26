@@ -5,21 +5,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.boot.autoconfigure.service.connection.ConnectionDetails;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import roomescape.common.Dao;
 import roomescape.reservationTime.ReservationTime;
 
 @Repository
-public class H2ReservationTimeDao implements Dao<ReservationTime> {
+public class ReservationTimeDao implements Dao<ReservationTime> {
     private final JdbcTemplate jdbcTemplate;
 
-    public H2ReservationTimeDao(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

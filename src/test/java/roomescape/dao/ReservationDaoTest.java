@@ -24,6 +24,7 @@ class ReservationDaoTest {
     JdbcTemplate jdbcTemplate;
 
     Reservation savedReservation;
+
     @BeforeEach
     void beforeEach() {
         reservationDao = new ReservationDao(jdbcTemplate);
@@ -73,5 +74,4 @@ class ReservationDaoTest {
         reservationDao.deleteById(savedReservation.getId());
         assertThat(reservationDao.findAll()).isEmpty();
     }
-
 }

@@ -38,12 +38,4 @@ public class ReservationTime {
     public int hashCode() {
         return Objects.hash(id, startAt);
     }
-
-    @Override
-    public String toString() {
-        return "ReservationTime{" +
-            "id=" + id +
-            ", startAt=" + startAt +
-            '}';
-    }
 }

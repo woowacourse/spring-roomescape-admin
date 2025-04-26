@@ -1,17 +1,19 @@
 package roomescape.repository;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
-import java.sql.PreparedStatement;
+import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class JdbcReservationDao implements ReservationRepository {
@@ -32,9 +34,13 @@ public class JdbcReservationDao implements ReservationRepository {
     };
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
-    public JdbcReservationDao(final JdbcTemplate jdbcTemplate) {
+    public JdbcReservationDao(final JdbcTemplate jdbcTemplate, DataSource source) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(source)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
@@ -50,21 +56,17 @@ public class JdbcReservationDao implements ReservationRepository {
 
     @Override
     public Reservation save(final Reservation reservation) {
-        String sql = """
-                insert into reservation (name, date, time_id) values (?, ?, ?)
-                """;
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    sql, new String[]{"id"});
-            ps.setString(1, reservation.name());
-            ps.setString(2, reservation.date().toString());
-            ps.setLong(3, reservation.time().id());
-            return ps;
-        }, keyHolder);
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("name", reservation.name());
+            params.put("date", reservation.date());
+            params.put("time_id", reservation.time().id());
 
-        long reservationKey = keyHolder.getKey().longValue();
-        return findById(reservationKey);
+            Long id = jdbcInsert.executeAndReturnKey(params).longValue();
+            return findById(id);
+        } catch (DuplicateKeyException e) {
+            throw new IllegalArgumentException("[ERROR] 이미 등록된 예약 입니다.");
+        }
     }
 
     private Reservation findById(Long id) {

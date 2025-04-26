@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +13,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Person;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
 
 @JdbcTest
 class ReservationDaoTest {
@@ -27,16 +25,28 @@ class ReservationDaoTest {
     @BeforeEach
     void initialize() {
         reservationDao = new ReservationDao(jdbcTemplate);
-        jdbcTemplate.update("insert into reservation (name, date, time) values (?, ?, ?)",
-                "아마",
-                "2024-12-25",
+        jdbcTemplate.update("insert into reservation_time (start_at) values (?)",
+                "10:00"
+        );
+
+        jdbcTemplate.update("insert into reservation_time (start_at) values (?)",
                 "11:00"
         );
 
-        jdbcTemplate.update("insert into reservation (name, date, time) values (?, ?, ?)",
+        jdbcTemplate.update("insert into reservation_time (start_at) values (?)",
+                "12:00"
+        );
+        
+        jdbcTemplate.update("insert into reservation (name, date, time_id) values (?, ?, ?)",
+                "아마",
+                "2024-12-25",
+                "1"
+        );
+
+        jdbcTemplate.update("insert into reservation (name, date, time_id) values (?, ?, ?)",
                 "후후",
                 "2024-12-26",
-                "11:00"
+                "2"
         );
     }
 
@@ -44,10 +54,9 @@ class ReservationDaoTest {
     @Test
     void insertTest() {
         Person person = new Person("아마");
-        ReservationTime reservationTime = new ReservationTime(LocalTime.of(11, 0));
-        Reservation reservation = new Reservation(1, person, LocalDate.of(2024, 2, 25), reservationTime);
+        Reservation reservation = new Reservation(person, LocalDate.of(2024, 2, 25));
 
-        reservationDao.insert(reservation);
+        reservationDao.insert(reservation, 1);
         int size = jdbcTemplate.queryForObject("select count(*) from reservation", Integer.class);
         assertThat(size).isEqualTo(3);
     }

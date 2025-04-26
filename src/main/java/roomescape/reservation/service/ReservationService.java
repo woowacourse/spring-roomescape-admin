@@ -2,7 +2,7 @@ package roomescape.reservation.service;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import roomescape.reservation.database.ReservationRepository;
+import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.dto.ReservationReqDto;
 import roomescape.reservation.domain.dto.ReservationResDto;

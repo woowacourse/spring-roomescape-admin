@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import roomescape.reservation.database.ReservationRepositoryImpl;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.fixture.ReservationFixture;
 import roomescape.reservationTime.domain.ReservationTime;

@@ -1,4 +1,4 @@
-package roomescape.reservation.database;
+package roomescape.reservation.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;

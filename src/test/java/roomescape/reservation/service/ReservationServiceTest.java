@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import org.assertj.core.api.Assertions;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,20 +31,6 @@ class ReservationServiceTest {
     private ReservationTimeService reservationTimeService;
 
     @Test
-    void 예약_정보를_저장한다() {
-        // given
-        final LocalTime time = LocalTime.parse("10:00");
-        final Long time_id = reservationTimeService.save(time);
-
-        final String name = "헤일러";
-        final LocalDate date = LocalDate.parse("2023-08-05");
-
-        // when & then
-        Assertions.assertThatCode(() -> reservationService.save(name, date, time_id))
-                .doesNotThrowAnyException();
-    }
-
-    @Test
     void 예약_정보_목록을_조회한다() {
         // given
         final LocalTime time = LocalTime.parse("10:00");
@@ -67,6 +53,28 @@ class ReservationServiceTest {
 
         // then
         assertThat(reservations.size()).isEqualTo(2);
+    }
+
+    @Test
+    void 예약_정보를_저장한다() {
+        // given
+        final String name = "헤일러";
+        final LocalDate date = LocalDate.parse("2023-08-05");
+        final LocalTime time = LocalTime.parse("10:00");
+        final Long timeId = reservationTimeService.save(time);
+
+        // when
+        final Long savedId = reservationService.save(name, date, timeId);
+        final Reservation found = reservationService.getById(savedId);
+
+        // then
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(savedId).isEqualTo(found.getId());
+            softly.assertThat(name).isEqualTo(found.getName());
+            softly.assertThat(date).isEqualTo(found.getDate());
+            softly.assertThat(timeId).isEqualTo(found.getTime().getId());
+            softly.assertThat(time).isEqualTo(found.getTime().getStartAt());
+        });
     }
 
 

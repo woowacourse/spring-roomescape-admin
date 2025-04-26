@@ -16,7 +16,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse addTime(ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime time = reservationTimeRequest.toEntity(null);
+        ReservationTime time = reservationTimeRequest.toEntity();
         ReservationTime savedTime = reservationTimeRepository.save(time);
         return ReservationTimeResponse.fromEntity(savedTime);
     }

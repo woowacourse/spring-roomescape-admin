@@ -8,9 +8,9 @@ public record ReservationTimeRequest(
         @JsonFormat(pattern = "HH:mm")
         LocalTime startAt
 ) {
-    public ReservationTime toEntity(Long id) {
+    public ReservationTime toEntity() {
         return new ReservationTime(
-                id,
+                null,
                 startAt
                 );
     }

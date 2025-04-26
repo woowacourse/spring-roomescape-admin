@@ -1,6 +1,7 @@
 package roomescape.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -36,11 +37,14 @@ class ReservationTimeDaoTest {
         Integer count = getReservationTimeCount();
 
         // then
-        assertThat(findReservationTimes)
-                .contains(firstReservationTime, secondReservationTime);
-
-        assertThat(count)
-                .isEqualTo(findReservationTimes.size());
+        assertAll(
+                () -> assertThat(findReservationTimes)
+                        .contains(firstReservationTime, secondReservationTime),
+                () -> {
+                    assertThat(findReservationTimes).isNotNull();
+                    assertThat(count).isEqualTo(findReservationTimes.size());
+                }
+        );
     }
 
     @Test
@@ -65,9 +69,11 @@ class ReservationTimeDaoTest {
         Boolean exists = isReservationTimeExists();
 
         // then
-        assertThat(saved.getId()).isEqualTo(1L);
-        assertThat(saved.getTime()).isEqualTo(LocalTime.MIDNIGHT);
-        assertThat(exists).isTrue();
+        assertAll(
+                () -> assertThat(saved.getId()).isEqualTo(1L),
+                () -> assertThat(saved.getTime()).isEqualTo(LocalTime.MIDNIGHT),
+                () -> assertThat(exists).isTrue()
+        );
     }
 
     @Test
@@ -81,8 +87,10 @@ class ReservationTimeDaoTest {
         Boolean afterExists = isReservationTimeExists();
 
         // then
-        assertThat(result).isTrue();
-        assertThat(beforeExists).isNotEqualTo(afterExists);
+        assertAll(
+                () -> assertThat(result).isTrue(),
+                () -> assertThat(beforeExists).isNotEqualTo(afterExists)
+        );
     }
 
     @Test
@@ -92,8 +100,10 @@ class ReservationTimeDaoTest {
         Boolean exists = isReservationTimeExists();
 
         // then
-        assertThat(result).isFalse();
-        assertThat(exists).isFalse();
+        assertAll(
+                () -> assertThat(result).isFalse(),
+                () -> assertThat(exists).isFalse()
+        );
     }
 
     private ReservationTime createTestReservationTime() {

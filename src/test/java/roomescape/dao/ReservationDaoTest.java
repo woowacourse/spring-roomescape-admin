@@ -1,6 +1,8 @@
 package roomescape.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -51,8 +53,13 @@ class ReservationDaoTest {
         Integer count = getReservationCount();
 
         // then
-        assertThat(findReservations).contains(testReservation);
-        assertThat(count).isEqualTo(findReservations.size());
+        assertAll(
+                () -> assertThat(findReservations).contains(testReservation),
+                () -> {
+                    assertNotNull(findReservations);
+                    assertThat(count).isEqualTo(findReservations.size());
+                }
+        );
     }
 
     @Test
@@ -65,11 +72,13 @@ class ReservationDaoTest {
         Boolean exists = isReservationExists();
 
         // then
-        assertThat(savedReservation.getId()).isEqualTo(1L);
-        assertThat(savedReservation.getName()).isEqualTo(TEST_NAME);
-        assertThat(savedReservation.getDate()).isEqualTo(TEST_DATE);
-        assertThat(savedReservation.getTime()).isEqualTo(TEST_RESERVATION_TIME);
-        assertThat(exists).isTrue();
+        assertAll(
+                () -> assertThat(savedReservation.getId()).isEqualTo(1L),
+                () -> assertThat(savedReservation.getName()).isEqualTo(TEST_NAME),
+                () -> assertThat(savedReservation.getDate()).isEqualTo(TEST_DATE),
+                () -> assertThat(savedReservation.getTime()).isEqualTo(TEST_RESERVATION_TIME),
+                () -> assertThat(exists).isTrue()
+        );
     }
 
     @Test
@@ -83,8 +92,10 @@ class ReservationDaoTest {
         Boolean afterExists = isReservationExists();
 
         // then
-        assertThat(result).isTrue();
-        assertThat(beforeExists).isNotEqualTo(afterExists);
+        assertAll(
+                () -> assertThat(result).isTrue(),
+                () -> assertThat(beforeExists).isNotEqualTo(afterExists)
+        );
     }
 
     @Test
@@ -94,8 +105,10 @@ class ReservationDaoTest {
         Boolean exists = isReservationExists();
 
         // then
-        assertThat(result).isFalse();
-        assertThat(exists).isFalse();
+        assertAll(
+                () -> assertThat(result).isFalse(),
+                () -> assertThat(exists).isFalse()
+        );
     }
 
     private Reservation createTestReservation() {

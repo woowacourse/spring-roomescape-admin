@@ -8,10 +8,12 @@ public record ReservationTimeResponse(
         String startAt
 ) {
 
+    private static final String TIME_WITHOUT_SECONDS_FORMAT = "HH:mm";
+
     public ReservationTimeResponse(ReservationTime reservationTime) {
         this(
                 reservationTime.getId(),
-                reservationTime.formatTime(DateTimeFormatter.ofPattern("HH:mm"))
+                reservationTime.formatTime(DateTimeFormatter.ofPattern(TIME_WITHOUT_SECONDS_FORMAT))
         );
     }
 }

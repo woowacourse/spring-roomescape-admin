@@ -1,6 +1,8 @@
 package roomescape.reservationTime.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.boot.autoconfigure.service.connection.ConnectionDetails;
@@ -40,10 +42,7 @@ public class H2ReservationTimeDao implements Dao<ReservationTime> {
         String sql = "select id, start_at from reservation_time where id = ?";
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
-                    (resultSet, rowNum) -> new ReservationTime(
-                            resultSet.getLong("id"),
-                            resultSet.getTime("start_at").toLocalTime()
-                    ), id));
+                    (resultSet, rowNum) -> createReservationTime(resultSet), id));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -53,14 +52,18 @@ public class H2ReservationTimeDao implements Dao<ReservationTime> {
     public List<ReservationTime> findAll() {
         String sql = "select id, start_at from reservation_time";
         return jdbcTemplate.query(sql,
-                (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getLong("id"),
-                        resultSet.getTime("start_at").toLocalTime()
-                ));
+                (resultSet, rowNum) -> createReservationTime(resultSet));
     }
 
     @Override
     public void deleteById(Long id) {
         jdbcTemplate.update("delete from reservation_time where id = ?", id);
+    }
+
+    private ReservationTime createReservationTime(ResultSet resultSet) throws SQLException {
+        return new ReservationTime(
+                resultSet.getLong("id"),
+                resultSet.getTime("start_at").toLocalTime()
+        );
     }
 }

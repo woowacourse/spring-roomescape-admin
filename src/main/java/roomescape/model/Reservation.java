@@ -1,7 +1,6 @@
 package roomescape.model;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
 public class Reservation {
 
@@ -19,13 +18,13 @@ public class Reservation {
     }
 
     private void validate(final String name, final LocalDate date, final ReservationTime reservationTime) {
-        try {
-            Objects.requireNonNull(name);
-            Objects.requireNonNull(date);
-            Objects.requireNonNull(reservationTime);
-            validateBlank(name);
-        } catch (NullPointerException e) {
-            throw new IllegalArgumentException(e);
+        validateNull(name, date, reservationTime);
+        validateBlank(name);
+    }
+
+    private void validateNull(final String name, final LocalDate date, final ReservationTime reservationTime) {
+        if (name == null || date == null || reservationTime == null) {
+            throw new IllegalArgumentException("예약 생성에 필요한 값이 존재하지 않습니다.");
         }
     }
 

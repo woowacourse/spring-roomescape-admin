@@ -6,21 +6,37 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.MethodMode;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ReservationTimeTest {
 
-    @LocalServerPort
-    private int port;
+    private final JdbcTemplate jdbcTemplate;
+    private final int port;
 
-    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
+    public ReservationTimeTest(
+            @Autowired final JdbcTemplate jdbcTemplate,
+            @LocalServerPort final int port
+    ){
+        this.jdbcTemplate = jdbcTemplate;
+        this.port = port;
+    }
+
+    @BeforeEach
+    void setUp() {
+        jdbcTemplate.update("DELETE FROM RESERVATION");
+        jdbcTemplate.update("DELETE FROM RESERVATION_TIME");
+        jdbcTemplate.update("ALTER TABLE RESERVATION ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.update("ALTER TABLE RESERVATION_TIME ALTER COLUMN id RESTART WITH 1");
+    }
+
     @DisplayName("startAt 관련 api 테스트")
     @Test
     void 칠단계() {

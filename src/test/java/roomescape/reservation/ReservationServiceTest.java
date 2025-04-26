@@ -13,13 +13,17 @@ import roomescape.reservation.dto.ReservationResponse;
 
 public class ReservationServiceTest {
 
-    private ReservationService reservationService;
-    private FakeReservationDao fakeReservationDao;
+    private final ReservationService reservationService;
+    private final FakeReservationDao fakeReservationDao;
+
+    public ReservationServiceTest(){
+        fakeReservationDao = new FakeReservationDao();
+        reservationService = new ReservationService(fakeReservationDao);
+    }
 
     @BeforeEach
     void setUp() {
-        fakeReservationDao = new FakeReservationDao();
-        reservationService = new ReservationService(fakeReservationDao);
+        fakeReservationDao.clear();
     }
 
 

@@ -9,17 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.MethodMode;
 import roomescape.reservation.ReservationController;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class LayeredArchitectureTest {
 
-    @Autowired
-    private ReservationController reservationController;
+    private final ReservationController reservationController;
 
-    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
+    public LayeredArchitectureTest(
+            @Autowired final ReservationController reservationController
+    ){
+        this.reservationController = reservationController;
+    }
+
     @DisplayName("reservationController의 필드에, JdbcTemplate가 존재하지 않는지 테스트")
     @Test
     void 구단계() {

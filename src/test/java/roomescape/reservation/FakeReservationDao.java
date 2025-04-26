@@ -52,4 +52,10 @@ public class FakeReservationDao implements ReservationDao {
         return invokeDeleteId.stream()
                 .anyMatch(value -> Objects.equals(value, id));
     }
+
+    public void clear(){
+        NEXT_ID = 1L;
+        reservations.clear();
+        invokeDeleteId.clear();
+    }
 }

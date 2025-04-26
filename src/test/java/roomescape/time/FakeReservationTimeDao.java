@@ -44,4 +44,10 @@ public class FakeReservationTimeDao implements ReservationTimeDao {
         return invokeDeleteId.stream()
                 .anyMatch(timeId -> Objects.equals(timeId, id));
     }
+
+    public void clear(){
+        this.NEXT_ID = 1L;
+        this.reservationTimes.clear();
+        this.invokeDeleteId.clear();
+    }
 }

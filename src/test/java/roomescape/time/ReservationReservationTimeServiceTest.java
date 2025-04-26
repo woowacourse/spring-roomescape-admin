@@ -14,12 +14,16 @@ import roomescape.time.dto.ReservationTimeResponse;
 public class ReservationReservationTimeServiceTest {
 
     private ReservationTimeService reservationTimeService;
-    private FakeReservationTimeDao fakeTimeDao;
+    private FakeReservationTimeDao fakeReservationTimeDao;
+
+    public ReservationReservationTimeServiceTest(){
+        fakeReservationTimeDao = new FakeReservationTimeDao();
+        reservationTimeService = new ReservationTimeService(fakeReservationTimeDao);
+    }
 
     @BeforeEach
     void setUp() {
-        fakeTimeDao = new FakeReservationTimeDao();
-        reservationTimeService = new ReservationTimeService(fakeTimeDao);
+        fakeReservationTimeDao.clear();
     }
 
     @DisplayName("TimeRequest를 저장하고, 저장된 TimeResponse를 반환한다.")
@@ -42,7 +46,7 @@ public class ReservationReservationTimeServiceTest {
     @Test
     void findAllTime() {
         // given
-        fakeTimeDao.saveTime(new ReservationTime(null, LocalTime.of(12, 40)));
+        fakeReservationTimeDao.saveTime(new ReservationTime(null, LocalTime.of(12, 40)));
 
         // when
         final List<ReservationTimeResponse> actual = reservationTimeService.findAllTime();
@@ -57,11 +61,11 @@ public class ReservationReservationTimeServiceTest {
     @Test
     void deleteTimeById() {
         // given
-        fakeTimeDao.saveTime(new ReservationTime(null, LocalTime.of(12, 40)));
+        fakeReservationTimeDao.saveTime(new ReservationTime(null, LocalTime.of(12, 40)));
 
         // when
         reservationTimeService.deleteTimeById(1L);
-        final boolean actual = fakeTimeDao.isInvokeDeleteId(1L);
+        final boolean actual = fakeReservationTimeDao.isInvokeDeleteId(1L);
 
         // then
         assertThat(actual).isTrue();

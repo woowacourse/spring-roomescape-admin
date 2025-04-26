@@ -5,27 +5,38 @@ import static org.hamcrest.Matchers.is;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.LocalTime;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.MethodMode;
+import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.time.dto.ReservationTimeRequest;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ReservationTimeApiTest {
 
+    private final JdbcTemplate jdbcTemplate;
     private final int port;
 
     public ReservationTimeApiTest(
-            @LocalServerPort final int port
+            @LocalServerPort final int port,
+            @Autowired final JdbcTemplate jdbcTemplate
     ){
         this.port = port;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
-    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
+    @BeforeEach
+    void setUp() {
+        jdbcTemplate.update("DELETE FROM RESERVATION");
+        jdbcTemplate.update("DELETE FROM RESERVATION_TIME");
+        jdbcTemplate.update("ALTER TABLE RESERVATION ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.update("ALTER TABLE RESERVATION_TIME ALTER COLUMN id RESTART WITH 1");
+    }
+
     @DisplayName("시간 생성")
     @Test
     void createTime() {
@@ -49,7 +60,6 @@ public class ReservationTimeApiTest {
                 .body("size()", is(0));
     }
 
-    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     @DisplayName("시간 삭제")
     @Test
     void deleteTime() {

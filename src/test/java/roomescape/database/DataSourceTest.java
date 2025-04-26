@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,22 +19,40 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.MethodMode;
 import roomescape.reservation.dto.ReservationResponse;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class DataSourceTest {
 
+    private static final Map<String, String> RESERVATION_BODY = new HashMap<>();
+    private static final Map<String, String> TIME_BODY = new HashMap<>();
+
     private final JdbcTemplate jdbcTemplate;
     private final int port;
 
     public DataSourceTest(
-            @Autowired JdbcTemplate jdbcTemplate,
+            @Autowired final JdbcTemplate jdbcTemplate,
             @LocalServerPort final int port
     ) {
         this.jdbcTemplate = jdbcTemplate;
         this.port = port;
+    }
+
+    @BeforeAll
+    static void beforeAll() {
+        RESERVATION_BODY.put("name", "브라운");
+        RESERVATION_BODY.put("date", "2023-08-05");
+        RESERVATION_BODY.put("timeId", "1");
+
+        TIME_BODY.put("startAt", "10:00");
+    }
+
+    @BeforeEach
+    void setUp() {
+        jdbcTemplate.update("DELETE FROM RESERVATION");
+        jdbcTemplate.update("DELETE FROM RESERVATION_TIME");
+        jdbcTemplate.update("ALTER TABLE RESERVATION ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.update("ALTER TABLE RESERVATION_TIME ALTER COLUMN id RESTART WITH 1");
     }
 
     @DisplayName("데이터베이스가 존재하고, 예약 테이블이 존재하는지 검증")
@@ -47,7 +67,6 @@ public class DataSourceTest {
         }
     }
 
-    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     @DisplayName("데이터베이스에 예약 하나 추가 후 예약 조회 API를 통해 조회한 예약 수와 데이터베이스 쿼리를 통해 조회한 예약 수가 같은지 비교")
     @Test
     void 오단계() {
@@ -68,33 +87,12 @@ public class DataSourceTest {
         assertThat(reservations.size()).isEqualTo(count);
     }
 
-    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     @DisplayName("reservation 삽입, 삭제 검증")
     @Test
     void 육단계() {
-        // given
-        Map<String, String> RESERVATION_BODY = new HashMap<>();
-        RESERVATION_BODY.put("name", "브라운");
-        RESERVATION_BODY.put("date", "2023-08-05");
-        RESERVATION_BODY.put("timeId", "1");
-
-        Map<String, String> TIME_BODY = new HashMap<>();
-        TIME_BODY.put("startAt", "10:00");
-
-        // when
-        RestAssured.given().port(port).log().all()
-                .contentType(ContentType.JSON)
-                .body(TIME_BODY)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
-
-        RestAssured.given().port(port).log().all()
-                .contentType(ContentType.JSON)
-                .body(RESERVATION_BODY)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200);
+        // given & when
+        givenCreateReservationTime();
+        givenCreateReservation();
 
         // then
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
@@ -110,33 +108,12 @@ public class DataSourceTest {
         assertThat(countAfterDelete).isEqualTo(0);
     }
 
-    @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     @DisplayName("time과 reservation 연결 테스트")
     @Test
     void 팔단계() {
         // given
-        Map<String, Object> reservation = new HashMap<>();
-        reservation.put("name", "브라운");
-        reservation.put("date", "2023-08-05");
-        reservation.put("timeId", 1);
-
-        Map<String, String> TIME_BODY = new HashMap<>();
-        TIME_BODY.put("startAt", "10:00");
-
-        RestAssured.given().port(port).log().all()
-                .contentType(ContentType.JSON)
-                .body(TIME_BODY)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
-
-        RestAssured.given().port(port).log().all()
-                .contentType(ContentType.JSON)
-                .body(reservation)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200);
-
+        givenCreateReservationTime();
+        givenCreateReservation();
 
         // when & then
         RestAssured.given().port(port).log().all()
@@ -144,5 +121,23 @@ public class DataSourceTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
+
+    private void givenCreateReservationTime() {
+        RestAssured.given().port(port).log().all()
+                .contentType(ContentType.JSON)
+                .body(TIME_BODY)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    private void givenCreateReservation() {
+        RestAssured.given().port(port).log().all()
+                .contentType(ContentType.JSON)
+                .body(RESERVATION_BODY)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
     }
 }

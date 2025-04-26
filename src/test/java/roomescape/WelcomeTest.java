@@ -11,8 +11,13 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class WelcomeTest {
 
-    @LocalServerPort
-    private int port;
+    private final int port;
+
+    public WelcomeTest(
+            @LocalServerPort final int port
+    ){
+        this.port = port;
+    }
 
     @DisplayName("/로 요청이 들어오면 웰컴 페이지를 응답한다.")
     @Test

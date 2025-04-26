@@ -45,6 +45,13 @@ public class MissionStepTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
+        jdbcTemplate.execute("TRUNCATE TABLE reservation");
+        jdbcTemplate.execute("ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.execute("TRUNCATE TABLE reservation_time");
+        jdbcTemplate.execute("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
     }
 
     @DisplayName("/ 요청 시 admin/reservation으로 리디렉션")
@@ -91,6 +98,9 @@ public class MissionStepTest {
     @DisplayName("3단계 - 예약 추가 api 호출 시, id가 정상적으로 부여된다.")
     @Test
     public void request_addReservation() {
+        jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)",
+                1L, "10:00");
+
         int repositorySize = reservationRepository.findAll().size();
         int expectedSize = repositorySize + 1;
 
@@ -133,8 +143,11 @@ public class MissionStepTest {
 
     @Test
     void 오단계() {
+        jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)",
+                1L, "10:00");
+
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
-                "브라운", "2023-08-05", 1
+                "브라운", "2023-08-05", 1L
         );
 
         List<ReservationResponse> reservations = RestAssured.given().log().all()
@@ -150,6 +163,9 @@ public class MissionStepTest {
 
     @Test
     void 육단계() {
+        jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)",
+                1L, "10:00");
+
         int beforeCount = reservationRepository.findAll().size();
 
         Map<String, String> params = new HashMap<>();
@@ -204,6 +220,9 @@ public class MissionStepTest {
 
     @Test
     void 팔단계() {
+        jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)",
+                1L, "10:00");
+
         int beforeSize = reservationRepository.findAll().size();
 
         Map<String, Object> reservation = new HashMap<>();

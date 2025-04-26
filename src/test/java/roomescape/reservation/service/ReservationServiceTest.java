@@ -8,7 +8,6 @@ import java.util.List;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -82,26 +81,30 @@ class ReservationServiceTest {
     static class TestConfig {
 
         @Bean(name = "h2ReservationTimeRepository")
-        public ReservationTimeRepository reservationTimeRepository(JdbcTemplate jdbcTemplate) {
+        public ReservationTimeRepository reservationTimeRepository(
+                final JdbcTemplate jdbcTemplate
+        ) {
             return new H2ReservationTimeRepository(jdbcTemplate);
         }
 
         @Bean
         public ReservationTimeService reservationTimeService(
-                @Qualifier("h2ReservationTimeRepository") ReservationTimeRepository reservationTimeRepository
+                final ReservationTimeRepository reservationTimeRepository
         ) {
             return new ReservationTimeService(reservationTimeRepository);
         }
 
         @Bean(name = "h2ReservationRepository")
-        public ReservationRepository h2ReservationRepository(JdbcTemplate jdbcTemplate) {
+        public ReservationRepository h2ReservationRepository(
+                final JdbcTemplate jdbcTemplate
+        ) {
             return new H2ReservationRepository(jdbcTemplate);
         }
 
         @Bean
         public ReservationService reservationService(
-                @Qualifier("h2ReservationRepository") ReservationRepository reservationRepository,
-                ReservationTimeService reservationTimeService
+                final ReservationRepository reservationRepository,
+                final ReservationTimeService reservationTimeService
         ) {
             return new ReservationService(reservationRepository, reservationTimeService);
         }

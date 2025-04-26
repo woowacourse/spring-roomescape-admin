@@ -5,7 +5,10 @@ import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationDto;
+import roomescape.dto.create.ReservationCreate;
+import roomescape.dto.create.ReservationTimeCreate;
+import roomescape.dto.read.ReservationRead;
+import roomescape.dto.read.ReservationTimeRead;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.request.ReservationTimeRequest;
 import roomescape.dto.response.ReservationResponse;
@@ -25,21 +28,25 @@ public class ReservationService {
     }
 
     public ReservationResponse createReservation(final ReservationRequest request) {
-        ReservationTime time = reservationTimeDao.findById(request.timeId());
+        ReservationCreate reservationCreate = new ReservationCreate(request.name(), request.date().toString(), request.timeId());
+        long id = reservationDao.save(reservationCreate);
+
+        ReservationTimeRead readTime = reservationTimeDao.findById(request.timeId());
+        ReservationTime time = readTime.toTime();
+
         ReservationTimeResponse timeResponse = ReservationTimeResponse.of(time);
-        Reservation reservation = new Reservation(request.name(), request.date(), time);
-        long id = reservationDao.save(reservation);
-        reservation.setId(id);
+        Reservation reservation = reservationCreate.toReservation(id, time);
         return ReservationResponse.of(reservation, timeResponse);
     }
 
     public List<ReservationResponse> findAllReservations() {
-        List<ReservationDto> reservationDtos = reservationDao.getAll();
-        List<Reservation> reservations = ReservationDto.toReservations(reservationDtos);
+        List<ReservationRead> reservationReads = reservationDao.getAll();
+        List<Reservation> reservations = ReservationRead.toReservations(reservationReads);
 
         return reservations.stream()
                 .map(reservation -> {
-                    ReservationTime time = reservationTimeDao.findById(reservation.getTime().getId());
+                    ReservationTimeRead readTime = reservationTimeDao.findById(reservation.getTime().getId());
+                    ReservationTime time = readTime.toTime();
                     ReservationTimeResponse timeResponse = ReservationTimeResponse.of(time);
                     return ReservationResponse.of(reservation, timeResponse);
                 }).toList();
@@ -53,14 +60,18 @@ public class ReservationService {
     }
 
     public ReservationTimeResponse createReservationTime(final ReservationTimeRequest request) {
-        ReservationTime reservationTime = request.toReservationTime();
-        long id = reservationTimeDao.save(reservationTime);
-        reservationTime.setId(id);
+        ReservationTimeCreate reservationTimeCreate = new ReservationTimeCreate(request.startAt().toString());
+        long id = reservationTimeDao.save(reservationTimeCreate);
+
+        ReservationTime reservationTime = reservationTimeCreate.toReservationTime(id);
         return ReservationTimeResponse.of(reservationTime);
     }
 
     public List<ReservationTimeResponse> findAllReservationTimes() {
-        List<ReservationTime> times = reservationTimeDao.getAll();
+        List<ReservationTimeRead> readTimes = reservationTimeDao.getAll();
+        List<ReservationTime> times = readTimes.stream()
+                .map(ReservationTimeRead::toTime)
+                .toList();
         return ReservationTimeResponse.from(times);
     }
 

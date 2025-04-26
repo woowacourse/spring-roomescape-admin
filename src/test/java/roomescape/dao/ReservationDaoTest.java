@@ -5,12 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.dto.create.ReservationCreate;
 
 import javax.sql.DataSource;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -62,20 +60,16 @@ class ReservationDaoTest {
 
     @Test
     void 데이터베이스에_예약_기록을_추가할_수_있다() {
-        // given
-        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.now());
-
         // when & then
-        assertThat(reservationDao.save(new Reservation("메이", LocalDate.now(), reservationTime)))
+        assertThat(reservationDao.save(new ReservationCreate("메이", getTodayDate(), 1L)))
                 .isEqualTo(1);
     }
 
     @Test
     void 데이터베이스에서_예약_목록을_가져올_수_있다() {
         // given
-        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.now());
-        reservationDao.save(new Reservation("메이", LocalDate.now(), reservationTime));
-        reservationDao.save(new Reservation("may", LocalDate.now().plusDays(1), reservationTime));
+        reservationDao.save(new ReservationCreate("메이", getTodayDate(), 1L));
+        reservationDao.save(new ReservationCreate("may", getTomorrowDate(), 1L));
 
         // when & then
         assertThat(reservationDao.getAll().size())
@@ -85,14 +79,21 @@ class ReservationDaoTest {
     @Test
     void 데이터베이스의_예약_목록을_삭제할_수_있다() {
         // given
-        ReservationTime reservationTime = new ReservationTime(1L, LocalTime.now());
-        reservationDao.save(new Reservation("메이", LocalDate.now(), reservationTime));
-        reservationDao.save(new Reservation("메이", LocalDate.now().plusDays(1), reservationTime));
+        reservationDao.save(new ReservationCreate("메이", getTodayDate(), 1L));
+        reservationDao.save(new ReservationCreate("메이", getTomorrowDate(), 1L));
 
         Long id = reservationDao.getAll().get(0).reservationId();
 
         // when & then
         assertThat(reservationDao.delete(id))
                 .isEqualTo(1);
+    }
+
+    private String getTodayDate() {
+        return LocalDate.now().toString();
+    }
+
+    private String getTomorrowDate() {
+        return LocalDate.now().plusDays(1).toString();
     }
 }

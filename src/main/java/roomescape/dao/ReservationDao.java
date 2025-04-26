@@ -5,11 +5,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.Reservation;
-import roomescape.dto.ReservationDto;
+import roomescape.dto.create.ReservationCreate;
+import roomescape.dto.read.ReservationRead;
 
 import java.sql.PreparedStatement;
-import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -21,23 +20,23 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long save(final Reservation reservation) {
-        checkReservationAlreadyExist(reservation.getDate(), reservation.getTime().getId());
+    public long save(final ReservationCreate reservationCreate) {
+        checkReservationAlreadyExist(reservationCreate.date(), reservationCreate.timeId());
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
-            ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate().toString());
-            ps.setLong(3, reservation.getTime().getId());
+            ps.setString(1, reservationCreate.name());
+            ps.setString(2, reservationCreate.date());
+            ps.setLong(3, reservationCreate.timeId());
             return ps;
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
     }
 
-    public List<ReservationDto> getAll() {
+    public List<ReservationRead> getAll() {
         String query = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value " +
                 "FROM reservation r " +
                 "INNER JOIN reservation_time t on r.time_id = t.id";
@@ -55,7 +54,7 @@ public class ReservationDao {
         jdbcTemplate.update(query);
     }
 
-    private void checkReservationAlreadyExist(final LocalDate date, final Long timeId) {
+    private void checkReservationAlreadyExist(final String date, final Long timeId) {
         String query = "SELECT count(*) FROM reservation WHERE date = ? AND time_id = ?";
         int count = jdbcTemplate.queryForObject(query, Integer.class, date, timeId);
         if (count != 0) {
@@ -63,8 +62,8 @@ public class ReservationDao {
         }
     }
 
-    private RowMapper<ReservationDto> reservationRowMapper() {
-        return (resultSet, rowNum) -> new ReservationDto(
+    private RowMapper<ReservationRead> reservationRowMapper() {
+        return (resultSet, rowNum) -> new ReservationRead(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getString("date"),

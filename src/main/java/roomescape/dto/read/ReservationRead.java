@@ -1,4 +1,4 @@
-package roomescape.dto;
+package roomescape.dto.read;
 
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -8,7 +8,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public record ReservationDto(
+public record ReservationRead(
         Long reservationId,
         String name,
         String date,
@@ -16,9 +16,9 @@ public record ReservationDto(
         String timeValue
 ) {
 
-    public static List<Reservation> toReservations(List<ReservationDto> dtos) {
+    public static List<Reservation> toReservations(List<ReservationRead> dtos) {
         return dtos.stream()
-                .map(ReservationDto::toReservation)
+                .map(ReservationRead::toReservation)
                 .toList();
     }
 

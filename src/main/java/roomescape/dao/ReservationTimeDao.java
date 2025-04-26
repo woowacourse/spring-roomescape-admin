@@ -5,11 +5,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.ReservationTime;
+import roomescape.dto.create.ReservationTimeCreate;
+import roomescape.dto.read.ReservationTimeRead;
 
 import java.sql.PreparedStatement;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Repository
@@ -21,32 +20,32 @@ public class ReservationTimeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public long save(final ReservationTime reservationTime) {
+    public long save(final ReservationTimeCreate reservationTimeCreate) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "INSERT INTO reservation_time(start_at) VALUES (?)";
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(query, new String[]{"id"});
-            ps.setString(1, reservationTime.getStartAt().toString());
+            ps.setString(1, reservationTimeCreate.startAt());
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();
     }
 
-    public List<ReservationTime> getAll() {
+    public List<ReservationTimeRead> getAll() {
         String query = "SELECT * FROM reservation_time";
         return jdbcTemplate.query(query, timeRowMapper());
     }
 
-    public ReservationTime findById(final Long timeId) {
+    public ReservationTimeRead findById(final Long timeId) {
         String query = "SELECT * FROM reservation_time WHERE id = ?";
         return jdbcTemplate.queryForObject(query, timeRowMapper(), timeId);
     }
 
-    private RowMapper<ReservationTime> timeRowMapper() {
+    private RowMapper<ReservationTimeRead> timeRowMapper() {
         return (resultSet, rowNum) -> {
             Long id = resultSet.getLong("id");
             String time = resultSet.getString("start_at");
-            return new ReservationTime(id, LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm")));
+            return new ReservationTimeRead(id, time);
         };
     }
 

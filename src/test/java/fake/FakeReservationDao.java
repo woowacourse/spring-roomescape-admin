@@ -1,21 +1,21 @@
-package roomescape.reservation.dao;
+package fake;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import roomescape.reservation.Reservation;
+import roomescape.reservation.dao.ReservationDao;
 
-public class ListBasedReservationDao implements ReservationDao {
+public class FakeReservationDao implements ReservationDao {
     private List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+    private long index = 1L;
 
     public List<Reservation> findAll() {
         return Collections.unmodifiableList(reservations);
     }
 
     public Reservation save(Reservation reservation) {
-        Reservation newReservation = new Reservation(index.getAndIncrement(), reservation.getCustomerName(),
+        Reservation newReservation = new Reservation(index++, reservation.getCustomerName(),
                 reservation.getReservationDate(), reservation.getReservationTime());
         reservations.add(newReservation);
         return newReservation;

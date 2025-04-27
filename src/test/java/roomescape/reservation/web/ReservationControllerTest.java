@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
-import roomescape.reservation.dao.ListBasedReservationDao;
+import fake.FakeReservationDao;
 import roomescape.reservation.dao.ReservationDao;
 import roomescape.time.ReservationTime;
 import roomescape.time.dao.ReservationTimeDao;
@@ -26,7 +26,7 @@ class ReservationControllerTest {
 
     @BeforeEach
     public void init() {
-        reservationDao = new ListBasedReservationDao();
+        reservationDao = new FakeReservationDao();
         reservationTimeDao = new FakeReservationTimeDao();
         reservationController = new ReservationController(reservationDao, reservationTimeDao);
         date = LocalDate.now();

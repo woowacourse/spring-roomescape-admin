@@ -1,41 +1,42 @@
 package roomescape.dao;
 
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.entity.ReservationEntity;
 import roomescape.entity.ReservationTimeEntity;
 
-import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
 @Repository
 public class ReservationDaoImpl implements ReservationDao {
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public ReservationDaoImpl(JdbcTemplate jdbcTemplate) {
+    public ReservationDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public ReservationEntity save(ReservationEntity newReservation) {
-        String query = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
+        String query = "INSERT INTO reservation (name, date, time_id) VALUES (:name, :date, :time_id)";
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", newReservation.name())
+                        .addValue("date", newReservation.date().toString())
+                                .addValue("time_id", newReservation.getTimeId());
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(query, new String[]{"id"});
-            preparedStatement.setString(1, newReservation.name());
-            preparedStatement.setString(2, newReservation.date().toString());
-            preparedStatement.setLong(3, newReservation.getTimeId());
-            return preparedStatement;
-        }, keyHolder);
+        jdbcTemplate.update(query, params, keyHolder);
         final long id = keyHolder.getKey().longValue();
         return newReservation.changeId(id);
     }
 
     public boolean deleteById(final Long id) {
-        String query = "DELETE FROM reservation WHERE id = ?";
-        final int updated = jdbcTemplate.update(query, id);
+        String query = "DELETE FROM reservation WHERE id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", id);
+        final int updated = jdbcTemplate.update(query, params);
         return updated > 0;
     }
 

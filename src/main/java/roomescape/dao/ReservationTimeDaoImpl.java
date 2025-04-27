@@ -1,33 +1,31 @@
 package roomescape.dao;
 
 import org.springframework.jdbc.IncorrectResultSetColumnCountException;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.entity.ReservationTimeEntity;
 
-import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class ReservationTimeDaoImpl implements ReservationTimeDao {
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public ReservationTimeDaoImpl(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public ReservationTimeEntity save(ReservationTimeEntity entity) {
-        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
+        String sql = "INSERT INTO reservation_time (start_at) VALUES (:start_at)";
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("start_at", entity.startAt().toString());
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setString(1, entity.startAt().toString());
-            return preparedStatement;
-        }, keyHolder);
+        jdbcTemplate.update(sql, params, keyHolder);
         final long id = keyHolder.getKey().longValue();
         return new ReservationTimeEntity(id, entity.startAt());
     }
@@ -44,19 +42,23 @@ public class ReservationTimeDaoImpl implements ReservationTimeDao {
 
     @Override
     public boolean deleteById(final Long id) {
-        String sql = "DELETE FROM reservation_time WHERE id = ?";
-        final int updated = jdbcTemplate.update(sql, id);
+        String sql = "DELETE FROM reservation_time WHERE id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", id);
+        final int updated = jdbcTemplate.update(sql, params);
         return updated > 0;
     }
 
     @Override
     public Optional<ReservationTimeEntity> findById(final Long id) {
-        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+        String sql = "SELECT id, start_at FROM reservation_time WHERE id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", id);
         try {
-            ReservationTimeEntity timeEntity = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> {
+            ReservationTimeEntity timeEntity = jdbcTemplate.queryForObject(sql, params, (resultSet, rowNum) -> {
                 LocalTime startAt = resultSet.getObject("start_at", LocalTime.class);
                 return new ReservationTimeEntity(id, startAt);
-            }, id);
+            });
             return Optional.of(timeEntity);
         } catch (IncorrectResultSetColumnCountException e) {
             return Optional.empty();

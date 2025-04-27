@@ -51,6 +51,7 @@ class ReservationServiceTest {
 
         // then
         assertThat(reservations.size()).isEqualTo(1);
+        assertThat(reservations.getFirst()).isEqualTo(reservation);
     }
 
     @Test

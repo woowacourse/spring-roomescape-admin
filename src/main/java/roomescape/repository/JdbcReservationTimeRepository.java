@@ -1,24 +1,24 @@
 package roomescape.repository;
 
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.entity.ReservationTime;
 
-import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate nameJdbcTemplate;
 
-    public JdbcReservationTimeRepository(final JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public JdbcReservationTimeRepository(final NamedParameterJdbcTemplate nameJdbcTemplate) {
+        this.nameJdbcTemplate = nameJdbcTemplate;
     }
 
     private static final RowMapper<ReservationTime> reservationTimeRowMapper = (row, rowNum) ->
@@ -27,35 +27,38 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public Long add(final ReservationTime reservationTime) {
-        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
+        String sql = "INSERT INTO reservation_time (start_at) VALUES (:start_at)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[] {"id"});
-            ps.setString(1, String.valueOf(reservationTime.getStartAt()));
-            return ps;
-        }, keyHolder);
-
+        nameJdbcTemplate.update(sql,
+                new MapSqlParameterSource().addValue("start_at", reservationTime.getStartAt())
+                ,keyHolder
+        );
         return keyHolder.getKey().longValue();
     }
 
     @Override
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";
-        return jdbcTemplate.query(sql, reservationTimeRowMapper);
+        return nameJdbcTemplate.query(sql, reservationTimeRowMapper);
     }
 
     @Override
     public void deleteById(final Long id) {
-        String sql = "DELETE FROM reservation_time WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        String sql = "DELETE FROM reservation_time WHERE id = :id";
+        nameJdbcTemplate.update(sql,
+                new MapSqlParameterSource().addValue("id", id)
+        );
     }
 
     @Override
     public Optional<ReservationTime> findById(final Long id) {
         try {
-            String sql = "SELECT * FROM reservation_time WHERE id = ?";
-            ReservationTime reservationTime = jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, id);
+            String sql = "SELECT * FROM reservation_time WHERE id = :id";
+            ReservationTime reservationTime = nameJdbcTemplate.queryForObject(sql,
+                    new MapSqlParameterSource().addValue("id", id)
+                    , reservationTimeRowMapper
+            );
             return Optional.of(reservationTime);
         } catch (IncorrectResultSizeDataAccessException e) {
             return Optional.empty();

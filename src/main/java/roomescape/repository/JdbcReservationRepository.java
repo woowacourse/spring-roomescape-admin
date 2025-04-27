@@ -1,25 +1,27 @@
 package roomescape.repository;
 
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 
-import java.sql.PreparedStatement;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate nameJdbcTemplate;
 
-    public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public JdbcReservationRepository(NamedParameterJdbcTemplate nameJdbcTemplate) {
+        this.nameJdbcTemplate = nameJdbcTemplate;
     }
 
     private static final RowMapper<Reservation> reservationRowMapper = (row, rowNum) ->
@@ -31,15 +33,14 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Long add(final Reservation reservation) {
-        String sql = "INSERT INTO RESERVATION (NAME, DATE, TIME_ID) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO RESERVATION (NAME, DATE, TIME_ID) VALUES (:name, :date, :time_id)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, reservation.getName());
-            ps.setString(2, String.valueOf(reservation.getDate()));
-            ps.setLong(3, reservation.getTime().getId());
-            return ps;
-        }, keyHolder);
+
+        nameJdbcTemplate.update(sql, new MapSqlParameterSource()
+                .addValue("name", reservation.getName())
+                .addValue("date", reservation.getDate())
+                .addValue("time_id", reservation.getTime().getId())
+        , keyHolder);
 
         return keyHolder.getKey().longValue();
     }
@@ -49,8 +50,13 @@ public class JdbcReservationRepository implements ReservationRepository {
         try {
             String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value " +
                     "FROM reservation as r inner join reservation_time as t on r.time_id = t.id " +
-                    "WHERE r.id = ?";
-            Reservation reservation = jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
+                    "WHERE r.id = :id";
+            Map<String, Object> params = new HashMap<>();
+            params.put("id", id);
+            Reservation reservation = nameJdbcTemplate.queryForObject(sql,
+                    new MapSqlParameterSource().addValue("id", id),
+                    reservationRowMapper
+            );
             return Optional.of(reservation);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -59,14 +65,17 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public void deleteById(final Long id) {
-        String sql = "DELETE FROM RESERVATION WHERE ID = ?";
-        jdbcTemplate.update(sql, id);
+        String sql = "DELETE FROM RESERVATION WHERE ID = :id";
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        nameJdbcTemplate.update(sql, params);
     }
 
     @Override
     public List<Reservation> findAll() {
         String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value " +
                 "FROM reservation as r inner join reservation_time as t on r.time_id = t.id";
-        return jdbcTemplate.query(sql, reservationRowMapper);
+        return nameJdbcTemplate.query(sql, reservationRowMapper);
     }
 }

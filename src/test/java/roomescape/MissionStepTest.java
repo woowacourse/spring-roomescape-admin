@@ -1,21 +1,43 @@
 package roomescape;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.lang.reflect.Field;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.presentation.controller.ReservationApiController;
+import roomescape.presentation.dto.ReservationResponseDto;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ReservationApiController reservationApiController;
+
+    @BeforeEach
+    void setUp() {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "15:00");
+    }
 
     @DisplayName("1단계 - 관리자 홈 화면 응답 성공")
     @Test
@@ -47,7 +69,7 @@ public class MissionStepTest {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        params.put("time", "15:40");
+        params.put("timeId", "1");
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -73,5 +95,130 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
+    }
+
+    @DisplayName("4단계 - 데이터베이스 커넥션을 획득하고, 데이터베이스 이름과 예약 테이블 존재 여부 확인")
+    @Test
+    void step4() {
+        try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
+            assertThat(connection).isNotNull();
+            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
+            assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @DisplayName("5단계 - 예약 추가 후 조회 API와 데이터베이스 쿼리 결과 비교")
+    @Test
+    void step5() {
+        LocalDateTime now = LocalDateTime.now();
+        String date = now.plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String time = now.format(DateTimeFormatter.ofPattern("HH:mm"));
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", date, "1");
+
+        List<ReservationResponseDto> reservations = RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200).extract()
+                .jsonPath().getList(".", ReservationResponseDto.class);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(1) from reservation", Integer.class);
+
+        assertThat(reservations.size()).isEqualTo(count);
+    }
+
+    @DisplayName("6단계 - 예약 추가 후 조회, 예약 삭제 후 조회 확인")
+    @Test
+    void step6() {
+        LocalDateTime now = LocalDateTime.now();
+        String date = now.plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", date);
+        params.put("timeId", "1");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM Reservation", Integer.class);
+        assertThat(count).isEqualTo(1);
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(200);
+
+        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM Reservation", Integer.class);
+        assertThat(countAfterDelete).isEqualTo(0);
+    }
+
+    @DisplayName("7단계 - 방탈출 시간표 시간 추가, 조회, 삭제 확인")
+    @Test
+    void step7() {
+        jdbcTemplate.update("DELETE FROM reservation_time");
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @DisplayName("8단계 - 방탈출 예약 추가, 조회 확인")
+    @Test
+    void step8() {
+        LocalDateTime now = LocalDateTime.now();
+        String date = now.plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", date);
+        reservation.put("timeId", "1");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
+
+    @DisplayName("9단계 - 컨트롤러에 JdbcTemplate 객체가 주입되지 않는지 확인")
+    @Test
+    void step9() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : reservationApiController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
     }
 }

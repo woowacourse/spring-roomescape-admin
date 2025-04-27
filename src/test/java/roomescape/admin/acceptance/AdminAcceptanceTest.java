@@ -1,6 +1,4 @@
-package roomescape;
-
-import static org.hamcrest.Matchers.is;
+package roomescape.admin.acceptance;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.DisplayName;
@@ -10,29 +8,35 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class AdminTest {
+class AdminAcceptanceTest {
 
     @Test
     @DisplayName("어드민 페이지를 반환한다.")
     void getAdminPage() {
-        RestAssured.given().log().all()
+        RestAssured
+                .given().log().all()
                 .when().get("/admin")
                 .then().log().all()
                 .statusCode(200);
     }
 
     @Test
-    @DisplayName("모든 예약을 조회한다.")
-    void getAllReservations() {
-        RestAssured.given().log().all()
+    @DisplayName("예약 페이지를 반환한다.")
+    void getReservationPage() {
+        RestAssured
+                .given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
                 .statusCode(200);
+    }
 
-        RestAssured.given().log().all()
-                .when().get("/reservations")
+    @Test
+    @DisplayName("시간 페이지를 반환한다.")
+    void getTimePage() {
+        RestAssured
+                .given().log().all()
+                .when().get("/admin/time")
                 .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
+                .statusCode(200);
     }
 }

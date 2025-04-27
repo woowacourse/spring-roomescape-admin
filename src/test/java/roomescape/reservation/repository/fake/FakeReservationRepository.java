@@ -6,8 +6,8 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.common.exception.EntityNotFoundException;
-import roomescape.reservation.entity.Reservation;
-import roomescape.reservation.repository.EntityRepository;
+import roomescape.domain.reservation.entity.Reservation;
+import roomescape.domain.reservation.repository.EntityRepository;
 
 public class FakeReservationRepository implements EntityRepository<Reservation> {
 

@@ -1,4 +1,4 @@
-package roomescape.reservation.controller;
+package roomescape.domain.reservation.controller;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import roomescape.reservation.dto.ReservationTimeRequest;
-import roomescape.reservation.dto.ReservationTimeResponse;
-import roomescape.reservation.service.ReservationTimeService;
+import roomescape.domain.reservation.dto.ReservationTimeRequest;
+import roomescape.domain.reservation.dto.ReservationTimeResponse;
+import roomescape.domain.reservation.service.ReservationTimeService;
 
 @Controller
 public class ReservationTimeController {
@@ -20,11 +20,6 @@ public class ReservationTimeController {
 
     public ReservationTimeController(ReservationTimeService reservationTimeService) {
         this.reservationTimeService = reservationTimeService;
-    }
-
-    @GetMapping("/admin/time")
-    public String adminReservationTimeDashboard() {
-        return "admin/time";
     }
 
     @GetMapping("/times")

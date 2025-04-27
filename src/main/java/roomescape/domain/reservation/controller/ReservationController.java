@@ -1,18 +1,17 @@
-package roomescape.reservation.controller;
+package roomescape.domain.reservation.controller;
 
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import roomescape.reservation.dto.ReservationRequest;
-import roomescape.reservation.dto.ReservationResponse;
-import roomescape.reservation.service.ReservationService;
+import roomescape.domain.reservation.dto.ReservationRequest;
+import roomescape.domain.reservation.dto.ReservationResponse;
+import roomescape.domain.reservation.service.ReservationService;
 
 @Controller
 public class ReservationController {
@@ -21,11 +20,6 @@ public class ReservationController {
 
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
-    }
-
-    @GetMapping("/admin/reservation")
-    public String adminReservationDashboard() {
-        return "/admin/reservation";
     }
 
     @GetMapping("/reservations")

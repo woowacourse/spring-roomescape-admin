@@ -1,4 +1,4 @@
-package roomescape.reservation.dto;
+package roomescape.domain.reservation.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalTime;

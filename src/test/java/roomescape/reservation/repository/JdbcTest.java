@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.reservation.dto.ReservationResponse;
+import roomescape.domain.reservation.dto.ReservationResponse;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 class JdbcTest {

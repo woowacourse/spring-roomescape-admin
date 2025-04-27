@@ -15,9 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.reservation.entity.Reservation;
-import roomescape.reservation.entity.ReservationTime;
-import roomescape.reservation.repository.EntityRepository;
+import roomescape.domain.reservation.entity.Reservation;
+import roomescape.domain.reservation.entity.ReservationTime;
+import roomescape.domain.reservation.repository.EntityRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 public class ReservationTimeApiTest {

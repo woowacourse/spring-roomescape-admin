@@ -25,10 +25,11 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import roomescape.common.exception.EntityNotFoundException;
-import roomescape.reservation.dto.ReservationRequest;
-import roomescape.reservation.dto.ReservationResponse;
-import roomescape.reservation.dto.ReservationTimeResponse;
-import roomescape.reservation.service.ReservationService;
+import roomescape.domain.reservation.controller.ReservationController;
+import roomescape.domain.reservation.dto.ReservationRequest;
+import roomescape.domain.reservation.dto.ReservationResponse;
+import roomescape.domain.reservation.dto.ReservationTimeResponse;
+import roomescape.domain.reservation.service.ReservationService;
 
 @WebMvcTest(ReservationController.class)
 public class ReservationControllerTest {

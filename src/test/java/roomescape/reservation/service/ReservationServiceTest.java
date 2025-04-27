@@ -12,11 +12,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.common.exception.EntityNotFoundException;
-import roomescape.reservation.dto.ReservationRequest;
-import roomescape.reservation.dto.ReservationResponse;
-import roomescape.reservation.dto.ReservationTimeResponse;
-import roomescape.reservation.entity.Reservation;
-import roomescape.reservation.entity.ReservationTime;
+import roomescape.domain.reservation.dto.ReservationRequest;
+import roomescape.domain.reservation.dto.ReservationResponse;
+import roomescape.domain.reservation.dto.ReservationTimeResponse;
+import roomescape.domain.reservation.entity.Reservation;
+import roomescape.domain.reservation.entity.ReservationTime;
+import roomescape.domain.reservation.service.ReservationService;
 import roomescape.reservation.repository.fake.FakeReservationRepository;
 import roomescape.reservation.repository.fake.FakeReservationTimeRepository;
 

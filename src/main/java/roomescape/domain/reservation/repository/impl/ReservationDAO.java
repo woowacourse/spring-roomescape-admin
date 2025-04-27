@@ -1,4 +1,4 @@
-package roomescape.reservation.repository.impl;
+package roomescape.domain.reservation.repository.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,9 +15,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.common.exception.EntityNotFoundException;
-import roomescape.reservation.entity.Reservation;
-import roomescape.reservation.entity.ReservationTime;
-import roomescape.reservation.repository.EntityRepository;
+import roomescape.domain.reservation.entity.Reservation;
+import roomescape.domain.reservation.entity.ReservationTime;
+import roomescape.domain.reservation.repository.EntityRepository;
 
 @Repository
 public class ReservationDAO implements EntityRepository<Reservation> {

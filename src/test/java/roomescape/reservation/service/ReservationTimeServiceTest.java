@@ -10,10 +10,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.common.exception.EntityNotFoundException;
-import roomescape.reservation.dto.ReservationTimeRequest;
-import roomescape.reservation.dto.ReservationTimeResponse;
-import roomescape.reservation.entity.ReservationTime;
-import roomescape.reservation.repository.EntityRepository;
+import roomescape.domain.reservation.dto.ReservationTimeRequest;
+import roomescape.domain.reservation.dto.ReservationTimeResponse;
+import roomescape.domain.reservation.entity.ReservationTime;
+import roomescape.domain.reservation.service.ReservationTimeService;
 import roomescape.reservation.repository.fake.FakeReservationTimeRepository;
 
 public class ReservationTimeServiceTest {

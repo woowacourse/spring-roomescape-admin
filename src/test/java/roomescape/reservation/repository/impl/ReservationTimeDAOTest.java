@@ -16,8 +16,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import roomescape.common.exception.AlreadyInUseException;
 import roomescape.common.exception.EntityNotFoundException;
 import roomescape.config.TestConfig;
-import roomescape.reservation.entity.ReservationTime;
-import roomescape.reservation.repository.EntityRepository;
+import roomescape.domain.reservation.entity.ReservationTime;
+import roomescape.domain.reservation.repository.EntityRepository;
+import roomescape.domain.reservation.repository.impl.ReservationTimeDAO;
 import roomescape.utils.JdbcTemplateUtils;
 
 class ReservationTimeDAOTest {

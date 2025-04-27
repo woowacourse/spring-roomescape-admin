@@ -37,7 +37,7 @@ class JdbcReservationDaoTest {
         // given
         ReservationTime reservationTime = new ReservationTime(LocalTime.of(10, 0));
         Long id = reservationTimeDao.create(reservationTime);
-        Reservation reservation = new Reservation("포라", LocalDate.now(), new ReservationTime(id, reservationTime.getStartAt()));
+        Reservation reservation = Reservation.reservationWithoutId("포라", LocalDate.now(), new ReservationTime(id, reservationTime.getStartAt()));
 
         // when
         reservationDao.create(reservation);
@@ -52,7 +52,7 @@ class JdbcReservationDaoTest {
         // given
         ReservationTime reservationTime = new ReservationTime(LocalTime.of(10, 0));
         Long id = reservationTimeDao.create(reservationTime);
-        Reservation reservation = new Reservation("포라", LocalDate.now(), new ReservationTime(id, reservationTime.getStartAt()));
+        Reservation reservation = Reservation.reservationWithoutId("포라", LocalDate.now(), new ReservationTime(id, reservationTime.getStartAt()));
         reservationDao.create(reservation);
 
         // when
@@ -67,7 +67,7 @@ class JdbcReservationDaoTest {
         // given
         ReservationTime reservationTime = new ReservationTime(LocalTime.of(10, 0));
         Long id = reservationTimeDao.create(reservationTime);
-        Reservation reservation = new Reservation("포라", LocalDate.now(), new ReservationTime(id, reservationTime.getStartAt()));
+        Reservation reservation = Reservation.reservationWithoutId("포라", LocalDate.now(), new ReservationTime(id, reservationTime.getStartAt()));
         reservationDao.create(reservation);
         int beforeSize = reservationDao.findAll().size();
 

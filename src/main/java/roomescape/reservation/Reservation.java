@@ -10,18 +10,15 @@ public class Reservation {
     private final LocalDate date;
     private final ReservationTime reservationTime;
 
-    public Reservation(final String name, final LocalDate date, final ReservationTime reservationTime) {
-        this.id = null;
-        this.name = name;
-        this.date = date;
-        this.reservationTime = reservationTime;
-    }
-
     public Reservation(final Long id, final String name, final LocalDate date, final ReservationTime reservationTime) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.reservationTime = reservationTime;
+    }
+
+    public static Reservation reservationWithoutId(final String name, final LocalDate date, final ReservationTime reservationTime) {
+        return new Reservation(null, name, date, reservationTime);
     }
 
     public Long getId() {

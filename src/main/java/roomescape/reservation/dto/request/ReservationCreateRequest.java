@@ -12,6 +12,6 @@ public record ReservationCreateRequest(
         @NotNull Long timeId
 ) {
     public Reservation toReservation(ReservationTime reservationTime) {
-        return new Reservation(name, date, reservationTime);
+        return Reservation.reservationWithoutId(name, date, reservationTime);
     }
 }

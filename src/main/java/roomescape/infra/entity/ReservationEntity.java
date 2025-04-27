@@ -3,7 +3,6 @@ package roomescape.infra.entity;
 import org.springframework.jdbc.core.RowMapper;
 import roomescape.business.domain.Customer;
 import roomescape.business.domain.Reservation;
-import roomescape.presentation.dto.request.ReservationCreateRequest;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -32,8 +31,8 @@ public record ReservationEntity(
         return new ReservationEntity(id, name, date, new ReservationTimeEntity(timeId, timeValue));
     };
 
-    public static ReservationEntity beforeSave(final ReservationCreateRequest request) {
-        return new ReservationEntity(null, request.name(), request.date(), new ReservationTimeEntity(request.timeId(), null));
+    public static ReservationEntity beforeSave(final Reservation reservation, final long timeId) {
+        return new ReservationEntity(null, reservation.customerName(), reservation.date(), new ReservationTimeEntity(timeId, null));
     }
 
     public Map<String, ?> toDataMap() {

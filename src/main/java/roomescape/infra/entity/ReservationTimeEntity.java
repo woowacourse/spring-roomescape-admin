@@ -2,7 +2,6 @@ package roomescape.infra.entity;
 
 import org.springframework.jdbc.core.RowMapper;
 import roomescape.business.domain.ReservationTime;
-import roomescape.presentation.dto.request.ReservationTimeCreateRequest;
 
 import java.time.LocalTime;
 import java.util.Map;
@@ -22,8 +21,8 @@ public record ReservationTimeEntity(
         return new ReservationTimeEntity(id, startTime);
     };
 
-    public static ReservationTimeEntity beforeSave(final ReservationTimeCreateRequest request) {
-        return new ReservationTimeEntity(null, request.startAt());
+    public static ReservationTimeEntity beforeSave(final ReservationTime domain) {
+        return new ReservationTimeEntity(null, domain.startTime());
     }
 
     public Map<String, ?> toDataMap() {

@@ -3,12 +3,13 @@ package roomescape.business.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import roomescape.infra.ReservationDatabase;
+import roomescape.infra.ReservationTimeDatabase;
+import roomescape.infra.entity.ReservationEntity;
+import roomescape.infra.entity.ReservationTimeEntity;
 import roomescape.presentation.dto.request.ReservationCreateRequest;
 import roomescape.presentation.dto.response.ReservationResponse;
 import roomescape.presentation.dto.response.ReservationTimeResponse;
-import roomescape.infra.ReservationDatabase;
-import roomescape.infra.entity.ReservationEntity;
-import roomescape.infra.entity.ReservationTimeEntity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,19 +20,23 @@ import static org.assertj.core.api.Assertions.*;
 
 class ReservationServiceTest {
 
+    private ReservationTimeDatabase reservationTimeDatabase;
     private ReservationDatabase reservationDatabase;
     private ReservationService reservationService;
 
     @BeforeEach
     void setUp() {
         this.reservationDatabase = Mockito.mock(ReservationDatabase.class);
-        this.reservationService = new ReservationService(reservationDatabase);
+        this.reservationTimeDatabase = Mockito.mock(ReservationTimeDatabase.class);
+        this.reservationService = new ReservationService(reservationDatabase, reservationTimeDatabase);
     }
 
     @Test
     void 예약을_저장하고_그_결과를_반환한다() {
         Mockito.when(reservationDatabase.saveAndGetId(Mockito.any()))
                 .thenReturn(1L);
+        Mockito.when(reservationTimeDatabase.findById(Mockito.anyLong()))
+                .thenReturn(Optional.of(new ReservationTimeEntity(1L, LocalTime.of(10, 0))));
         Mockito.when(reservationDatabase.findById(1L))
                 .thenReturn(Optional.of(new ReservationEntity(1L, "dompoo", LocalDate.of(2025, 5, 17), new ReservationTimeEntity(3L, LocalTime.of(10, 0)))));
         final ReservationCreateRequest request = new ReservationCreateRequest("dompoo", LocalDate.of(2025, 5, 17), 1L);

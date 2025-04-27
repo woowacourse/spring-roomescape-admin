@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-import roomescape.presentation.dto.request.ReservationCreateRequest;
-import roomescape.presentation.dto.request.ReservationTimeCreateRequest;
 import roomescape.infra.entity.ReservationEntity;
 import roomescape.infra.entity.ReservationTimeEntity;
 
@@ -34,10 +32,10 @@ class ReservationMemoryDatabaseTest {
 
     @Test
     void 전체_조회_테스트() {
-        final long timeId1 = timeDatabase.saveAndGetId(ReservationTimeEntity.beforeSave(new ReservationTimeCreateRequest(LocalTime.of(10, 0))));
-        final long timeId2 = timeDatabase.saveAndGetId(ReservationTimeEntity.beforeSave(new ReservationTimeCreateRequest(LocalTime.of(13, 0))));
-        database.saveAndGetId(ReservationEntity.beforeSave(new ReservationCreateRequest("dompoo", LocalDate.now().plusDays(20), timeId1)));
-        database.saveAndGetId(ReservationEntity.beforeSave(new ReservationCreateRequest("popo", LocalDate.now().plusDays(25), timeId2)));
+        final long timeId1 = timeDatabase.saveAndGetId(new ReservationTimeEntity(null, LocalTime.of(10, 0)));
+        final long timeId2 = timeDatabase.saveAndGetId(new ReservationTimeEntity(null, LocalTime.of(13, 0)));
+        database.saveAndGetId(new ReservationEntity(null, "dompoo", LocalDate.now().plusDays(20), new ReservationTimeEntity(timeId1, null)));
+        database.saveAndGetId(new ReservationEntity(null, "popo", LocalDate.now().plusDays(25), new ReservationTimeEntity(timeId2, null)));
 
         final List<ReservationEntity> result = database.findAll();
 
@@ -53,8 +51,8 @@ class ReservationMemoryDatabaseTest {
 
     @Test
     void id_조회_테스트() {
-        final long timeId = timeDatabase.saveAndGetId(ReservationTimeEntity.beforeSave(new ReservationTimeCreateRequest(LocalTime.of(10, 0))));
-        final long reservationId = database.saveAndGetId(ReservationEntity.beforeSave(new ReservationCreateRequest("dompoo", LocalDate.now().plusDays(20), timeId)));
+        final long timeId = timeDatabase.saveAndGetId(new ReservationTimeEntity(null, LocalTime.of(10, 0)));
+        final long reservationId = database.saveAndGetId(new ReservationEntity(null, "dompoo", LocalDate.now().plusDays(20), new ReservationTimeEntity(timeId, null)));
 
         final ReservationEntity result = database.findById(reservationId).get();
 
@@ -65,10 +63,10 @@ class ReservationMemoryDatabaseTest {
 
     @Test
     void 저장_테스트() {
-        final long timeId = timeDatabase.saveAndGetId(ReservationTimeEntity.beforeSave(new ReservationTimeCreateRequest(LocalTime.of(10, 0))));
-        final ReservationCreateRequest request = new ReservationCreateRequest("dompoo", LocalDate.of(2025, 5, 17), timeId);
+        final long timeId = timeDatabase.saveAndGetId(new ReservationTimeEntity(null, LocalTime.of(10, 0)));
+        final ReservationEntity request = new ReservationEntity(null, "dompoo", LocalDate.of(2025, 5, 17), new ReservationTimeEntity(timeId, null));
 
-        final long savedId = database.saveAndGetId(ReservationEntity.beforeSave(request));
+        final long savedId = database.saveAndGetId(request);
 
         assertThat(database.findAll().size()).isEqualTo(1);
         final ReservationEntity savedReservation = database.findById(savedId).get();
@@ -79,8 +77,8 @@ class ReservationMemoryDatabaseTest {
 
     @Test
     void 삭제_테스트() {
-        final long timeId = timeDatabase.saveAndGetId(ReservationTimeEntity.beforeSave(new ReservationTimeCreateRequest(LocalTime.of(10, 0))));
-        final long reservationId = database.saveAndGetId(ReservationEntity.beforeSave(new ReservationCreateRequest("dompoo", LocalDate.of(2025, 5, 17), timeId)));
+        final long timeId = timeDatabase.saveAndGetId(new ReservationTimeEntity(null, LocalTime.of(10, 0)));
+        final long reservationId = database.saveAndGetId(new ReservationEntity(null, "dompoo", LocalDate.of(2025, 5, 17), new ReservationTimeEntity(timeId, null)));
 
         database.deleteById(reservationId);
 

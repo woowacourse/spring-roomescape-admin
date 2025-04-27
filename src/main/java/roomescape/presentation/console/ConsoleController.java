@@ -35,7 +35,7 @@ public class ConsoleController {
     ) {
         this.inputView = inputView;
         this.outputView = outputView;
-        this.reservationService = new ReservationService(reservationDatabase);
+        this.reservationService = new ReservationService(reservationDatabase, reservationTimeDatabase);
         this.reservationTimeService = new ReservationTimeService(reservationTimeDatabase);
     }
 

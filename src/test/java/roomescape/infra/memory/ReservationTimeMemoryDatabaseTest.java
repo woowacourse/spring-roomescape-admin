@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-import roomescape.presentation.dto.request.ReservationTimeCreateRequest;
+import roomescape.business.domain.ReservationTime;
 import roomescape.infra.entity.ReservationTimeEntity;
 
 import java.time.LocalTime;
@@ -27,8 +27,8 @@ class ReservationTimeMemoryDatabaseTest {
 
     @Test
     void 전체_조회_테스트() {
-        timeDatabase.saveAndGetId(ReservationTimeEntity.beforeSave(new ReservationTimeCreateRequest(LocalTime.of(10, 0))));
-        timeDatabase.saveAndGetId(ReservationTimeEntity.beforeSave(new ReservationTimeCreateRequest(LocalTime.of(13, 0))));
+        timeDatabase.saveAndGetId(new ReservationTimeEntity(null, LocalTime.of(10, 0)));
+        timeDatabase.saveAndGetId(new ReservationTimeEntity(null, LocalTime.of(13, 0)));
 
         final List<ReservationTimeEntity> result = timeDatabase.findAll();
 
@@ -39,7 +39,7 @@ class ReservationTimeMemoryDatabaseTest {
 
     @Test
     void id_조회_테스트() {
-        final long reservationTimeId = timeDatabase.saveAndGetId(ReservationTimeEntity.beforeSave(new ReservationTimeCreateRequest(LocalTime.of(10, 0))));
+        final long reservationTimeId = timeDatabase.saveAndGetId(new ReservationTimeEntity(null, LocalTime.of(10, 0)));
 
         final ReservationTimeEntity result = timeDatabase.findById(reservationTimeId).get();
 
@@ -48,7 +48,7 @@ class ReservationTimeMemoryDatabaseTest {
 
     @Test
     void 저장_테스트() {
-        final ReservationTimeCreateRequest request = new ReservationTimeCreateRequest(LocalTime.of(10, 0));
+        final ReservationTime request = new ReservationTime(LocalTime.of(10, 0));
 
         final long savedId = timeDatabase.saveAndGetId(ReservationTimeEntity.beforeSave(request));
 
@@ -58,7 +58,7 @@ class ReservationTimeMemoryDatabaseTest {
 
     @Test
     void 삭제_테스트() {
-        final ReservationTimeCreateRequest request = new ReservationTimeCreateRequest(LocalTime.of(10, 0));
+        final ReservationTime request = new ReservationTime(LocalTime.of(10, 0));
         final long savedId = timeDatabase.saveAndGetId(ReservationTimeEntity.beforeSave(request));
 
         timeDatabase.deleteById(savedId);

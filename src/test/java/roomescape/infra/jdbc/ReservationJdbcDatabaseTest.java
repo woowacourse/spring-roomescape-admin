@@ -8,8 +8,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.presentation.dto.request.ReservationCreateRequest;
-import roomescape.presentation.dto.request.ReservationTimeCreateRequest;
 import roomescape.infra.entity.ReservationEntity;
 import roomescape.infra.entity.ReservationTimeEntity;
 
@@ -38,8 +36,8 @@ class ReservationJdbcDatabaseTest {
 
     @Test
     void 전체_조회_테스트() {
-        final long timeId1 = timeDatabase.saveAndGetId(ReservationTimeEntity.beforeSave(new ReservationTimeCreateRequest(LocalTime.of(10, 0))));
-        final long timeId2 = timeDatabase.saveAndGetId(ReservationTimeEntity.beforeSave(new ReservationTimeCreateRequest(LocalTime.of(13, 0))));
+        final long timeId1 = timeDatabase.saveAndGetId(new ReservationTimeEntity(null, LocalTime.of(10, 0)));
+        final long timeId2 = timeDatabase.saveAndGetId(new ReservationTimeEntity(null, LocalTime.of(13, 0)));
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "dompoo", LocalDate.now().plusDays(20), timeId1);
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "popo", LocalDate.now().plusDays(25), timeId2);
 
@@ -57,7 +55,7 @@ class ReservationJdbcDatabaseTest {
 
     @Test
     void id_조회_테스트() {
-        final long timeId = timeDatabase.saveAndGetId(ReservationTimeEntity.beforeSave(new ReservationTimeCreateRequest(LocalTime.of(10, 0))));
+        final long timeId = timeDatabase.saveAndGetId(new ReservationTimeEntity(null, LocalTime.of(10, 0)));
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
@@ -79,10 +77,10 @@ class ReservationJdbcDatabaseTest {
 
     @Test
     void 저장_테스트() {
-        final long timeId = timeDatabase.saveAndGetId(ReservationTimeEntity.beforeSave(new ReservationTimeCreateRequest(LocalTime.of(10, 0))));
-        final ReservationCreateRequest request = new ReservationCreateRequest("dompoo", LocalDate.of(2025, 5, 17), timeId);
+        final long timeId = timeDatabase.saveAndGetId(new ReservationTimeEntity(null, LocalTime.of(10, 0)));
+        final ReservationEntity request = new ReservationEntity(null, "dompoo", LocalDate.of(2025, 5, 17), new ReservationTimeEntity(timeId, null));
 
-        final long savedId = database.saveAndGetId(ReservationEntity.beforeSave(request));
+        final long savedId = database.saveAndGetId(request);
 
         assertThat(database.findAll().size()).isEqualTo(1);
         final ReservationEntity savedReservation = database.findById(savedId).get();
@@ -93,8 +91,8 @@ class ReservationJdbcDatabaseTest {
 
     @Test
     void 삭제_테스트() {
-        final long timeId = timeDatabase.saveAndGetId(ReservationTimeEntity.beforeSave(new ReservationTimeCreateRequest(LocalTime.of(10, 0))));
-        final long reservationId = database.saveAndGetId(ReservationEntity.beforeSave(new ReservationCreateRequest("dompoo", LocalDate.of(2025, 5, 17), timeId)));
+        final long timeId = timeDatabase.saveAndGetId(new ReservationTimeEntity(null, LocalTime.of(10, 0)));
+        final long reservationId = database.saveAndGetId(new ReservationEntity(null, "dompoo", LocalDate.of(2025, 5, 17), new ReservationTimeEntity(timeId, null)));
 
         database.deleteById(reservationId);
 

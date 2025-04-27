@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.presentation.dto.request.ReservationTimeCreateRequest;
 import roomescape.infra.entity.ReservationTimeEntity;
 
 import java.sql.PreparedStatement;
@@ -60,9 +59,9 @@ class ReservationTimeJdbcDatabaseTest {
 
     @Test
     void 저장_테스트() {
-        final ReservationTimeCreateRequest request = new ReservationTimeCreateRequest(LocalTime.of(10, 0));
+        final ReservationTimeEntity request = new ReservationTimeEntity(null, LocalTime.of(10, 0));
 
-        final long savedId = timeDatabase.saveAndGetId(ReservationTimeEntity.beforeSave(request));
+        final long savedId = timeDatabase.saveAndGetId(request);
 
         final ReservationTimeEntity savedReservation = timeDatabase.findById(savedId).get();
         assertThat(savedReservation.startAt()).isEqualTo("10:00");
@@ -70,8 +69,8 @@ class ReservationTimeJdbcDatabaseTest {
 
     @Test
     void 삭제_테스트() {
-        final ReservationTimeCreateRequest request = new ReservationTimeCreateRequest(LocalTime.of(10, 0));
-        final long savedId = timeDatabase.saveAndGetId(ReservationTimeEntity.beforeSave(request));
+        final ReservationTimeEntity request = new ReservationTimeEntity(null, LocalTime.of(10, 0));
+        final long savedId = timeDatabase.saveAndGetId(request);
 
         timeDatabase.deleteById(savedId);
 

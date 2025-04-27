@@ -22,12 +22,8 @@ public class Reservation {
         this.time = time;
     }
 
-    public void setId(Id id) {
-        this.id = id;
-    }
-
-    public void setTime(ReservationTime reservationTime) {
-        this.time = reservationTime;
+    public Reservation copyWithId(Id id) {
+        return new Reservation(id, name, date, time);
     }
 
     public long getId() {

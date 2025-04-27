@@ -22,8 +22,8 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
-    public void setId(Id id) {
-        this.id = id;
+    public ReservationTime copyWithId(Id id) {
+        return new ReservationTime(id, startAt);
     }
 
     public long getId() {

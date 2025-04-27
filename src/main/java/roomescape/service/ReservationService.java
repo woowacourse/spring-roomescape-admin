@@ -1,7 +1,6 @@
 package roomescape.service;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.TimeDao;
@@ -29,14 +28,12 @@ public class ReservationService {
     }
 
     public ReservationResponseDto createReservation(ReservationRequestDto reservationRequest) {
-        Reservation newReservation = reservationRequest.toReservation();
         ReservationTime reservationTime = timeDao.findById(reservationRequest.timeId());
-        long reservationId = reservationDao.create(newReservation);
+        Reservation reservationWithoutId = reservationRequest.toReservationWith(reservationTime);
+        long reservationId = reservationDao.create(reservationWithoutId);
 
-        newReservation.setId(new Id(reservationId));
-        newReservation.setTime(reservationTime);
-
-        return ReservationResponseDto.from(newReservation);
+        Reservation reservation = reservationWithoutId.copyWithId(new Id(reservationId));
+        return ReservationResponseDto.from(reservation);
     }
 
     public void deleteReservation(long id) {

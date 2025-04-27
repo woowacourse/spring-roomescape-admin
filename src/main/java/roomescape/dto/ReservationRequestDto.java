@@ -1,9 +1,6 @@
 package roomescape.dto;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import roomescape.domain_entity.Id;
 import roomescape.domain_entity.Reservation;
 import roomescape.domain_entity.ReservationTime;
@@ -28,9 +25,9 @@ public record ReservationRequestDto(
         }
     }
 
-    public Reservation toReservation() {
+    public Reservation toReservationWith(ReservationTime reservationTime) {
         return new Reservation(
-                name, date, new ReservationTime(new Id(timeId))
+                name, date, reservationTime
         );
     }
 }

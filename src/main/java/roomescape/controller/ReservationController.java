@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.service.ReservationService;
 import roomescape.service.dto.ReservationRegisterDto;
@@ -27,13 +26,11 @@ public class ReservationController {
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
     public List<ReservationResponseDto> getReservations() {
         return reservationService.findAllReservations();
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
     public ReservationResponseDto registerReservation(
             @RequestBody @Valid final ReservationRegisterDto reservationRegisterDto) {
         Long savedId = reservationService.saveReservation(reservationRegisterDto);

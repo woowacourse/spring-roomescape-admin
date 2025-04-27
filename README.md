@@ -60,7 +60,7 @@
   8단계의 API 명세를 참고하여, 요구사항이 반영되도록 API 수정하세요.
 - [x] 예약 페이지 파일 수정  
   templates/admin/reservation-legacy.html 대신 templates/admin/reservation.html 파일을 활용하세요.
-- [ ] 테이블 스키마 재정의  
+- [x] 테이블 스키마 재정의  
   외래키 지정을 통해 reservation 테이블과 reservation_time 테이블의 관계를 설정해주세요.
 - [ ] 예약 클래스 수정
   시간 타입을 String -> ReservationTime 객체로 수정하세요.

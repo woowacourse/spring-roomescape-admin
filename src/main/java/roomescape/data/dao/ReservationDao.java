@@ -9,5 +9,5 @@ public interface ReservationDao {
 
     List<Reservation> findAll();
 
-    int remove(final Long id);
+    boolean remove(final Long id);
 }

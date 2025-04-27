@@ -46,13 +46,13 @@ public class FakeReservationDao implements ReservationDao {
     }
 
     @Override
-    public int remove(final Long id) {
+    public boolean remove(final Long id) {
         try {
             reservations.remove(reservations.get(Math.toIntExact(id)));
             index--;
-            return 1;
+            return true;
         } catch (IndexOutOfBoundsException e) {
-            return 0;
+            return false;
         }
     }
 }

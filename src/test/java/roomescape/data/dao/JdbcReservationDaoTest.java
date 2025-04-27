@@ -114,12 +114,12 @@ class JdbcReservationDaoTest {
         jdbcTemplate.update("INSERT INTO RESERVATION (name, date, time_id) values ('hotteok', '2025-01-01', 1)");
 
         // when
-        final int rowNum = reservationDao.remove(1L);
+        final boolean flag = reservationDao.remove(1L);
         final List<Reservation> reservations = reservationDao.findAll();
 
         // then
         assertAll(
-                () -> assertThat(rowNum).isEqualTo(1),
+                () -> assertThat(flag).isTrue(),
                 () -> assertThat(reservations).isEmpty()
         );
     }
@@ -128,9 +128,9 @@ class JdbcReservationDaoTest {
     @Test
     void removeNotExistsReservation() {
         // given & when
-        final int rowNum = reservationDao.remove(1L);
+        final boolean flag = reservationDao.remove(1L);
 
         // then
-        assertThat(rowNum).isEqualTo(0);
+        assertThat(flag).isFalse();
     }
 }

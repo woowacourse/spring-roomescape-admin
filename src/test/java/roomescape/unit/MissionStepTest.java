@@ -12,8 +12,7 @@ import java.sql.Time;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import roomescape.controller.ReservationController;
 import roomescape.domain.Reservation;
 
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
@@ -43,16 +41,18 @@ public class MissionStepTest {
         return params;
     }
 
+    @DisplayName("어드민 페이지 접근시 정상 응답 반환")
     @Test
-    void 일단계() {
+    void step1() {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
     }
 
+    @DisplayName("예약관리 페이지와 예약 목록 조회시 정상 응답과 빈목록을 반환")
     @Test
-    void 이단계() {
+    void step2() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
@@ -65,11 +65,13 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
+    @DisplayName("예약 기능 통합 테스트")
     @Nested
-    class 삼단계 {
+    class Step3 {
 
+        @DisplayName("예약을 생성하고 목록 조회")
         @Test
-        void 삼단계_예약을_할_수_있다() {
+        void step3_1() {
             Map<String, String> params = createTestParams();
 
             RestAssured.given().log().all()
@@ -87,8 +89,9 @@ public class MissionStepTest {
                     .body("size()", is(1));
         }
 
+        @DisplayName("예약을 생성하고 목록에서 삭제")
         @Test
-        void 삼단계_예약을_삭제할_수_있다() {
+        void step3_2() {
             Map<String, String> params = createTestParams();
 
             RestAssured.given().log().all()
@@ -112,8 +115,9 @@ public class MissionStepTest {
         }
     }
 
+    @DisplayName("DB에 예약 테이블이 정상적으로 생성")
     @Test
-    void 사단계() {
+    void step4() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
             assertThat(connection.getCatalog()).isEqualTo("DATABASE");
@@ -123,8 +127,9 @@ public class MissionStepTest {
         }
     }
 
+    @DisplayName("DB에 직접 삽입한 예약 데이터가 API로 정상 조회")
     @Test
-    void 오단계() {
+    void step5() {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", Time.valueOf("10:00:0"));
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", "1");
 
@@ -139,8 +144,9 @@ public class MissionStepTest {
         assertThat(reservations.size()).isEqualTo(count);
     }
 
+    @DisplayName("예약을 생성하고 삭제하면 DB에 정상적으로 반영")
     @Test
-    void 육단계() {
+    void step6() {
         Map<String, String> params = createTestParams();
 
         RestAssured.given().log().all()
@@ -162,8 +168,9 @@ public class MissionStepTest {
         assertThat(countAfterDelete).isEqualTo(0);
     }
 
+    @DisplayName("시간 정보를 등록하고 조회 및 삭제")
     @Test
-    void 칠단계() {
+    void step7() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -186,8 +193,9 @@ public class MissionStepTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
+    @DisplayName("예약을 생성하면 조회 시 예약 정보가 포함")
     @Test
-    void 팔단계() {
+    void step8() {
         Map<String, String> params = createTestParams();
 
         RestAssured.given().log().all()
@@ -197,7 +205,6 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(HttpStatus.OK.value());
 
-
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
@@ -205,8 +212,9 @@ public class MissionStepTest {
                 .body("size()", is(1));
     }
 
+    @DisplayName("ReservationController에 직접 주입되지 않는 JdbcTemplate 확인")
     @Test
-    void 구단계() {
+    void step9() {
         boolean isJdbcTemplateInjected = false;
 
         for (Field field : reservationController.getClass().getDeclaredFields()) {

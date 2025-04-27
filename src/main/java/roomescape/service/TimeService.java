@@ -3,7 +3,7 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import roomescape.dao.TimeDao;
+import roomescape.dao.JdbcTimeDao;
 import roomescape.domain_entity.Id;
 import roomescape.domain_entity.ReservationTime;
 import roomescape.dto.ReservationTimeResponseDto;
@@ -13,7 +13,7 @@ import roomescape.dto.ReservationTimeRequestDto;
 public class TimeService {
 
     @Autowired
-    private TimeDao timeDao;
+    private JdbcTimeDao timeDao;
 
     public ReservationTimeResponseDto createTime(ReservationTimeRequestDto timeRequest) {
         ReservationTime reservationTime = timeRequest.toTime();

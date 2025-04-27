@@ -19,8 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dao.ReservationDao;
-import roomescape.dao.TimeDao;
+import roomescape.dao.JdbcReservationDao;
+import roomescape.dao.JdbcTimeDao;
 import roomescape.domain_entity.Id;
 import roomescape.domain_entity.Reservation;
 import roomescape.domain_entity.ReservationTime;
@@ -36,9 +36,9 @@ public class ReservationIntegratedTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private TimeDao timeDao;
+    private JdbcTimeDao timeDao;
     @Autowired
-    private ReservationDao reservationDao;
+    private JdbcReservationDao reservationDao;
 
     @Test
     void checkDatabaseConnection() {

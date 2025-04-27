@@ -3,8 +3,8 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import roomescape.dao.ReservationDao;
-import roomescape.dao.TimeDao;
+import roomescape.dao.JdbcReservationDao;
+import roomescape.dao.JdbcTimeDao;
 import roomescape.domain_entity.Id;
 import roomescape.domain_entity.Reservation;
 import roomescape.domain_entity.ReservationTime;
@@ -15,9 +15,9 @@ import roomescape.dto.ReservationResponseDto;
 public class ReservationService {
 
     @Autowired
-    private ReservationDao reservationDao;
+    private JdbcReservationDao reservationDao;
     @Autowired
-    private TimeDao timeDao;
+    private JdbcTimeDao timeDao;
 
     public List<ReservationResponseDto> findAllReservations() {
         return reservationDao.findAll().stream()

@@ -36,7 +36,7 @@ public class TimeService {
     }
 
     public void remove(final Long id) {
-        if(!timeDao.remove(id)) {
+        if (!timeDao.remove(id)) {
             throw new TimeNotFoundException(id);
         }
     }

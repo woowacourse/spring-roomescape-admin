@@ -2,7 +2,6 @@ package roomescape.business.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.business.domain.Reservation;
 import roomescape.business.domain.Time;
@@ -25,21 +24,19 @@ public class ReservationService {
 
     public ReservationResponse create(final ReservationRequest reservationRequest) {
         final Time time = timeService.find(reservationRequest.timeId());
-        validateIsFuture(LocalDateTime.of(
-                reservationRequest.date(),
-                time.getStartAt()
-        ));
 
         final Reservation reservation = reservationRequest.toDomain(time);
+        validateIsFuture(reservation);
+
         final Long id = reservationDao.save(reservation);
 
         return ReservationResponse.withId(reservation, id);
     }
 
-    private void validateIsFuture(final LocalDateTime reservationDateTime) {
+    private void validateIsFuture(final Reservation reservation) {
         final LocalDateTime now = LocalDateTime.now();
 
-        if (now.isAfter(reservationDateTime)) {
+        if (reservation.isBefore(now)) {
             throw new InvalidReservationDateException();
         }
     }

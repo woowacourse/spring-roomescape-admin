@@ -1,6 +1,7 @@
 package roomescape.business.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Reservation {
@@ -27,6 +28,12 @@ public class Reservation {
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public boolean isBefore(final LocalDateTime dateTime) {
+        final LocalDateTime reservationDateTime = LocalDateTime.of(date, time.getStartAt());
+
+        return reservationDateTime.isBefore(dateTime);
     }
 
     private void validateNameIsNotBlank(final String name) {

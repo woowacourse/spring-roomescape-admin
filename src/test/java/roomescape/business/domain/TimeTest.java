@@ -9,14 +9,14 @@ import org.junit.jupiter.api.Test;
 
 class TimeTest {
 
-    @DisplayName("생성자1로 null은 들어올 수 없다.")
+    @DisplayName("객체 생성시 null을 들어올 수 없다.")
     @Test
     void validateNonNull() {
         // given & when & then
         assertAll(
                 () -> assertThatThrownBy(() -> new Time(null))
                         .isInstanceOf(NullPointerException.class),
-                () -> assertThatThrownBy(() -> new Time(null, LocalTime.MAX))
+                () -> assertThatThrownBy(() -> Time.createWithId(null, LocalTime.MAX))
                         .isInstanceOf(NullPointerException.class)
         );
     }

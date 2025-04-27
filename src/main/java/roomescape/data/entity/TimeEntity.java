@@ -18,7 +18,7 @@ public record TimeEntity(Long id, String startAt) {
     }
 
     public Time toDomain() {
-        return new Time(
+        return Time.createWithId(
                 id,
                 LocalTime.parse(startAt, TIME_FORMATTER)
         );

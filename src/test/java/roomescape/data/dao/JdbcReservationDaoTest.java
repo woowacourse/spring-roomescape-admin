@@ -23,7 +23,7 @@ class JdbcReservationDaoTest {
     private ReservationDao reservationDao;
 
     private final JdbcTemplate jdbcTemplate;
-    private final Time timeFixture = new Time(1L, LocalTime.of(10, 10));
+    private final Time timeFixture = Time.createWithId(1L, LocalTime.of(10, 10));
 
     @Autowired
     public JdbcReservationDaoTest(final JdbcTemplate jdbcTemplate) {

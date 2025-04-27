@@ -30,7 +30,7 @@ class TimeServiceTest {
         timeService.create(new TimeRequest(FORMATTED_MAX_LOCAL_TIME));
 
         final Long id = 1L;
-        final Time expected = new Time(1L, FORMATTED_MAX_LOCAL_TIME);
+        final Time expected = Time.createWithId(1L, FORMATTED_MAX_LOCAL_TIME);
 
         // when & then
         assertThat(timeService.find(id))
@@ -54,7 +54,7 @@ class TimeServiceTest {
     void findOrThrowIfIdNotExists() {
         // given
         final Long id = 1L;
-        final Time expected = new Time(1L, FORMATTED_MAX_LOCAL_TIME);
+        final Time expected = Time.createWithId(1L, FORMATTED_MAX_LOCAL_TIME);
 
         // when & then
         assertThatThrownBy(() -> timeService.find(id))

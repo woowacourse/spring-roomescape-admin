@@ -66,7 +66,7 @@ class JdbcTimeDaoTest {
 
         // then
         assertThat(actual).isPresent();
-        assertThat(actual.get()).isEqualTo(new Time(1L, LocalTime.of(10, 10)));
+        assertThat(actual.get()).isEqualTo(Time.createWithId(1L, LocalTime.of(10, 10)));
     }
 
     @DisplayName("해당하는 방탈출 시간이 없다면 Optional Empty를 반환한다.")
@@ -91,8 +91,8 @@ class JdbcTimeDaoTest {
 
         // then
         assertThat(actual).containsExactly(
-                new Time(1L, LocalTime.of(10, 10)),
-                new Time(2L, LocalTime.of(11, 10))
+                Time.createWithId(1L, LocalTime.of(10, 10)),
+                Time.createWithId(2L, LocalTime.of(11, 10))
         );
     }
 

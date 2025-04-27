@@ -41,14 +41,14 @@ class ReservationControllerTest {
         ReservationController reservationController = new ReservationController(testReservationDAO);
 
         // when
-        ResponseEntity<List<Reservation>> response = reservationController.readReservations();
-        List<Reservation> reservations = response.getBody();
+        ResponseEntity<List<ReservationResponse>> response = reservationController.readReservations();
+        List<ReservationResponse> reservationResponse = response.getBody();
         int statusCode = response.getStatusCode()
                 .value();
 
         // then
         assertAll(
-                () -> assertThat(reservations).isEmpty(),
+                () -> assertThat(reservationResponse).isEmpty(),
                 () -> assertThat(statusCode).isEqualTo(200)
         );
     }

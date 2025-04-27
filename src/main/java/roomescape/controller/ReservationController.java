@@ -23,9 +23,12 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> readReservations() {
-        return ResponseEntity.ok()
-                .body(reservationDAO.findAllReservation());
+    public ResponseEntity<List<ReservationResponse>> readReservations() {
+        final List<Reservation> reservations = reservationDAO.findAllReservation();
+        final List<ReservationResponse> reservationResponses = reservations.stream()
+                .map(ReservationResponse::from)
+                .toList();
+        return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping("/reservations")

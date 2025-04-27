@@ -10,8 +10,6 @@ import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
-import roomescape.dao.JdbcReservationDao;
-import roomescape.dao.JdbcReservationTimeDao;
 
 @Service
 public class ReservationService {

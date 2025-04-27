@@ -2,7 +2,6 @@ package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -28,16 +27,16 @@ class ReservationTimeServiceTest {
 
     @Test
     void 예약시간을_정상적으로_추가() {
-        ReservationTimeRequest request = new ReservationTimeRequest(LocalTime.of(10,0));
+        ReservationTimeRequest request = new ReservationTimeRequest(LocalTime.of(10, 0));
         ReservationTimeResponse response = reservationTimeService.addTime(request);
 
         assertThat(response.id()).isNotNull();
-        assertThat(response.startAt()).isEqualTo(LocalTime.of(10,0).toString());
+        assertThat(response.startAt()).isEqualTo(LocalTime.of(10, 0).toString());
     }
 
     @Test
     void 예약시간_리스트_정상적으로_조회() {
-        ReservationTimeRequest request = new ReservationTimeRequest(LocalTime.of(10,0));
+        ReservationTimeRequest request = new ReservationTimeRequest(LocalTime.of(10, 0));
         reservationTimeService.addTime(request);
 
         List<ReservationTimeResponse> reservationTimes = reservationTimeService.getReservationTimes();
@@ -47,7 +46,7 @@ class ReservationTimeServiceTest {
 
     @Test
     void 예약시간을_정상적으로_삭제() {
-        ReservationTimeRequest request = new ReservationTimeRequest(LocalTime.of(10,0));
+        ReservationTimeRequest request = new ReservationTimeRequest(LocalTime.of(10, 0));
         ReservationTimeResponse saved = reservationTimeService.addTime(request);
         Long id = saved.id();
 

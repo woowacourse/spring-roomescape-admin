@@ -5,10 +5,10 @@ import java.util.List;
 import roomescape.domain.Reservation;
 
 public class ReservationResponse {
-    private Long id;
-    private String name;
-    private LocalDate date;
-    private ReservationTimeResponse time;
+    private final Long id;
+    private final String name;
+    private final LocalDate date;
+    private final ReservationTimeResponse time;
 
     private ReservationResponse(Long id, String name, LocalDate date, ReservationTimeResponse time) {
         this.id = id;

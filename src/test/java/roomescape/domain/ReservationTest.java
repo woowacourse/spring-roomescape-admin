@@ -11,7 +11,6 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import roomescape.exception.reservation.ReservationFieldRequiredException;
 
 class ReservationTest {
-
     @DisplayName("name이 빈 값이거나 null이면 예외가 발생한다")
     @ParameterizedTest
     @NullAndEmptySource

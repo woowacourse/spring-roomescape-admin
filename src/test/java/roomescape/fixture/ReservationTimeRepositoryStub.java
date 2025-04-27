@@ -24,7 +24,7 @@ public class ReservationTimeRepositoryStub implements ReservationTimeRepository 
     }
 
     @Override
-    public int deleteBy(Long id) {
+    public int deleteById(Long id) {
         ReservationTime removedTime = times.remove(id);
         if (removedTime == null) {
             return 0;
@@ -33,7 +33,7 @@ public class ReservationTimeRepositoryStub implements ReservationTimeRepository 
     }
 
     @Override
-    public Optional<ReservationTime> findBy(Long timeId) {
+    public Optional<ReservationTime> findById(Long timeId) {
         ReservationTime time = times.get(timeId);
         if (time == null) {
             return Optional.empty();

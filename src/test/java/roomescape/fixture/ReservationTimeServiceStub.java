@@ -7,7 +7,6 @@ import roomescape.domain.ReservationTime;
 import roomescape.service.ReservationTimeService;
 
 public class ReservationTimeServiceStub extends ReservationTimeService {
-
     private final Map<Long, ReservationTime> times = new HashMap<>();
 
     public ReservationTimeServiceStub() {
@@ -16,7 +15,7 @@ public class ReservationTimeServiceStub extends ReservationTimeService {
     }
 
     @Override
-    public ReservationTime getBy(Long timeId) {
+    public ReservationTime getById(Long timeId) {
         return times.get(timeId);
     }
 }

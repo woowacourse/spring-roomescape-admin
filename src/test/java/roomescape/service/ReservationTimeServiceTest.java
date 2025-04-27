@@ -62,23 +62,23 @@ class ReservationTimeServiceTest {
 
     @DisplayName("존재하지 않는 id의 예약시간 삭제시 예외를 발생시킨다")
     @Test
-    void delete() {
+    void deleteById() {
         // given
         Long id = 99L;
 
         // when // then
-        assertThatThrownBy(() -> timeService.deleteBy(id))
+        assertThatThrownBy(() -> timeService.deleteById(id))
                 .isInstanceOf(ReservationTimeNotFoundException.class);
     }
 
     @DisplayName("존재하지 않는 id의 예약시간 조회시 예외를 발생시킨다")
     @Test
-    void get() {
+    void getById() {
         // given
         Long id = 99L;
 
         // when // then
-        assertThatThrownBy(() -> timeService.getBy(id))
+        assertThatThrownBy(() -> timeService.getById(id))
                 .isInstanceOf(ReservationTimeNotFoundException.class);
     }
 }

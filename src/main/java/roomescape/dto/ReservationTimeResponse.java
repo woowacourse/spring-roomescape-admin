@@ -5,8 +5,8 @@ import java.util.List;
 import roomescape.domain.ReservationTime;
 
 public class ReservationTimeResponse {
-    private Long id;
-    private LocalTime startAt;
+    private final Long id;
+    private final LocalTime startAt;
 
     private ReservationTimeResponse(Long id, LocalTime startAt) {
         this.id = id;

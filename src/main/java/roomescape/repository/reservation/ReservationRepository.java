@@ -6,7 +6,7 @@ import roomescape.domain.Reservation;
 public interface ReservationRepository {
     Reservation add(Reservation reservation);
 
-    int deleteBy(Long id);
+    int deleteById(Long id);
 
     List<Reservation> findAll();
 }

@@ -24,7 +24,6 @@ import roomescape.dto.ReservationResponse;
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired

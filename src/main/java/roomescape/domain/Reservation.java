@@ -5,9 +5,9 @@ import roomescape.exception.reservation.ReservationFieldRequiredException;
 
 public class Reservation {
     private final Long id;
-    private String name;
-    private LocalDate date;
-    private ReservationTime time;
+    private final String name;
+    private final LocalDate date;
+    private final ReservationTime time;
 
     private Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         validate(name, date, time);

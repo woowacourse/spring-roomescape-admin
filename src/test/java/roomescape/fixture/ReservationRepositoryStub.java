@@ -18,7 +18,7 @@ public class ReservationRepositoryStub implements ReservationRepository {
     }
 
     @Override
-    public int deleteBy(Long id) {
+    public int deleteById(Long id) {
         Reservation removedReservation = reservations.remove(id);
         if (removedReservation == null) {
             return 0;

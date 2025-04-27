@@ -20,7 +20,7 @@ public class ReservationService {
     }
 
     public ReservationResponse create(ReservationRequest request) {
-        ReservationTime time = timeService.getBy(request.getTimeId());
+        ReservationTime time = timeService.getById(request.getTimeId());
         Reservation newReservation = new Reservation(request.getName(), request.getDate(), time);
         return ReservationResponse.from(reservationRepository.add(newReservation));
     }
@@ -29,11 +29,10 @@ public class ReservationService {
         return ReservationResponse.from(reservationRepository.findAll());
     }
 
-    public void deleteBy(Long id) {
-        int affectedCount = reservationRepository.deleteBy(id);
+    public void deleteById(Long id) {
+        int affectedCount = reservationRepository.deleteById(id);
         if (affectedCount == 0) {
             throw new ReservationNotFoundException(id);
         }
     }
-
 }

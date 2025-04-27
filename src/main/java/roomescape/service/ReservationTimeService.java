@@ -25,15 +25,15 @@ public class ReservationTimeService {
         return ReservationTimeResponse.from(timeRepository.findAll());
     }
 
-    public void deleteBy(Long id) {
-        int affectedCount = timeRepository.deleteBy(id);
+    public void deleteById(Long id) {
+        int affectedCount = timeRepository.deleteById(id);
         if (affectedCount == 0) {
             throw new ReservationTimeNotFoundException(id);
         }
     }
 
-    public ReservationTime getBy(Long id) {
-        return timeRepository.findBy(id)
+    public ReservationTime getById(Long id) {
+        return timeRepository.findById(id)
                 .orElseThrow(() -> new ReservationTimeNotFoundException(id));
     }
 }

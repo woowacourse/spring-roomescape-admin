@@ -33,7 +33,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
     }
 
     @Override
-    public int deleteBy(Long id) {
+    public int deleteById(Long id) {
         String sql = "delete from reservation where id = ?";
         return jdbcTemplate.update(sql, id);
     }

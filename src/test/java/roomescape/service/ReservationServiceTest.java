@@ -15,7 +15,6 @@ import roomescape.fixture.ReservationRepositoryStub;
 import roomescape.fixture.ReservationTimeServiceStub;
 
 class ReservationServiceTest {
-
     private ReservationService reservationService;
 
     @BeforeEach
@@ -50,8 +49,8 @@ class ReservationServiceTest {
 
     @DisplayName("존재하지 않는 id의 예약 삭제 시 예외가 발생한다")
     @Test
-    void delete() {
-        assertThatThrownBy(() -> reservationService.deleteBy(99L))
+    void deleteById() {
+        assertThatThrownBy(() -> reservationService.deleteById(99L))
                 .isInstanceOf(ReservationNotFoundException.class);
     }
 }

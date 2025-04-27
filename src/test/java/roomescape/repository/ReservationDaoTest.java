@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.service.domain.Reservation;
-import roomescape.service.domain.ReservationTime;
+import roomescape.service.reservation.Reservation;
+import roomescape.service.reservation.ReservationTime;
 
 @JdbcTest
 class ReservationDaoTest {

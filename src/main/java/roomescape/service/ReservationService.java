@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.repository.ReservationDao;
-import roomescape.service.domain.Reservation;
+import roomescape.service.reservation.Reservation;
 
 @Service
 public class ReservationService {

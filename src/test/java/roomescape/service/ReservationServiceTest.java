@@ -115,7 +115,7 @@ class ReservationServiceTest {
             assertThat(responses).isEmpty();
         }
 
-        @DisplayName("존재하지 않는 Id의 Reservation을 삭제할 수 있다")
+        @DisplayName("존재하지 않는 Id의 Reservation을 삭제할 수 없다")
         @Test
         void deleteInvalidReservationIdTest() {
             LocalTime startTime = LocalTime.of(10, 0);

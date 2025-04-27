@@ -22,9 +22,13 @@ public class ReservationService {
     }
 
     public ReservationResponseDto createReservation(ReservationCreateRequestDto dto) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(dto.timeId());
+        ReservationTime reservationTime = reservationTimeRepository.findById(dto.timeId())
+                .orElseThrow(() -> new IllegalStateException("[ERROR] 예약 시간을 찾을 수 없습니다. id : " + dto.timeId()));
         Reservation requestReservation = dto.createWithoutId(reservationTime);
-        Reservation newReservation = reservationRepository.save(requestReservation);
+
+        Reservation newReservation = reservationRepository.save(requestReservation)
+                .orElseThrow(() -> new IllegalStateException("[ERROR] 알 수 없는 오류로 인해 예약을 실패하였습니다."));
+
         return ReservationResponseDto.from(newReservation, newReservation.time());
     }
 

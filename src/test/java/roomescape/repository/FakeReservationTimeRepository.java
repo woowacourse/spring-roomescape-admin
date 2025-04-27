@@ -4,6 +4,7 @@ import roomescape.domain.ReservationTime;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class FakeReservationTimeRepository implements ReservationTimeRepository {
@@ -16,10 +17,10 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTime save(ReservationTime reservationTime) {
+    public Optional<ReservationTime> save(ReservationTime reservationTime) {
         ReservationTime newReservationTime = new ReservationTime(reservationTimeId.getAndIncrement(), reservationTime.startAt());
         reservationTimes.add(newReservationTime);
-        return newReservationTime;
+        return findById(newReservationTime.id());
     }
 
     @Override
@@ -31,23 +32,22 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
     public int deleteById(long id) {
         ReservationTime deleteReservation = reservationTimes.stream()
                 .filter(reservationTime -> Objects.equals(reservationTime.id(), id))
-                .findFirst().get();
+                .findFirst().orElse(null);
 
-        int affectedRows = (int) reservationTimes.stream()
-                .filter(reservationTime -> Objects.equals(reservationTime.id(), id))
-                .count();
-
-        if (affectedRows > 0) {
+        if (deleteReservation != null) {
+            int affectedRows = (int) reservationTimes.stream()
+                    .filter(reservationTime -> Objects.equals(reservationTime.id(), id))
+                    .count();
             reservationTimes.remove(deleteReservation);
+            return affectedRows;
         }
-        return affectedRows;
+        return 0;
     }
 
     @Override
-    public ReservationTime findById(long id) {
+    public Optional<ReservationTime> findById(long id) {
         return reservationTimes.stream()
                 .filter(reservationTime -> Objects.equals(reservationTime.id(), id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("No ReservationTime with id: " + id));
+                .findFirst();
     }
 }

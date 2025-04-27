@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -14,6 +15,7 @@ import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcReservationDao implements ReservationRepository {
@@ -55,7 +57,7 @@ public class JdbcReservationDao implements ReservationRepository {
     }
 
     @Override
-    public Reservation save(final Reservation reservation) {
+    public Optional<Reservation> save(final Reservation reservation) {
         try {
             SqlParameterSource parms = new MapSqlParameterSource()
                     .addValue("name", reservation.name())
@@ -69,7 +71,8 @@ public class JdbcReservationDao implements ReservationRepository {
         }
     }
 
-    private Reservation findById(Long id) {
+    @Override
+    public Optional<Reservation> findById(final Long id) {
         String sql = """
                 SELECT *
                 FROM reservation as r
@@ -77,7 +80,11 @@ public class JdbcReservationDao implements ReservationRepository {
                 on r.time_id = t.id
                 where r.id = ?
                 """;
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

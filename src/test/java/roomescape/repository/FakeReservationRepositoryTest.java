@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -26,7 +27,8 @@ class FakeReservationRepositoryTest {
         ReservationTime reservationTime = new ReservationTime(2L, LocalTime.now());
         Reservation reservation = new Reservation(null, "가이온", LocalDate.now(), reservationTime);
 
-        Reservation savedReservation = reservationRepository.save(reservation);
+        Optional<Reservation> optionalReservation = reservationRepository.save(reservation);
+        Reservation savedReservation = optionalReservation.get();
 
         assertThat(savedReservation.id()).isEqualTo(1L);
     }
@@ -58,7 +60,17 @@ class FakeReservationRepositoryTest {
         );
     }
 
-    @DisplayName("원하는 Id의 Reservation을 삭제할 수 있디")
+    @DisplayName("저장되지 않은 Reservation 을 불러오면 Optional Empty 가 반환된다")
+    @Test
+    void findInvalidReservationsEmptyTest() {
+        reservationRepository = new FakeReservationRepository(new ArrayList<>());
+
+        Optional<Reservation> byId = reservationRepository.findById(2L);
+
+        assertThat(byId).isEmpty();
+    }
+
+    @DisplayName("원하는 Id의 Reservation 을 삭제할 수 있디")
     @Test
     void deleteReservationTest() {
         reservationRepository = new FakeReservationRepository(new ArrayList<>());

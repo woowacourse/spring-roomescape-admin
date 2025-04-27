@@ -4,6 +4,7 @@ import roomescape.domain.Reservation;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class FakeReservationRepository implements ReservationRepository {
@@ -21,25 +22,33 @@ public class FakeReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation save(final Reservation reservation) {
+    public Optional<Reservation> findById(Long id) {
+        return reservations.stream()
+                .filter(reservation -> Objects.equals(reservation.id(), id))
+                .findFirst();
+    }
+
+    @Override
+    public Optional<Reservation> save(final Reservation reservation) {
         Reservation newReservation = new Reservation(reservationId.getAndIncrement(), reservation.name(), reservation.date(), reservation.time());
         reservations.add(newReservation);
-        return newReservation;
+        return findById(newReservation.id());
     }
 
     @Override
     public int deleteById(long id) {
         Reservation deleteReservation = reservations.stream()
                 .filter(reservation -> Objects.equals(reservation.id(), id))
-                .findFirst().get();
+                .findFirst().orElse(null);
 
-        int affectedRows = (int) reservations.stream()
-                .filter(reservation -> Objects.equals(reservation.id(), deleteReservation.id()))
-                .count();
+        if (deleteReservation != null) {
+            int affectedRows = (int) reservations.stream()
+                    .filter(reservation -> Objects.equals(reservation.id(), deleteReservation.id()))
+                    .count();
 
-        if (affectedRows > 0) {
             reservations.remove(deleteReservation);
+            return affectedRows;
         }
-        return affectedRows;
+        return 0;
     }
 }

@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -12,6 +13,7 @@ import roomescape.domain.ReservationTime;
 import javax.sql.DataSource;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcReservationTimeDao implements ReservationTimeRepository {
@@ -28,11 +30,13 @@ public class JdbcReservationTimeDao implements ReservationTimeRepository {
 
     public JdbcReservationTimeDao(JdbcTemplate jdbcTemplate, DataSource source) {
         this.jdbcTemplate = jdbcTemplate;
-        this.jdbcInsert = new SimpleJdbcInsert(source);
+        this.jdbcInsert = new SimpleJdbcInsert(source)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
-    public ReservationTime save(ReservationTime reservationTime) {
+    public Optional<ReservationTime> save(ReservationTime reservationTime) {
         try {
             LocalTime startTime = reservationTime.startAt();
             SqlParameterSource params = new MapSqlParameterSource()
@@ -52,9 +56,13 @@ public class JdbcReservationTimeDao implements ReservationTimeRepository {
     }
 
     @Override
-    public ReservationTime findById(long id) {
+    public Optional<ReservationTime> findById(long id) {
         String sql = "select * from reservation_time where id = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(sql, rowMapper, id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

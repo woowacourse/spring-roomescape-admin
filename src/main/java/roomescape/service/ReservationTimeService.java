@@ -19,7 +19,9 @@ public class ReservationTimeService {
 
     public ReservationTimeResponseDto createReservationTime(final ReservationTimeCreateRequestDto requestDto) {
         ReservationTime requestTime = requestDto.createWithoutId();
-        ReservationTime savedTime = reservationTimeRepository.save(requestTime);
+        ReservationTime savedTime = reservationTimeRepository.save(requestTime)
+                .orElseThrow(() -> new IllegalStateException("[ERROR] 알 수 없는 오류로 인해 예약시간을 생성 실패하였습니다."));
+
         return ReservationTimeResponseDto.from(savedTime);
     }
 

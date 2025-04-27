@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.annotation.DirtiesContext;
 import roomescape.globalException.CustomException;
 import roomescape.reservation.fixture.ReservationFixture;
 import roomescape.reservationTime.domain.ReservationTime;
@@ -14,7 +13,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationTest {
 
     @Nested

@@ -32,12 +32,12 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTimeResponse> times(@RequestBody @Valid ReservationTimeRequest request) {
+    public ResponseEntity<ReservationTimeResponse> createTime(@RequestBody @Valid ReservationTimeRequest request) {
         return ResponseEntity.ok(reservationTimeService.create(request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> times(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteTime(@PathVariable Long id) {
         reservationTimeService.remove(id);
         return ResponseEntity.ok().build();
     }

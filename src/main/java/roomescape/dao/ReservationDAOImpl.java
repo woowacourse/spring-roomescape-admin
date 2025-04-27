@@ -1,8 +1,6 @@
 package roomescape.dao;
 
 import java.sql.PreparedStatement;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -35,9 +33,9 @@ public class ReservationDAOImpl implements ReservationDAO {
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
             final Long id = resultSet.getLong("id");
             final String name = resultSet.getString("name");
-            final LocalDate date = LocalDate.parse(resultSet.getString("date"));
+            final String date = resultSet.getString("date");
             final Long timeId = resultSet.getLong("time_id");
-            final LocalTime timeValue = LocalTime.parse(resultSet.getString("time_value"));
+            final String timeValue = resultSet.getString("time_value");
             return new Reservation(id, name, date, new Time(timeId, timeValue));
         });
     }
@@ -48,8 +46,7 @@ public class ReservationDAOImpl implements ReservationDAO {
         jdbcTemplate.update(connection -> {
             final PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate()
-                    .toString());
+            ps.setString(2, reservation.getDate());
             ps.setLong(3, reservation.getTime()
                     .getId());
             return ps;

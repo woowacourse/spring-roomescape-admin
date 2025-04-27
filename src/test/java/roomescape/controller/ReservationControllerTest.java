@@ -3,8 +3,6 @@ package roomescape.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,8 +57,7 @@ class ReservationControllerTest {
     @DisplayName("예약을 생성한다")
     void create_reservation() {
         // given
-        LocalDate date = LocalDate.of(2025, 4, 21);
-        LocalTime time = LocalTime.of(10, 0);
+        String date = "2025-04-21";
         ReservationRequest reservationRequest = new ReservationRequest("kim", date, 1L);
         ReservationController reservationController = new ReservationController(testReservationDAO);
 
@@ -77,8 +74,7 @@ class ReservationControllerTest {
     @DisplayName("id에 해당하는 예약을 삭제한다")
     void delete_reservation() {
         // given
-        LocalDate date = LocalDate.of(2025, 4, 21);
-        LocalTime time = LocalTime.of(10, 0);
+        String date = "2025-04-21";
         ReservationRequest reservationRequest = new ReservationRequest("kim", date, 1L);
         ReservationController reservationController = new ReservationController(testReservationDAO);
         ResponseEntity<ReservationResponse> createdResponse = reservationController.createReservation(

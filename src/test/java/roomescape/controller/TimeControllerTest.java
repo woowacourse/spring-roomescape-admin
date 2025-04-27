@@ -3,7 +3,6 @@ package roomescape.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,7 +57,7 @@ class TimeControllerTest {
     @DisplayName("시간을 생성한다")
     void create_time() {
         // given
-        LocalTime startAt = LocalTime.of(12, 0);
+        String startAt = "10:00";
         TimeRequest timeRequest = new TimeRequest(startAt);
         TimeController timeController = new TimeController(testTimeDAO);
 
@@ -75,7 +74,7 @@ class TimeControllerTest {
     @DisplayName("id에 해당하는 시간을 삭제한다")
     void delete_time() {
         // given
-        LocalTime startAt = LocalTime.of(12, 0);
+        String startAt = "10:00";
         TimeRequest timeRequest = new TimeRequest(startAt);
         TimeController timeController = new TimeController(testTimeDAO);
         ResponseEntity<TimeResponse> createdResponse = timeController.createTime(timeRequest);

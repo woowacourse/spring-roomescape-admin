@@ -2,7 +2,6 @@ package roomescape.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +34,7 @@ class TimeDAOImplTest {
     void insertTime() {
         // given
         TimeDAOImpl timeDAOImpl = new TimeDAOImpl(jdbcTemplate);
-        Time time = new Time(LocalTime.of(12, 0));
+        Time time = new Time("10:00");
 
         // when
         Long id = timeDAOImpl.insertTime(time);
@@ -49,7 +48,7 @@ class TimeDAOImplTest {
     void deleteTimeById() {
         // given
         TimeDAOImpl timeDAOImpl = new TimeDAOImpl(jdbcTemplate);
-        Time time = new Time(LocalTime.of(12, 0));
+        Time time = new Time("10:00");
         Long id = timeDAOImpl.insertTime(time);
 
         // when

@@ -7,14 +7,14 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.ReservationTime;
 
-public class ImMemoryReservationTimeDAO implements ReservationTimeDAO {
+public class InMemoryReservationTimeDAO implements ReservationTimeDAO {
 
     private static final int DUPLICATE_RESERVATION_TIME = -1;
 
     private final List<ReservationTime> reservationTimes;
     private final AtomicLong index = new AtomicLong(1);
 
-    public ImMemoryReservationTimeDAO(final List<ReservationTime> reservationTimes) {
+    public InMemoryReservationTimeDAO(final List<ReservationTime> reservationTimes) {
         this.reservationTimes = reservationTimes;
     }
 

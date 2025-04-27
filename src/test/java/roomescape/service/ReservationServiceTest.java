@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.dao.ImMemoryReservationTimeDAO;
 import roomescape.dao.InMemoryReservationDAO;
+import roomescape.dao.InMemoryReservationTimeDAO;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
@@ -24,7 +24,7 @@ class ReservationServiceTest {
     @BeforeEach
     void provideService() {
         ReservationTime time = new ReservationTime(LocalTime.of(10, 10));
-        ImMemoryReservationTimeDAO reservationTimeDAO = new ImMemoryReservationTimeDAO(new ArrayList<>());
+        InMemoryReservationTimeDAO reservationTimeDAO = new InMemoryReservationTimeDAO(new ArrayList<>());
         reservationTimeService = new ReservationTimeService(reservationTimeDAO);
         long savedTimeId = reservationTimeDAO.insert(time);
         reservationService = new ReservationService(new InMemoryReservationDAO(new ArrayList<>()), reservationTimeDAO);

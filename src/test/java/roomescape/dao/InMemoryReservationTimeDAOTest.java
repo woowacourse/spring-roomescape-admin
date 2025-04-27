@@ -12,14 +12,14 @@ import roomescape.domain.ReservationTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ImMemoryReservationTimeDAOTest {
+class InMemoryReservationTimeDAOTest {
 
     @Test
     @DisplayName("dao에 존재하는 모든 reservationTime 데이터를 조회한다")
     void findAll() {
         //given
         List<ReservationTime> reservationTimes = List.of(new ReservationTime(LocalTime.of(10, 0)));
-        ReservationTimeDAO reservationTimeDAO = new ImMemoryReservationTimeDAO(reservationTimes);
+        ReservationTimeDAO reservationTimeDAO = new InMemoryReservationTimeDAO(reservationTimes);
 
         //when
         List<ReservationTime> actual = reservationTimeDAO.findAll();
@@ -31,7 +31,7 @@ class ImMemoryReservationTimeDAOTest {
     @Test
     void findById() {
         //given
-        ReservationTimeDAO reservationTimeDAO = new ImMemoryReservationTimeDAO(new ArrayList<>());
+        ReservationTimeDAO reservationTimeDAO = new InMemoryReservationTimeDAO(new ArrayList<>());
         long id = reservationTimeDAO.insert(new ReservationTime(LocalTime.of(10, 0)));
 
         //when
@@ -45,7 +45,7 @@ class ImMemoryReservationTimeDAOTest {
     @DisplayName("dao에 reservationTime 데이터를 저장한다")
     void insert() {
         //given
-        ReservationTimeDAO reservationTimeDAO = new ImMemoryReservationTimeDAO(new ArrayList<>());
+        ReservationTimeDAO reservationTimeDAO = new InMemoryReservationTimeDAO(new ArrayList<>());
 
         //when
         long id = reservationTimeDAO.insert(new ReservationTime(LocalTime.of(10, 0)));
@@ -59,7 +59,7 @@ class ImMemoryReservationTimeDAOTest {
     @DisplayName("dao에서 같은 startAt인 reservationTime 데이터의 존재 여부를 확인한다")
     void existsByStartAt(LocalTime time, LocalTime startAt, boolean expected) {
         //given
-        ReservationTimeDAO reservationTimeDAO = new ImMemoryReservationTimeDAO(new ArrayList<>());
+        ReservationTimeDAO reservationTimeDAO = new InMemoryReservationTimeDAO(new ArrayList<>());
         reservationTimeDAO.insert(new ReservationTime(time));
 
         //when
@@ -73,7 +73,7 @@ class ImMemoryReservationTimeDAOTest {
     @DisplayName("dao에 저장된 대상 id 인 reservationTime 데이터를 삭제한다")
     void deleteById() {
         //given
-        ReservationTimeDAO reservationTimeDAO = new ImMemoryReservationTimeDAO(new ArrayList<>());
+        ReservationTimeDAO reservationTimeDAO = new InMemoryReservationTimeDAO(new ArrayList<>());
         reservationTimeDAO.insert(new ReservationTime(LocalTime.of(10, 0)));
 
         //when
@@ -87,7 +87,7 @@ class ImMemoryReservationTimeDAOTest {
     @DisplayName("dao에 저장되어 있지 않은 대상 id 인 reservationTime 데이터를 삭제 시 false를 return 한다")
     void deleteByNotExistedId() {
         //given
-        ReservationTimeDAO reservationTimeDAO = new ImMemoryReservationTimeDAO(new ArrayList<>());
+        ReservationTimeDAO reservationTimeDAO = new InMemoryReservationTimeDAO(new ArrayList<>());
         reservationTimeDAO.insert(new ReservationTime(LocalTime.of(10, 0)));
 
         //when

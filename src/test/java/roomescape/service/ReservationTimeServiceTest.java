@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.dao.ImMemoryReservationTimeDAO;
+import roomescape.dao.InMemoryReservationTimeDAO;
 import roomescape.domain.ReservationTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,7 +18,7 @@ class ReservationTimeServiceTest {
     void findAll() {
         //given
         ReservationTimeService reservationTimeService = new ReservationTimeService(
-                new ImMemoryReservationTimeDAO(new ArrayList<>()));
+                new InMemoryReservationTimeDAO(new ArrayList<>()));
         reservationTimeService.addReservationTime(new ReservationTime(LocalTime.of(10, 0)));
 
         //when
@@ -33,7 +33,7 @@ class ReservationTimeServiceTest {
     void addReservationTime() {
         //given
         ReservationTimeService reservationTimeService = new ReservationTimeService(
-                new ImMemoryReservationTimeDAO(new ArrayList<>()));
+                new InMemoryReservationTimeDAO(new ArrayList<>()));
 
         //when
         ReservationTime reservationTime = new ReservationTime(LocalTime.of(10, 0));
@@ -48,7 +48,7 @@ class ReservationTimeServiceTest {
     void cannotAddReservationTime() {
         //given
         ReservationTimeService reservationTimeService = new ReservationTimeService(
-                new ImMemoryReservationTimeDAO(new ArrayList<>()));
+                new InMemoryReservationTimeDAO(new ArrayList<>()));
         ReservationTime savedTime = new ReservationTime(LocalTime.of(10, 0));
         reservationTimeService.addReservationTime(savedTime);
         ReservationTime duplicatedTime = new ReservationTime(LocalTime.of(10, 0));
@@ -64,7 +64,7 @@ class ReservationTimeServiceTest {
     void deleteById() {
         //given
         ReservationTimeService reservationTimeService = new ReservationTimeService(
-                new ImMemoryReservationTimeDAO(new ArrayList<>()));
+                new InMemoryReservationTimeDAO(new ArrayList<>()));
         reservationTimeService.addReservationTime(new ReservationTime(LocalTime.of(10, 0)));
         ReservationTime savedTime = reservationTimeService.findAll().getFirst();
 
@@ -80,7 +80,7 @@ class ReservationTimeServiceTest {
     void deleteNotExistTimeById() {
         //given
         ReservationTimeService reservationTimeService = new ReservationTimeService(
-                new ImMemoryReservationTimeDAO(new ArrayList<>()));
+                new InMemoryReservationTimeDAO(new ArrayList<>()));
 
         //when
         boolean actual = reservationTimeService.deleteById(100L);

@@ -1,3 +1,8 @@
+## 콘솔 기능
+
+- `room-escape.console-view.enabled` 프로퍼티를 `true`로 주어 사용 가능합니다.
+  - 위 경우 `ConsoleRunner` 빈이 등록되며 콘솔 뷰가 활성화됩니다.
+
 ## 어드민 홈화면
 
 - 어드민 홈화면을 보여줍니다.

@@ -20,7 +20,8 @@ public class ReservationService {
     }
 
     public Reservation save(ReservationRequest request) {
-        ReservationTime reservationTime = reservationTimeDao.findById(request.timeId());
+        ReservationTime reservationTime = reservationTimeDao.findById(request.timeId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간입니다."));
         Reservation reservation = request.toEntity(reservationTime);
         Long reservationId = reservationDao.save(reservation);
         return reservationDao.findById(reservationId)

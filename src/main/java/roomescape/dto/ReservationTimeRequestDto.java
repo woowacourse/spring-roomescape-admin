@@ -3,10 +3,10 @@ package roomescape.dto;
 import java.time.LocalTime;
 import roomescape.domain_entity.ReservationTime;
 
-public record TimeRequestDto(
+public record ReservationTimeRequestDto(
         LocalTime startAt
 ) {
-    public TimeRequestDto {
+    public ReservationTimeRequestDto {
         validateNotNull(startAt);
     }
 

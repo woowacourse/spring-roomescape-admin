@@ -7,7 +7,7 @@ import roomescape.dao.TimeDao;
 import roomescape.domain_entity.Id;
 import roomescape.domain_entity.ReservationTime;
 import roomescape.dto.ReservationTimeResponseDto;
-import roomescape.dto.TimeRequestDto;
+import roomescape.dto.ReservationTimeRequestDto;
 
 @Component
 public class TimeService {
@@ -15,7 +15,7 @@ public class TimeService {
     @Autowired
     private TimeDao timeDao;
 
-    public ReservationTimeResponseDto createTime(TimeRequestDto timeRequest) {
+    public ReservationTimeResponseDto createTime(ReservationTimeRequestDto timeRequest) {
         ReservationTime reservationTime = timeRequest.toTime();
         long id = timeDao.create(reservationTime);
         reservationTime.setId(new Id(id));

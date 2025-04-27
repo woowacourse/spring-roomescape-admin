@@ -24,7 +24,7 @@ import roomescape.dao.TimeDao;
 import roomescape.domain_entity.Id;
 import roomescape.domain_entity.Reservation;
 import roomescape.domain_entity.ReservationTime;
-import roomescape.dto.TimeRequestDto;
+import roomescape.dto.ReservationTimeRequestDto;
 import roomescape.service.TimeService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -64,7 +64,7 @@ public class ReservationIntegratedTest {
     @DisplayName("예약을 생성한다.")
     void createReservation() {
         //given
-        timeService.createTime(new TimeRequestDto(LocalTime.of(10, 0, 0)));
+        timeService.createTime(new ReservationTimeRequestDto(LocalTime.of(10, 0, 0)));
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");

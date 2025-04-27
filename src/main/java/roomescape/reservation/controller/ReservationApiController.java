@@ -1,4 +1,4 @@
-package roomescape.reservation;
+package roomescape.reservation.controller;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -9,29 +9,32 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.dto.ReservationResponse;
+import roomescape.reservation.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationApiController {
-    private final Reservations reservations;
+    private final ReservationService reservationService;
 
-    public ReservationApiController() {
-        this.reservations = new Reservations();
+    public ReservationApiController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> add(@RequestBody ReservationDto reservationDto) {
-        return ResponseEntity.ok(reservations.add(reservationDto));
+    public ResponseEntity<ReservationResponse> add(@RequestBody ReservationRequest reservationRequest) {
+        return ResponseEntity.ok(reservationService.add(reservationRequest));
     }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> getAll() {
-        return ResponseEntity.ok(reservations.getAll());
+    public ResponseEntity<List<ReservationResponse>> findAll() {
+        return ResponseEntity.ok(reservationService.findAll());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        reservations.deleteById(id);
+        reservationService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }

@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import roomescape.domain.ReservationTime;
 import roomescape.fixture.TextFixture;
 
@@ -42,21 +41,35 @@ class ReservationTimeRepositoryImplTest {
 
     @Test
     void findAll() {
+        // given
+
+        // when
         List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+
+        // then
         assertThat(reservationTimes.size()).isEqualTo(1);
     }
 
     @Test
-    void insert() {
-        LocalTime now = LocalTime.now();
-        ReservationTime reservationTime = reservationTimeRepository.insert(now);
-        assertThat(reservationTime.getStartAt()).isEqualTo(now);
+    void save() {
+        //given
+
+        // when
+        reservationTimeRepository.save(TextFixture.makeReservationTime(1L));
+
+        // then
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+        assertThat(reservationTimes.size()).isEqualTo(2);
     }
 
     @Test
     void delete() {
+        // given
+
+        // when
         reservationTimeRepository.delete(1);
 
+        // then
         List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
         assertThat(reservationTimes).isEmpty();
     }

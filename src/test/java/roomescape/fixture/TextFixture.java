@@ -3,6 +3,8 @@ package roomescape.fixture;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 public class TextFixture {
 
@@ -21,5 +23,14 @@ public class TextFixture {
     public static String makeYesterdayMessage() {
         LocalDate yesterday = LocalDate.now().minusDays(1);
         return String.format(DATE_FORMAT, yesterday.getYear(), yesterday.getMonthValue(), yesterday.getDayOfMonth());
+    }
+
+    public static Reservation makeReservation(final long reservationId, final long reservationTimeId) {
+        ReservationTime reservationTime = makeReservationTime(reservationTimeId);
+        return new Reservation(reservationId, "밍트", LocalDate.now(), reservationTime);
+    }
+
+    public static ReservationTime makeReservationTime(final long reservationTimeId) {
+        return new ReservationTime(reservationTimeId, LocalTime.now());
     }
 }

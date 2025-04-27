@@ -48,11 +48,11 @@ class ReservationRepositoryImplTest {
     }
 
     @Test
-    void insert() {
+    void save() {
         LocalDate now = LocalDate.now();
         ReservationTime reservationTime = new ReservationTime(1L, null);
         Reservation reservation = new Reservation(null, "밍트", now, reservationTime);
-        reservationRepository.insert(reservation);
+        reservationRepository.save(reservation);
 
         List<Reservation> reservations = reservationRepository.findAll();
         assertThat(reservations.size()).isEqualTo(2);

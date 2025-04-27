@@ -39,7 +39,6 @@ class ReservationTimeServiceTest {
         defaultDummyTimeId = service.add(ReservationTimeFixture.createReqDto(defaultDummyTime)).id();
     }
 
-
     @Nested
     @DisplayName("저장된 모든 예약 시간 불러오는 기능")
     class readAll {

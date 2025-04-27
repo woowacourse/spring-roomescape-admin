@@ -32,7 +32,7 @@ public class ReservationDao {
         return getGenerateId(number);
     }
 
-    public List<Reservation> readAll() {
+    public List<Reservation> findAll() {
         final String sql = """
                 SELECT 
                     r.id as reservation_id, 

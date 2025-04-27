@@ -30,8 +30,8 @@ public final class ReservationTimeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTimeResponse>> readAll() {
-        final List<ReservationTimeResponse> responses = reservationTimeService.readAll();
+    public ResponseEntity<List<ReservationTimeResponse>> findAll() {
+        final List<ReservationTimeResponse> responses = reservationTimeService.findAll();
         return ResponseEntity.ok(responses);
     }
 

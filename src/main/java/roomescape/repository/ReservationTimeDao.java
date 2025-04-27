@@ -29,7 +29,7 @@ public class ReservationTimeDao {
         return getGenerateId(number);
     }
 
-    public List<ReservationTime> readAll() {
+    public List<ReservationTime> findAll() {
         final String sql = "select id, start_at from reservation_time";
         final RowMapper<ReservationTime> rowMapper = getRowMapper();
         return jdbcTemplate.query(sql, rowMapper);

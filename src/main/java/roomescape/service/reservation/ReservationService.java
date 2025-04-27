@@ -27,8 +27,8 @@ public final class ReservationService {
         return ReservationResponse.from(id, reservation);
     }
 
-    public List<ReservationResponse> readAll() {
-        List<Reservation> reservations = reservationDao.readAll();
+    public List<ReservationResponse> findAll() {
+        List<Reservation> reservations = reservationDao.findAll();
         return reservations.stream()
                 .map(ReservationResponse::of)
                 .toList();

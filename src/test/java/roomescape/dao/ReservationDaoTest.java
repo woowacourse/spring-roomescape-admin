@@ -3,6 +3,7 @@ package roomescape.dao;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import roomescape.dto.create.ReservationCreate;
@@ -11,6 +12,8 @@ import javax.sql.DataSource;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class ReservationDaoTest {
 
@@ -44,7 +47,8 @@ class ReservationDaoTest {
                         "date VARCHAR(255) NOT NULL, " +
                         "time_id BIGINT, " +
                         "PRIMARY KEY (id), " +
-                        "FOREIGN KEY (time_id) REFERENCES reservation_time (id)" +
+                        "FOREIGN KEY (time_id) REFERENCES reservation_time (id), " +
+                        "UNIQUE(date, time_id) " +
                         ")"
         );
 
@@ -61,8 +65,7 @@ class ReservationDaoTest {
     @Test
     void 데이터베이스에_예약_기록을_추가할_수_있다() {
         // when & then
-        assertThat(reservationDao.save(new ReservationCreate("메이", getTodayDate(), 1L)))
-                .isEqualTo(1);
+        assertDoesNotThrow(() -> reservationDao.save(new ReservationCreate("메이", getTodayDate(), 1L)));
     }
 
     @Test
@@ -87,6 +90,16 @@ class ReservationDaoTest {
         // when & then
         assertThat(reservationDao.delete(id))
                 .isEqualTo(1);
+    }
+
+    @Test
+    void 데이터베이스에_중복_예약을_저장할_수_없다() {
+        // given
+        reservationDao.save(new ReservationCreate("메이", getTodayDate(), 1L));
+
+        // when & then
+        assertThatThrownBy(() -> reservationDao.save(new ReservationCreate("may", getTodayDate(), 1L)))
+                .isInstanceOf(DuplicateKeyException.class);
     }
 
     private String getTodayDate() {

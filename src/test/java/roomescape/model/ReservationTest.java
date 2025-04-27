@@ -10,9 +10,9 @@ class ReservationTest {
 
     @DisplayName("이름에 null값이 들어오면 예외처리되도록 한다.")
     @Test
-    void test1() {
+    void test1(){
         LocalDateTime dateTime = LocalDateTime.now().plusDays(1);
-        assertThatThrownBy(() ->
+        assertThatThrownBy(()->
                 new Reservation(
                         1L,
                         null,
@@ -24,9 +24,9 @@ class ReservationTest {
 
     @DisplayName("이름에 공백값 들어오면 예외처리되도록 한다.")
     @Test
-    void test2() {
+    void test2(){
         LocalDateTime dateTime = LocalDateTime.now().plusDays(1);
-        assertThatThrownBy(() ->
+        assertThatThrownBy(()->
                 new Reservation(
                         1L,
                         "",
@@ -38,9 +38,9 @@ class ReservationTest {
 
     @DisplayName("당일 예약은 예외처리되도록 한다.")
     @Test
-    void test3() {
+    void test3(){
         LocalDateTime dateTime = LocalDateTime.now();
-        assertThatThrownBy(() ->
+        assertThatThrownBy(()->
                 new Reservation(
                         1L,
                         "히로",
@@ -52,9 +52,9 @@ class ReservationTest {
 
     @DisplayName("오늘보다 과거로 예약하려고 할 경우 예외처리되도록 한다.")
     @Test
-    void test4() {
+    void test4(){
         LocalDateTime dateTime = LocalDateTime.now().minusDays(1);
-        assertThatThrownBy(() ->
+        assertThatThrownBy(()->
                 new Reservation(
                         1L,
                         "히로",
@@ -63,4 +63,8 @@ class ReservationTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("과거 및 당일 예약은 불가능합니다.");
     }
+
+
+
+
 }

@@ -19,12 +19,8 @@ public class ReservationTimeRestController {
 
     @PostMapping
     public ResponseEntity<ReservationTimeResponseDto> create(@RequestBody ReservationTimeRequestDto requestDto) {
-        try {
-            ReservationTimeResponseDto responseDto = service.create(requestDto);
-            return ResponseEntity.ok().body(responseDto);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        ReservationTimeResponseDto responseDto = service.create(requestDto);
+        return ResponseEntity.ok().body(responseDto);
     }
 
     @GetMapping
@@ -34,11 +30,7 @@ public class ReservationTimeRestController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        try {
-            service.delete(id);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+        service.delete(id);
+        return ResponseEntity.ok().build();
     }
 }

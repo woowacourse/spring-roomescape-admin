@@ -24,21 +24,13 @@ public class ReservationRestController {
 
     @PostMapping
     public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationRequestDto requestDto) {
-        try {
-            ReservationResponseDto responseDto = service.createReservation(requestDto);
-            return ResponseEntity.ok().body(responseDto);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        ReservationResponseDto responseDto = service.createReservation(requestDto);
+        return ResponseEntity.ok().body(responseDto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
-        try {
-            service.deleteReservation(id);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+        service.deleteReservation(id);
+        return ResponseEntity.ok().build();
     }
 }

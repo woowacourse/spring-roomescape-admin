@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,9 @@ import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationTimeDao {
+
+    protected static final int NOT_EFFECTED_ROW_COUNT = 0;
+
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert insertReservationTime;
 
@@ -34,11 +38,13 @@ public class ReservationTimeDao {
     }
 
     public ReservationTime findById(long id) {
-        String sql = "select start_at from reservation_time where id = ?";
-        LocalTime time = jdbcTemplate.queryForObject(sql, LocalTime.class, id);
-
-        return new ReservationTime(id, time);
-
+        try {
+            String sql = "select start_at from reservation_time where id = ?";
+            LocalTime time = jdbcTemplate.queryForObject(sql, LocalTime.class, id);
+            return new ReservationTime(id, time);
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("해당 예약은 존재하지 않습니다.");
+        }
     }
 
     public ReservationTime insert(ReservationTime reservationTime) {
@@ -51,6 +57,10 @@ public class ReservationTimeDao {
 
     public int deleteById(long id) {
         String sql = "delete from reservation_time where id = ?";
-        return jdbcTemplate.update(sql, id);
+        int effectedRowCount = jdbcTemplate.update(sql, id);
+        if (effectedRowCount == NOT_EFFECTED_ROW_COUNT) {
+            throw new IllegalArgumentException("id가 존재하지 않습니다.");
+        }
+        return effectedRowCount;
     }
 }

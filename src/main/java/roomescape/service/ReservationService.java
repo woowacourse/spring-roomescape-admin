@@ -31,9 +31,6 @@ public class ReservationService {
     }
 
     public void deleteById(long id) {
-        int effectedRowCount = reservationDao.deleteById(id);
-        if (effectedRowCount == NOT_EFFECTED_ROW_COUNT) {
-            throw new IllegalArgumentException("id가 존재하지 않습니다.");
-        }
+        reservationDao.deleteById(id);
     }
 }

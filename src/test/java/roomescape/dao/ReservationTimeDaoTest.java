@@ -1,6 +1,7 @@
 package roomescape.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalTime;
@@ -74,5 +75,13 @@ public class ReservationTimeDaoTest {
                 () -> assertThat(reservationTimes.size()).isEqualTo(2),
                 () -> assertThat(effectedRowsCount).isEqualTo(1)
         );
+    }
+
+    @DisplayName("삭제하려는 id가 없는 경우 예외가 발생합니다.")
+    @Test
+    void deleteByIdErrorTest() {
+        assertThatCode(() -> reservationTimeDao.deleteById(10))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("id가 존재하지 않습니다.");
     }
 }

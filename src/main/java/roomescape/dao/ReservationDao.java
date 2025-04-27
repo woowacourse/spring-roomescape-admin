@@ -1,5 +1,7 @@
 package roomescape.dao;
 
+import static roomescape.dao.ReservationTimeDao.NOT_EFFECTED_ROW_COUNT;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -64,6 +66,10 @@ public class ReservationDao {
 
     public int deleteById(long id) {
         String sql = "delete from reservation where id = ?";
-        return jdbcTemplate.update(sql, id);
+        int effectedRowCount = jdbcTemplate.update(sql, id);
+        if (effectedRowCount == NOT_EFFECTED_ROW_COUNT) {
+            throw new IllegalArgumentException("id가 존재하지 않습니다.");
+        }
+        return effectedRowCount;
     }
 }

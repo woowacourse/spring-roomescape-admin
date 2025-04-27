@@ -40,3 +40,79 @@
 
 - [x] 기존에 사용하던 List 및 AtomicLong 을 제거
 - [x] 예약 관리 기능이 정상 동작하도록 기능 완성
+
+## 7단계
+
+### API 명세를 따라 시간 관리 API 구현하기.
+
+- [ ] `/admin/time` 페이지 응답하기
+- [ ] 페이지는 `templates/admin/time.html` 파일 이용
+- [ ] 시간 추가 API 구현하기
+- [ ] 시간 조회 API 구현하기
+- [ ] 시간 삭제 API 구현하기
+- [ ] 데이터베이스 time 스키마 생성 sql 추가
+
+---
+
+# API 명세
+
+## 시간 추가 API
+
+### request
+
+```text
+POST /times HTTP/1.1
+content-type: application/json
+
+{
+    "startAt": "10:00"
+}
+```
+
+### response
+
+```text
+HTTP/1.1 200
+Content-Type: application/json
+
+{
+    "id": 1,
+    "startAt": "10:00"
+}
+```
+
+## 시간 조회 API
+
+### request
+
+```text
+GET /times HTTP/1.1
+```
+
+### response
+
+```text
+HTTP/1.1 200 
+Content-Type: application/json
+
+[
+   {
+        "id": 1,
+        "startAt": "10:00"
+    }
+]
+```
+
+## 시간 삭제 API
+
+### request
+
+```text
+DELETE /times/1 HTTP/1.1
+```
+
+### response
+
+```text
+HTTP/1.1 200
+```

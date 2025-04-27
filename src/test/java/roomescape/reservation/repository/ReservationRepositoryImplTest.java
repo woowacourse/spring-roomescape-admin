@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import roomescape.globalException.CustomException;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.fixture.ReservationFixture;
 import roomescape.reservationTime.domain.ReservationTime;
@@ -59,7 +59,7 @@ class ReservationRepositoryImplTest {
 
         // when & then
         Assertions.assertThatCode(
-                () -> reservationTimeRepository.findById(Long.MAX_VALUE)
-        ).isInstanceOf(IncorrectResultSizeDataAccessException.class);
+                () -> reservationTimeRepository.findByIdOrThrow(Long.MAX_VALUE)
+        ).isInstanceOf(CustomException.class);
     }
 }

@@ -1,15 +1,19 @@
 package roomescape.reservation.repository;
 
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.globalException.CustomException;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservationTime.domain.ReservationTime;
 import roomescape.reservationTime.repository.ReservationTimeRepository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ReservationRepositoryImpl implements ReservationRepository {
@@ -52,23 +56,15 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
-    public Reservation findById(Long id) {
-        String sql = "select id, name, date, time_id from reservation where id = ?";
-
-        return jdbcTemplate.queryForObject(sql,
-                (resultSet, rowNum) ->
-                        new Reservation(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name"),
-                                resultSet.getDate("date").toLocalDate(),
-                                reservationTimeRepository.findById(resultSet.getLong("time_id"))
-                        ), id);
+    public Reservation findByIdOrThrow(Long id) {
+        return findById(id)
+                .orElseThrow(() -> new CustomException(HttpStatus.BAD_REQUEST, "해당 예약 id가 존재하지 않습니다."));
     }
 
     @Override
     public Reservation add(Reservation reservation) {
         Long id = insertWithKeyHolder(reservation);
-        return findById(id);
+        return findById(id).get();
     }
 
     @Override
@@ -94,5 +90,22 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
+    }
+
+    private Optional<Reservation> findById(Long id) {
+        String sql = "select id, name, date, time_id from reservation where id = ?";
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+                    (resultSet, rowNum) -> new Reservation(
+                            resultSet.getLong("id"),
+                            resultSet.getString("name"),
+                            resultSet.getDate("date").toLocalDate(),
+                            reservationTimeRepository.findByIdOrThrow(resultSet.getLong("time_id"))
+                    ), id));
+
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

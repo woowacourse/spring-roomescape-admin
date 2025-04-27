@@ -42,8 +42,7 @@ public class ReservationService {
     }
 
     public void delete(Long id) {
-        reservationRepository.findById(id)
-                .orElseThrow(() -> new CustomException(HttpStatus.BAD_REQUEST, "존재하지 않는 id로 요청하였습니다."));
+        reservationRepository.findByIdOrThrow(id);
         reservationRepository.delete(id);
     }
 
@@ -57,7 +56,7 @@ public class ReservationService {
     }
 
     private Reservation convertReservation(ReservationReqDto dto) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(dto.timeId());
+        ReservationTime reservationTime = reservationTimeRepository.findByIdOrThrow(dto.timeId());
         return ReservationMapper.toEntity(dto, reservationTime);
     }
 

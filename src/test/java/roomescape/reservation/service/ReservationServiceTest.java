@@ -81,7 +81,7 @@ class ReservationServiceTest {
             LocalTime duplicateTime = LocalTime.of(11, 22);
             ReservationTime reservationTime = ReservationTimeFixture.create(duplicateTime);
             Long reservationTimeId = reservationTimeRepository.insertWithKeyHolder(reservationTime);
-            ReservationTime savedReservationTime = reservationTimeRepository.findById(reservationTimeId);
+            ReservationTime savedReservationTime = reservationTimeRepository.findByIdOrThrow(reservationTimeId);
 
             String dummyName1 = "kali";
             int dummyFuturePlusDay1 = 1;

@@ -14,8 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import fake.FakeReservationDao;
 import roomescape.reservation.dao.ReservationDao;
-import roomescape.time.ReservationTime;
-import roomescape.time.dao.ReservationTimeDao;
+import roomescape.reservation.ReservationTime;
+import roomescape.reservation.dao.ReservationTimeDao;
+import roomescape.reservation.web.dto.ReservationRequest;
+import roomescape.reservation.web.dto.ReservationResponse;
 
 class ReservationControllerTest {
     private ReservationController reservationController;

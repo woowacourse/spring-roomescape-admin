@@ -1,4 +1,4 @@
-package roomescape.time.web;
+package roomescape.reservation.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -11,6 +11,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import roomescape.reservation.web.dto.ReservationTimeRequest;
+import roomescape.reservation.web.dto.ReservationTimeResponse;
 
 class ReservationTimeControllerTest {
     private ReservationTimeController reservationTimeController;

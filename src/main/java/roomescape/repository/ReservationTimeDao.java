@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -31,13 +32,19 @@ public class ReservationTimeDao {
                 INSERT INTO reservation_time (start_at)
                 VALUES (?)
                 """;
-        jdbcTemplate.update(connection -> {
+        jdbcTemplate.update(getPreparedStatementCreator(reservationTime, insertSql), keyHolder);
+        return new ReservationTime(keyHolder.getKey().longValue(), reservationTime.getStartAt());
+    }
+
+    private PreparedStatementCreator getPreparedStatementCreator(
+            final ReservationTime reservationTime, final String insertSql
+    ) {
+        return connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(insertSql,
                     Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, reservationTime.getStartAt().format(DateTimeFormatter.ofPattern("HH:mm")));
             return preparedStatement;
-        }, keyHolder);
-        return new ReservationTime(keyHolder.getKey().longValue(), reservationTime.getStartAt());
+        };
     }
 
     public List<ReservationTime> findAll() {

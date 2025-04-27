@@ -12,8 +12,7 @@ public class ReservationRepositoryStub implements ReservationRepository {
 
     @Override
     public Reservation add(Reservation reservation) {
-        Reservation newReservation = new Reservation(id, reservation.getName(), reservation.getDate(),
-                reservation.getTime());
+        Reservation newReservation = reservation.withId(id);
         reservations.put(id++, newReservation);
         return newReservation;
     }

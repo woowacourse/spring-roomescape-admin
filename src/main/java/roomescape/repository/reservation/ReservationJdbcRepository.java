@@ -29,7 +29,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
         params.put("time_id", reservation.getTime().getId());
 
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
-        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+        return reservation.withId(id);
     }
 
     @Override
@@ -41,20 +41,18 @@ public class ReservationJdbcRepository implements ReservationRepository {
     @Override
     public List<Reservation> findAll() {
         String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value FROM reservation as r inner join reservation_time as t on r.time_id = t.id";
-        List<Reservation> reservations = jdbcTemplate.query(
+        return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> {
                     Reservation reservation = new Reservation(
-                            resultSet.getLong("reservation_id"),
                             resultSet.getString("name"),
                             resultSet.getDate("date").toLocalDate(),
                             new ReservationTime(
                                     resultSet.getLong("time_id"),
                                     resultSet.getTime("time_value").toLocalTime())
                     );
-                    return reservation;
+                    return reservation.withId(resultSet.getLong("reservation_id"));
                 }
         );
-        return reservations;
     }
 }

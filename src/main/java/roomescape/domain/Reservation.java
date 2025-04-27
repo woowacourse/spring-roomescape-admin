@@ -9,7 +9,7 @@ public class Reservation {
     private LocalDate date;
     private ReservationTime time;
 
-    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
+    private Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         validate(name, date, time);
         this.id = id;
         this.name = name;
@@ -19,6 +19,10 @@ public class Reservation {
 
     public Reservation(String name, LocalDate date, ReservationTime time) {
         this(null, name, date, time);
+    }
+
+    public Reservation withId(Long id) {
+        return new Reservation(id, this.name, this.date, this.time);
     }
 
     public Long getId() {

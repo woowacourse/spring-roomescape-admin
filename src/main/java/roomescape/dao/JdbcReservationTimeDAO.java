@@ -15,7 +15,7 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class JdbcReservationTimeDAO implements ReservationTimeDAO {
 
-    private static final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNumber) ->
+    private static final RowMapper<ReservationTime> RESERVATION_TIME_ROW_MAPPER = (resultSet, rowNumber) ->
             new ReservationTime(resultSet.getLong("id"),
                     resultSet.getTime("start_at").toLocalTime());
 
@@ -32,13 +32,13 @@ public class JdbcReservationTimeDAO implements ReservationTimeDAO {
     @Override
     public List<ReservationTime> findAll() {
         String query = "SELECT * FROM reservation_time";
-        return jdbcTemplate.query(query, reservationTimeRowMapper);
+        return jdbcTemplate.query(query, RESERVATION_TIME_ROW_MAPPER);
     }
 
     @Override
     public Optional<ReservationTime> findById(final long id) {
         String query = "SELECT * FROM reservation_time WHERE id = ?";
-        List<ReservationTime> reservationTimes = jdbcTemplate.query(query, reservationTimeRowMapper, id);
+        List<ReservationTime> reservationTimes = jdbcTemplate.query(query, RESERVATION_TIME_ROW_MAPPER, id);
         return reservationTimes.stream()
                 .findFirst();
     }

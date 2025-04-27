@@ -16,7 +16,7 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class JdbcReservationDAO implements ReservationDAO {
 
-    private static final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
+    private static final RowMapper<Reservation> RESERVATION_ROW_MAPPER = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("reservation_id"),
             resultSet.getString("name"),
             resultSet.getDate("date").toLocalDate(),
@@ -46,7 +46,7 @@ public class JdbcReservationDAO implements ReservationDAO {
                 inner join reservation_time as t
                 on r.time_id = t.id
                 """;
-        return jdbcTemplate.query(query, reservationRowMapper);
+        return jdbcTemplate.query(query, RESERVATION_ROW_MAPPER);
     }
 
     @Override

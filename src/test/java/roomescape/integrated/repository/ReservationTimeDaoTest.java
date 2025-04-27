@@ -44,7 +44,7 @@ class ReservationTimeDaoTest {
 
     @DisplayName("예약 시간 전체 조회")
     @Test
-    void findAll() {
+    void findAll() throws SQLException {
         // given
         final ReservationTime reservationTime1 = ReservationTime.create("10:00");
         final ReservationTime reservationTime2 = ReservationTime.create("11:00");
@@ -68,7 +68,7 @@ class ReservationTimeDaoTest {
 
     @DisplayName("예약번호로 예약 시간 조회")
     @Test
-    void findById() {
+    void findById() throws SQLException {
         // given
         final ReservationTime reservationTime = ReservationTime.create("10:00");
         final ReservationTime expected = reservationTime.register(1L);
@@ -83,7 +83,7 @@ class ReservationTimeDaoTest {
 
     @DisplayName("예약 시간 저장")
     @Test
-    void save() {
+    void save() throws SQLException {
         // given
         final List<ReservationTime> beforeSave = reservationTimeDao.findAll();
         final ReservationTime reservationTime = ReservationTime.create("10:00");
@@ -103,7 +103,7 @@ class ReservationTimeDaoTest {
 
     @DisplayName("예약 시간 삭제")
     @Test
-    void remove() {
+    void remove() throws SQLException {
         // given
         final List<ReservationTime> beforeSave = reservationTimeDao.findAll();
         final ReservationTime reservationTime = ReservationTime.create("10:00");

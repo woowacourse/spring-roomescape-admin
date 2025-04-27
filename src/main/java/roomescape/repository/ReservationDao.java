@@ -2,8 +2,8 @@ package roomescape.repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -58,7 +58,7 @@ public class ReservationDao {
         }
     }
 
-    public Reservation save(final Reservation reservation) {
+    public Reservation save(final Reservation reservation) throws SQLException {
         final String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -70,7 +70,7 @@ public class ReservationDao {
             return ps;
         }, keyHolder);
 
-        final long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        final long id = getGeneratedId(keyHolder);
         return reservation.register(id);
     }
 
@@ -87,5 +87,12 @@ public class ReservationDao {
                 resultSet.getLong("time_id"),
                 resultSet.getString("time_value")
         );
+    }
+
+    private long getGeneratedId(KeyHolder keyHolder) throws SQLException {
+        if (keyHolder.getKey() == null) {
+            throw new SQLException("예약을 저장하는 도중 생성된 ID를 반환할 수 없습니다.");
+        }
+        return keyHolder.getKey().longValue();
     }
 }

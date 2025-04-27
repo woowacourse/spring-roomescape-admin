@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import java.sql.SQLException;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
@@ -29,12 +30,16 @@ public class ReservationService {
     }
 
     public ReservationResponse save(final AddReservationRequest request) {
-        final ReservationTime createdTime = ReservationTime.create(request.time());
-        final ReservationTime savedTime = reservationTimeDao.save(createdTime);
+        try {
+            final ReservationTime createdTime = ReservationTime.create(request.time());
+            final ReservationTime savedTime = reservationTimeDao.save(createdTime);
 
-        final Reservation created = Reservation.create(request.name(), request.date(), savedTime);
-        final Reservation saved = reservationDao.save(created);
-        return ReservationResponse.from(saved);
+            final Reservation created = Reservation.create(request.name(), request.date(), savedTime);
+            final Reservation saved = reservationDao.save(created);
+            return ReservationResponse.from(saved);
+        } catch (SQLException e) {
+            throw new InvalidReservationException(e.getMessage());
+        }
     }
 
     public void remove(final Long id) {

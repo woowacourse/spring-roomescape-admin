@@ -65,56 +65,6 @@ class MissionStepTest {
                 .body("size()", is(0));
     }
 
-    @DisplayName("예약 기능 통합 테스트")
-    @Nested
-    class Step3 {
-
-        @DisplayName("예약을 생성하고 목록 조회")
-        @Test
-        void step3_1() {
-            Map<String, String> params = createTestParams();
-
-            RestAssured.given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(params)
-                    .when().post("/reservations")
-                    .then().log().all()
-                    .statusCode(HttpStatus.OK.value())
-                    .body("id", is(1));
-
-            RestAssured.given().log().all()
-                    .when().get("/reservations")
-                    .then().log().all()
-                    .statusCode(HttpStatus.OK.value())
-                    .body("size()", is(1));
-        }
-
-        @DisplayName("예약을 생성하고 목록에서 삭제")
-        @Test
-        void step3_2() {
-            Map<String, String> params = createTestParams();
-
-            RestAssured.given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(params)
-                    .when().post("/reservations")
-                    .then().log().all()
-                    .statusCode(HttpStatus.OK.value())
-                    .body("id", is(1));
-
-            RestAssured.given().log().all()
-                    .when().delete("/reservations/1")
-                    .then().log().all()
-                    .statusCode(HttpStatus.OK.value());
-
-            RestAssured.given().log().all()
-                    .when().get("/reservations")
-                    .then().log().all()
-                    .statusCode(HttpStatus.OK.value())
-                    .body("size()", is(0));
-        }
-    }
-
     @DisplayName("DB에 예약 테이블이 정상적으로 생성")
     @Test
     void step4() {
@@ -225,5 +175,55 @@ class MissionStepTest {
         }
 
         assertThat(isJdbcTemplateInjected).isFalse();
+    }
+
+    @DisplayName("예약 기능 통합 테스트")
+    @Nested
+    class Step3 {
+
+        @DisplayName("예약을 생성하고 목록 조회")
+        @Test
+        void step3_1() {
+            Map<String, String> params = createTestParams();
+
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(params)
+                    .when().post("/reservations")
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("id", is(1));
+
+            RestAssured.given().log().all()
+                    .when().get("/reservations")
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("size()", is(1));
+        }
+
+        @DisplayName("예약을 생성하고 목록에서 삭제")
+        @Test
+        void step3_2() {
+            Map<String, String> params = createTestParams();
+
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(params)
+                    .when().post("/reservations")
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("id", is(1));
+
+            RestAssured.given().log().all()
+                    .when().delete("/reservations/1")
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value());
+
+            RestAssured.given().log().all()
+                    .when().get("/reservations")
+                    .then().log().all()
+                    .statusCode(HttpStatus.OK.value())
+                    .body("size()", is(0));
+        }
     }
 }

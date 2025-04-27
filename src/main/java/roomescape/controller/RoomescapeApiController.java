@@ -1,55 +1,49 @@
 package roomescape.controller;
 
 import java.util.List;
-import java.util.Vector;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
-import roomescape.domain.Reservations;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.exception.CannotAddException;
-import roomescape.exception.CannotRemoveException;
+import roomescape.service.ReservationService;
 
+@RequestMapping("/reservations")
 @RestController
 public class RoomescapeApiController {
 
-    private final Reservations reservations;
+    private final ReservationService reservationService;
 
-    public RoomescapeApiController() {
-        this.reservations = new Reservations(new Vector<>());
+    public RoomescapeApiController(final ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
-    @GetMapping("/reservations")
+    @GetMapping
     public List<ReservationResponse> findAllReservations() {
-        return reservations.findAll()
+        return reservationService.findAll()
                 .stream()
                 .map(ReservationResponse::from)
                 .toList();
     }
 
-    @PostMapping("/reservations")
+    @PostMapping
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest request) {
-        try {
-            Reservation savedReservation = reservations.addReservation(request.toReservation());
-            return ResponseEntity.ok(ReservationResponse.from(savedReservation));
-        } catch (CannotAddException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        Reservation reservation = reservationService.addReservation(request);
+        return ResponseEntity.ok(ReservationResponse.from(reservation));
     }
 
-    @DeleteMapping("/reservations/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeReservation(@PathVariable long id) {
-        try {
-            reservations.removeReservationById(id);
+        boolean removed = reservationService.removeReservationById(id);
+        if (removed) {
             return ResponseEntity.ok().build();
-        } catch (CannotRemoveException e) {
-            return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.notFound().build();
     }
 }

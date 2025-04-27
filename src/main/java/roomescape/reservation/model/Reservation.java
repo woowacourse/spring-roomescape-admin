@@ -45,6 +45,10 @@ public class Reservation {
         return time;
     }
 
+    public Reservation withId(Long reservationId) {
+        return new Reservation(reservationId, this.name, this.date, this.time);
+    }
+
     private void validateName(String value) {
         if (value == null || value.isBlank()) {
             throw new IllegalArgumentException("이름을 입력해주세요.");

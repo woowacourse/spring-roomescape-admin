@@ -25,11 +25,12 @@ public class ReservationDAO {
 
     public Reservation insert(Reservation reservation) {
         Long reservationId = insertWithKeyHolder(reservation);
-        return new Reservation(reservationId, reservation.getName(), reservation.getDate(), reservation.getTime());
+        return reservation.withId(reservationId);
     }
 
     private Long insertWithKeyHolder(Reservation reservation) {
         String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});

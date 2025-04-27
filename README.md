@@ -59,7 +59,7 @@ content-type: application/json
 
 ### 응답
 ```json
-HTTP/1.1 200
+HTTP/1.1 201
 Content-Type: application/json
 
 {
@@ -82,7 +82,10 @@ Content-Type: application/json
 `DELETE /reservations/1 HTTP/1.1`
 
 ### 응답
-`DELETE /reservations/1 HTTP/1.1`
+```json
+HTTP/1.1 204
+Content-Type: application/json
+```
 
 ## 시간 추가
 ### 요청

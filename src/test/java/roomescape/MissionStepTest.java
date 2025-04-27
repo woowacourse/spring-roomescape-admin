@@ -81,7 +81,7 @@ public class MissionStepTest {
                         .body(params)
                         .when().post("/reservations")
                         .then().log().all()
-                        .statusCode(200)
+                        .statusCode(201)
                         .body("id", is(1));
 
                 RestAssured.given().log().all()
@@ -173,13 +173,13 @@ public class MissionStepTest {
                     .body(params)
                     .when().post("/reservations")
                     .then().log().all()
-                    .statusCode(200)
+                    .statusCode(201)
                     .body("id", is(1));
 
             RestAssured.given().log().all()
                     .when().delete("/reservations/1")
                     .then().log().all()
-                    .statusCode(200);
+                    .statusCode(204);
 
             RestAssured.given().log().all()
                     .when().get("/reservations")
@@ -196,7 +196,7 @@ public class MissionStepTest {
         private JdbcTemplate jdbcTemplate;
 
         @Test
-        void 사단계() {
+        void 데이터베이스를_적용한다() {
             try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
                 assertThat(connection).isNotNull();
                 assertThat(connection.getCatalog()).isEqualTo("DATABASE");
@@ -214,7 +214,7 @@ public class MissionStepTest {
         private JdbcTemplate jdbcTemplate;
 
         @Test
-        void 오단계() {
+        void 예약을_조회한다() {
             makeReservationTime();
 
             String date = LocalDate.now().toString();
@@ -239,7 +239,7 @@ public class MissionStepTest {
         private JdbcTemplate jdbcTemplate;
 
         @Test
-        void 육단계() {
+        void 예약을_추가한다() {
             makeReservationTime();
 
             String date = LocalDate.now().toString();
@@ -254,7 +254,29 @@ public class MissionStepTest {
                     .body(params)
                     .when().post("/reservations")
                     .then().log().all()
-                    .statusCode(200);
+                    .statusCode(201);
+
+            Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+            assertThat(count).isEqualTo(1);
+        }
+
+        @Test
+        void 예약을_삭제한다() {
+            makeReservationTime();
+
+            String date = LocalDate.now().toString();
+
+            Map<String, String> params = new HashMap<>();
+            params.put("name", "브라운");
+            params.put("date", date);
+            params.put("timeId", "1");
+
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(params)
+                    .when().post("/reservations")
+                    .then().log().all()
+                    .statusCode(201);
 
             Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
             assertThat(count).isEqualTo(1);
@@ -262,7 +284,7 @@ public class MissionStepTest {
             RestAssured.given().log().all()
                     .when().delete("/reservations/1")
                     .then().log().all()
-                    .statusCode(200);
+                    .statusCode(204);
 
             Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
             assertThat(countAfterDelete).isEqualTo(0);
@@ -288,7 +310,7 @@ public class MissionStepTest {
                     .body(params)
                     .when().post("/times")
                     .then().log().all()
-                    .statusCode(200);
+                    .statusCode(201);
 
             RestAssured.given().log().all()
                     .when().get("/times")
@@ -299,7 +321,7 @@ public class MissionStepTest {
             RestAssured.given().log().all()
                     .when().delete("/times/1")
                     .then().log().all()
-                    .statusCode(200);
+                    .statusCode(204);
 
             RestAssured.given().log().all()
                     .when().get("/times")
@@ -319,7 +341,7 @@ public class MissionStepTest {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -332,7 +354,7 @@ public class MissionStepTest {
     class Step8 {
 
         @Test
-        void 팔단계() {
+        void 정해진_예약_시간만_예약한다() {
             Map<String, String> params = new HashMap<>();
             String time = TextFixture.makeNowTime();
             params.put("startAt", time);
@@ -342,7 +364,7 @@ public class MissionStepTest {
                     .body(params)
                     .when().post("/times")
                     .then().log().all()
-                    .statusCode(200);
+                    .statusCode(201);
 
             RestAssured.given().log().all()
                     .when().get("/times")
@@ -362,7 +384,7 @@ public class MissionStepTest {
                     .body(reservation)
                     .when().post("/reservations")
                     .then().log().all()
-                    .statusCode(200);
+                    .statusCode(201);
 
             RestAssured.given().log().all()
                     .when().get("/reservations")
@@ -379,7 +401,7 @@ public class MissionStepTest {
         private ReservationController reservationController;
 
         @Test
-        void 구단계() {
+        void Layered_Architecture를_적용한다() {
             boolean isJdbcTemplateInjected = false;
 
             for (Field field : reservationController.getClass().getDeclaredFields()) {

@@ -42,7 +42,7 @@ public class ReservationDao {
                     String name = rs.getString("name");
                     String date = rs.getString("date");
                     String startAt = rs.getString("start_at");
-                    return new Reservation(id, toPerson(name), LocalDate.parse(date), toReservationTime(startAt));
+                    return new Reservation(id, new Person(name), LocalDate.parse(date), toReservationTime(startAt));
                 }
         );
         return foundReservations;
@@ -50,10 +50,6 @@ public class ReservationDao {
 
     private ReservationTime toReservationTime(String time) {
         return new ReservationTime(LocalTime.parse(time));
-    }
-
-    private Person toPerson(String name) {
-        return new Person(name);
     }
 
     public Reservation insert(Reservation reservation, long timeId) {

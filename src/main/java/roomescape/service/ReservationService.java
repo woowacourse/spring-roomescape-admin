@@ -1,7 +1,6 @@
 package roomescape.service;
 
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -45,20 +44,12 @@ public class ReservationService {
     }
 
     private Reservation findReservationWithId(Long id) {
-        Optional<Reservation> foundReservation = reservationDao.findById(id);
-
-        if (foundReservation.isEmpty()) {
-            throw new IllegalArgumentException("해당 id 와 일치하는 예약 내역이 존재하지 않습니다.");
-        }
-        return foundReservation.get();
+        return reservationDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 id 와 일치하는 예약 내역이 존재하지 않습니다."));
     }
 
     private ReservationTime findReservationTime(final Long id) {
-        Optional<ReservationTime> foundReservationTime = reservationTimeDao.findById(id);
-
-        if (foundReservationTime.isEmpty()) {
-            throw new IllegalArgumentException("해당 id 와 일치하는 예약 시각이 존재하지 않습니다.");
-        }
-        return foundReservationTime.get();
+        return reservationTimeDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 id 와 일치하는 예약 시각이 존재하지 않습니다."));
     }
 }

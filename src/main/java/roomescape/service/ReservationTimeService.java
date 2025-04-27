@@ -1,10 +1,7 @@
 package roomescape.service;
 
 import java.util.List;
-import java.util.Optional;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeDao;
 import roomescape.service.dto.ReservationTimeRegisterDto;
@@ -25,12 +22,8 @@ public class ReservationTimeService {
     }
 
     public ReservationTime findReservationTimeById(final Long id) {
-        Optional<ReservationTime> foundReservationTime = reservationTimeDao.findById(id);
-
-        if (foundReservationTime.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 id 와 일치하는 예약 시각이 존재하지 않습니다.");
-        }
-        return foundReservationTime.get();
+        return reservationTimeDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 id 와 일치하는 예약 시각이 존재하지 않습니다."));
     }
 
     public List<ReservationTimeResponseDto> findAllReservationTimes() {

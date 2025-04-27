@@ -1,7 +1,7 @@
 package roomescape.reservation.service;
 
 import java.util.List;
-import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.dao.ReservationDao;
 import roomescape.reservation.domain.Reservation;
@@ -34,7 +34,7 @@ public class ReservationService {
                     savedReservation.getDate(),
                     new TimeResponse(savedReservation.getTime().getId(), savedReservation.getTime().getStartAt())
             );
-        } catch (DataAccessException dataAccessException) {
+        } catch (EmptyResultDataAccessException e) {
             throw new IllegalArgumentException("[ERROR] 요청받은 timeId가 존재하지 않습니다.");
         }
     }

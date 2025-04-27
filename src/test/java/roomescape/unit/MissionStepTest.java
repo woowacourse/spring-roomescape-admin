@@ -165,7 +165,7 @@ class MissionStepTest {
                 .statusCode(HttpStatus.OK.value());
 
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) FROM reservation", Integer.class);
-        assertThat(countAfterDelete).isEqualTo(0);
+        assertThat(countAfterDelete).isZero();
     }
 
     @DisplayName("시간 정보를 등록하고 조회 및 삭제")

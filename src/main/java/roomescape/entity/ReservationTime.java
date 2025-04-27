@@ -3,11 +3,15 @@ package roomescape.entity;
 import java.time.LocalTime;
 
 public class ReservationTime {
-    private final Long id;
+    private Long id;
     private final LocalTime startAt;
 
     public ReservationTime(Long id, LocalTime startAt) {
         this.id = id;
+        this.startAt = startAt;
+    }
+
+    public ReservationTime(LocalTime startAt) {
         this.startAt = startAt;
     }
 

@@ -29,15 +29,11 @@ public class ReservationService {
 
     public ReservationResponseDto createReservation(CreateReservationDto createReservationDto) {
         ReservationTime time = reservationTimeRepository.findById(createReservationDto.timeId());
-        Reservation reservation = new Reservation(
-                createReservationDto.name(),
-                LocalDate.parse(createReservationDto.date(), DateTimeFormatUtils.dateFormatter),
-                time
-        );
+        LocalDate date = DateTimeFormatUtils.formatDateFrom(createReservationDto.date());
+        Reservation reservation = new Reservation(createReservationDto.name(), date, time);
 
         Long id = reservationRepository.addAndGetId(reservation);
-        Reservation resultReservation = reservationRepository.findById(id);
-        return ReservationResponseDto.from(resultReservation);
+        return ReservationResponseDto.fromIdAndReservation(id, reservation);
     }
 
     public void deleteReservation(Long id) {

@@ -1,10 +1,12 @@
 package roomescape.service;
 
+import java.time.LocalTime;
 import java.util.List;
 import roomescape.entity.ReservationTime;
 import roomescape.persistence.repository.reservationtime.ReservationTimeRepository;
 import roomescape.presentation.dto.CreateReservationTimeDto;
 import roomescape.presentation.dto.ReservationTimeResponseDto;
+import roomescape.util.DateTimeFormatUtils;
 
 public class ReservationTimeService {
 
@@ -15,9 +17,11 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponseDto createReservationTime(CreateReservationTimeDto request) {
-        Long id = reservationTimeRepository.addAndGetId(request);
-        ReservationTime reservationTime = reservationTimeRepository.findById(id);
-        return ReservationTimeResponseDto.from(reservationTime);
+        LocalTime startAt = DateTimeFormatUtils.formatTimeFrom(request.startAt());
+        ReservationTime reservationTime = new ReservationTime(startAt);
+
+        Long id = reservationTimeRepository.addAndGetId(reservationTime);
+        return ReservationTimeResponseDto.fromIdAndReservationTime(id, reservationTime);
     }
 
     public List<ReservationTimeResponseDto> getAllReservationTimes() {

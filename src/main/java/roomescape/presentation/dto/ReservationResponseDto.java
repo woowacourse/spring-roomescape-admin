@@ -9,8 +9,16 @@ public record ReservationResponseDto(Long id,
                                      ReservationTimeResponseDto time) {
 
     public static ReservationResponseDto from(Reservation reservation) {
-        String date = DateTimeFormatUtils.dateFormatter.format(reservation.getDate());
-        return new ReservationResponseDto(reservation.getId(), reservation.getName(), date,
+        return getReservationResponseDtoWithId(reservation.getId(), reservation);
+    }
+
+    public static ReservationResponseDto fromIdAndReservation(Long id, Reservation reservation) {
+        return getReservationResponseDtoWithId(id, reservation);
+    }
+
+    private static ReservationResponseDto getReservationResponseDtoWithId(Long id, Reservation reservation) {
+        return new ReservationResponseDto(id, reservation.getName(),
+                DateTimeFormatUtils.DATE_FORMATTER.format(reservation.getDate()),
                 ReservationTimeResponseDto.from(reservation.getTime()));
     }
 }

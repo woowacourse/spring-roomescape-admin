@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.entity.ReservationTime;
-import roomescape.presentation.dto.CreateReservationTimeDto;
 
 @Repository
 public class ReservationTimeJdbcRepository implements ReservationTimeRepository {
@@ -31,9 +30,9 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public Long addAndGetId(CreateReservationTimeDto createReservationTimeDto) {
+    public Long addAndGetId(ReservationTime reservationTime) {
         SqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue(RESERVATION_TIME_START_AT, createReservationTimeDto.startAt());
+                .addValue(RESERVATION_TIME_START_AT, reservationTime.getStartAt());
 
         return jdbcInsert.executeAndReturnKey(parameters).longValue();
     }

@@ -1,7 +1,6 @@
 package roomescape.service;
 
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDAO;
 import roomescape.dao.ReservationTimeDAO;
@@ -25,12 +24,7 @@ public class ReservationService {
     }
 
     public Reservation addReservation(final ReservationRequest reservationRequest) {
-        Optional<ReservationTime> reservationTimeOptional = reservationTimeDAO.findById(reservationRequest.timeId());
-        if (reservationTimeOptional.isEmpty()) {
-            throw new IllegalArgumentException("[ERROR] 존재하지 않는 예약 가능 시간입니다: timeId=%d"
-                    .formatted(reservationRequest.timeId()));
-        }
-        ReservationTime reservationTime = reservationTimeOptional.get();
+        ReservationTime reservationTime = findReservationTimeByTimeId(reservationRequest.timeId());
         Reservation reservation = new Reservation(reservationRequest.name(),
                 reservationRequest.date(),
                 reservationTime);
@@ -40,6 +34,12 @@ public class ReservationService {
         }
         long savedId = reservationDAO.insert(reservation);
         return reservation.withId(savedId);
+    }
+
+    private ReservationTime findReservationTimeByTimeId(final long timeId) {
+        return reservationTimeDAO.findById(timeId)
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 예약 가능 시간입니다: timeId=%d"
+                        .formatted(timeId)));
     }
 
     public boolean removeReservationById(final long id) {

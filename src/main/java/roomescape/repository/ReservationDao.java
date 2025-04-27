@@ -85,6 +85,6 @@ public class ReservationDao {
                 "date", Date.valueOf(convertedRequest.getDate()),
                 "time_id", convertedRequest.getTimeId())
         );
-        return (long) reservationInserter.executeAndReturnKey(parameters);
+        return reservationInserter.executeAndReturnKey(parameters).longValue();
     }
 }

@@ -1,9 +1,7 @@
-package roomescape.repository;
+package roomescape.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -13,14 +11,15 @@ import roomescape.dto.ReservationTimeResponse;
 import roomescape.model.ReservationTime;
 
 @Repository
-public class ReservationTimeRepository {
+public class JdbcReservationTimeDao implements ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
+    public JdbcReservationTimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public ReservationTime save(ReservationTime time) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -37,6 +36,7 @@ public class ReservationTimeRepository {
         return new ReservationTime(id, time.getStartAt());
     }
 
+    @Override
     public List<ReservationTimeResponse> findAll() {
         return jdbcTemplate.query(
                 "SELECT id, start_at FROM reservation_time",
@@ -49,7 +49,8 @@ public class ReservationTimeRepository {
         );
     }
 
-    public boolean delete(Long id) {
+    @Override
+    public boolean deleteById(Long id) {
         int deletedRow = jdbcTemplate.update(
                 "DELETE FROM reservation_time WHERE id = ?",
                 id
@@ -57,6 +58,7 @@ public class ReservationTimeRepository {
         return deletedRow == 1;
     }
 
+    @Override
     public ReservationTime findById(Long id) {
         return jdbcTemplate.queryForObject(
                 "SELECT id, start_at FROM reservation_time WHERE id = ?",

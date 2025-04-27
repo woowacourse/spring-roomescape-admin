@@ -1,9 +1,7 @@
-package roomescape.repository;
+package roomescape.dao;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -13,14 +11,15 @@ import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 
 @Repository
-public class ReservationRepository {
+public class JdbcReservationDao implements ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationRepository(JdbcTemplate jdbcTemplate) {
+    public JdbcReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public Reservation save(Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -39,7 +38,8 @@ public class ReservationRepository {
         return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getReservationTime());
     }
 
-    public boolean delete(Long id) {
+    @Override
+    public boolean deleteById(Long id) {
         int deletedRow = jdbcTemplate.update(
                 "DELETE FROM reservation WHERE id = ?",
                 id
@@ -47,6 +47,7 @@ public class ReservationRepository {
         return deletedRow == 1;
     }
 
+    @Override
     public List<Reservation> findAll() {
         return jdbcTemplate.query(
                 "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value"

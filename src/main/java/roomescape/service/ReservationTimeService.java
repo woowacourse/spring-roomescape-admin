@@ -7,30 +7,30 @@ import org.springframework.web.server.ResponseStatusException;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.model.ReservationTime;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.dao.JdbcReservationTimeDao;
 
 @Service
 public class ReservationTimeService {
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final JdbcReservationTimeDao jdbcReservationTimeDao;
 
-    public ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationTimeService(JdbcReservationTimeDao jdbcReservationTimeDao) {
+        this.jdbcReservationTimeDao = jdbcReservationTimeDao;
     }
 
     public ReservationTimeResponse addTime(ReservationTimeRequest reservationTimeRequest) {
         ReservationTime time = reservationTimeRequest.toEntity();
-        ReservationTime savedTime = reservationTimeRepository.save(time);
+        ReservationTime savedTime = jdbcReservationTimeDao.save(time);
         return ReservationTimeResponse.fromEntity(savedTime);
     }
 
     public void deleteTime(Long id) {
-        boolean isDeleted = reservationTimeRepository.delete(id);
+        boolean isDeleted = jdbcReservationTimeDao.deleteById(id);
         if (!isDeleted) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당하는 id가 없습니다");
         }
     }
 
     public List<ReservationTimeResponse> getReservationTimes() {
-        return reservationTimeRepository.findAll();
+        return jdbcReservationTimeDao.findAll();
     }
 }

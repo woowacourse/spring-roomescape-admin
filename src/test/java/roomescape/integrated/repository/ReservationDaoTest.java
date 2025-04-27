@@ -50,8 +50,8 @@ public class ReservationDaoTest {
     @Test
     void findAll() {
         // given
-        final ReservationTime time1 = reservationTimeDao.save(new ReservationTime("17:00"));
-        final ReservationTime time2 = reservationTimeDao.save(new ReservationTime("18:00"));
+        final ReservationTime time1 = reservationTimeDao.save(ReservationTime.create("17:00"));
+        final ReservationTime time2 = reservationTimeDao.save(ReservationTime.create("18:00"));
 
         final Reservation reservation1 = Reservation.create("리버1", "2025-04-17", time1).register(1L);
         final Reservation reservation2 = Reservation.create("리버2", "2025-04-18", time2).register(2L);
@@ -72,7 +72,7 @@ public class ReservationDaoTest {
     @Test
     void findById() {
         // given
-        final ReservationTime time = reservationTimeDao.save(new ReservationTime("17:00"));
+        final ReservationTime time = reservationTimeDao.save(ReservationTime.create("17:00"));
         final Reservation reservation = Reservation.create("리버", "2025-04-17", time);
         final Reservation expected = reservationDao.save(reservation);
 
@@ -88,7 +88,7 @@ public class ReservationDaoTest {
     void save() {
         // given
         final List<Reservation> beforeSave = reservationDao.findAll();
-        final ReservationTime time = reservationTimeDao.save(new ReservationTime("17:00"));
+        final ReservationTime time = reservationTimeDao.save(ReservationTime.create("17:00"));
         final Reservation reservation = Reservation.create("리버", "2025-04-17", time);
         final Reservation expected = reservation.register(1L);
 
@@ -109,7 +109,7 @@ public class ReservationDaoTest {
     void remove() {
         // given
         final List<Reservation> beforeSave = reservationDao.findAll();
-        final ReservationTime time = reservationTimeDao.save(new ReservationTime("17:00"));
+        final ReservationTime time = reservationTimeDao.save(ReservationTime.create("17:00"));
         final Reservation reservation = Reservation.create("리버", "2025-04-17", time);
         reservationDao.save(reservation);
         final List<Reservation> afterSave = reservationDao.findAll();

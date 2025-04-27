@@ -19,12 +19,12 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
-    public ReservationTime(final String startAt) {
+    private ReservationTime(final String startAt) {
         this(null, LocalTime.parse(startAt));
     }
 
     public static ReservationTime create(final String startAt) {
-        return new ReservationTime(null, LocalTime.parse(startAt));
+        return new ReservationTime(startAt);
     }
 
     public ReservationTime register(final Long id) {

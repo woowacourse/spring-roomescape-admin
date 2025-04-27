@@ -30,12 +30,12 @@ public class Reservation {
         this(id, name, LocalDate.parse(date), new ReservationTime(timeId, LocalTime.parse(startAt)));
     }
 
-    public Reservation(final String name, final String date, final ReservationTime time) {
+    private Reservation(final String name, final String date, final ReservationTime time) {
         this(null, name, LocalDate.parse(date), time);
     }
 
     public static Reservation create(final String name, final String date, final ReservationTime time) {
-        return new Reservation(null, name, LocalDate.parse(date), time);
+        return new Reservation(name, date, time);
     }
 
     public Reservation register(final Long id) {

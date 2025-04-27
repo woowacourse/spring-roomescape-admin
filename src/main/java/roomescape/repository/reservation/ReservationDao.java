@@ -1,8 +1,8 @@
-package roomescape.repository;
+package roomescape.repository.reservation;
 
 import java.util.List;
 import java.util.Optional;
-import roomescape.domain.Reservation;
+import roomescape.domain.reservation.Reservation;
 
 public interface ReservationDao {
 

@@ -37,13 +37,13 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
     }
 
     @Override
-    public List<ReservationTimeResponse> findAll() {
+    public List<ReservationTime> findAll() {
         return jdbcTemplate.query(
                 "SELECT id, start_at FROM reservation_time",
                 (rs, rowNum) -> {
-                    return new ReservationTimeResponse(
+                    return new ReservationTime(
                             rs.getLong("id"),
-                            rs.getTime("start_at").toString()
+                            rs.getTime("start_at").toLocalTime()
                     );
                 }
         );

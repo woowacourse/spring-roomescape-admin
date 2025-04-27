@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,8 @@ public class ReservationTimeService {
     }
 
     public List<ReservationTimeResponse> getReservationTimes() {
-        return jdbcReservationTimeDao.findAll();
+        return jdbcReservationTimeDao.findAll().stream()
+                .map(ReservationTimeResponse::fromEntity)
+                .toList();
     }
 }

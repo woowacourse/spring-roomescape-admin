@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,13 +14,24 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationControllerTest {
+
+    @BeforeEach
+    void setUp() {
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(Map.of("1", "10:00"))
+                .when()
+                .post("/times");
+    }
 
     @DisplayName("예약 정보가 존재하지 않으면 예약을 생성할 수 없다.")
     @MethodSource
@@ -30,15 +42,15 @@ class ReservationControllerTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(400)
+                .statusCode(404)
                 .body("requestUrl", containsString("/reservations"));
     }
 
     private static Stream<Arguments> addReservationWithoutReservationInformation() {
         return Stream.of(
-                Arguments.of(Map.of("name", "", "date", "2025-04-20", "time", "10:00")),
-                Arguments.of(Map.of("name", "포스티", "date", "", "time", "10:00")),
-                Arguments.of(Map.of("name", "포스티", "date", "2025-04-20", "time", ""))
+                Arguments.of(Map.of("name", "", "date", "2025-04-20", "timeId", "1")),
+                Arguments.of(Map.of("name", "포스티", "date", "", "timeId", "1")),
+                Arguments.of(Map.of("name", "포스티", "date", "2025-04-20", "timeId", ""))
         );
     }
 

@@ -9,12 +9,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jakarta.servlet.http.HttpServletRequest;
 import roomescape.model.exception.ReservationNotFoundException;
+import roomescape.model.exception.ReservationTimeNotFoundException;
 
 @RestControllerAdvice(annotations = RestController.class)
 public class ExceptionControllerAdvice {
 
     @ResponseBody
-    @ExceptionHandler(ReservationNotFoundException.class)
+    @ExceptionHandler({ReservationNotFoundException.class, ReservationTimeNotFoundException.class})
     public ResponseEntity<ErrorResult> handleReservationNotFoundException(
             final HttpServletRequest request,
             final Throwable exception

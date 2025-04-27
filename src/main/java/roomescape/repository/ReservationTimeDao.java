@@ -1,0 +1,83 @@
+package roomescape.repository;
+
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
+
+import roomescape.model.ReservationTime;
+
+@Repository
+public class ReservationTimeDao {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public ReservationTimeDao(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public ReservationTime insert(final ReservationTime reservationTime) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String insertSql = """
+                INSERT INTO reservation_time (start_at)
+                VALUES (?)
+                """;
+        jdbcTemplate.update(getPreparedStatementCreator(reservationTime, insertSql), keyHolder);
+        return new ReservationTime(keyHolder.getKey().longValue(), reservationTime.getStartAt());
+    }
+
+    private PreparedStatementCreator getPreparedStatementCreator(
+            final ReservationTime reservationTime, final String insertSql
+    ) {
+        return connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(insertSql,
+                    Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, reservationTime.getStartAt().format(DateTimeFormatter.ofPattern("HH:mm")));
+            return preparedStatement;
+        };
+    }
+
+    public List<ReservationTime> findAll() {
+        String findAllSql = """
+                SELECT id, start_at
+                FROM reservation_time
+                """;
+        return jdbcTemplate.query(findAllSql, getReservationTimeRowMapper());
+    }
+
+    public int deleteById(final Long id) {
+        String deleteByIdSql = """
+                DELETE FROM reservation_time
+                WHERE id = ?
+                """;
+        return jdbcTemplate.update(deleteByIdSql, id);
+    }
+
+    public Optional<ReservationTime> findById(final Long id) {
+        String findByIdSql = """
+                SELECT id, start_at
+                FROM reservation_time
+                WHERE id = ?
+                """;
+        return DataAccessUtils.optionalResult(
+                jdbcTemplate.query(findByIdSql, getReservationTimeRowMapper(), id)
+        );
+    }
+
+    private RowMapper<ReservationTime> getReservationTimeRowMapper() {
+        return (resultSet, rowNum) -> new ReservationTime(
+                resultSet.getLong("id"),
+                LocalTime.parse(resultSet.getString("start_at"))
+        );
+    }
+}

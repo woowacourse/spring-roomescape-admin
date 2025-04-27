@@ -1,30 +1,30 @@
 package roomescape.model;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Objects;
 
 public class Reservation {
 
     private final Long id;
     private final String name;
-    private final ReservationDateTime reservationDateTime;
+    private final LocalDate date;
+    private final ReservationTime time;
 
-    public Reservation(final Long id, final String name, final ReservationDateTime reservationDateTime) {
-        validate(id, name, reservationDateTime);
+    public Reservation(final Long id, final String name, final LocalDate date, final ReservationTime time) {
+        validate(name, date, time);
         this.id = id;
         this.name = name;
-        this.reservationDateTime = reservationDateTime;
+        this.date = date;
+        this.time = time;
     }
 
-    private void validate(final Long id, final String name, final ReservationDateTime reservationDateTime) {
-        try {
-            Objects.requireNonNull(id);
-            Objects.requireNonNull(name);
-            Objects.requireNonNull(reservationDateTime);
-            validateBlank(name);
-        } catch (NullPointerException e) {
-            throw new IllegalArgumentException(e);
+    private void validate(final String name, final LocalDate date, final ReservationTime reservationTime) {
+        validateNull(name, date, reservationTime);
+        validateBlank(name);
+    }
+
+    private void validateNull(final String name, final LocalDate date, final ReservationTime reservationTime) {
+        if (name == null || date == null || reservationTime == null) {
+            throw new IllegalArgumentException("예약 생성에 필요한 값이 존재하지 않습니다.");
         }
     }
 
@@ -43,10 +43,10 @@ public class Reservation {
     }
 
     public LocalDate getDate() {
-        return reservationDateTime.getDate();
+        return date;
     }
 
-    public LocalTime getTime() {
-        return reservationDateTime.getTime();
+    public ReservationTime getTime() {
+        return time;
     }
 }

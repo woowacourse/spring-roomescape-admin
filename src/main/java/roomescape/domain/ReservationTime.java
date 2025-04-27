@@ -8,11 +8,13 @@ public class ReservationTime {
     private final LocalTime startAt;
 
     public ReservationTime(final long id, final LocalTime startAt) {
+        validateNullTime(startAt);
         this.id = id;
         this.startAt = startAt;
     }
 
     public ReservationTime(final LocalTime startAt) {
+        validateNullTime(startAt);
         this.startAt = startAt;
     }
 
@@ -27,6 +29,12 @@ public class ReservationTime {
 
     public LocalTime getStartAt() {
         return startAt;
+    }
+
+    private void validateNullTime(final LocalTime time) {
+        if (time == null) {
+            throw new IllegalArgumentException("예약 시간은 비어있을 수 없습니다.");
+        }
     }
 
     @Override

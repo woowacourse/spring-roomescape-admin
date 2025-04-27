@@ -23,9 +23,7 @@ class ReservationRepositoryImplTest {
 
     @BeforeEach
     void setUp() {
-        ReservationDao reservationDao = new ReservationDao(jdbcTemplate);
-        ReservationTimeDao reservationTimeDao = new ReservationTimeDao(jdbcTemplate);
-        reservationRepository = new ReservationRepositoryImpl(reservationDao, reservationTimeDao);
+        reservationRepository = new ReservationRepositoryImpl(jdbcTemplate);
 
         jdbcTemplate.execute("DROP TABLE reservation IF EXISTS");
         jdbcTemplate.execute("DROP TABLE reservation_time IF EXISTS");

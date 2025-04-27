@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import roomescape.domain.ReservationTime;
 import roomescape.fixture.TextFixture;
 
@@ -22,8 +23,7 @@ class ReservationTimeRepositoryImplTest {
 
     @BeforeEach
     void setUp() {
-        ReservationTimeDao reservationTimeDao = new ReservationTimeDao(jdbcTemplate);
-        reservationTimeRepository = new ReservationTimeRepositoryImpl(reservationTimeDao);
+        reservationTimeRepository = new ReservationTimeRepositoryImpl(jdbcTemplate);
 
         jdbcTemplate.execute("DROP TABLE reservation IF EXISTS");
         jdbcTemplate.execute("DROP TABLE reservation_time IF EXISTS");

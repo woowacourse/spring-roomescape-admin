@@ -18,6 +18,12 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
+    private void validateNullTime(final LocalTime time) {
+        if (time == null) {
+            throw new IllegalArgumentException("예약 시간은 비어있을 수 없습니다.");
+        }
+    }
+
     public ReservationTime(final long id, final ReservationTime reservationTime) {
         this.id = id;
         this.startAt = reservationTime.getStartAt();
@@ -29,12 +35,6 @@ public class ReservationTime {
 
     public LocalTime getStartAt() {
         return startAt;
-    }
-
-    private void validateNullTime(final LocalTime time) {
-        if (time == null) {
-            throw new IllegalArgumentException("예약 시간은 비어있을 수 없습니다.");
-        }
     }
 
     @Override

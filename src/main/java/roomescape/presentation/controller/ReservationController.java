@@ -32,6 +32,8 @@ public class ReservationController {
             return ResponseEntity.ok(reservationResponse);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
+        } catch (NullPointerException e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 

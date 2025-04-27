@@ -27,9 +27,12 @@ public class TimeController {
     public ResponseEntity<TimeResponse> create(
             @RequestBody final TimeRequest timeRequest
     ) {
-        final TimeResponse timeResponse = timeService.create(timeRequest);
-
-        return ResponseEntity.ok(timeResponse);
+        try {
+            final TimeResponse timeResponse = timeService.create(timeRequest);
+            return ResponseEntity.ok(timeResponse);
+        } catch (NullPointerException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("admin")
-public class AdminViewController {
+public class AdminPageController {
 
     @GetMapping
     public String getAdmin() {
@@ -15,6 +15,11 @@ public class AdminViewController {
 
     @GetMapping("reservation")
     public String getAdminReservation() {
-        return "admin/reservation-legacy";
+        return "admin/reservation";
+    }
+
+    @GetMapping("time")
+    public String getAdminTime() {
+        return "admin/time";
     }
 }

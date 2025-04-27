@@ -5,32 +5,35 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.util.HashMap;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
-import roomescape.dto.ReservationResponse;
+import roomescape.application.dto.ReservationResponse;
+import roomescape.domain.ReservationTime;
 
-@ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationApiTest {
+class ReservationControllerTest {
 
-    @LocalServerPort
-    private int port;
+    private static final ReservationTime TEST_RESERVATION_TIME = new ReservationTime(1L, LocalTime.MIDNIGHT);
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {
-        RestAssured.port = port;
+        jdbcTemplate.update(
+                "insert into reservation_time (id, start_at) values (?, ?)",
+                TEST_RESERVATION_TIME.getId(),
+                TEST_RESERVATION_TIME.getTime()
+        );
     }
 
     @Test
@@ -44,7 +47,7 @@ class ReservationApiTest {
 
     @Test
     void 예약_추가_요청을_성공한다() {
-        Map<String, String> params = createReservationData();
+        Map<String, String> params = saveReservationData();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -56,7 +59,7 @@ class ReservationApiTest {
 
     @Test
     void 요청으로_추가된_예약_정보를_응답한다() {
-        Map<String, String> params = createReservationData();
+        Map<String, String> params = saveReservationData();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -146,7 +149,7 @@ class ReservationApiTest {
     }
 
     private void createAndSendReservation() {
-        Map<String, String> params = createReservationData();
+        Map<String, String> params = saveReservationData();
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -154,11 +157,11 @@ class ReservationApiTest {
                 .when().post("/reservations");
     }
 
-    private Map<String, String> createReservationData() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
-        return params;
+    private Map<String, String> saveReservationData() {
+        return Map.of(
+                "name", "브라운",
+                "date", "2023-08-05",
+                "timeId", "1"
+        );
     }
 }

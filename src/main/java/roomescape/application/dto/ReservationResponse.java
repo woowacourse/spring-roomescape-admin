@@ -1,21 +1,21 @@
-package roomescape.dto;
+package roomescape.application.dto;
 
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 import roomescape.domain.Reservation;
 
 public record ReservationResponse(
         Long id,
         String name,
-        String date,
-        String time
+        LocalDate date,
+        ReservationTimeResponse time
 ) {
 
     public ReservationResponse(Reservation reservation) {
         this(
                 reservation.getId(),
                 reservation.getName(),
-                reservation.formatDateTime(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                reservation.formatDateTime(DateTimeFormatter.ofPattern("HH:mm"))
+                reservation.getDate(),
+                new ReservationTimeResponse(reservation.getTime())
         );
     }
 }

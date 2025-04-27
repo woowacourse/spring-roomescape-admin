@@ -1,5 +1,6 @@
 package roomescape.domain;
 
+import java.util.Collections;
 import java.util.List;
 
 public class Reservations {
@@ -11,6 +12,6 @@ public class Reservations {
     }
 
     public List<Reservation> getReservations() {
-        return reservations;
+        return Collections.unmodifiableList(reservations);
     }
 }

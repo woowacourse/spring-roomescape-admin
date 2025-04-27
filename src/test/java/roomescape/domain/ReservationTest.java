@@ -19,7 +19,7 @@ class ReservationTest {
     void sameIdTest() {
         Person person = new Person("이름");
         ReservationTime reservationTime = new ReservationTime(LocalTime.of(10, 0));
-        Reservation reservation = new Reservation(1, person, LocalDate.of(2024, 4, 25), reservationTime);
+        Reservation reservation = new Reservation(1, person, LocalDate.of(2025, 12, 25), reservationTime);
 
         assertAll(
                 () -> assertThat(reservation.isSameId(1)).isTrue(),

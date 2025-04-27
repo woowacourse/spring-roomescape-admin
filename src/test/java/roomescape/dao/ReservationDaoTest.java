@@ -40,13 +40,13 @@ class ReservationDaoTest {
 
         jdbcTemplate.update("insert into reservation (name, date, time_id) values (?, ?, ?)",
                 "아마",
-                "2024-12-25",
+                "2025-12-25",
                 "1"
         );
 
         jdbcTemplate.update("insert into reservation (name, date, time_id) values (?, ?, ?)",
                 "후후",
-                "2024-12-26",
+                "2025-12-26",
                 "2"
         );
     }
@@ -55,7 +55,7 @@ class ReservationDaoTest {
     @Test
     void insertTest() {
         Person person = new Person("아마");
-        Reservation reservation = new Reservation(person, LocalDate.of(2024, 2, 25));
+        Reservation reservation = new Reservation(person, LocalDate.of(2025, 10, 25));
 
         reservationDao.insert(reservation, 1);
         int size = jdbcTemplate.queryForObject("select count(*) from reservation", Integer.class);

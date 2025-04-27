@@ -17,6 +17,7 @@ import roomescape.service.fake_dao.FakeReservationDao;
 import roomescape.service.fake_dao.FakeReservationTimeDao;
 
 class ReservationServiceTest {
+
     private final ReservationDao reservationDao = new FakeReservationDao();
     private final TimeDao timeDao = new FakeReservationTimeDao();
     private final ReservationService reservationService = new ReservationService(reservationDao, timeDao);
@@ -32,7 +33,7 @@ class ReservationServiceTest {
 
         assertThat(reservation.name()).isEqualTo("moda");
         assertThat(reservation.date()).isEqualTo(LocalDate.of(2025, 4, 27));
-        assertThat(reservation.reservationTime()).isEqualTo(ReservationTimeResponseDto.from(time));
+        assertThat(reservation.time()).isEqualTo(ReservationTimeResponseDto.from(time));
     }
 
     @Test

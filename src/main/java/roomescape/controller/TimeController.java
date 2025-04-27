@@ -16,8 +16,11 @@ import roomescape.service.ReservationTimeService;
 @Controller
 public class TimeController {
 
-    @Autowired
-    private ReservationTimeService reservationTimeService;
+    private final ReservationTimeService reservationTimeService;
+
+    public TimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
+    }
 
     @GetMapping("/admin/time")
     public String displayAdminTime() {

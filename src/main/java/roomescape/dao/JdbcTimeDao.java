@@ -2,7 +2,6 @@ package roomescape.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -15,7 +14,6 @@ import roomescape.mapper.TimeMapper;
 @Component
 public class JdbcTimeDao implements TimeDao {
 
-    @Autowired
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcTimeDao(JdbcTemplate jdbcTemplate) {

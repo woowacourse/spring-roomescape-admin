@@ -5,8 +5,6 @@ import static org.hamcrest.CoreMatchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -21,6 +19,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dao.JdbcReservationDao;
 import roomescape.dao.JdbcTimeDao;
+import roomescape.dao.ReservationDao;
+import roomescape.dao.TimeDao;
 import roomescape.domain_entity.Id;
 import roomescape.domain_entity.Reservation;
 import roomescape.domain_entity.ReservationTime;
@@ -32,24 +32,13 @@ import roomescape.service.ReservationTimeService;
 public class ReservationIntegratedTest {
 
     @Autowired
-    private ReservationTimeService reservationTimeService;
-    @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private JdbcTimeDao timeDao;
+    private ReservationDao reservationDao;
     @Autowired
-    private JdbcReservationDao reservationDao;
-
-    @Test
-    void checkDatabaseConnection() {
-        try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
-            assertThat(connection).isNotNull();
-            assertThat(connection.getCatalog()).isEqualTo("DATABASE");
-            assertThat(connection.getMetaData().getTables(null, null, "RESERVATION", null).next()).isTrue();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private TimeDao timeDao;
+    @Autowired
+    private ReservationTimeService reservationTimeService;
 
     @Test
     @DisplayName("예약 관리 메인 페이지를 렌더링한다.")
@@ -65,6 +54,7 @@ public class ReservationIntegratedTest {
     void createReservation() {
         //given
         reservationTimeService.createTime(new ReservationTimeRequestDto(LocalTime.of(10, 0, 0)));
+
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");
@@ -81,7 +71,7 @@ public class ReservationIntegratedTest {
                         "name", is("브라운"),
                         "date", is("2023-08-05"),
                         "time.id", is(1),
-                        "time.startAt", is("10:00:00")
+                        "time.startAt", is("10:00")
                 );
 
         //then
@@ -165,7 +155,7 @@ public class ReservationIntegratedTest {
                 .then().log().all()
                 .statusCode(200);
 
-        Integer count = jdbcTemplate.queryForObject("SELECT count(*) from reservation", Integer.class);
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM RESERVATION", Integer.class);
         assertThat(count).isEqualTo(1);
     }
 

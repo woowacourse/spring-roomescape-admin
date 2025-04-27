@@ -14,7 +14,6 @@ import roomescape.mapper.ReservationMapper;
 @Component
 public class JdbcReservationDao implements ReservationDao {
 
-    @Autowired
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcReservationDao(JdbcTemplate jdbcTemplate) {

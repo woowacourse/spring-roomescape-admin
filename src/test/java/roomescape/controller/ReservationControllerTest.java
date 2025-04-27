@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 public class ReservationControllerTest {
 
-    private final ReservationController reservationController = new ReservationController();
+    private final ReservationController reservationController = new ReservationController(null);
 
     @Test
     @DisplayName("컨트롤러는 DB 접근 책임을 가지지 않는다.")

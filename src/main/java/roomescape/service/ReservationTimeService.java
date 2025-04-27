@@ -12,7 +12,6 @@ import roomescape.dto.ReservationTimeRequestDto;
 @Component
 public class ReservationTimeService {
 
-    @Autowired
     private TimeDao timeDao;
 
     public ReservationTimeService(TimeDao timeDao) {

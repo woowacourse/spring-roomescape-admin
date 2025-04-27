@@ -18,7 +18,6 @@ public class ReservationService {
     private final TimeService timeService;
     private final ReservationDao reservationDao;
 
-    @Autowired
     public ReservationService(final TimeService timeService, final ReservationDao reservationDao) {
         this.timeService = timeService;
         this.reservationDao = reservationDao;

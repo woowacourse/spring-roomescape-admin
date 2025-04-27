@@ -17,5 +17,4 @@ class ReservationTimeResponseDtoTest {
 
         assertThat(reservationTimeResponseDto.getStartAt()).isEqualTo("10:00");
     }
-
 }

@@ -9,6 +9,7 @@ import roomescape.domain_entity.Id;
 import roomescape.domain_entity.Reservation;
 import roomescape.domain_entity.ReservationTime;
 import roomescape.dto.ReservationRequestDto;
+import roomescape.dto.ReservationResponseDto;
 
 @Component
 public class ReservationService {
@@ -18,11 +19,13 @@ public class ReservationService {
     @Autowired
     private TimeDao timeDao;
 
-    public List<Reservation> findAllReservations() {
-        return reservationDao.findAll();
+    public List<ReservationResponseDto> findAllReservations() {
+        return reservationDao.findAll().stream()
+                .map(ReservationResponseDto::from)
+                .toList();
     }
 
-    public Reservation createReservation(ReservationRequestDto reservationRequest) {
+    public ReservationResponseDto createReservation(ReservationRequestDto reservationRequest) {
         Reservation newReservation = reservationRequest.toReservation();
         ReservationTime reservationTime = timeDao.findById(reservationRequest.timeId());
         long reservationId = reservationDao.create(newReservation);
@@ -30,7 +33,7 @@ public class ReservationService {
         newReservation.setId(new Id(reservationId));
         newReservation.setTime(reservationTime);
 
-        return newReservation;
+        return ReservationResponseDto.from(newReservation);
     }
 
     public void deleteReservation(long id) {

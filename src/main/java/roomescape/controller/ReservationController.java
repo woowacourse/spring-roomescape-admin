@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.domain_entity.Reservation;
+import roomescape.dto.ReservationResponseDto;
 import roomescape.service.ReservationService;
 
 @Controller
@@ -31,16 +32,16 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> readReservations() {
-        List<Reservation> reservationResponseDtos = reservationService.findAllReservations();
+    public ResponseEntity<List<ReservationResponseDto>> readReservations() {
+        List<ReservationResponseDto> reservationResponseDtos = reservationService.findAllReservations();
         return ResponseEntity.ok().body(reservationResponseDtos);
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> createReservation(
+    public ResponseEntity<ReservationResponseDto> createReservation(
             @RequestBody ReservationRequestDto reservationRequest
     ) {
-        Reservation newReservation = reservationService.createReservation(reservationRequest);
+        ReservationResponseDto newReservation = reservationService.createReservation(reservationRequest);
         return ResponseEntity.ok().body(newReservation);
     }
 

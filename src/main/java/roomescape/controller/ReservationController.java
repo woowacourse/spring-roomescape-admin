@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,41 +8,33 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.request.ReservationRequest;
-import roomescape.dto.response.ReservationResponse;
-import roomescape.mapper.ReservationMapper;
-import roomescape.model.Reservation;
-import roomescape.repository.ReservationRepository;
+import roomescape.controller.dto.request.ReservationRequest;
+import roomescape.controller.dto.response.ReservationResponse;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationRepository repository;
+    private final ReservationService service;
 
-    public ReservationController(ReservationRepository repository) {
-        this.repository = repository;
+    public ReservationController(ReservationService service) {
+        this.service = service;
     }
 
-    @ResponseBody
     @GetMapping
     public List<ReservationResponse> getAllReservations() {
-        List<Reservation> allReservations = repository.findAll();
-        return ReservationMapper.toDtos(allReservations);
+        return service.getAllReservations();
     }
 
-    @ResponseBody
     @PostMapping
-    public ReservationResponse addReservation(@RequestBody ReservationRequest request) {
-        Long id = repository.add(ReservationMapper.toDomain(request));
-        return ReservationMapper.toDto(repository.findById(id));
+    public ReservationResponse addReservation(@Valid @RequestBody ReservationRequest request) {
+        return service.registerReservation(request);
     }
 
-    @ResponseBody
     @DeleteMapping("/{id}")
     public void deleteReservation(@PathVariable("id") Long id) {
-        repository.deleteById(id);
+        service.deleteReservation(id);
     }
 }

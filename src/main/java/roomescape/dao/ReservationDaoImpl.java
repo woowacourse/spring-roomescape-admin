@@ -2,7 +2,7 @@ package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import roomescape.entity.ReservationEntity;
 import roomescape.entity.ReservationTimeEntity;
 
@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-@Component
+@Repository
 public class ReservationDaoImpl implements ReservationDao {
     private final JdbcTemplate jdbcTemplate;
 

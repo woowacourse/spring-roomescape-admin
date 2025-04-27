@@ -3,7 +3,7 @@ package roomescape.dao;
 import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import roomescape.entity.ReservationTimeEntity;
 
 import java.sql.PreparedStatement;
@@ -11,7 +11,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@Repository
 public class ReservationTimeDaoImpl implements ReservationTimeDao {
     private final JdbcTemplate jdbcTemplate;
 

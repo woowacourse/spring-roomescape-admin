@@ -3,21 +3,17 @@ package roomescape.time.service;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import roomescape.exception.DataNotFoundException;
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.repository.ReservationTimeRepository;
 
 @Service
+@RequiredArgsConstructor
 public class ReservationTimeService {
 
     private final ReservationTimeRepository reservationTimeRepository;
-
-    public ReservationTimeService(
-            @Qualifier("h2ReservationTimeRepository") final ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
-    }
 
     public Long save(final LocalTime startAt) {
         final ReservationTime reservationTime = new ReservationTime(startAt);

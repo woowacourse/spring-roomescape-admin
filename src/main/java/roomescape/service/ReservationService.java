@@ -52,10 +52,14 @@ public class ReservationService {
     }
 
     private void validateDuplicated(ReservationEntity newReservation) {
-        List<ReservationEntity> reservations = reservationDao.findAll();
-        if (reservations.stream().anyMatch(reservation -> reservation.isDuplicatedWith(newReservation))) {
+        if (isExistDuplicatedWith(newReservation)) {
             throw new ConflictException("해당 날짜에는 이미 예약이 존재합니다.");
         }
+    }
+
+    private boolean isExistDuplicatedWith(ReservationEntity target) {
+        List<ReservationEntity> reservations = reservationDao.findAll();
+        return reservations.stream().anyMatch(reservation -> reservation.isDuplicatedWith(target));
     }
 
     public void deleteReservation(final Long id) {

@@ -1,6 +1,6 @@
 package roomescape.repository;
 
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -60,7 +60,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
                     , reservationTimeRowMapper
             );
             return Optional.of(reservationTime);
-        } catch (IncorrectResultSizeDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
 

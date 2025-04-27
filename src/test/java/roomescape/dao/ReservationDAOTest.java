@@ -42,7 +42,8 @@ class ReservationDAOTest {
         Long id = reservationDAO.insertReservation(reservation);
 
         // then
-        assertThat(id != -1L).isTrue();
+        assertThat(id).isNotEqualTo(-1);
+    }
 
     @Test
     @DisplayName("reservation 을 삭제한다")

@@ -2,7 +2,6 @@ package roomescape.controller;
 
 import java.net.URI;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,24 +19,27 @@ import roomescape.service.ReservationTimeService;
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    @Autowired
-    ReservationTimeService reservationTimeService;
+    private final ReservationTimeService reservationTimeService;
+
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
+    }
 
     @GetMapping
-    private ResponseEntity<List<ReservationTimeResDto>> readAll() {
+    public ResponseEntity<List<ReservationTimeResDto>> readAll() {
         List<ReservationTimeResDto> response = reservationTimeService.findAll();
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    private ResponseEntity<ReservationTimeResDto> create(@RequestBody ReservationTimeReqDto dto, UriComponentsBuilder ucb) {
+    public ResponseEntity<ReservationTimeResDto> create(@RequestBody ReservationTimeReqDto dto, UriComponentsBuilder ucb) {
         ReservationTimeResDto newReservationTime = reservationTimeService.addAndGet(dto);
-        URI uri = ucb.path("/times/{id}").buildAndExpand(newReservationTime.id()).toUri();
+        URI uri = ucb.path("times/{id}").buildAndExpand(newReservationTime.id()).toUri();
         return ResponseEntity.created(uri).body(newReservationTime);
     }
 
     @DeleteMapping("/{id}")
-    private ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         reservationTimeService.deleteById(id);
         return ResponseEntity.noContent().build();
     }

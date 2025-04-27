@@ -3,8 +3,6 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import roomescape.dao.JdbcReservationDao;
-import roomescape.dao.JdbcTimeDao;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.TimeDao;
 import roomescape.domain_entity.Id;

@@ -12,5 +12,5 @@ public interface TimeDao {
 
     List<Time> findAll();
 
-    int remove(Long id);
+    boolean remove(Long id);
 }

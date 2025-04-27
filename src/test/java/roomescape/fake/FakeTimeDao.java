@@ -57,13 +57,13 @@ public class FakeTimeDao implements TimeDao {
     }
 
     @Override
-    public int remove(final Long id) {
+    public boolean remove(final Long id) {
         try {
             times.remove(times.get(Math.toIntExact(id)));
             index--;
-            return 1;
+            return true;
         } catch (IndexOutOfBoundsException e) {
-            return 0;
+            return false;
         }
     }
 

@@ -56,9 +56,10 @@ public class JdbcTimeDao implements TimeDao {
     }
 
     @Override
-    public int remove(final Long id) {
+    public boolean remove(final Long id) {
         final String sql = "DELETE FROM reservation_time WHERE id = ?";
+        final int rowNum = jdbcTemplate.update(sql, id);
 
-        return jdbcTemplate.update(sql, id);
+        return rowNum == 1;
     }
 }

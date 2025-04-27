@@ -103,12 +103,12 @@ class JdbcTimeDaoTest {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES ('10:10')");
 
         // when
-        final int rowNum = timeDao.remove(1L);
+        final boolean flag = timeDao.remove(1L);
         final List<Time> times = timeDao.findAll();
 
         // then
         assertAll(
-                () -> assertThat(rowNum).isEqualTo(1),
+                () -> assertThat(flag).isTrue(),
                 () -> assertThat(times).isEmpty()
         );
     }
@@ -117,9 +117,9 @@ class JdbcTimeDaoTest {
     @Test
     void removeNotExistsTime() {
         // given & when
-        final int rowNum = timeDao.remove(1L);
+        final boolean flag = timeDao.remove(1L);
 
         // then
-        assertThat(rowNum).isEqualTo(0);
+        assertThat(flag).isFalse();
     }
 }

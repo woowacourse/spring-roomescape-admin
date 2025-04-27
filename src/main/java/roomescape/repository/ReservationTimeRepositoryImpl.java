@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
+import roomescape.exception.ResourceNotFoundException;
 
 @Repository
 public class ReservationTimeRepositoryImpl implements ReservationTimeRepository {
@@ -43,17 +44,10 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
 
     @Override
     public void delete(final long id) {
-        ReservationTime reservationTime = findById(id);
-
         final String sql = "delete from reservation_time where id = ?";
-        jdbcTemplate.update(sql, id);
-    }
-
-    private ReservationTime findById(final long timeId) {
-        final String sql = "select * from reservation_time where id = ?";
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNumber) -> {
-            LocalTime startTime = LocalTime.parse(resultSet.getString("start_at"));
-            return new ReservationTime(timeId, startTime);
-        }, timeId);
+        int updatedRow = jdbcTemplate.update(sql, id);
+        if (updatedRow != 1) {
+            throw new ResourceNotFoundException("[ERROR] 해당 id가 존재하지 않습니다.");
+        }
     }
 }

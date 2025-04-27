@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.exception.ResourceNotFoundException;
 
 @Repository
 public class ReservationRepositoryImpl implements ReservationRepository {
@@ -63,6 +64,15 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         return findByIdWithTime(reservationId);
     }
 
+    @Override
+    public void delete(final long id) {
+        final String sql = "delete from reservation where id = ?";
+        int updatedRow = jdbcTemplate.update(sql, id);
+        if (updatedRow != 1) {
+            throw new ResourceNotFoundException("[ERROR] 해당 id가 존재하지 않습니다.");
+        }
+    }
+
     private Reservation findByIdWithTime(final long reservationId) {
         String sql = """
                 SELECT
@@ -76,12 +86,5 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                 on r.time_id = t.id
                 WHERE r.id = ?""";
         return jdbcTemplate.queryForObject(sql, RESERVATION_ROW_MAPPER, reservationId);
-    }
-
-    // TODO : id 없을 경우
-    @Override
-    public void delete(final long id) {
-        final String sql = "delete from reservation where id = ?";
-        jdbcTemplate.update(sql, id);
     }
 }

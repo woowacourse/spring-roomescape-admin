@@ -3,6 +3,8 @@ package roomescape.reservationtime.stub;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.reservationtime.ReservationTime;
 import roomescape.reservationtime.dao.ReservationTimeDao;
@@ -36,10 +38,10 @@ public class StubReservationTimeDao implements ReservationTimeDao {
     }
 
     @Override
-    public ReservationTime findById(Long id) {
-        return fakeReservationTimes.stream()
+    public Optional<ReservationTime> findById(Long id) {
+        return Optional.ofNullable(fakeReservationTimes.stream()
                 .filter(reservationTime -> reservationTime.getId().equals(id))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(NoSuchElementException::new));
     }
 }

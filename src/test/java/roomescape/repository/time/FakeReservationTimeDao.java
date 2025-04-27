@@ -38,7 +38,7 @@ public class FakeReservationTimeDao implements ReservationTimeDao {
     }
 
     @Override
-    public void deleteById(long id) {
-        reservationTimes.removeIf(reservationTime -> reservationTime.getId() == id);
+    public boolean deleteById(long id) {
+        return reservationTimes.removeIf(reservationTime -> reservationTime.getId() == id);
     }
 }

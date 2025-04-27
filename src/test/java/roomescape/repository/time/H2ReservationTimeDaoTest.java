@@ -26,7 +26,7 @@ class H2ReservationTimeDaoTest {
 
     @Test
     @Transactional
-    void 예약을_저장한다() {
+    void 예약_시간을_저장한다() {
         ReservationTime reservationTime = createReservationTimeStuff(DEFAULT_TIME);
 
         h2ReservationTimeDao.save(reservationTime);
@@ -35,7 +35,7 @@ class H2ReservationTimeDaoTest {
 
     @Test
     @Transactional
-    void 모든_예약을_조회한다() {
+    void 모든_예약_시간을_조회한다() {
         save(createReservationTimeStuff(DEFAULT_TIME));
         save(createReservationTimeStuff(DEFAULT_TIME));
         save(createReservationTimeStuff(DEFAULT_TIME));
@@ -45,7 +45,7 @@ class H2ReservationTimeDaoTest {
 
     @Test
     @Transactional
-    void 예약을_삭제한다() {
+    void 예약_시간을_삭제한다() {
         ReservationTime reservationTime = createReservationTimeStuff(DEFAULT_TIME);
 
         save(reservationTime);

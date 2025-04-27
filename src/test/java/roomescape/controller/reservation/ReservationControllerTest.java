@@ -15,6 +15,8 @@ import roomescape.dto.reservation.ReservationCreateRequest;
 import roomescape.dto.reservation.ReservationResponse;
 import roomescape.repository.reservation.FakeReservationDao;
 import roomescape.repository.time.FakeReservationTimeDao;
+import roomescape.service.reservation.ReservationService;
+import roomescape.service.time.ReservationTimeService;
 
 class ReservationControllerTest {
 
@@ -32,7 +34,12 @@ class ReservationControllerTest {
     void setUp() {
         reservationTimeDao = new FakeReservationTimeDao(new ArrayList<>());
         reservationDao = new FakeReservationDao(new ArrayList<>());
-        controller = new ReservationController(reservationDao, reservationTimeDao);
+        controller = new ReservationController(
+            new ReservationService(
+                reservationDao,
+                new ReservationTimeService(reservationTimeDao)
+            )
+        );
     }
 
     @Test

@@ -12,5 +12,5 @@ public interface ReservationTimeDao {
 
     List<ReservationTime> findAll();
 
-    void deleteById(long id);
+    boolean deleteById(long id);
 }

@@ -40,8 +40,7 @@ class ReservationTimeServiceTest {
         ReservationTimeResponse reservationTimeResponse = reservationTimeService.addTime(reservationTimeRequest);
 
         // then
-        assertThat(reservationTimeResponse)
-                .hasFieldOrPropertyWithValue("startAt", LocalTime.of(12, 1));
+        assertThat(reservationTimeResponse.startAt()).isEqualTo(LocalTime.of(12, 1));
     }
 
     @DisplayName("id에 해당하는 예약 시간을 삭제한다.")
@@ -67,7 +66,6 @@ class ReservationTimeServiceTest {
         ReservationTime reservationTime = reservationTimeService.findTimeById(id);
 
         // then
-        assertThat(reservationTime)
-                .hasFieldOrPropertyWithValue("startAt", LocalTime.of(12, 1));
+        assertThat(reservationTime.getStartAt()).isEqualTo(LocalTime.of(12, 1));
     }
 }

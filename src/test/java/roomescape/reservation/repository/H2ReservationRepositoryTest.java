@@ -1,6 +1,7 @@
 package roomescape.reservation.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -38,10 +39,12 @@ class H2ReservationRepositoryTest {
         List<Reservation> reservations = h2ReservationRepository.findAll();
 
         // then
-        assertThat(reservations).hasSize(1);
-        assertThat(reservations.getFirst())
-                .hasFieldOrPropertyWithValue("name", "test")
-                .hasFieldOrPropertyWithValue("date", LocalDate.of(2024, 12, 1));
+        Reservation reservation = reservations.getFirst();
+        assertAll(
+                () -> assertThat(reservations).hasSize(1),
+                () -> assertThat(reservation.getName()).isEqualTo("test"),
+                () -> assertThat(reservation.getDate()).isEqualTo(LocalDate.of(2024, 12, 1))
+        );
     }
 
     @DisplayName("예약을 추가한다.")
@@ -54,9 +57,8 @@ class H2ReservationRepositoryTest {
         Reservation reservation = h2ReservationRepository.insertReservation(reservationWithoutId);
 
         // then
-        assertThat(reservation)
-                .hasFieldOrPropertyWithValue("name", "test")
-                .hasFieldOrPropertyWithValue("date", LocalDate.of(2024, 12, 1));
+        assertThat(reservation.getName()).isEqualTo("test");
+        assertThat(reservation.getDate()).isEqualTo(LocalDate.of(2024, 12, 1));
     }
 
     @DisplayName("id가 일치하는 예약을 삭제하면 true를 반환한다.")

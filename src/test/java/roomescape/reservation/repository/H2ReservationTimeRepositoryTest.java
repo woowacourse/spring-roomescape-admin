@@ -28,8 +28,7 @@ class H2ReservationTimeRepositoryTest {
         ReservationTime reservationTime = h2ReservationTimeRepository.insertTime(reservationTimeWithoutId);
 
         // then
-        assertThat(reservationTime)
-                .hasFieldOrPropertyWithValue("startAt", LocalTime.of(12, 0));
+        assertThat(reservationTime.getStartAt()).isEqualTo(LocalTime.of(12, 0));
     }
 
     @DisplayName("id에 해당하는 Time을 삭제한다.")
@@ -56,7 +55,6 @@ class H2ReservationTimeRepositoryTest {
 
         // then
         assertThat(reservationTimes).hasSize(1);
-        assertThat(reservationTimes.getFirst())
-                .hasFieldOrPropertyWithValue("startAt", LocalTime.of(12, 0));
+        assertThat(reservationTimes.getFirst().getStartAt()).isEqualTo(LocalTime.of(12, 0));
     }
 }

@@ -51,9 +51,8 @@ class ReservationServiceTest {
         ReservationResponse reservationResponse = reservationService.addReservation(reservationRequest);
 
         // then
-        assertThat(reservationResponse)
-                .hasFieldOrPropertyWithValue("name", "test")
-                .hasFieldOrPropertyWithValue("date", LocalDate.of(2024, 12, 1));
+        assertThat(reservationResponse.name()).isEqualTo("test");
+        assertThat(reservationResponse.date()).isEqualTo(LocalDate.of(2024, 12, 1));
     }
 
     @DisplayName("아이디에 해당하는 예약을 삭제한다.")

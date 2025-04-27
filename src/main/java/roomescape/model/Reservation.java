@@ -1,19 +1,18 @@
 package roomescape.model;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
 
 public class Reservation {
 
-    private Long id;
-    private String name;
-    private LocalDate date;
-    private ReservationTime reservationTime;
+    private final Long id;
+    private final String name;
+    private final LocalDate date;
+    private final ReservationTime reservationTime;
 
     public Reservation(Long id, String name, LocalDate date, ReservationTime reservationTime) {
-        validateReservationDateInFuture(date, reservationTime);
+        validateReservationDateInFuture(date);
         this.id = Objects.requireNonNull(id);
         this.name = validateNonBlank(name);
         this.date = Objects.requireNonNull(date);
@@ -21,7 +20,7 @@ public class Reservation {
     }
 
     public Reservation(String name, LocalDate date, ReservationTime reservationTime) {
-        validateReservationDateInFuture(date, reservationTime);
+        validateReservationDateInFuture(date);
         this.id = null;
         this.name = validateNonBlank(name);
         this.date = Objects.requireNonNull(date);
@@ -35,9 +34,8 @@ public class Reservation {
         return name;
     }
 
-    private void validateReservationDateInFuture(LocalDate localDate, ReservationTime reservationTime){
-        LocalDateTime reservationDateTime = LocalDateTime.of(localDate, reservationTime.getStartAt());
-        if(reservationDateTime.isBefore(LocalDateTime.now())){
+    private void validateReservationDateInFuture(LocalDate localDate){
+        if(!localDate.isAfter(LocalDate.now())){
             throw new IllegalArgumentException("과거 및 당일 예약은 불가능합니다.");
         }
     }

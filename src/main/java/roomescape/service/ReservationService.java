@@ -20,7 +20,7 @@ public class ReservationService {
 
     public List<ReservationResponse> getAllReservations() {
         return reservationRepository.findAll().stream()
-                .map(ReservationResponse::toDto)
+                .map(ReservationResponse::from)
                 .toList();
     }
 
@@ -28,7 +28,7 @@ public class ReservationService {
         Long id = reservationRepository.add(reservationCreateRequest.toReservation());
         Optional<Reservation> reservation = reservationRepository.findById(id);
         if (reservation.isPresent()) {
-            return ReservationResponse.toDto(reservation.get());
+            return ReservationResponse.from(reservation.get());
         } else {
             throw new IllegalStateException("예약 추가가 정상적으로 되지 않았습니다.");
         }
@@ -37,7 +37,7 @@ public class ReservationService {
     public ReservationResponse getReservationById(final Long id) {
         Optional<Reservation> reservation = reservationRepository.findById(id);
         if (reservation.isPresent()) {
-            return ReservationResponse.toDto(reservation.get());
+            return ReservationResponse.from(reservation.get());
         } else {
             throw new IllegalArgumentException("해당 예약을 찾을 수 없습니다.");
         }

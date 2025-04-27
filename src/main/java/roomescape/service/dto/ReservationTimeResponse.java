@@ -9,7 +9,7 @@ public record ReservationTimeResponse(
         LocalTime startAt
 ) {
 
-    public static ReservationTimeResponse toDto(final ReservationTime reservationTime) {
+    public static ReservationTimeResponse from(final ReservationTime reservationTime) {
         return new ReservationTimeResponse(reservationTime.getId(), reservationTime.getStartAt());
     }
 }

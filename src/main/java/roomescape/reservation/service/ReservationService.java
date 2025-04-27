@@ -1,6 +1,7 @@
 package roomescape.reservation.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.Reservation;
 import roomescape.reservation.dao.ReservationDao;
@@ -29,7 +30,8 @@ public class ReservationService {
     }
 
     public Long create(ReservationCreateRequest request) {
-        ReservationTime reservationTime = reservationTimeDao.findById(request.timeId());
+        ReservationTime reservationTime = reservationTimeDao.findById(request.timeId())
+                .orElseThrow(NoSuchElementException::new);
         Reservation reservation = request.toReservation(reservationTime);
         return reservationDao.create(reservation);
     }

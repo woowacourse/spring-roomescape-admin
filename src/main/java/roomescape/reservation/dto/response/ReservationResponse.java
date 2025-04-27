@@ -11,7 +11,6 @@ public record ReservationResponse(
         ReservationTimeResponse time
 ) {
     public static ReservationResponse toDto(Reservation reservation) {
-        System.out.println(reservation.getReservationTime().toString());
         ReservationTimeResponse dto = ReservationTimeResponse.toDto(reservation.getReservationTime());
         return new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(), dto);
     }

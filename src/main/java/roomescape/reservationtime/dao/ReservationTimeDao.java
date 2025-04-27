@@ -1,6 +1,7 @@
 package roomescape.reservationtime.dao;
 
 import java.util.List;
+import java.util.Optional;
 import roomescape.reservationtime.ReservationTime;
 
 public interface ReservationTimeDao {
@@ -10,5 +11,5 @@ public interface ReservationTimeDao {
 
     int delete(Long id);
 
-    ReservationTime findById(Long id);
+    Optional<ReservationTime> findById(Long id);
 }

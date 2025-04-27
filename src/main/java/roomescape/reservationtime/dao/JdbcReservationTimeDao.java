@@ -3,6 +3,7 @@ package roomescape.reservationtime.dao;
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -57,10 +58,10 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
     }
 
     @Override
-    public ReservationTime findById(Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         String sql = "select * from reservation_time where id = ?";
 
-        return this.jdbcTemplate.queryForObject(sql,
+        return Optional.ofNullable(this.jdbcTemplate.queryForObject(sql,
                 (resultSet, rowNum) -> {
                     ReservationTime reservationTime = new ReservationTime(
                             resultSet.getLong("id"),
@@ -68,6 +69,6 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
                     );
                     return reservationTime;
                 }, id
-        );
+        ));
     }
 }

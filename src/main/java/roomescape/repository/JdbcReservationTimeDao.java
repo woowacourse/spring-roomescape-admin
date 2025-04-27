@@ -1,13 +1,15 @@
 package roomescape.repository;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
-import java.sql.PreparedStatement;
+import javax.sql.DataSource;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -22,24 +24,24 @@ public class JdbcReservationTimeDao implements ReservationTimeRepository {
     });
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
-    public JdbcReservationTimeDao(JdbcTemplate jdbcTemplate) {
+    public JdbcReservationTimeDao(JdbcTemplate jdbcTemplate, DataSource source) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(source);
     }
 
     @Override
     public ReservationTime save(ReservationTime reservationTime) {
-        LocalTime startAt = reservationTime.startAt();
-
-        String sql = "insert into reservation_time (start_at) values (?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, startAt.toString());
-            return ps;
-        }, keyHolder);
-        long id = keyHolder.getKey().longValue();
-        return new ReservationTime(id, startAt);
+        try {
+            LocalTime startTime = reservationTime.startAt();
+            SqlParameterSource params = new MapSqlParameterSource()
+                    .addValue("start_at", startTime.toString());
+            long id = jdbcInsert.executeAndReturnKey(params).longValue();
+            return findById(id);
+        } catch (DuplicateKeyException e) {
+            throw new IllegalArgumentException("[ERROR] 이미 등록된 예약 시간 입니다.");
+        }
     }
 
     @Override

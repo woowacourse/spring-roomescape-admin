@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.Time;
 
 @Repository
 public class ReservationDAOImpl implements ReservationDAO {
@@ -20,26 +21,37 @@ public class ReservationDAOImpl implements ReservationDAO {
     }
 
     public List<Reservation> findAllReservation() {
-        final String sql = "select id, name, date, time from reservation";
+        final String sql = """
+            SELECT
+                r.id as reservation_id,
+                r.name,
+                r.date,
+                t.id as time_id,
+                t.start_at as time_value
+            FROM 
+                reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id""";
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
             final Long id = resultSet.getLong("id");
             final String name = resultSet.getString("name");
             final LocalDate date = LocalDate.parse(resultSet.getString("date"));
-            final LocalTime time = LocalTime.parse(resultSet.getString("time"));
-            return new Reservation(id, name, date, time);
+            final Long timeId = resultSet.getLong("time_id");
+            final LocalTime timeValue = LocalTime.parse(resultSet.getString("time_value"));
+            return new Reservation(id, name, date, new Time(timeId, timeValue));
         });
     }
 
     public Long insertReservation(final Reservation reservation) {
-        final String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
+        final String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             final PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setString(2, reservation.getDate()
                     .toString());
-            ps.setString(3, reservation.getTime()
-                    .toString());
+            ps.setLong(3, reservation.getTime()
+                    .getId());
             return ps;
         }, keyHolder);
         if (keyHolder.getKey() == null) {

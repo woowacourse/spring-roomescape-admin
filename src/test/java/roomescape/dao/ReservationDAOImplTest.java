@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
+import roomescape.domain.Time;
 
 @JdbcTest
 class ReservationDAOImplTest {
@@ -36,7 +37,7 @@ class ReservationDAOImplTest {
     void insertReservation() {
         // given
         ReservationDAOImpl reservationDAOImpl = new ReservationDAOImpl(jdbcTemplate);
-        Reservation reservation = new Reservation("fuyu", LocalDate.of(2025, 4, 28), LocalTime.of(12, 0));
+        Reservation reservation = new Reservation("fuyu", LocalDate.of(2025, 4, 28), new Time(1L, LocalTime.of(10, 0)));
 
         // when
         Long id = reservationDAOImpl.insertReservation(reservation);
@@ -50,7 +51,7 @@ class ReservationDAOImplTest {
     void deleteReservationById() {
         // given
         ReservationDAOImpl reservationDAOImpl = new ReservationDAOImpl(jdbcTemplate);
-        Reservation reservation = new Reservation("fuyu", LocalDate.of(2025, 4, 28), LocalTime.of(12, 0));
+        Reservation reservation = new Reservation("fuyu", LocalDate.of(2025, 4, 28), new Time(1L, LocalTime.of(10, 0)));
         Long id = reservationDAOImpl.insertReservation(reservation);
 
         // when

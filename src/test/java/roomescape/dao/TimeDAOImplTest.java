@@ -27,7 +27,7 @@ class TimeDAOImplTest {
         List<Time> times = timeDAOImpl.findAllTime();
 
         // then
-        assertThat(times).isEmpty();
+        assertThat(times).hasSize(1);
     }
 
     @Test

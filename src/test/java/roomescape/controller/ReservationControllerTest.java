@@ -61,7 +61,7 @@ class ReservationControllerTest {
         // given
         LocalDate date = LocalDate.of(2025, 4, 21);
         LocalTime time = LocalTime.of(10, 0);
-        ReservationRequest reservationRequest = new ReservationRequest("kim", date, time);
+        ReservationRequest reservationRequest = new ReservationRequest("kim", date, 1L);
         ReservationController reservationController = new ReservationController(testReservationDAO);
 
         // when
@@ -79,7 +79,7 @@ class ReservationControllerTest {
         // given
         LocalDate date = LocalDate.of(2025, 4, 21);
         LocalTime time = LocalTime.of(10, 0);
-        ReservationRequest reservationRequest = new ReservationRequest("kim", date, time);
+        ReservationRequest reservationRequest = new ReservationRequest("kim", date, 1L);
         ReservationController reservationController = new ReservationController(testReservationDAO);
         ResponseEntity<ReservationResponse> createdResponse = reservationController.createReservation(
                 reservationRequest);

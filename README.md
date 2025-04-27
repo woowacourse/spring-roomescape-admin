@@ -56,17 +56,17 @@
 
 ### 예약 기능에서 시간을 시간 테이블에 저장된 값만 선택할 수 있도록 수정하기.
 
-- [ ] 예약, 시간 관리 API 수정  
+- [x] 예약, 시간 관리 API 수정  
   8단계의 API 명세를 참고하여, 요구사항이 반영되도록 API 수정하세요.
 - [x] 예약 페이지 파일 수정  
   templates/admin/reservation-legacy.html 대신 templates/admin/reservation.html 파일을 활용하세요.
 - [x] 테이블 스키마 재정의  
   외래키 지정을 통해 reservation 테이블과 reservation_time 테이블의 관계를 설정해주세요.
-- [ ] 예약 클래스 수정
+- [x] 예약 클래스 수정
   시간 타입을 String -> ReservationTime 객체로 수정하세요.
-- [ ] 예약 추가 쿼리 수정
+- [x] 예약 추가 쿼리 수정
   예약 추가 시, 시간을 문자열(ex. "10:00") 형태로 입력하던 부분을 ReservationTime 식별자(ex. 1)로 수정해주세요.
-- [ ] 예약 조회 쿼리 수정
+- [x] 예약 조회 쿼리 수정
   조회 시 ReservationTime 정보도 함께 조회하기 위해 쿼리를 수정해주세요.
 
 ---

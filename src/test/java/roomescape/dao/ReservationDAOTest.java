@@ -2,6 +2,8 @@ package roomescape.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,5 +29,19 @@ class ReservationDAOTest {
 
         // then
         assertThat(reservations).isEmpty();
+    }
+
+    @Test
+    @DisplayName("reservation 을 추가한다")
+    void insertReservation() {
+        // given
+        ReservationDAO reservationDAO = new ReservationDAO(jdbcTemplate);
+        Reservation reservation = new Reservation("fuyu", LocalDate.of(2025, 4, 28), LocalTime.of(12, 0));
+
+        // when
+        Long id = reservationDAO.insertReservation(reservation);
+
+        // then
+        assertThat(id != -1L).isTrue();
     }
 }

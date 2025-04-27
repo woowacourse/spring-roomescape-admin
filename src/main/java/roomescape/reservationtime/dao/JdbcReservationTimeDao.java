@@ -3,7 +3,6 @@ package roomescape.reservationtime.dao;
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -13,8 +12,11 @@ import roomescape.reservationtime.ReservationTime;
 @Repository
 public class JdbcReservationTimeDao implements ReservationTimeDao {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
+
+    public JdbcReservationTimeDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Override
     public List<ReservationTime> findAll() {

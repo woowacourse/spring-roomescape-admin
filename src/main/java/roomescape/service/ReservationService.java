@@ -7,6 +7,9 @@ import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.entity.ReservationEntity;
 import roomescape.entity.ReservationTimeEntity;
+import roomescape.exception.BadRequestException;
+import roomescape.exception.ConflictException;
+import roomescape.exception.NotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,7 +33,7 @@ public class ReservationService {
 
     public ReservationResponseDto createReservation(ReservationRequestDto request) {
         ReservationTimeEntity timeEntity = timeDao.findById(request.timeId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 id 입니다."));
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 id 입니다."));
 
         ReservationEntity newReservation = request.toEntity(timeEntity);
         validateDateTime(newReservation);
@@ -44,21 +47,21 @@ public class ReservationService {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime reservationDateTime = reservation.getDateTime();
         if (reservationDateTime.isBefore(now)) {
-            throw new IllegalArgumentException("과거 날짜/시간의 예약은 생성할 수 없습니다.");
+            throw new BadRequestException("과거 날짜/시간의 예약은 생성할 수 없습니다.");
         }
     }
 
     private void validateDuplicated(ReservationEntity newReservation) {
         List<ReservationEntity> reservations = reservationDao.findAll();
         if (reservations.stream().anyMatch(reservation -> reservation.isDuplicatedWith(newReservation))) {
-            throw new IllegalArgumentException("해당 날짜에는 이미 예약이 존재합니다.");
+            throw new ConflictException("해당 날짜에는 이미 예약이 존재합니다.");
         }
     }
 
     public void deleteReservation(final Long id) {
         final int deleted = reservationDao.deleteById(id);
         if (deleted == 0) {
-            throw new IllegalArgumentException("존재하지 않는 id 입니다.");
+            throw new NotFoundException("존재하지 않는 id 입니다.");
         }
     }
 }

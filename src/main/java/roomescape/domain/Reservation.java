@@ -7,9 +7,9 @@ import java.util.Objects;
 public class Reservation {
 
     private Long id;
-    private final String name;
-    private final LocalDate date;
-    private final LocalTime time;
+    private String name;
+    private LocalDate date;
+    private LocalTime time;
 
     public Reservation(final Long id, final String name, final LocalDate date, final LocalTime time) {
         this.id = id;
@@ -19,11 +19,12 @@ public class Reservation {
     }
 
     public Reservation(final String name, final LocalDate date, final LocalTime time) {
-        this(null, name, date, time);
+        this.name = name;
+        this.date = date;
+        this.time = time;
     }
 
     public Reservation() {
-        this(null, null, null, null);
     }
 
     public boolean isSameId(final Long id) {

@@ -20,22 +20,22 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
     private static final String RESERVATION_TIME_START_AT = "start_at";
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     public ReservationTimeJdbcRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getDataSource())
+                .withTableName(RESERVATION_TIME_TABLE)
+                .usingColumns(RESERVATION_TIME_START_AT)
+                .usingGeneratedKeyColumns(RESERVATION_TIME_ID);
     }
 
     @Override
     public Long addAndGetId(CreateReservationTimeDto createReservationTimeDto) {
-        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getDataSource())
-                .withTableName(RESERVATION_TIME_TABLE)
-                .usingColumns(RESERVATION_TIME_START_AT)
-                .usingGeneratedKeyColumns(RESERVATION_TIME_ID);
-
         SqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue(RESERVATION_TIME_START_AT, createReservationTimeDto.startAt());
 
-        return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
+        return jdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 
     @Override

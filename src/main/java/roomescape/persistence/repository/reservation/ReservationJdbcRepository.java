@@ -25,9 +25,14 @@ public class ReservationJdbcRepository implements ReservationRepository {
     private static final String RESERVATION_TIME_START_AT = "start_at";
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     public ReservationJdbcRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getDataSource())
+                .withTableName(RESERVATION_TABLE)
+                .usingColumns(RESERVATION_NAME, RESERVATION_DATE, RESERVATION_TIME_ID)
+                .usingGeneratedKeyColumns(RESERVATION_ID);
     }
 
     @Override
@@ -41,17 +46,12 @@ public class ReservationJdbcRepository implements ReservationRepository {
 
     @Override
     public Long addAndGetId(Reservation reservation) {
-        SimpleJdbcInsert insertQuery = new SimpleJdbcInsert(jdbcTemplate.getDataSource())
-                .withTableName(RESERVATION_TABLE)
-                .usingColumns(RESERVATION_NAME, RESERVATION_DATE, RESERVATION_TIME_ID)
-                .usingGeneratedKeyColumns(RESERVATION_ID);
-
         SqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue(RESERVATION_NAME, reservation.getName())
                 .addValue(RESERVATION_DATE, reservation.getDate())
                 .addValue(RESERVATION_TIME_ID, reservation.getTime().getId());
 
-        return insertQuery.executeAndReturnKey(parameters).longValue();
+        return jdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 
     @Override

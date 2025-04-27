@@ -12,9 +12,8 @@ public record ReservationTimeEntity(
 
     public boolean isDuplicatedWith(ReservationTimeEntity other) {
         LocalTime otherStartAt = other.startAt();
-        LocalTime endAt = startAt.plusSeconds(RUNNING_TIME.toSecondOfDay());
-        return (otherStartAt.isAfter(startAt) || otherStartAt.equals(startAt))
-                && otherStartAt.isBefore(endAt);
+        final int interval = Math.abs(otherStartAt.toSecondOfDay() - startAt.toSecondOfDay());
+        return interval < RUNNING_TIME.toSecondOfDay();
     }
 
     public boolean isAvailable() {

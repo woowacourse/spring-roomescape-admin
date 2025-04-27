@@ -1,11 +1,14 @@
 package roomescape.dto.request;
 
 import java.time.LocalTime;
-import roomescape.valid.annotation.NotNull;
 
 public record ReservationTimeRequest(
 
-        @NotNull
         LocalTime startAt
 ) {
+    public ReservationTimeRequest {
+        if (startAt == null) {
+            throw new IllegalArgumentException("[ERROR] 시작 시간은 필수입니다.");
+        }
+    }
 }

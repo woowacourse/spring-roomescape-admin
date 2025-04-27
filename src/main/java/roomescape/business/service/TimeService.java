@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.business.domain.Time;
 import roomescape.data.dao.TimeDao;
+import roomescape.exception.TimeNotFoundException;
 import roomescape.presentation.dto.TimeRequest;
 import roomescape.presentation.dto.TimeResponse;
 
@@ -18,7 +19,7 @@ public class TimeService {
 
     public Time find(final Long id) {
         return timeDao.find(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 id가 없습니다."));
+                .orElseThrow(() -> new TimeNotFoundException(id));
     }
 
     public TimeResponse create(final TimeRequest timeRequest) {
@@ -36,7 +37,7 @@ public class TimeService {
 
     public void remove(final Long id) {
         if(!timeDao.remove(id)) {
-            throw new IllegalArgumentException("해당하는 id가 없습니다.");
+            throw new TimeNotFoundException(id);
         }
     }
 }

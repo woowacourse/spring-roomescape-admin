@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import roomescape.business.domain.Reservation;
 import roomescape.business.domain.Time;
 import roomescape.data.dao.ReservationDao;
+import roomescape.exception.InvalidReservationDateException;
+import roomescape.exception.ReservationNotFoundException;
 import roomescape.presentation.dto.ReservationRequest;
 import roomescape.presentation.dto.ReservationResponse;
 
@@ -39,7 +41,7 @@ public class ReservationService {
         final LocalDateTime now = LocalDateTime.now();
 
         if (now.isAfter(reservationDateTime)) {
-            throw new IllegalArgumentException("예약 날짜 및 시간이 현재보다 과거일 수 없습니다.");
+            throw new InvalidReservationDateException();
         }
     }
 
@@ -51,7 +53,7 @@ public class ReservationService {
 
     public void remove(final Long id) {
         if (!reservationDao.remove(id)) {
-            throw new IllegalArgumentException("해당하는 id가 없습니다.");
+            throw new ReservationNotFoundException(id);
         }
     }
 }

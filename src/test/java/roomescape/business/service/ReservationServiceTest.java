@@ -63,7 +63,7 @@ public class ReservationServiceTest {
         // when & then
         assertThatThrownBy(() -> reservationService.create(reservationRequest))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("해당하는 id가 없습니다.");
+                .hasMessage("해당하는 방탈출 시간 id를 찾을 수 없습니다. id : 2");
     }
 
     @DisplayName("저장하려는 예약이 현재 날짜/시간보다 과거라면 예외가 발생한다.")

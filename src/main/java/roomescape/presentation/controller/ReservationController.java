@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.business.service.ReservationService;
+import roomescape.exception.InvalidReservationDateException;
+import roomescape.exception.ReservationNotFoundException;
+import roomescape.exception.TimeNotFoundException;
 import roomescape.presentation.dto.ReservationRequest;
 import roomescape.presentation.dto.ReservationResponse;
 
@@ -30,8 +33,10 @@ public class ReservationController {
         try {
             final ReservationResponse reservationResponse = reservationService.create(reservationRequest);
             return ResponseEntity.ok(reservationResponse);
-        } catch (IllegalArgumentException e) {
+        } catch (TimeNotFoundException e) {
             return ResponseEntity.notFound().build();
+        } catch (InvalidReservationDateException e) {
+            return ResponseEntity.unprocessableEntity().build();
         } catch (NullPointerException e) {
             return ResponseEntity.badRequest().build();
         }
@@ -48,7 +53,7 @@ public class ReservationController {
     public ResponseEntity<Void> delete(@PathVariable("id") final Long id) {
         try {
             reservationService.remove(id);
-        } catch (IllegalArgumentException e) {
+        } catch (ReservationNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
 

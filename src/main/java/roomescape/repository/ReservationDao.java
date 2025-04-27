@@ -33,15 +33,17 @@ public class ReservationDao {
     }
 
     public List<Reservation> readAll() {
-        final String sql = "SELECT \n"
-                + "    r.id as reservation_id, \n"
-                + "    r.name, \n"
-                + "    r.date, \n"
-                + "    t.id as time_id, \n"
-                + "    t.start_at as time_value \n"
-                + "FROM reservation as r \n"
-                + "inner join reservation_time as t \n"
-                + "on r.time_id = t.id";
+        final String sql = """
+                SELECT 
+                    r.id as reservation_id, 
+                    r.name, 
+                    r.date, 
+                    t.id as time_id, 
+                    t.start_at as time_value 
+                FROM reservation as r 
+                INNER JOIN reservation_time as t 
+                ON r.time_id = t.id
+                """;
         final RowMapper<Reservation> rowMapper = getRowMapper();
         return jdbcTemplate.query(sql, rowMapper);
     }

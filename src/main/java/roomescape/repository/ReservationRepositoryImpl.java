@@ -16,7 +16,7 @@ import roomescape.domain.ReservationTime;
 public class ReservationRepositoryImpl implements ReservationRepository {
 
     private static final RowMapper<Reservation> RESERVATION_ROW_MAPPER = (resultSet, rowNumber) -> {
-        long id = resultSet.getLong("id");
+        long id = resultSet.getLong("reservation_id");
         String name = resultSet.getString("name");
         LocalDate date = LocalDate.parse(resultSet.getString("date"));
         long timeId = resultSet.getLong("time_id");
@@ -52,7 +52,6 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         return query;
     }
 
-    // TODO : inner join
     @Override
     public Reservation save(final Reservation reservation) {
         Map<String, Object> parameters = new HashMap<>();
@@ -67,6 +66,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     private Reservation findByIdWithTime(final long reservationId) {
         String sql = """
                 SELECT
+                    r.id as reservation_id,
                     r.name,
                     r.date,
                     t.id as time_id,

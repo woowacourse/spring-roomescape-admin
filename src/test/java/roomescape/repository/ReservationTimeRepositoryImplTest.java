@@ -9,19 +9,22 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import roomescape.domain.ReservationTime;
 import roomescape.fixture.TextFixture;
 
-@JdbcTest
 class ReservationTimeRepositoryImplTest {
 
-    private ReservationTimeRepository reservationTimeRepository;
-
-    @Autowired
+    private EmbeddedDatabase database;
     private JdbcTemplate jdbcTemplate;
+    private ReservationTimeRepository reservationTimeRepository;
 
     @BeforeEach
     void setUp() {
+        database = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).build();
+        jdbcTemplate = new JdbcTemplate(database);
         reservationTimeRepository = new ReservationTimeRepositoryImpl(jdbcTemplate);
 
         jdbcTemplate.execute("DROP TABLE reservation IF EXISTS");

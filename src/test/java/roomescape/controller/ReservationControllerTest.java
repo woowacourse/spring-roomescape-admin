@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.dto.ReservationTimeCreateRequestDto;
 
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,8 +37,7 @@ class ReservationControllerTest {
 
         @BeforeEach
         void setUp() {
-            Map<String, Object> reservationTime = new HashMap<>();
-            reservationTime.put("startAt", "10:00");
+            ReservationTimeCreateRequestDto reservationTime = new ReservationTimeCreateRequestDto(LocalTime.of(10, 0));
 
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
@@ -99,8 +100,7 @@ class ReservationControllerTest {
         @DisplayName("존재하는 예약을 삭제할 수 있다")
         @Test
         void deleteReservationTest() {
-            Map<String, Object> reservationTime = new HashMap<>();
-            reservationTime.put("startAt", "10:00");
+            ReservationTimeCreateRequestDto reservationTime = new ReservationTimeCreateRequestDto(LocalTime.of(10, 0));
 
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)

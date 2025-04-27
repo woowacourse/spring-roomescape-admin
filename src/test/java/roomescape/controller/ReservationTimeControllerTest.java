@@ -7,7 +7,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.dto.ReservationTimeCreateRequestDto;
 
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,12 +37,12 @@ class ReservationTimeControllerTest {
         @DisplayName("Time 입력 테스트")
         @Test
         void addReservationTimeTest() {
-            Map<String, String> params = new HashMap<>();
-            params.put("startAt", "15:40");
+            LocalTime reservationTime = LocalTime.of(15, 30);
+            ReservationTimeCreateRequestDto requestTime = new ReservationTimeCreateRequestDto(reservationTime);
 
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
-                    .body(params)
+                    .body(requestTime)
                     .when().post("/times")
                     .then().log().all()
                     .statusCode(200)
@@ -56,12 +58,12 @@ class ReservationTimeControllerTest {
         @DisplayName("times 응답의 LocalTime 형식은 xx:xx 이다.")
         @Test
         void timeResponseTest() {
-            Map<String, String> params = new HashMap<>();
-            params.put("startAt", "15:40");
+            LocalTime reservationTime = LocalTime.of(15, 40);
+            ReservationTimeCreateRequestDto requestTime = new ReservationTimeCreateRequestDto(reservationTime);
 
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
-                    .body(params)
+                    .body(requestTime)
                     .when().post("/times")
                     .then().log().all()
                     .statusCode(200);
@@ -94,12 +96,12 @@ class ReservationTimeControllerTest {
         @DisplayName("저장된 Id 제거 테스트")
         @Test
         void deleteTimeTest() {
-            Map<String, String> params = new HashMap<>();
-            params.put("startAt", "15:40");
+            LocalTime reservationTime = LocalTime.of(15, 30);
+            ReservationTimeCreateRequestDto requestTime = new ReservationTimeCreateRequestDto(reservationTime);
 
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
-                    .body(params)
+                    .body(requestTime)
                     .when().post("/times")
                     .then().log().all()
                     .statusCode(200);

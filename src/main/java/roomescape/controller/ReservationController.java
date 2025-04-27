@@ -41,8 +41,7 @@ public class ReservationController {
                     .build();
         }
         reservation.setId(id);
-        return ResponseEntity.ok()
-                .body(ReservationResponse.from(reservation));
+        return ResponseEntity.ok(ReservationResponse.from(reservation));
     }
 
     @DeleteMapping("/reservations/{id}")

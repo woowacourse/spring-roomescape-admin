@@ -1,9 +1,8 @@
 package roomescape.controller;
 
-import jakarta.validation.Valid;
-import java.time.LocalDateTime;
+import java.net.URI;
 import java.util.List;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,42 +10,39 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import roomescape.domain.Reservation;
-import roomescape.domain.Reservations;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final Reservations reservations = new Reservations();
+    private final ReservationService reservationService;
+
+    public ReservationController(final ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     @GetMapping
-    public List<ReservationResponse> readReservations() {
-        final List<ReservationResponse> dtos = ReservationResponse.from(reservations);
-        return dtos;
+    public ResponseEntity<List<ReservationResponse>> findAll() {
+        final List<ReservationResponse> dtos = reservationService.findAll();
+        return ResponseEntity.ok(dtos);
     }
 
     @PostMapping
-    public ReservationResponse createReservation(
-            @Valid @RequestBody final ReservationRequest reservationRequest) {
-        final Reservation reservation = makeReservation(reservationRequest);
-        return ReservationResponse.from(reservation);
+    public ResponseEntity<Reservation> add(@RequestBody final ReservationRequest reservationRequest) {
+        final Reservation reservation = reservationService.add(reservationRequest.fromEntity());
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(reservation.getDate())
+                .toUri();
+        return ResponseEntity.created(uri).body(reservation);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteReservation(@PathVariable final Long id) {
-        reservations.deleteById(id);
-    }
-
-    private Reservation makeReservation(final ReservationRequest reservationRequest) {
-        final LocalDateTime dateTime = LocalDateTime.of(reservationRequest.date(), reservationRequest.time());
-        try {
-            return reservations.addReservation(reservationRequest.name(), dateTime);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Void> delete(@PathVariable final Long id) {
+        reservationService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

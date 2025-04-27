@@ -1,23 +1,28 @@
 package roomescape.dto.response;
 
-import roomescape.domain.Reservation;
-import roomescape.domain.Reservations;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
-public record ReservationResponse(Long id, String name, LocalDate date, LocalTime time) {
+public record ReservationResponse(Long id, String name, LocalDate date, ReservationTimeResponse time) {
 
-    public static List<ReservationResponse> from(final Reservations reservations) {
-        return reservations.getReservations().values().stream()
+    public static List<ReservationResponse> from(final List<Reservation> reservations) {
+        return reservations.stream()
                 .map(ReservationResponse::from)
                 .toList();
     }
 
     public static ReservationResponse from(final Reservation reservation) {
-        LocalDateTime dateTime = reservation.getDateTime();
-        return new ReservationResponse(reservation.getId(), reservation.getName(), dateTime.toLocalDate(), dateTime.toLocalTime());
+        return new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(),
+                ReservationTimeResponse.from(reservation.getTime()));
+    }
+
+    private record ReservationTimeResponse(long id, LocalTime startAt) {
+
+        private static ReservationTimeResponse from(final ReservationTime reservationTime) {
+            return new ReservationTimeResponse(reservationTime.getId(), reservationTime.getStartAt());
+        }
     }
 }

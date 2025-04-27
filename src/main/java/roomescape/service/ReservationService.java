@@ -33,6 +33,7 @@ public class ReservationService {
         long reservationId = reservationDao.create(reservationWithoutId);
 
         Reservation reservation = reservationWithoutId.copyWithId(new Id(reservationId));
+        System.out.println("id : " + reservation.getId());
         return ReservationResponseDto.from(reservation);
     }
 

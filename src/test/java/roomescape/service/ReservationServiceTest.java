@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -31,9 +32,12 @@ class ReservationServiceTest {
                 "moda", LocalDate.of(2025, 4, 27), 1L
         ));
 
-        assertThat(reservation.name()).isEqualTo("moda");
-        assertThat(reservation.date()).isEqualTo(LocalDate.of(2025, 4, 27));
-        assertThat(reservation.time()).isEqualTo(ReservationTimeResponseDto.from(time));
+        assertAll(
+                () -> assertThat(reservation.id()).isEqualTo(1),
+                () -> assertThat(reservation.name()).isEqualTo("moda"),
+                () -> assertThat(reservation.date()).isEqualTo(LocalDate.of(2025, 4, 27)),
+                () -> assertThat(reservation.time()).isEqualTo(ReservationTimeResponseDto.from(time))
+        );
     }
 
     @Test

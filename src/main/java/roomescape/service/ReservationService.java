@@ -27,7 +27,7 @@ public class ReservationService {
         Reservation requestReservation = dto.createWithoutId(reservationTime);
 
         Reservation newReservation = reservationRepository.save(requestReservation)
-                .orElseThrow(() -> new IllegalStateException("[ERROR] 알 수 없는 오류로 인해 예약을 실패하였습니다."));
+                .orElseThrow(() -> new IllegalStateException("[ERROR] 알 수 없는 오류로 인해 예약 생성을 실패하였습니다."));
 
         return ReservationResponseDto.from(newReservation, newReservation.time());
     }

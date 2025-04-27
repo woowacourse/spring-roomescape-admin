@@ -166,14 +166,14 @@ function requestDelete(id) {
 
   return fetch(`${RESERVATION_API_ENDPOINT}/${id}`, requestOptions)
       .then(response => {
-        if (response.status !== 200) throw new Error('Delete failed');
+        if (response.status !== 204) throw new Error('Delete failed');
       });
 }
 
 function requestRead(endpoint) {
   return fetch(endpoint)
       .then(response => {
-        if (response.status === 200) return response.json();
+        if (response.status   === 200) return response.json();
         throw new Error('Read failed');
       });
 }

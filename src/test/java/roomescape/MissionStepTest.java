@@ -16,10 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.controller.ReservationController;
-import roomescape.controller.ReservationTimeController;
+import roomescape.controller.reservation.ReservationController;
+import roomescape.controller.reservationtime.ReservationTimeController;
+import roomescape.controller.reservationtime.request.ReservationTimeRequest;
 import roomescape.model.Reservation;
-import roomescape.service.dto.reservationtime.request.ReservationTimeRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)

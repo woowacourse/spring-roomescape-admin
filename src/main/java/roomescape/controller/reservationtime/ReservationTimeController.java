@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.controller.reservationtime;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.service.ReservationTimeService;
-import roomescape.service.dto.reservationtime.request.ReservationTimeRequest;
-import roomescape.service.dto.reservationtime.response.ReservationTimeResponse;
+import roomescape.controller.reservationtime.request.ReservationTimeRequest;
+import roomescape.service.reservationtime.ReservationTimeService;
+import roomescape.service.reservationtime.response.ReservationTimeResponse;
 
 @RequestMapping("/times")
 @RestController
@@ -24,15 +24,15 @@ public final class ReservationTimeController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTimeResponse> save(@RequestBody ReservationTimeRequest reservationTimeRequest) {
-        final ReservationTimeResponse reservationTimeResponse = reservationTimeService.save(reservationTimeRequest);
-        return ResponseEntity.ok(reservationTimeResponse);
+    public ResponseEntity<ReservationTimeResponse> save(@RequestBody ReservationTimeRequest request) {
+        final ReservationTimeResponse response = reservationTimeService.save(request.toServiceRequest());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> readAll() {
-        final List<ReservationTimeResponse> reservationTimeResponses = reservationTimeService.readAll();
-        return ResponseEntity.ok(reservationTimeResponses);
+        final List<ReservationTimeResponse> responses = reservationTimeService.readAll();
+        return ResponseEntity.ok(responses);
     }
 
     @DeleteMapping("/{id}")

@@ -2,7 +2,9 @@ package roomescape.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -12,6 +14,18 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class ReservationDao {
 
+    public static final RowMapper<Reservation> RESERVATION_ROW_MAPPER = (rs, rowNum) -> {
+        ReservationTime reservationTime = new ReservationTime(
+                rs.getLong("time_id"),
+                rs.getString("time_value")
+        );
+        return new Reservation(
+                rs.getLong("reservation_id"),
+                rs.getString("name"),
+                rs.getString("date"),
+                reservationTime
+        );
+    };
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationDao(JdbcTemplate jdbcTemplate) {
@@ -43,18 +57,23 @@ public class ReservationDao {
                 INNER JOIN reservation_time AS t
                     ON r.time_id = t.id
                 """;
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            ReservationTime reservationTime = new ReservationTime(
-                    rs.getLong("time_id"),
-                    rs.getString("time_value")
-            );
-            return new Reservation(
-                    rs.getLong("reservation_id"),
-                    rs.getString("name"),
-                    rs.getString("date"),
-                    reservationTime
-            );
-        });
+        return jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER);
+    }
+
+    public Optional<Reservation> findById(Long id) {
+        String sql = """
+                SELECT
+                    r.id AS reservation_id,
+                    r.name,
+                    r.date,
+                    t.id AS time_id,
+                    t.start_at AS time_value
+                FROM reservation AS r
+                INNER JOIN reservation_time AS t
+                    ON r.time_id = t.id
+                    WHERE r.id = ?
+                """;
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, RESERVATION_ROW_MAPPER, id));
     }
 
     public void deleteById(Long id) {

@@ -23,7 +23,8 @@ public class ReservationService {
         ReservationTime reservationTime = reservationTimeDao.findById(request.timeId());
         Reservation reservation = request.toEntity(reservationTime);
         Long reservationId = reservationDao.save(reservation);
-        return new Reservation(reservationId, reservation.getName(), reservation.getDate(), reservationTime);
+        return reservationDao.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
     }
 
     public List<Reservation> findAll() {
@@ -31,6 +32,8 @@ public class ReservationService {
     }
 
     public void delete(Long reservationId) {
-        reservationDao.deleteById(reservationId);
+        Reservation reservation = reservationDao.findById(reservationId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
+        reservationDao.deleteById(reservation.getId());
     }
 }

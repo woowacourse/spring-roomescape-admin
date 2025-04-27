@@ -51,13 +51,7 @@ public class ReservationDAO {
                 where r.id = ?
                 """;
         try {
-            return jdbcTemplate.queryForObject(sql,
-                    (rs, rowNum) -> new Reservation(
-                            rs.getLong("id"),
-                            rs.getString("name"),
-                            rs.getDate("date").toLocalDate(),
-                            new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())
-                    ), id);
+            return jdbcTemplate.queryForObject(sql, rowMapper(), id);
         } catch (EmptyResultDataAccessException e) {
             throw new ReservationNotFoundException(id, e);
         }
@@ -95,5 +89,14 @@ public class ReservationDAO {
                     time
             );
         };
+    }
+
+    private RowMapper<Reservation> rowMapper() {
+        return (rs, rowNum) -> new Reservation(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getDate("date").toLocalDate(),
+                new ReservationTime(rs.getLong("time_id"), rs.getTime("time_value").toLocalTime())
+        );
     }
 }

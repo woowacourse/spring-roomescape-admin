@@ -32,7 +32,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Reservation> createReservation(@RequestBody final ReservationRequest reservationRequest) {
-        final Reservation reservation = reservationService.insert(reservationRequest.fromEntity());
+        final Reservation reservation = reservationService.add(reservationRequest.fromEntity());
         return ResponseEntity.ok(reservation);
     }
 

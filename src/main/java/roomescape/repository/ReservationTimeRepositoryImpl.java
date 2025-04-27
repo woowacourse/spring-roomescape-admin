@@ -23,8 +23,9 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTime insert(final LocalTime startAt) {
+    public ReservationTime save(final ReservationTime reservationTime) {
         Map<String, Object> parameters = new HashMap<>();
+        LocalTime startAt = reservationTime.getStartAt();
         parameters.put("start_at", startAt);
         long id = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
         return new ReservationTime(id, startAt);

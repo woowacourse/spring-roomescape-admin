@@ -54,7 +54,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
     // TODO : inner join
     @Override
-    public Reservation insert(final Reservation reservation) {
+    public Reservation save(final Reservation reservation) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", reservation.getName());
         parameters.put("date", reservation.getDate().toString());

@@ -20,8 +20,8 @@ public class ReservationService {
         return ReservationResponse.from(reservations);
     }
 
-    public Reservation insert(final Reservation reservation) {
-        return reservationRepository.insert(reservation);
+    public Reservation add(final Reservation reservation) {
+        return reservationRepository.save(reservation);
     }
 
     public void delete(final long id) {

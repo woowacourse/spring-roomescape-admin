@@ -1,6 +1,5 @@
 package roomescape.service;
 
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.ReservationTime;
@@ -15,8 +14,8 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public ReservationTime addReservationTime(final LocalTime startAt) {
-        return reservationTimeRepository.insert(startAt);
+    public ReservationTime add(final ReservationTime reservationTime) {
+        return reservationTimeRepository.save(reservationTime);
     }
 
     public List<ReservationTime> findAll() {

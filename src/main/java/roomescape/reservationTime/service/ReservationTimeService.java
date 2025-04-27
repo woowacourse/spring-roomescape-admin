@@ -1,5 +1,6 @@
 package roomescape.reservationTime.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import roomescape.globalException.CustomException;
@@ -16,6 +17,7 @@ public class ReservationTimeService {
 
     private final ReservationTimeRepository repository;
 
+    @Autowired
     public ReservationTimeService(ReservationTimeRepository repository) {
         this.repository = repository;
     }
@@ -35,6 +37,7 @@ public class ReservationTimeService {
     }
 
     public void delete(Long id) {
+        repository.findByIdOrThrow(id);
         repository.delete(id);
     }
 

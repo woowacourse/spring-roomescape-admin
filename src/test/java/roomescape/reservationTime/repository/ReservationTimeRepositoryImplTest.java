@@ -38,7 +38,7 @@ class ReservationTimeRepositoryImplTest {
 
         // when & then
         Assertions.assertThatCode(
-                () -> repository.findById(Long.MAX_VALUE)
+                () -> repository.findByIdOrThrow(Long.MAX_VALUE)
         ).isInstanceOf(IncorrectResultSizeDataAccessException.class);
     }
 }

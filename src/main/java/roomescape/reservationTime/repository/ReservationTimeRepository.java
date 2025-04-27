@@ -10,7 +10,7 @@ public interface ReservationTimeRepository {
 
     ReservationTime add(ReservationTime reservationTime);
 
-    ReservationTime findById(Long id);
+    ReservationTime findByIdOrThrow(Long id);
 
     void delete(Long id);
 

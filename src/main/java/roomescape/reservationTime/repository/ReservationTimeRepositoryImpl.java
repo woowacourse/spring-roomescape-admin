@@ -1,13 +1,17 @@
 package roomescape.reservationTime.repository;
 
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.globalException.CustomException;
 import roomescape.reservationTime.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ReservationTimeRepositoryImpl implements ReservationTimeRepository {
@@ -34,19 +38,13 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
     @Override
     public ReservationTime add(ReservationTime reservationTime) {
         Long id = insertWithKeyHolder(reservationTime);
-        return findById(id);
+        return findByIdOrThrow(id);
     }
 
     @Override
-    public ReservationTime findById(Long id) {
-        String sql = "select id, start_at from reservation_time where id = ?";
-
-        return jdbcTemplate.queryForObject(sql,
-                (resultSet, rowNum) ->
-                        new ReservationTime(
-                                resultSet.getLong("id"),
-                                resultSet.getTime("start_at").toLocalTime()
-                        ), id);
+    public ReservationTime findByIdOrThrow(Long id) {
+        return findById(id)
+                .orElseThrow(() -> new CustomException(HttpStatus.BAD_REQUEST, "해당 예약시간 id가 존재하지 않습니다."));
     }
 
     @Override
@@ -69,5 +67,20 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
+    }
+
+    private Optional<ReservationTime> findById(Long id) {
+        String sql = "select id, start_at from reservation_time where id = ?";
+
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+                    (resultSet, rowNum) ->
+                            new ReservationTime(
+                                    resultSet.getLong("id"),
+                                    resultSet.getTime("start_at").toLocalTime()
+                            ), id));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

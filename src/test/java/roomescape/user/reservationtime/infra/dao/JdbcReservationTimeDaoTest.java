@@ -16,7 +16,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.user.reservationtime.domain.ReservationTime;
+import roomescape.user.reservation.domain.ReservationTime;
+import roomescape.user.reservation.infra.dao.JdbcReservationTimeDao;
 
 class JdbcReservationTimeDaoTest {
 

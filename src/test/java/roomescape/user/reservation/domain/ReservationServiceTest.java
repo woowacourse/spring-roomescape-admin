@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import roomescape.fake.FakeReservationRepository;
 import roomescape.fake.FakeReservationTimeRepository;
-import roomescape.user.reservationtime.domain.ReservationTime;
 
 class ReservationServiceTest {
 

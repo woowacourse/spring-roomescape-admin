@@ -17,9 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.user.reservation.infra.dao.JdbcReservationDao;
+import roomescape.user.reservation.infra.dao.JdbcReservationTimeDao;
 import roomescape.user.reservation.presentation.UserReservationRestController;
 import roomescape.user.reservation.presentation.dto.ReservationV1Response;
-import roomescape.user.reservationtime.infra.dao.JdbcReservationTimeDao;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class MissionStepTest {  // 미션에서 제공한 요구사항 테스트

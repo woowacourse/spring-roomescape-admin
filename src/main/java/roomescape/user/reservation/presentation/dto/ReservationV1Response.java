@@ -3,7 +3,7 @@ package roomescape.user.reservation.presentation.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import roomescape.user.reservation.domain.Reservation;
-import roomescape.user.reservationtime.domain.ReservationTime;
+import roomescape.user.reservation.domain.ReservationTime;
 
 public record ReservationV1Response(
         Long id,

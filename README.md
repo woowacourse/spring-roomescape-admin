@@ -47,9 +47,9 @@
 
 - [x] `/admin/time` 페이지 응답하기
 - [x] 페이지는 `templates/admin/time.html` 파일 이용
-- [ ] 시간 추가 API 구현하기
-- [ ] 시간 조회 API 구현하기
-- [ ] 시간 삭제 API 구현하기
+- [x] 시간 추가 API 구현하기
+- [x] 시간 조회 API 구현하기
+- [x] 시간 삭제 API 구현하기
 - [x] 데이터베이스 time 스키마 생성 sql 추가
 
 ---

@@ -43,5 +43,19 @@ class ReservationDAOTest {
 
         // then
         assertThat(id != -1L).isTrue();
+
+    @Test
+    @DisplayName("reservation 을 삭제한다")
+    void deleteReservationById() {
+        // given
+        ReservationDAO reservationDAO = new ReservationDAO(jdbcTemplate);
+        Reservation reservation = new Reservation("fuyu", LocalDate.of(2025, 4, 28), LocalTime.of(12, 0));
+        Long id = reservationDAO.insertReservation(reservation);
+
+        // when
+        int deletedCount = reservationDAO.deleteReservationById(id);
+
+        // then
+        assertThat(deletedCount).isEqualTo(1);
     }
 }

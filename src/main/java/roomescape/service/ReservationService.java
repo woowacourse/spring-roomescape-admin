@@ -10,6 +10,7 @@ import roomescape.domain.Reservation;
 @Service
 public class ReservationService {
 
+    private static final int NOT_EFFECTED_ROW_COUNT = 0;
     private final ReservationDao reservationDao;
 
     public ReservationService(final ReservationDao reservationDao) {
@@ -30,6 +31,9 @@ public class ReservationService {
     }
 
     public void deleteById(long id) {
-        reservationDao.deleteById(id);
+        int effectedRowCount = reservationDao.deleteById(id);
+        if (effectedRowCount == NOT_EFFECTED_ROW_COUNT) {
+            throw new IllegalArgumentException("id가 존재하지 않습니다.");
+        }
     }
 }

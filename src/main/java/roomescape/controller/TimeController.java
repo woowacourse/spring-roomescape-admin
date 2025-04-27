@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.dto.ReservationTimeResponseDto;
 import roomescape.dto.ReservationTimeRequestDto;
-import roomescape.service.TimeService;
+import roomescape.service.ReservationTimeService;
 
 @Controller
 public class TimeController {
 
     @Autowired
-    private TimeService timeService;
+    private ReservationTimeService reservationTimeService;
 
     @GetMapping("/admin/time")
     public String displayAdminTime() {
@@ -28,14 +28,14 @@ public class TimeController {
     public ResponseEntity<ReservationTimeResponseDto> createTime(
             @RequestBody ReservationTimeRequestDto timeRequest
     ) {
-        ReservationTimeResponseDto reservationTime = timeService.createTime(timeRequest);
+        ReservationTimeResponseDto reservationTime = reservationTimeService.createTime(timeRequest);
         return ResponseEntity.ok().body(reservationTime);
     }
 
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTimeResponseDto>> getTimes(
     ) {
-        List<ReservationTimeResponseDto> reservationTimes = timeService.findAllTimes();
+        List<ReservationTimeResponseDto> reservationTimes = reservationTimeService.findAllTimes();
         return ResponseEntity.ok().body(reservationTimes);
     }
 
@@ -43,7 +43,7 @@ public class TimeController {
     public ResponseEntity<Void> deleteTime(
             @PathVariable("id") long idRequest
     ) {
-        timeService.deleteTime(idRequest);
+        reservationTimeService.deleteTime(idRequest);
         return ResponseEntity.ok().build();
     }
 }

@@ -25,14 +25,14 @@ import roomescape.domain_entity.Id;
 import roomescape.domain_entity.Reservation;
 import roomescape.domain_entity.ReservationTime;
 import roomescape.dto.ReservationTimeRequestDto;
-import roomescape.service.TimeService;
+import roomescape.service.ReservationTimeService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationIntegratedTest {
 
     @Autowired
-    private TimeService timeService;
+    private ReservationTimeService reservationTimeService;
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
@@ -64,7 +64,7 @@ public class ReservationIntegratedTest {
     @DisplayName("예약을 생성한다.")
     void createReservation() {
         //given
-        timeService.createTime(new ReservationTimeRequestDto(LocalTime.of(10, 0, 0)));
+        reservationTimeService.createTime(new ReservationTimeRequestDto(LocalTime.of(10, 0, 0)));
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");

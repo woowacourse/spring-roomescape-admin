@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import roomescape.dao.JdbcReservationDao;
 import roomescape.dao.JdbcTimeDao;
+import roomescape.dao.ReservationDao;
+import roomescape.dao.TimeDao;
 import roomescape.domain_entity.Id;
 import roomescape.domain_entity.Reservation;
 import roomescape.domain_entity.ReservationTime;
@@ -15,9 +17,14 @@ import roomescape.dto.ReservationResponseDto;
 public class ReservationService {
 
     @Autowired
-    private JdbcReservationDao reservationDao;
+    private ReservationDao reservationDao;
     @Autowired
-    private JdbcTimeDao timeDao;
+    private TimeDao timeDao;
+
+    public ReservationService(ReservationDao reservationDao, TimeDao timeDao) {
+        this.reservationDao = reservationDao;
+        this.timeDao = timeDao;
+    }
 
     public List<ReservationResponseDto> findAllReservations() {
         return reservationDao.findAll().stream()

@@ -1,13 +1,15 @@
-package roomescape.user.reservation.domain;
+package roomescape.fake;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import roomescape.fake.FakeReservationRepository;
+import roomescape.user.reservation.domain.Reservation;
+import roomescape.user.reservation.domain.ReservationTime;
 
 class FakeReservationRepositoryTest {
 
@@ -19,7 +21,8 @@ class FakeReservationRepositoryTest {
         void saveAndFindById() {
             // given
             var repository = new FakeReservationRepository();
-            var reservation = new Reservation(null, "브라운", LocalDate.of(2025, 5, 1), 1L);
+            var reservation = new Reservation(null, "브라운", LocalDate.of(2025, 5, 1),
+                    new ReservationTime(null, LocalTime.of(10, 0)));
 
             // when
             var savedId = repository.save(reservation);
@@ -27,10 +30,9 @@ class FakeReservationRepositoryTest {
 
             // then
             assertSoftly(softly -> {
-                softly.assertThat(foundReservation).isPresent();
                 softly.assertThat(foundReservation.get().getName()).isEqualTo("브라운");
                 softly.assertThat(foundReservation.get().getDate()).isEqualTo(LocalDate.of(2025, 5, 1));
-                softly.assertThat(foundReservation.get().getTimeId()).isEqualTo(1L);
+                softly.assertThat(foundReservation.get().extractTime()).isEqualTo(LocalTime.of(10, 0));
             });
         }
 
@@ -39,8 +41,10 @@ class FakeReservationRepositoryTest {
         void findAll() {
             // given
             var repository = new FakeReservationRepository();
-            repository.save(new Reservation(null, "브라운", LocalDate.of(2025, 5, 1), 1L));
-            repository.save(new Reservation(null, "포비", LocalDate.of(2025, 5, 2), 2L));
+            repository.save(new Reservation(null, "브라운", LocalDate.of(2025, 5, 1),
+                    new ReservationTime(null, LocalTime.of(10, 0))));
+            repository.save(new Reservation(null, "포비", LocalDate.of(2025, 5, 2),
+                    new ReservationTime(null, LocalTime.of(10, 0))));
 
             // when
             var reservations = repository.findAll();
@@ -54,7 +58,8 @@ class FakeReservationRepositoryTest {
         void deleteById() {
             // given
             var repository = new FakeReservationRepository();
-            var savedId = repository.save(new Reservation(null, "브라운", LocalDate.of(2025, 5, 1), 1L));
+            var savedId = repository.save(new Reservation(null, "브라운", LocalDate.of(2025, 5, 1),
+                    new ReservationTime(null, LocalTime.of(10, 0))));
 
             // when
             repository.deleteById(savedId);

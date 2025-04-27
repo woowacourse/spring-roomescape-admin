@@ -1,4 +1,4 @@
-package roomescape.user.reservationtime.infra.dao;
+package roomescape.user.reservation.infra.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.user.reservation.domain.ReservationTime;
-import roomescape.user.reservation.infra.dao.JdbcReservationTimeDao;
 
 class JdbcReservationTimeDaoTest {
 
@@ -26,17 +25,18 @@ class JdbcReservationTimeDaoTest {
 
     @BeforeAll
     static void beforeAll() {
-        initializeDatabase();
+        jdbcTemplate = initializeDatabase();
         executeSchema();
-        initDao();
+        jdbcReservationTimeDao = initDao();
     }
 
-    private static void initializeDatabase() {
+    private static JdbcTemplate initializeDatabase() {
         JdbcDataSource dataSource = new JdbcDataSource();
         dataSource.setURL("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1");
         dataSource.setUser("sa");
         dataSource.setPassword("");
-        jdbcTemplate = new JdbcTemplate(dataSource);
+
+        return new JdbcTemplate(dataSource);
     }
 
     private static void executeSchema() {
@@ -54,8 +54,8 @@ class JdbcReservationTimeDaoTest {
         }
     }
 
-    private static void initDao() {
-        jdbcReservationTimeDao = new JdbcReservationTimeDao(jdbcTemplate);
+    private static JdbcReservationTimeDao initDao() {
+        return new JdbcReservationTimeDao(jdbcTemplate);
     }
 
     @BeforeEach
@@ -74,41 +74,41 @@ class JdbcReservationTimeDaoTest {
         @Test
         @DisplayName("예약 시간을 저장하고 조회할 수 있다.")
         void saveAndFindById() {
-            // Given
-            ReservationTime reservationTime = new ReservationTime(null, LocalTime.of(10, 0));
+            // given
+            var reservationTime = new ReservationTime(null, LocalTime.of(10, 0));
 
-            // When
-            Long savedId = jdbcReservationTimeDao.save(reservationTime);
+            // when
+            var savedId = jdbcReservationTimeDao.save(reservationTime);
             var foundReservationTime = jdbcReservationTimeDao.findById(savedId);
 
-            // Then
+            // then
             assertThat(foundReservationTime.get().getStartAt()).isEqualTo(LocalTime.of(10, 0));
         }
 
         @Test
         @DisplayName("모든 예약 시간을 조회할 수 있다.")
         void findAll() {
-            // Given
+            // given
             jdbcReservationTimeDao.save(new ReservationTime(null, LocalTime.of(10, 0)));
             jdbcReservationTimeDao.save(new ReservationTime(null, LocalTime.of(11, 0)));
 
-            // When
+            // when
             var reservationTimes = jdbcReservationTimeDao.findAll();
 
-            // Then
+            // then
             assertThat(reservationTimes).hasSize(2);
         }
 
         @Test
         @DisplayName("예약 시간을 삭제할 수 있다.")
         void deleteById() {
-            // Given
-            Long savedId = jdbcReservationTimeDao.save(new ReservationTime(null, LocalTime.of(10, 0)));
+            // given
+            var savedId = jdbcReservationTimeDao.save(new ReservationTime(null, LocalTime.of(10, 0)));
 
-            // When
+            // when
             jdbcReservationTimeDao.deleteById(savedId);
 
-            // Then
+            // then
             assertThat(jdbcReservationTimeDao.findById(savedId)).isEmpty();
         }
     }
@@ -125,7 +125,7 @@ class JdbcReservationTimeDaoTest {
             // when & then
             assertThatThrownBy(() -> jdbcReservationTimeDao.deleteById(nonExistentId))
                     .isInstanceOf(IllegalStateException.class)
-                    .hasMessageContaining("Reservation time with id " + nonExistentId + " does not exist");
+                    .hasMessage("Reservation time with id " + nonExistentId + " does not exist");
         }
     }
 }

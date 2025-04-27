@@ -44,4 +44,9 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
 
         reservationTimes.remove(id);
     }
+
+    public void clear() {
+        reservationTimes.clear();
+        sequence.set(1);
+    }
 }

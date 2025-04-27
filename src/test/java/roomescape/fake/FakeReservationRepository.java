@@ -20,9 +20,9 @@ public class FakeReservationRepository implements ReservationRepository {
                 generatedId,
                 reservation.getName(),
                 reservation.getDate(),
-                reservation.getTimeId()
+                reservation.getTime()
         );
-        
+
         reservations.put(generatedId, savedReservation);
 
         return generatedId;
@@ -45,5 +45,10 @@ public class FakeReservationRepository implements ReservationRepository {
         }
 
         reservations.remove(id);
+    }
+
+    public void clear() {
+        reservations.clear();
+        sequence.set(1);
     }
 }

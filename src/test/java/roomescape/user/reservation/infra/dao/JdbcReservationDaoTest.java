@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.stream.Collectors;
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.AfterEach;
@@ -18,26 +19,31 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.user.reservation.domain.Reservation;
+import roomescape.user.reservation.domain.ReservationTime;
 
 class JdbcReservationDaoTest {
 
     private static JdbcTemplate jdbcTemplate;
+    private static JdbcReservationTimeDao jdbcReservationTimeDao;
+    private static ReservationTime dummyReservationTime;
     private static JdbcReservationDao jdbcReservationDao;
 
     @BeforeAll
     static void beforeAll() {
-        initializeDatabase();
+        jdbcTemplate = initializeDatabase();
         executeSchema();
-        insertDummyReservationTime();
-        jdbcReservationDao = new JdbcReservationDao(jdbcTemplate);
+        jdbcReservationTimeDao = new JdbcReservationTimeDao(jdbcTemplate);
+        dummyReservationTime = insertDummyReservationTime();
+        jdbcReservationDao = new JdbcReservationDao(jdbcReservationTimeDao, jdbcTemplate);
     }
 
-    private static void initializeDatabase() {
+    private static JdbcTemplate initializeDatabase() {
         JdbcDataSource dataSource = new JdbcDataSource();
         dataSource.setURL("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1");
         dataSource.setUser("sa");
         dataSource.setPassword("");
-        jdbcTemplate = new JdbcTemplate(dataSource);
+
+        return new JdbcTemplate(dataSource);
     }
 
     private static void executeSchema() {
@@ -55,8 +61,10 @@ class JdbcReservationDaoTest {
         }
     }
 
-    private static void insertDummyReservationTime() {
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+    private static ReservationTime insertDummyReservationTime() {
+        Long savedId = jdbcReservationTimeDao.save(new ReservationTime(null, LocalTime.of(10, 0)));
+
+        return jdbcReservationTimeDao.findById(savedId).get();
     }
 
     @BeforeEach
@@ -75,45 +83,47 @@ class JdbcReservationDaoTest {
         @Test
         @DisplayName("예약을 저장하고 조회할 수 있다.")
         void saveAndFindById() {
-            // Given
-            var reservation = new Reservation(null, "브라운", LocalDate.of(2025, 5, 1), 1L);
+            // given
+            var reservation = new Reservation(null, "브라운", LocalDate.of(2025, 5, 1),
+                    new ReservationTime(null, LocalTime.of(10, 0)));
 
-            // When
+            // when
             var savedId = jdbcReservationDao.save(reservation);
             var foundReservation = jdbcReservationDao.findById(savedId);
 
-            // Then
+            // then
             assertSoftly(softly -> {
                 softly.assertThat(foundReservation.get().getName()).isEqualTo("브라운");
                 softly.assertThat(foundReservation.get().getDate()).isEqualTo(LocalDate.of(2025, 5, 1));
-                softly.assertThat(foundReservation.get().getTimeId()).isEqualTo(1L);
+                softly.assertThat(foundReservation.get().extractTime()).isEqualTo(LocalTime.of(10, 0));
             });
         }
 
         @Test
         @DisplayName("모든 예약을 조회할 수 있다.")
         void findAll() {
-            // Given
-            jdbcReservationDao.save(new Reservation(null, "브라운", LocalDate.of(2025, 5, 1), 1L));
-            jdbcReservationDao.save(new Reservation(null, "포비", LocalDate.of(2025, 5, 2), 1L));
+            // given
+            jdbcReservationDao.save(new Reservation(null, "브라운", LocalDate.of(2025, 5, 1), dummyReservationTime));
+            jdbcReservationDao.save(new Reservation(null, "포비", LocalDate.of(2025, 5, 2), dummyReservationTime));
 
-            // When
+            // when
             var reservations = jdbcReservationDao.findAll();
 
-            // Then
+            // then
             assertThat(reservations).hasSize(2);
         }
 
         @Test
         @DisplayName("예약을 삭제할 수 있다.")
         void deleteById() {
-            // Given
-            var savedId = jdbcReservationDao.save(new Reservation(null, "브라운", LocalDate.of(2025, 5, 1), 1L));
+            // given
+            var savedId = jdbcReservationDao.save(
+                    new Reservation(null, "브라운", LocalDate.of(2025, 5, 1), dummyReservationTime));
 
-            // When
+            // when
             jdbcReservationDao.deleteById(savedId);
 
-            // Then
+            // then
             assertThat(jdbcReservationDao.findById(savedId)).isEmpty();
         }
     }
@@ -130,7 +140,7 @@ class JdbcReservationDaoTest {
             // when & then
             assertThatThrownBy(() -> jdbcReservationDao.deleteById(nonExistentId))
                     .isInstanceOf(IllegalStateException.class)
-                    .hasMessageContaining("Reservation with id " + nonExistentId + " does not exist");
+                    .hasMessage("Reservation with id " + nonExistentId + " does not exist");
         }
     }
 }

@@ -45,8 +45,8 @@
 
 ### API 명세를 따라 시간 관리 API 구현하기.
 
-- [ ] `/admin/time` 페이지 응답하기
-- [ ] 페이지는 `templates/admin/time.html` 파일 이용
+- [x] `/admin/time` 페이지 응답하기
+- [x] 페이지는 `templates/admin/time.html` 파일 이용
 - [ ] 시간 추가 API 구현하기
 - [ ] 시간 조회 API 구현하기
 - [ ] 시간 삭제 API 구현하기

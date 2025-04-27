@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.reservation.dto.ReservationTimeReqDTO;
-import roomescape.reservation.exception.ReservationTimeNotFoundException;
 import roomescape.reservation.model.ReservationTime;
 import roomescape.reservation.service.ReservationTimeService;
 
@@ -29,11 +28,8 @@ public class ReservationTimeController {
 
     @PostMapping
     public ResponseEntity<ReservationTime> create(@RequestBody ReservationTimeReqDTO timeDto) {
-        try {
-            return ResponseEntity.ok(reservationTimeService.create(timeDto));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok(reservationTimeService.create(timeDto));
+
     }
 
     @GetMapping
@@ -43,11 +39,7 @@ public class ReservationTimeController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBy(@PathVariable Long id) {
-        try {
-            timeService.deleteBy(id);
-            return ResponseEntity.ok().build();
-        } catch (ReservationTimeNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        timeService.deleteBy(id);
+        return ResponseEntity.ok().build();
     }
 }

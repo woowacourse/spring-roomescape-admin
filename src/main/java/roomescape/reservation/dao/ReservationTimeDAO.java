@@ -59,7 +59,7 @@ public class ReservationTimeDAO {
                             rs.getTime("start_at").toLocalTime()
                     ), id);
         } catch (EmptyResultDataAccessException e) {
-            throw new ReservationTimeNotFoundException(id);
+            throw new ReservationTimeNotFoundException(id, e);
         }
     }
 }

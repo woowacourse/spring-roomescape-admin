@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.reservation.dto.ReservationReqDTO;
-import roomescape.reservation.exception.ReservationNotFoundException;
 import roomescape.reservation.model.Reservation;
 import roomescape.reservation.service.ReservationService;
 
@@ -27,11 +26,8 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Reservation> create(@RequestBody ReservationReqDTO dto) {
-        try {
-            return ResponseEntity.ok(reservationService.create(dto));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok(reservationService.create(dto));
+
     }
 
     @GetMapping
@@ -41,20 +37,13 @@ public class ReservationController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Reservation> getBy(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(reservationService.getBy(id));
-        } catch (ReservationNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(reservationService.getBy(id));
+
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBy(@PathVariable Long id) {
-        try {
-            reservationService.deleteBy(id);
-            return ResponseEntity.ok().build();
-        } catch (ReservationNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+        reservationService.deleteBy(id);
+        return ResponseEntity.ok().build();
     }
 }

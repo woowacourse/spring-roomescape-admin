@@ -22,9 +22,7 @@ public class ReservationTimeService {
     }
 
     public List<ReservationTimeResponse> getAll() {
-        return timeRepository.findAll().stream()
-                .map(ReservationTimeResponse::from)
-                .toList();
+        return ReservationTimeResponse.from(timeRepository.findAll());
     }
 
     public void deleteBy(Long id) {

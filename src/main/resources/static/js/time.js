@@ -1,6 +1,6 @@
 let isEditing = false;
 const API_ENDPOINT = '/times';
-const cellFields = ['id', 'startAt'];
+const cellFields = ['id', 'start_at'];
 const createCellFields = ['', createInput()];
 function createBody(inputs) {
   return {
@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function render(data) {
+  console.log(data);    // 콘솔 테스트
   const tableBody = document.getElementById('table-body');
   tableBody.innerHTML = '';
 

@@ -16,13 +16,13 @@ Content-Type: application/json
     "id": 1,
     "name": "브라운",
     "date": "2023-01-01",
-    "time": "10:00"
+    "reservationTime": "10:00"
   },
   {
     "id": 2,
     "name": "브라운",
     "date": "2023-01-02",
-    "time": "11:00"
+    "reservationTime": "11:00"
   }
 ]
   ```
@@ -35,7 +35,7 @@ content-type: application/json
 {
     "date": "2023-08-05",
     "name": "브라운",
-    "time": "15:40"
+    "reservationTime": "15:40"
 }
 
 ```
@@ -48,7 +48,7 @@ Content-Type: application/json
     "id": 1,
     "name": "브라운",
     "date": "2023-08-05",
-    "time": "15:40"
+    "reservationTime": "15:40"
 }
   ```
 - [x] API 명세를 따라 예약 삭제 API 구현

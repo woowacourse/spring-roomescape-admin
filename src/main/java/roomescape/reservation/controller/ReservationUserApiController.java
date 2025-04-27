@@ -32,7 +32,7 @@ public class ReservationUserApiController {
 
     @DeleteMapping("reservations/{reservationId}")
     public ResponseEntity<Void> delete(@PathVariable("reservationId") Long id) {
-       service.delete(id);
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

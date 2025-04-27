@@ -23,7 +23,7 @@ class ReservationTimeRestControllerTest {
 
     @Test
     void 예약_가능한_시간을_목록에_추가한다() {
-        Map<String, String> params = new HashMap<>();
+        final Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
         RestAssured.given().log().all()

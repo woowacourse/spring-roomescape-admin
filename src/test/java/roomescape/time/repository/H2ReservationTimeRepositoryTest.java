@@ -41,7 +41,7 @@ class H2ReservationTimeRepositoryTest {
         h2ReservationTimeRepository.save(reservationTime2);
 
         // when
-        List<ReservationTime> reservationTimes = h2ReservationTimeRepository.findAll();
+        final List<ReservationTime> reservationTimes = h2ReservationTimeRepository.findAll();
 
         // then
         assertThat(reservationTimes.size()).isEqualTo(2);

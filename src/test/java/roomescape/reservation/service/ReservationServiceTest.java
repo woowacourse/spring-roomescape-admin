@@ -48,7 +48,7 @@ class ReservationServiceTest {
         reservationService.save(name2, date2, time_id2);
 
         // when
-        List<Reservation> reservations = reservationService.findAll();
+        final List<Reservation> reservations = reservationService.findAll();
 
         // then
         assertThat(reservations.size()).isEqualTo(2);

@@ -17,3 +17,12 @@
 
 - [x] 예약 추가 API 구현하기
 - [x] 예약 삭제 API 구현하기
+
+## 4단계
+
+### h2 데이터베이스 연동을 위한 준비 작업하기.
+
+- [ ] h2, jdbc gradle 의존성 추가
+- [ ] 테이블 스키마 sql 파일 정의
+- [ ] h2 데이터베이스 console 기능 활성화
+- [ ] datasource url 다음으로 설정 `jdbc:h2:mem:database`

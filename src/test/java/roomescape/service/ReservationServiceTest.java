@@ -33,7 +33,7 @@ class ReservationServiceTest {
         ReservationResponse response = reservationService.create(request);
 
         assertThat(response.getName()).isEqualTo("브라운");
-        assertThat(response.getId()).isNotNull();
+        assertThat(response.getId()).isEqualTo(1L);
     }
 
     @DisplayName("전체 예약 목록을 조회한다")

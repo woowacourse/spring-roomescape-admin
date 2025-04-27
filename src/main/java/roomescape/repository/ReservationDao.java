@@ -48,7 +48,7 @@ public class ReservationDao {
                     FROM reservation AS r 
                     INNER JOIN reservation_time AS t 
                     ON r.time_id = t.id
-                    WHERE r.id = ?;
+                    WHERE r.id = ?
                 """;
         try {
             final Reservation reservation = jdbcTemplate.queryForObject(sql, getReservationRowMapper(), id);

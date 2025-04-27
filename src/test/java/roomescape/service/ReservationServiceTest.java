@@ -6,7 +6,7 @@ import roomescape.dao.FakeReservationDao;
 import roomescape.dao.FakeTimeDao;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
-import roomescape.dto.ReservationRequestDto;
+import roomescape.dto.ReservationRequest;
 import roomescape.entity.ReservationEntity;
 import roomescape.entity.ReservationTimeEntity;
 
@@ -25,7 +25,7 @@ class ReservationServiceTest {
     void notExistTimeId() {
         // given
         LocalDate now = LocalDate.now();
-        ReservationRequestDto requestDto = new ReservationRequestDto(now.plusDays(1), "test", 1L);
+        ReservationRequest requestDto = new ReservationRequest(now.plusDays(1), "test", 1L);
 
         // when & then
         assertThatThrownBy(() -> {
@@ -38,7 +38,7 @@ class ReservationServiceTest {
     void pastReservation() {
         // given
         LocalDate now = LocalDate.now();
-        ReservationRequestDto requestDto = new ReservationRequestDto(now.minusDays(1), "test", 1L);
+        ReservationRequest requestDto = new ReservationRequest(now.minusDays(1), "test", 1L);
 
         // when & then
         assertThatThrownBy(() -> {
@@ -58,7 +58,7 @@ class ReservationServiceTest {
         timeDao.save(timeEntity);
         reservationDao.save(reservationEntity);
 
-        ReservationRequestDto requestDto = new ReservationRequestDto(date, "test", timeEntity.id());
+        ReservationRequest requestDto = new ReservationRequest(date, "test", timeEntity.id());
 
         // when & then
         assertThatThrownBy(() -> {

@@ -5,8 +5,8 @@ import roomescape.entity.ReservationTimeEntity;
 
 import java.time.LocalDate;
 
-public record ReservationRequestDto(LocalDate date, String name, Long timeId) {
-    public ReservationRequestDto {
+public record ReservationRequest(LocalDate date, String name, Long timeId) {
+    public ReservationRequest {
         if (date == null || name == null || name.isBlank() || timeId == null) {
             throw new IllegalArgumentException("값이 모두 입력되지 않았습니다.");
         }

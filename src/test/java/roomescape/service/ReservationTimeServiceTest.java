@@ -7,7 +7,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import roomescape.dao.FakeTimeDao;
 import roomescape.dao.ReservationTimeDao;
-import roomescape.dto.ReservationTimeRequestDto;
+import roomescape.dto.ReservationTimeRequest;
 import roomescape.entity.ReservationTimeEntity;
 
 import java.time.LocalTime;
@@ -25,7 +25,7 @@ class ReservationTimeServiceTest {
     @MethodSource
     void validOperatingTime(LocalTime startAt) {
         // given
-        ReservationTimeRequestDto requestDto = new ReservationTimeRequestDto(startAt);
+        ReservationTimeRequest requestDto = new ReservationTimeRequest(startAt);
 
         // when
         assertThatCode(() -> {
@@ -45,7 +45,7 @@ class ReservationTimeServiceTest {
     @MethodSource
     void invalidOperatingTime(LocalTime startAt) {
         // given
-        ReservationTimeRequestDto requestDto = new ReservationTimeRequestDto(startAt);
+        ReservationTimeRequest requestDto = new ReservationTimeRequest(startAt);
         // when & then
         assertThatThrownBy(() -> {
             service.create(requestDto);
@@ -67,7 +67,7 @@ class ReservationTimeServiceTest {
         LocalTime duplicatedTime = time.plusHours(1);
         timeDao.save(new ReservationTimeEntity(1L, time));
 
-        ReservationTimeRequestDto requestDto = new ReservationTimeRequestDto(duplicatedTime);
+        ReservationTimeRequest requestDto = new ReservationTimeRequest(duplicatedTime);
 
         // when & then
         assertThatThrownBy(() -> {

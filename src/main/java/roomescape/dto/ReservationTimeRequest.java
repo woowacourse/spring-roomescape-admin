@@ -4,8 +4,8 @@ import roomescape.entity.ReservationTimeEntity;
 
 import java.time.LocalTime;
 
-public record ReservationTimeRequestDto(LocalTime startAt) {
-    public ReservationTimeRequestDto {
+public record ReservationTimeRequest(LocalTime startAt) {
+    public ReservationTimeRequest {
         if (startAt == null) {
             throw new IllegalArgumentException("값이 입력되지 않았습니다.");
         }

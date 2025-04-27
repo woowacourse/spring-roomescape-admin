@@ -3,8 +3,8 @@ package roomescape.service;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
-import roomescape.dto.ReservationRequestDto;
-import roomescape.dto.ReservationResponseDto;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.entity.ReservationEntity;
 import roomescape.entity.ReservationTimeEntity;
 import roomescape.exception.BadRequestException;
@@ -24,14 +24,14 @@ public class ReservationService {
         this.timeDao = timeDao;
     }
 
-    public List<ReservationResponseDto> getAllReservation() {
+    public List<ReservationResponse> getAllReservation() {
         return reservationDao.findAll()
                 .stream()
-                .map(ReservationResponseDto::from)
+                .map(ReservationResponse::from)
                 .toList();
     }
 
-    public ReservationResponseDto createReservation(ReservationRequestDto request) {
+    public ReservationResponse createReservation(ReservationRequest request) {
         ReservationTimeEntity timeEntity = timeDao.findById(request.timeId())
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 id 입니다."));
 
@@ -40,7 +40,7 @@ public class ReservationService {
         validateDuplicated(newReservation);
 
         ReservationEntity saved = reservationDao.save(newReservation);
-        return ReservationResponseDto.from(saved);
+        return ReservationResponse.from(saved);
     }
 
     private void validateDateTime(ReservationEntity reservation) {

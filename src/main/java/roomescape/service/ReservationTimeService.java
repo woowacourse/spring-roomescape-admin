@@ -2,8 +2,8 @@ package roomescape.service;
 
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationTimeDao;
-import roomescape.dto.ReservationTimeRequestDto;
-import roomescape.dto.ReservationTimeResponseDto;
+import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.ReservationTimeResponse;
 import roomescape.entity.ReservationTimeEntity;
 import roomescape.exception.BadRequestException;
 import roomescape.exception.ConflictException;
@@ -19,12 +19,12 @@ public class ReservationTimeService {
         this.timeDao = timeDao;
     }
 
-    public ReservationTimeResponseDto create(ReservationTimeRequestDto requestDto) {
+    public ReservationTimeResponse create(ReservationTimeRequest requestDto) {
         ReservationTimeEntity entity = requestDto.toEntity();
         validateOperatingTime(entity);
         validateDuplicated(entity);
         ReservationTimeEntity saved = timeDao.save(entity);
-        return ReservationTimeResponseDto.from(saved);
+        return ReservationTimeResponse.from(saved);
     }
 
     private void validateOperatingTime(ReservationTimeEntity entity) {
@@ -40,9 +40,9 @@ public class ReservationTimeService {
         }
     }
 
-    public List<ReservationTimeResponseDto> getAllTimes() {
+    public List<ReservationTimeResponse> getAllTimes() {
         return timeDao.findAll().stream()
-                .map(ReservationTimeResponseDto::from)
+                .map(ReservationTimeResponse::from)
                 .toList();
     }
 

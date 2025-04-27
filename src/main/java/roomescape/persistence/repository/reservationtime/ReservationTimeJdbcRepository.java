@@ -41,14 +41,14 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
     public ReservationTime findById(Long id) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
         return jdbcTemplate.queryForObject(sql,
-                (resultSet, rowNum) -> getReservationTimeData(resultSet), id);
+                (resultSet, rowNum) -> mapToReservationTime(resultSet), id);
     }
 
     @Override
     public List<ReservationTime> findAll() {
         String sql = "SELECT id, start_at FROM reservation_time";
         return jdbcTemplate.query(sql,
-                (resultSet, rowNum) -> getReservationTimeData(resultSet));
+                (resultSet, rowNum) -> mapToReservationTime(resultSet));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
         jdbcTemplate.update(sql, id);
     }
 
-    private ReservationTime getReservationTimeData(ResultSet resultSet) throws SQLException {
+    private ReservationTime mapToReservationTime(ResultSet resultSet) throws SQLException {
         return new ReservationTime(
                 resultSet.getLong(RESERVATION_TIME_ID),
                 resultSet.getObject(RESERVATION_TIME_START_AT, LocalTime.class)

@@ -41,7 +41,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
                 + "FROM reservation r "
                 + "INNER JOIN reservation_time rt "
                 + "ON r.time_id = rt.id ";
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> getReservationData(resultSet));
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> mapToReservation(resultSet));
     }
 
     @Override
@@ -69,11 +69,11 @@ public class ReservationJdbcRepository implements ReservationRepository {
                 + "WHERE r.id = ?";
 
         return jdbcTemplate.queryForObject(selectSql,
-                (resultSet, rowNum) -> getReservationData(resultSet),
+                (resultSet, rowNum) -> mapToReservation(resultSet),
                 id);
     }
 
-    private Reservation getReservationData(ResultSet resultSet) throws SQLException {
+    private Reservation mapToReservation(ResultSet resultSet) throws SQLException {
         ReservationTime reservationTime = new ReservationTime(
                 resultSet.getLong(RESERVATION_TIME_ID),
                 resultSet.getObject(RESERVATION_TIME_START_AT, LocalTime.class)

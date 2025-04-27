@@ -2,7 +2,6 @@ package roomescape.reservationTime.controller;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.BootstrapWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import roomescape.reservationTime.ReservationTimeTestDataConfig;
 import roomescape.reservationTime.domain.dto.ReservationTimeReqDto;
 import roomescape.reservationTime.domain.dto.ReservationTimeResDto;
 
@@ -23,7 +23,7 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, classes = {ReservationTimeTestDataConfig.class})
 @BootstrapWith(SpringBootTestContextBootstrapper.class)
 @ExtendWith({SpringExtension.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -31,11 +31,6 @@ public class ReservationTimeControllerTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    @BeforeEach
-    void setUp() {
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "2:40");
-    }
 
     @Nested
     @DisplayName("GET /times 요청")

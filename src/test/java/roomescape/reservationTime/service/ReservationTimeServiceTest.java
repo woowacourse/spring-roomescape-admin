@@ -1,7 +1,6 @@
 package roomescape.reservationTime.service;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -10,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.globalException.CustomException;
+import roomescape.reservationTime.ReservationTimeTestDataConfig;
 import roomescape.reservationTime.domain.ReservationTime;
 import roomescape.reservationTime.domain.dto.ReservationTimeResDto;
 import roomescape.reservationTime.fixture.ReservationTimeFixture;
@@ -19,25 +19,18 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static roomescape.reservationTime.ReservationTimeTestDataConfig.DEFAULT_DUMMY_TIME;
 
 @JdbcTest
-@Import({ReservationTimeRepositoryImpl.class, ReservationTimeService.class})
+@Import({ReservationTimeRepositoryImpl.class, ReservationTimeService.class, ReservationTimeTestDataConfig.class})
 class ReservationTimeServiceTest {
 
     @Autowired
     private ReservationTimeService service;
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    private LocalTime defaultDummyTime;
-    private Long defaultDummyTimeId;
-
-    @BeforeEach
-    void setUp() {
-        defaultDummyTime = LocalTime.of(11, 22);
-        defaultDummyTimeId = service.add(ReservationTimeFixture.createReqDto(defaultDummyTime)).id();
-    }
+    @Autowired
+    private ReservationTimeTestDataConfig testDataConfig;
 
     @Nested
     @DisplayName("저장된 모든 예약 시간 불러오는 기능")
@@ -55,7 +48,7 @@ class ReservationTimeServiceTest {
                         s.assertThat(resDtos).hasSize(1);
                         s.assertThat(resDtos)
                                 .extracting(ReservationTimeResDto::startAt)
-                                .containsExactlyInAnyOrder(defaultDummyTime);
+                                .contains(DEFAULT_DUMMY_TIME);
                         resDtos.forEach(resDto ->
                                 s.assertThat(resDto.id()).isNotNull());
                     }
@@ -105,7 +98,7 @@ class ReservationTimeServiceTest {
         @Test
         void delete_success_withValidId() {
             // given
-            service.delete(defaultDummyTimeId);
+            service.delete(testDataConfig.getDefaultDummyTimeId());
 
             // when
             List<ReservationTimeResDto> resDtos = service.readAll();
@@ -130,17 +123,16 @@ class ReservationTimeServiceTest {
     @Test
     void convertToReservationTimeResDto() {
         // given
-        ReservationTime reservationTime = ReservationTimeFixture.create(defaultDummyTime);
+        ReservationTime reservationTime = ReservationTimeFixture.create(DEFAULT_DUMMY_TIME);
 
         // when
         ReservationTimeResDto resDto = service.convertToReservationTimeResDto(reservationTime);
 
         // then
-        Assertions.assertThat(resDto.startAt()).isEqualTo(defaultDummyTime);
+        Assertions.assertThat(resDto.startAt()).isEqualTo(DEFAULT_DUMMY_TIME);
     }
 
     private void deleteAll() {
         jdbcTemplate.update("delete from reservation_time");
     }
 }
-

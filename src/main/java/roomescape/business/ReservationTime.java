@@ -1,22 +1,17 @@
 package roomescape.business;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalTime;
 
 public class ReservationTime {
 
-    @JsonProperty
     private Long id;
-    @JsonProperty
     private final LocalTime startAt;
 
     public ReservationTime(LocalTime startAt) {
         this.startAt = startAt;
     }
 
-    @JsonCreator
-    public ReservationTime(@JsonProperty("id") Long id, @JsonProperty("startAt") LocalTime startAt) {
+    public ReservationTime(Long id, LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
     }

@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import roomescape.business.Reservation;
 import roomescape.business.ReservationTime;
 import roomescape.business.dto.ReservationRequestDto;
+import roomescape.business.dto.ReservationResponseDto;
 import roomescape.business.dto.ReservationTimeRequestDto;
+import roomescape.business.dto.ReservationTimeResponseDto;
 import roomescape.persistence.GeneralRepository;
 
 @Service
@@ -22,12 +24,16 @@ public class ReservationService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public List<Reservation> readReservationAll() {
-        return reservationRepository.findAll();
+    public List<ReservationResponseDto> readReservationAll() {
+        List<Reservation> reservations = reservationRepository.findAll();
+        return reservations.stream()
+                .map(ReservationResponseDto::from)
+                .toList();
     }
 
-    public Reservation readReservationOne(Long id) {
-        return reservationRepository.findById(id);
+    public ReservationResponseDto readReservationOne(Long id) {
+        Reservation reservation = reservationRepository.findById(id);
+        return ReservationResponseDto.from(reservation);
     }
 
     public Long createReservation(ReservationRequestDto reservationDto) {
@@ -44,12 +50,16 @@ public class ReservationService {
         return reservationTimeRepository.add(new ReservationTime(reservationTimeRequestDto.startAt()));
     }
 
-    public List<ReservationTime> readTimeAll() {
-        return reservationTimeRepository.findAll();
+    public List<ReservationTimeResponseDto> readTimeAll() {
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+        return reservationTimes.stream()
+                .map(ReservationTimeResponseDto::from)
+                .toList();
     }
 
-    public ReservationTime readTimeOne(Long id) {
-        return reservationTimeRepository.findById(id);
+    public ReservationTimeResponseDto readTimeOne(Long id) {
+        ReservationTime reservationTime = reservationTimeRepository.findById(id);
+        return ReservationTimeResponseDto.from(reservationTime);
     }
 
     public void deleteTime(Long id) {

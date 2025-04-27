@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.business.dto.ReservationRequestDto;
 import roomescape.business.dto.ReservationTimeRequestDto;
+import roomescape.business.dto.ReservationTimeResponseDto;
 import roomescape.business.service.ReservationService;
 import roomescape.persistence.GeneralRepository;
 import roomescape.business.fakerepository.FakeReservationRepository;
@@ -71,7 +72,7 @@ class ReservationServiceTest {
     @DisplayName("아이디로 예약 가능한 시간을 조회한다")
     @Test
     void readTimeOne() {
-        ReservationTime reservationTime = reservationService.readTimeOne(1L);
+        ReservationTimeResponseDto reservationTime = reservationService.readTimeOne(1L);
         Assertions.assertThat(reservationTime).isNotNull();
     }
 
@@ -82,7 +83,7 @@ class ReservationServiceTest {
         Long two = reservationTimeRepository.add(new ReservationTime(2L, LocalTime.now()));
 
         // when
-        List<ReservationTime> reservationTimes = reservationService.readTimeAll();
+        List<ReservationTimeResponseDto> reservationTimes = reservationService.readTimeAll();
 
         // then
         Assertions.assertThat(reservationTimes).hasSize(2);

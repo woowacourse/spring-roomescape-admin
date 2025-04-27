@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.business.Reservation;
-import roomescape.business.ReservationTime;
 import roomescape.business.dto.ReservationRequestDto;
+import roomescape.business.dto.ReservationResponseDto;
 import roomescape.business.dto.ReservationTimeRequestDto;
+import roomescape.business.dto.ReservationTimeResponseDto;
 import roomescape.business.service.ReservationService;
 
 @RestController
@@ -25,9 +25,9 @@ public class ReservationCommandController {
     }
 
     @PostMapping("reservations")
-    public ResponseEntity<Reservation> create(@RequestBody ReservationRequestDto reservationDto) {
+    public ResponseEntity<ReservationResponseDto> create(@RequestBody ReservationRequestDto reservationDto) {
         Long id = reservationService.createReservation(reservationDto);
-        Reservation reservation = reservationService.readReservationOne(id);
+        ReservationResponseDto reservation = reservationService.readReservationOne(id);
         String location = "/reservations/" + id;
         return ResponseEntity.created(URI.create(location)).body(reservation);
     }
@@ -39,9 +39,10 @@ public class ReservationCommandController {
     }
 
     @PostMapping("times")
-    public ResponseEntity<ReservationTime> create(@RequestBody ReservationTimeRequestDto reservationTimeDto) {
+    public ResponseEntity<ReservationTimeResponseDto> create(
+            @RequestBody ReservationTimeRequestDto reservationTimeDto) {
         Long id = reservationService.createTime(reservationTimeDto);
-        ReservationTime reservationTime = reservationService.readTimeOne(id);
+        ReservationTimeResponseDto reservationTime = reservationService.readTimeOne(id);
         String location = "/times/" + id;
         return ResponseEntity.created(URI.create(location)).body(reservationTime);
     }

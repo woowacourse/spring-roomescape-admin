@@ -7,8 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
-import roomescape.business.Reservation;
-import roomescape.business.ReservationTime;
+import roomescape.business.dto.ReservationResponseDto;
+import roomescape.business.dto.ReservationTimeResponseDto;
 import roomescape.business.service.ReservationService;
 
 @Controller
@@ -43,29 +43,29 @@ public class ReservationQueryController {
 
     @GetMapping("reservations")
     @ResponseBody
-    public ResponseEntity<List<Reservation>> readReservations() {
-        List<Reservation> reservations = reservationService.readReservationAll();
+    public ResponseEntity<List<ReservationResponseDto>> readReservations() {
+        List<ReservationResponseDto> reservations = reservationService.readReservationAll();
         return ResponseEntity.ok(reservations);
     }
 
     @GetMapping("reservations/{reservationId}")
     @ResponseBody
-    public ResponseEntity<Reservation> readReservation(@PathVariable("reservationId") Long id) {
-        Reservation reservation = reservationService.readReservationOne(id);
+    public ResponseEntity<ReservationResponseDto> readReservation(@PathVariable("reservationId") Long id) {
+        ReservationResponseDto reservation = reservationService.readReservationOne(id);
         return ResponseEntity.ok(reservation);
     }
 
     @GetMapping("times")
     @ResponseBody
-    public ResponseEntity<List<ReservationTime>> readReservationTimes() {
-        List<ReservationTime> reservationTimes = reservationService.readTimeAll();
+    public ResponseEntity<List<ReservationTimeResponseDto>> readReservationTimes() {
+        List<ReservationTimeResponseDto> reservationTimes = reservationService.readTimeAll();
         return ResponseEntity.ok(reservationTimes);
     }
 
     @GetMapping("times/{timeId}")
     @ResponseBody
-    public ResponseEntity<ReservationTime> readReservationTime(@PathVariable("timeId") Long id) {
-        ReservationTime reservationTime = reservationService.readTimeOne(id);
+    public ResponseEntity<ReservationTimeResponseDto> readReservationTime(@PathVariable("timeId") Long id) {
+        ReservationTimeResponseDto reservationTime = reservationService.readTimeOne(id);
         return ResponseEntity.ok(reservationTime);
     }
 }

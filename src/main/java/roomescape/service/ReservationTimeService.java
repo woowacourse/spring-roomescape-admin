@@ -9,6 +9,8 @@ import roomescape.domain.ReservationTime;
 
 @Service
 public class ReservationTimeService {
+
+    private static final int NOT_EFFECTED_ROW_COUNT = 0;
     private final ReservationTimeDao reservationTimeDao;
 
     public ReservationTimeService(final ReservationTimeDao reservationTimeDao) {
@@ -21,8 +23,7 @@ public class ReservationTimeService {
                 .map(ReservationTimeResponse::from)
                 .toList();
     }
-
-
+    
     public ReservationTimeResponse create(ReservationTimeRequest reservationTimeRequest) {
         ReservationTime reservationTime = reservationTimeRequest.toReservationTime();
         ReservationTime reservationTimeWithId = reservationTimeDao.insert(reservationTime);
@@ -30,6 +31,9 @@ public class ReservationTimeService {
     }
 
     public void deleteById(long id) {
-        reservationTimeDao.deleteById(id);
+        int effectedRowCount = reservationTimeDao.deleteById(id);
+        if (effectedRowCount == NOT_EFFECTED_ROW_COUNT) {
+            throw new IllegalArgumentException("id가 존재하지 않습니다.");
+        }
     }
 }

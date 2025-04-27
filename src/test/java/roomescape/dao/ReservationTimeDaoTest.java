@@ -15,6 +15,7 @@ import roomescape.domain.ReservationTime;
 
 @JdbcTest
 public class ReservationTimeDaoTest {
+
     private ReservationTimeDao reservationTimeDao;
 
     @Autowired

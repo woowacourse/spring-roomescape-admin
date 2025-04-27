@@ -17,8 +17,7 @@ public record Person(String name) {
 
     private void validateNameLength(String name) {
         if (overMaxLength(name)) {
-            throw new IllegalArgumentException(String.format("이름은 "
-                    + "%d자 이하여야 합니다.", MAX_NAME_LENGTH));
+            throw new IllegalArgumentException(String.format("이름은 %d자 이하여야 합니다.", MAX_NAME_LENGTH));
         }
     }
 

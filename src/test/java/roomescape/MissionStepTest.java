@@ -7,6 +7,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +67,7 @@ public class MissionStepTest {
     void 삼단계() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", String.valueOf(LocalDate.now().plusDays(1)));
         params.put("timeId", "1");
 
         RestAssured.given().log().all()
@@ -114,7 +115,7 @@ public class MissionStepTest {
 
         jdbcTemplate.update(
                 "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
-                "브라운", "2023-08-05", "1");
+                "브라운", String.valueOf(LocalDate.now().plusDays(1)), "1");
 
         List<ReservationResponseDto> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -132,7 +133,7 @@ public class MissionStepTest {
     void 육단계() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", String.valueOf(LocalDate.now().plusDays(1)));
         params.put("timeId", "1");
 
         RestAssured.given().log().all()
@@ -184,7 +185,7 @@ public class MissionStepTest {
     void 팔단계() {
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
-        reservation.put("date", "2023-08-05");
+        reservation.put("date", String.valueOf(LocalDate.now().plusDays(1)));
         reservation.put("timeId", 1);
 
         RestAssured.given().log().all()

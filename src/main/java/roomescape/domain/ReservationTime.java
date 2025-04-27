@@ -58,9 +58,6 @@ public class ReservationTime {
 
     @Override
     public String toString() {
-        return "ReservationTime{" +
-                "id=" + id +
-                ", startAt=" + startAt +
-                '}';
+        return String.format("ReservationTime{id=%d, startAt=%s}", id, startAt);
     }
 }

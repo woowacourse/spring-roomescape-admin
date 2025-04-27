@@ -1,6 +1,6 @@
 package roomescape.model;
 
-import static util.FormatValidator.validateDateFormat;
+import static roomescape.util.FormatValidator.validateDateFormat;
 
 public class ReservationDate {
     private final String date;

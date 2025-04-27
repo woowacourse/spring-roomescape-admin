@@ -1,6 +1,6 @@
 package roomescape.model;
 
-import static util.FormatValidator.validateNameFormat;
+import static roomescape.util.FormatValidator.validateNameFormat;
 
 public class UserName {
     private final String name;

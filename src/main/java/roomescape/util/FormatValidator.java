@@ -1,4 +1,4 @@
-package util;
+package roomescape.util;
 
 import java.util.regex.Pattern;
 

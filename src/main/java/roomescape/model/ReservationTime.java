@@ -1,6 +1,6 @@
 package roomescape.model;
 
-import static util.FormatValidator.validateTimeFormat;
+import static roomescape.util.FormatValidator.validateTimeFormat;
 
 public class ReservationTime {
     private final Long id;

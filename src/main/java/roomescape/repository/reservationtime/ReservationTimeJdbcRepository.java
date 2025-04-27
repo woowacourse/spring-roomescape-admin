@@ -6,12 +6,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationTimeJdbcRepository implements ReservationTimeRepository {
+    private static final RowMapper<ReservationTime> ROW_MAPPER = (resultSet, rowNum) ->
+            new ReservationTime(
+                    resultSet.getLong("id"),
+                    resultSet.getTime("start_at").toLocalTime()
+            );
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
@@ -34,17 +40,10 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
     @Override
     public List<ReservationTime> findAll() {
         String sql = "select * from reservation_time";
-        List<ReservationTime> times = jdbcTemplate.query(
+        return jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) -> {
-                    ReservationTime time = new ReservationTime(
-                            resultSet.getLong("id"),
-                            resultSet.getTime("start_at").toLocalTime()
-                    );
-                    return time;
-                }
+                ROW_MAPPER
         );
-        return times;
     }
 
     @Override
@@ -58,11 +57,7 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
         String sql = "select * from reservation_time where id = ?";
         List<ReservationTime> time = jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) ->
-                        new ReservationTime(
-                                resultSet.getLong("id"),
-                                resultSet.getTime("start_at").toLocalTime()
-                        ),
+                ROW_MAPPER,
                 timeId
         );
         return time.stream().findFirst();

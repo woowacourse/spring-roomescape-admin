@@ -1,37 +1,36 @@
 package roomescape.entity;
 
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class Reservation {
-    public static final LocalTime START_RESERVATION_TIME = LocalTime.of(10, 0);
-    public static final LocalTime LAST_RESERVATION_TIME = LocalTime.of(23, 0);
 
-    private long id;
+    private Long id;
     private String name;
     private LocalDate date;
-    private LocalTime time;
+    private ReservationTime time;
 
-    public Reservation(final String name, final LocalDate date, final LocalTime time) {
+    public Reservation() {
+    }
+
+    public Reservation(final String name, final LocalDate date, final ReservationTime time) {
         validateTime(time);
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public Reservation(final long id, final String name, final LocalDate date, final LocalTime time) {
-        this(name,date,time);
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
+        this(name, date, time);
         this.id = id;
     }
 
-    private void validateTime(final LocalTime time) {
-        if(time.isBefore(START_RESERVATION_TIME) || time.isAfter(LAST_RESERVATION_TIME)){
-            throw new IllegalArgumentException("예약할 수 없는 시간입니다.");
+    private void validateTime(ReservationTime time) {
+        if (time == null) {
+            throw new IllegalArgumentException("존재하지 않는 시간입니다.");
         }
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -43,11 +42,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 }

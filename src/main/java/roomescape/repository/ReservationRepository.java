@@ -1,21 +1,18 @@
 package roomescape.repository;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import roomescape.entity.Reservation;
-
 import java.util.List;
-import java.util.Optional;
+import roomescape.entity.Reservation;
 
 public interface ReservationRepository {
 
-    Reservation findById(long id);
+    Reservation findById(Long id);
 
     List<Reservation> findAll();
 
     Reservation save(Reservation reservation);
 
-    void deleteById(long id);
+    int deleteById(Long id);
 
-    boolean selectByDateAndTime(LocalDate date, LocalTime time);
+    boolean isDuplicateDateAndTime(LocalDate date, Long timeId);
 }

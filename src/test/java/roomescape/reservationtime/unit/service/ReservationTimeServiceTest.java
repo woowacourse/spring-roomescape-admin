@@ -79,7 +79,7 @@ class ReservationTimeServiceTest {
         // when & then
         assertThatThrownBy(() -> reservationTimeService.createReservationTime(request))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이미 존재하는 시간입니다.");
+                .hasMessage("10:00은 이미 존재하는 시간입니다.");
     }
 
     @Test

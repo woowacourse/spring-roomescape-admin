@@ -35,7 +35,7 @@ public class ReservationTimeService {
 
     private void validateDuplicateTime(ReservationTime existReservationTime, ReservationTime reservationTime) {
         if (existReservationTime.isStartAtEqualTo(reservationTime)) {
-            throw new IllegalArgumentException("이미 존재하는 시간입니다.");
+            throw new IllegalArgumentException(reservationTime.getStartAt() + "은 이미 존재하는 시간입니다.");
         }
     }
 }

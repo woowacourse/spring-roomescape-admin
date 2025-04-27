@@ -2,16 +2,16 @@ package roomescape.reservation.service;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import roomescape.globalException.CustomException;
 import roomescape.reservation.ReservationMapper;
-import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.dto.ReservationReqDto;
 import roomescape.reservation.domain.dto.ReservationResDto;
-import roomescape.globalException.CustomException;
+import roomescape.reservation.repository.ReservationRepository;
+import roomescape.reservationTime.ReservationTimeMapper;
 import roomescape.reservationTime.domain.ReservationTime;
 import roomescape.reservationTime.domain.dto.ReservationTimeResDto;
 import roomescape.reservationTime.repository.ReservationTimeRepository;
-import roomescape.reservationTime.service.ReservationTimeService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,12 +19,10 @@ import java.util.stream.Collectors;
 @Service
 public class ReservationService {
 
-    private final ReservationTimeService reservationTimeService;
     private final ReservationRepository reservationRepository;
     private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(ReservationTimeService reservationTimeService, ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeService = reservationTimeService;
+    public ReservationService(ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
         this.reservationTimeRepository = reservationTimeRepository;
     }
@@ -44,6 +42,8 @@ public class ReservationService {
     }
 
     public void delete(Long id) {
+        reservationRepository.findById(id)
+                .orElseThrow(() -> new CustomException(HttpStatus.BAD_REQUEST, "존재하지 않는 id로 요청하였습니다."));
         reservationRepository.delete(id);
     }
 
@@ -62,7 +62,7 @@ public class ReservationService {
     }
 
     private ReservationResDto convertReservationResDto(Reservation reservation) {
-        ReservationTimeResDto reservationTimeResDto = reservationTimeService.convertToReservationTimeResDto(reservation.getReservationTime());
+        ReservationTimeResDto reservationTimeResDto = ReservationTimeMapper.toResDto(reservation.getReservationTime());
         return ReservationMapper.toResDto(reservation, reservationTimeResDto);
     }
 }

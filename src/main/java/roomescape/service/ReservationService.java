@@ -42,8 +42,8 @@ public class ReservationService {
         reservationDao.remove(id);
     }
 
-    private Reservation findReservationById(final Long id) {
-        return reservationDao.findById(id)
+    private void findReservationById(final Long id) {
+        reservationDao.findById(id)
                 .orElseThrow(() -> new InvalidReservationException("존재하지 않는 예약 시간입니다."));
     }
 }

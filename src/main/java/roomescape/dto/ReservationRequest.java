@@ -9,4 +9,8 @@ public record ReservationRequest(String name, LocalDate date, LocalTime time) {
     public Reservation toEntity(final long id) {
         return new Reservation(id, name, date, time);
     }
+
+    public Reservation toEntity() {
+        return new Reservation(null, name, date, time);
+    }
 }

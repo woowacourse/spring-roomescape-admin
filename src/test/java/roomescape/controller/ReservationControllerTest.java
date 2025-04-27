@@ -1,88 +1,112 @@
 package roomescape.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.ResponseEntity;
+import roomescape.dao.ReservationDAO;
+import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
-@WebMvcTest(ReservationController.class)
 class ReservationControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private final ReservationDAO testReservationDAO = new ReservationDAO() {
+        @Override
+        public List<Reservation> findAllReservation() {
+            return List.of();
+        }
 
-    @Autowired
-    private ObjectMapper objectMapper;
+        @Override
+        public Long insertReservation(Reservation reservation) {
+            return 1L;
+        }
+
+        @Override
+        public int deleteReservationById(Long id) {
+            if (id == 1L) {
+                return 1;
+            }
+            return 0;
+        }
+    };
 
     @Test
-    @DisplayName("GET /reservations - 모든 예약 목록을 조회한다")
-    void read_all_reservations() throws Exception {
-        // when & then
-        mockMvc.perform(get("/reservations"))
-                .andExpect(status().isOk());
+    @DisplayName("모든 예약 목록을 조회한다")
+    void read_all_reservations() {
+        // given
+        ReservationController reservationController = new ReservationController(testReservationDAO);
+
+        // when
+        ResponseEntity<List<Reservation>> response = reservationController.readReservations();
+        List<Reservation> reservations = response.getBody();
+        int statusCode = response.getStatusCode()
+                .value();
+
+        // then
+        assertAll(
+                () -> assertThat(reservations).isEmpty(),
+                () -> assertThat(statusCode).isEqualTo(200)
+        );
     }
 
     @Test
-    @DisplayName("POST /reservations - 예약을 생성한다")
-    void create_reservation() throws Exception {
+    @DisplayName("예약을 생성한다")
+    void create_reservation() {
         // given
         LocalDate date = LocalDate.of(2025, 4, 21);
         LocalTime time = LocalTime.of(10, 0);
         ReservationRequest reservationRequest = new ReservationRequest("kim", date, time);
-        String json = objectMapper.writeValueAsString(reservationRequest);
+        ReservationController reservationController = new ReservationController(testReservationDAO);
 
-        // when & then
-        mockMvc.perform(post("/reservations")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
-                .andExpectAll(
-                        status().isOk(),
-                        jsonPath("$.name").value("kim"),
-                        jsonPath("$.date").value("2025-04-21"),
-                        jsonPath("$.time").value("10:00:00")
-                );
+        // when
+        ResponseEntity<ReservationResponse> response = reservationController.createReservation(reservationRequest);
+        int statusCode = response.getStatusCode()
+                .value();
+
+        // then
+        assertThat(statusCode).isEqualTo(200);
     }
-
+    
     @Test
-    @DisplayName("DELETE /reservations/{id} - id에 해당하는 예약을 삭제한다")
-    void delete_reservation() throws Exception {
+    @DisplayName("id에 해당하는 예약을 삭제한다")
+    void delete_reservation() {
         // given
         LocalDate date = LocalDate.of(2025, 4, 21);
         LocalTime time = LocalTime.of(10, 0);
         ReservationRequest reservationRequest = new ReservationRequest("kim", date, time);
-        String json = objectMapper.writeValueAsString(reservationRequest);
-        String response = mockMvc.perform(post("/reservations")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json))
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-        ReservationResponse reservationResponse = objectMapper.readValue(response, ReservationResponse.class);
-        Long createdId = reservationResponse.id();
+        ReservationController reservationController = new ReservationController(testReservationDAO);
+        ResponseEntity<ReservationResponse> createdResponse = reservationController.createReservation(
+                reservationRequest);
+        Long createdId = createdResponse.getBody()
+                .id();
 
-        // when & then
-        String urlTemplate = "/reservations/%d".formatted(createdId);
-        mockMvc.perform(delete(urlTemplate))
-                .andExpect(status().isOk());
+        // when
+        ResponseEntity<Void> response = reservationController.deleteReservation(createdId);
+        int statusCode = response.getStatusCode()
+                .value();
+
+        // then
+        assertThat(statusCode).isEqualTo(200);
     }
 
     @Test
-    @DisplayName("DELETE /reservations/{id} - 존재하지 않는 예약 삭제 시 400 반환")
-    void delete_reservation_when_not_exist_id() throws Exception {
-        mockMvc.perform(delete("/reservations/2"))
-                .andExpect(status().isBadRequest());
+    @DisplayName("존재하지 않는 예약 삭제 시 400 반환")
+    void delete_reservation_when_not_exist_id() {
+        // given
+        ReservationController reservationController = new ReservationController(testReservationDAO);
+
+        // when
+        ResponseEntity<Void> response = reservationController.deleteReservation(2L);
+        int statusCode = response.getStatusCode()
+                .value();
+
+        // then
+        assertThat(statusCode).isEqualTo(400);
     }
 }

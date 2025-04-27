@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class Reservation {
 
-    private final Long id;
+    private Long id;
     private final String name;
     private final LocalDate date;
     private final LocalTime time;
@@ -20,6 +20,10 @@ public class Reservation {
 
     public Reservation(final String name, final LocalDate date, final LocalTime time) {
         this(null, name, date, time);
+    }
+
+    public Reservation() {
+        this(null, null, null, null);
     }
 
     public boolean isSameId(final Long id) {
@@ -55,5 +59,9 @@ public class Reservation {
 
     public LocalTime getTime() {
         return time;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
     }
 }

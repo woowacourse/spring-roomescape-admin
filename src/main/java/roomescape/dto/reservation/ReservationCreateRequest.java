@@ -1,12 +1,11 @@
-package roomescape.dto;
+package roomescape.dto.reservation;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public record ReservationCreateRequest(
-    LocalDate date,
     String name,
-    LocalTime time
+    LocalDate date,
+    long timeId
 ) {
 
 }

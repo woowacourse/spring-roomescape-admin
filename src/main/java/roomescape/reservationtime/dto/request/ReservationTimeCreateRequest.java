@@ -7,6 +7,6 @@ public record ReservationTimeCreateRequest(
         LocalTime startAt
 ) {
     public ReservationTime toReservationTime() {
-        return new ReservationTime(startAt);
+        return new ReservationTime(null, startAt);
     }
 }

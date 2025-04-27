@@ -2,7 +2,6 @@ package roomescape.reservation.repository;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
@@ -15,34 +14,22 @@ public class FakeReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> getAll() {
-        return reservations.values().stream()
+        return reservations.entrySet().stream()
+                .map(entry -> new Reservation(entry.getKey(), entry.getValue().getName(),
+                        entry.getValue().getDate(), entry.getValue().getTime()))
                 .toList();
     }
 
     @Override
     public Reservation put(final Reservation reservation) {
-        long id = index.getAndIncrement();
+        Long id = index.getAndIncrement();
         reservations.put(id, reservation);
-        return reservation;
+        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     @Override
-    public boolean deleteById(final long id) {
+    public boolean deleteById(final Long id) {
         return reservations.remove(id) != null;
     }
-
-
-    @Override
-    public Long getCachedId(final Reservation reservation) {
-        return reservations.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(reservation))
-                .map(Entry::getKey)
-                .findAny()
-                .orElseThrow();
-    }
-
-    @Override
-    public void cacheId(final Reservation reservation, final Long id) {
-        reservations.put(id, reservation);
-    }
 }
+

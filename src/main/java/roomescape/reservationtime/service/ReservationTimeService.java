@@ -18,8 +18,7 @@ public class ReservationTimeService {
 
     public List<ReservationTimeResponse> getReservationTimes() {
         return reservationTimeRepository.getAll().stream()
-                .map(reservation -> ReservationTimeResponse.from(reservationTimeRepository.getCachedId(reservation),
-                        reservation))
+                .map(ReservationTimeResponse::from)
                 .toList();
     }
 
@@ -32,8 +31,7 @@ public class ReservationTimeService {
     public ReservationTimeResponse create(final ReservationTimeCreateRequest request) {
         validateIsTimeUnique(request);
         ReservationTime newReservationTime = reservationTimeRepository.put(request.toReservationTime());
-        long newId = reservationTimeRepository.getCachedId(newReservationTime);
-        return ReservationTimeResponse.from(newId, newReservationTime);
+        return ReservationTimeResponse.from(newReservationTime);
     }
 
     private void validateIsTimeUnique(final ReservationTimeCreateRequest request) {

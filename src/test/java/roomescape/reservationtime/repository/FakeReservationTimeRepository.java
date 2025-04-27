@@ -3,7 +3,6 @@ package roomescape.reservationtime.repository;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -25,7 +24,7 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
     public ReservationTime put(final ReservationTime reservationTime) {
         long id = index.getAndIncrement();
         reservationTimes.put(id, reservationTime);
-        return reservationTime;
+        return new ReservationTime(id, reservationTime.getStartAt());
     }
 
     @Override
@@ -43,19 +42,5 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
         return reservationTimes.values().stream()
                 .map(ReservationTime::getStartAt)
                 .anyMatch(startAt -> startAt.equals(time));
-    }
-
-    @Override
-    public Long getCachedId(final ReservationTime reservationTime) {
-        return reservationTimes.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(reservationTime))
-                .map(Entry::getKey)
-                .findAny()
-                .orElseThrow();
-    }
-
-    @Override
-    public void cacheId(final ReservationTime reservationTime, final Long id) {
-        reservationTimes.put(id, reservationTime);
     }
 }

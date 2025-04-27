@@ -6,12 +6,14 @@ import java.time.LocalTime;
 import roomescape.reservationtime.domain.ReservationTime;
 
 public class Reservation {
+    private final Long id;
     private final String name;
     private final LocalDate date;
     private final ReservationTime time;
 
-    public Reservation(final String name, final LocalDate date, final ReservationTime time) {
+    public Reservation(final Long id, final String name, final LocalDate date, final ReservationTime time) {
         validateDateTime(date, time.getStartAt());
+        this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
@@ -33,5 +35,9 @@ public class Reservation {
 
     public ReservationTime getTime() {
         return time;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

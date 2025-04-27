@@ -15,8 +15,4 @@ public interface ReservationTimeRepository {
     Optional<ReservationTime> findById(long id);
 
     boolean checkExistsByStartAt(LocalTime time);
-
-    Long getCachedId(ReservationTime reservationTime);
-
-    void cacheId(ReservationTime reservationTime, Long id);
 }

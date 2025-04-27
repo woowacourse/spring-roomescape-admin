@@ -34,7 +34,7 @@ class ReservationServiceTest {
 
     @Test
     void createReservation_shouldReturnResponseWhenSuccessful() {
-        ReservationTime time = new ReservationTime(LocalTime.of(10, 0));
+        ReservationTime time = new ReservationTime(1L,LocalTime.of(10, 0));
         reservationTimeRepository.put(time);
 
         ReservationCreateRequest request = new ReservationCreateRequest("홍길동", LocalDate.of(2025, 5, 1), 1L);
@@ -47,7 +47,7 @@ class ReservationServiceTest {
 
     @Test
     void getReservations_shouldReturnAllCreatedReservations() {
-        reservationTimeRepository.put(new ReservationTime(LocalTime.of(10, 0)));
+        reservationTimeRepository.put(new ReservationTime(1L,LocalTime.of(10, 0)));
         reservationService.create(new ReservationCreateRequest("A", futureDate, 1L));
         reservationService.create(new ReservationCreateRequest("B", futureDate, 1L));
 
@@ -64,7 +64,7 @@ class ReservationServiceTest {
 
     @Test
     void deleteReservation_shouldRemoveSuccessfully() {
-        reservationTimeRepository.put(new ReservationTime(LocalTime.of(9, 0)));
+        reservationTimeRepository.put(new ReservationTime(1L,LocalTime.of(9, 0)));
         ReservationResponse response = reservationService.create(
                 new ReservationCreateRequest("Test", futureDate, 1L)
         );

@@ -10,10 +10,10 @@ import roomescape.reservationtime.domain.ReservationTime;
 class ReservationTest {
     @Test
     void createReservation_shouldThrowException_whenTimeIsBeforeNow() {
-        assertThatThrownBy(() -> new Reservation(
+        assertThatThrownBy(() -> new Reservation(1L,
                 "대니",
                 LocalDate.now().minusDays(1),
-                new ReservationTime(LocalTime.now()))
+                new ReservationTime(1L, LocalTime.now()))
         ).isInstanceOf(IllegalArgumentException.class);
     }
 }

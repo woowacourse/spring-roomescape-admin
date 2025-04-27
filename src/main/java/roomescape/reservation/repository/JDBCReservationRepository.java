@@ -9,20 +9,14 @@ import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.entity.ReservationEntity;
 import roomescape.reservationtime.entity.ReservationTimeEntity;
-import roomescape.reservationtime.repository.ReservationTimeIdCache;
 
 @Repository
 @Primary
 public class JDBCReservationRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
-    private final ReservationIdCache reservationIdCache;
-    private final ReservationTimeIdCache reservationTimeIdCache;
 
-    public JDBCReservationRepository(final JdbcTemplate jdbcTemplate, final ReservationIdCache reservationIdCache,
-                                     final ReservationTimeIdCache reservationTimeIdCache) {
+    public JDBCReservationRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.reservationIdCache = reservationIdCache;
-        this.reservationTimeIdCache = reservationTimeIdCache;
     }
 
     @Override
@@ -48,14 +42,12 @@ public class JDBCReservationRepository implements ReservationRepository {
                             resultSet.getString("date"),
                             timeEntity
                     );
-                    Reservation reservation = entity.toReservation();
-                    reservationIdCache.cacheId(reservation, entity.id());
-                    reservationTimeIdCache.cacheId(reservation.getTime(), timeEntity.id());
-                    return reservation;
+                    return entity.toReservation();
                 }
         );
     }
 
+    @Override
     public Reservation put(final Reservation reservation) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
@@ -63,24 +55,14 @@ public class JDBCReservationRepository implements ReservationRepository {
 
         long generatedId = simpleJdbcInsert.executeAndReturnKey(
                 Map.of("name", reservation.getName(), "date", reservation.getDate(), "time_id",
-                        reservationTimeIdCache.getCachedId(reservation.getTime()))).longValue();
+                        reservation.getTime().getId())
+        ).longValue();
 
-        cacheId(reservation, generatedId);
-        return reservation;
+        return new Reservation(generatedId, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     @Override
-    public boolean deleteById(final long id) {
+    public boolean deleteById(final Long id) {
         return jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id) != 0;
-    }
-
-    @Override
-    public Long getCachedId(final Reservation reservation) {
-        return reservationIdCache.getCachedId(reservation);
-    }
-
-    @Override
-    public void cacheId(final Reservation reservation, final Long id) {
-        reservationIdCache.cacheId(reservation, id);
     }
 }

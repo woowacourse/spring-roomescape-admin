@@ -15,12 +15,9 @@ import roomescape.reservationtime.entity.ReservationTimeEntity;
 @Primary
 public class JDBCReservationTimeRepository implements ReservationTimeRepository {
     private final JdbcTemplate jdbcTemplate;
-    private final ReservationTimeIdCache cache;
 
-    public JDBCReservationTimeRepository(final JdbcTemplate jdbcTemplate,
-                                         final ReservationTimeIdCache reservationTimeIdCache) {
+    public JDBCReservationTimeRepository(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.cache = reservationTimeIdCache;
     }
 
     @Override
@@ -32,9 +29,7 @@ public class JDBCReservationTimeRepository implements ReservationTimeRepository 
                             resultSet.getLong("id"),
                             resultSet.getString("start_at")
                     );
-                    ReservationTime reservationTime = entity.toReservationTime();
-                    cacheId(reservationTime, entity.id());
-                    return reservationTime;
+                    return entity.toReservationTime();
                 }
         );
     }
@@ -48,8 +43,7 @@ public class JDBCReservationTimeRepository implements ReservationTimeRepository 
         long generatedId = simpleJdbcInsert.executeAndReturnKey(
                 Map.of("start_at", reservationTime.getStartAt())).longValue();
 
-        cacheId(reservationTime, generatedId);
-        return reservationTime;
+        return new ReservationTime(generatedId, reservationTime.getStartAt());
     }
 
     @Override
@@ -79,15 +73,5 @@ public class JDBCReservationTimeRepository implements ReservationTimeRepository 
                 time
         );
         return Boolean.TRUE.equals(exists);
-    }
-
-    @Override
-    public Long getCachedId(final ReservationTime reservationTime) {
-        return cache.getCachedId(reservationTime);
-    }
-
-    @Override
-    public void cacheId(final ReservationTime reservationTime, final Long id) {
-        cache.cacheId(reservationTime, id);
     }
 }

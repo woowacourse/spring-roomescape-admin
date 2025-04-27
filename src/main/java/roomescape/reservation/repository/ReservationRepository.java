@@ -8,9 +8,5 @@ public interface ReservationRepository {
 
     Reservation put(Reservation reservation);
 
-    boolean deleteById(long id);
-
-    Long getCachedId(Reservation reservation);
-
-    void cacheId(Reservation reservation, Long id);
+    boolean deleteById(Long id);
 }

@@ -11,10 +11,9 @@ public record ReservationResponse(
         LocalDate date,
         ReservationTimeResponse time
 ) {
-    public static ReservationResponse from(long id, long reservationTimeId, Reservation reservation,
-                                           ReservationTime reservationTime) {
-        return new ReservationResponse(id, reservation.getName(), reservation.getDate(),
-                ReservationTimeResponse.from(reservationTimeId, reservationTime)
+    public static ReservationResponse from(Reservation reservation, ReservationTime reservationTime) {
+        return new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(),
+                ReservationTimeResponse.from(reservationTime)
         );
     }
 }

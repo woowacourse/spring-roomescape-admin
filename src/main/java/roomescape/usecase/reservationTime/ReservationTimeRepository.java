@@ -1,0 +1,16 @@
+package roomescape.usecase.reservationTime;
+
+import java.util.List;
+import roomescape.domain.ReservationTime;
+
+public interface ReservationTimeRepository {
+    ReservationTimeOutput addReservationTime(ReservationTime reservationTime);
+
+    List<ReservationTimeOutput> getAllReservationTimes();
+
+    ReservationTime getReservationTime(Long timeId);
+
+    void deleteReservationTime(long id);
+
+    boolean existsById(long id);
+}

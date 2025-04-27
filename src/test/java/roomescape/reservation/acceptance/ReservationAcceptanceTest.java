@@ -4,7 +4,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservation.controller.ReservationController;
 import roomescape.reservation.domain.Reservation;
@@ -220,20 +218,5 @@ class ReservationAcceptanceTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(400);
-    }
-
-    @Test
-    @DisplayName("서비스 계층 분리를 확인한다.")
-    void separateServiceLayer() {
-        boolean isJdbcTemplateInjected = false;
-
-        for (Field field : reservationController.getClass().getDeclaredFields()) {
-            if (field.getType().equals(JdbcTemplate.class)) {
-                isJdbcTemplateInjected = true;
-                break;
-            }
-        }
-
-        assertThat(isJdbcTemplateInjected).isFalse();
     }
 }

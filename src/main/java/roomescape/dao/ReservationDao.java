@@ -21,8 +21,6 @@ public class ReservationDao {
     }
 
     public long save(final ReservationCreate reservationCreate) {
-        checkReservationAlreadyExist(reservationCreate.date(), reservationCreate.timeId());
-
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
         jdbcTemplate.update(connection -> {
@@ -54,12 +52,10 @@ public class ReservationDao {
         jdbcTemplate.update(query);
     }
 
-    private void checkReservationAlreadyExist(final String date, final Long timeId) {
+    public boolean isReservationExist(final String date, final Long timeId) {
         String query = "SELECT count(*) FROM reservation WHERE date = ? AND time_id = ?";
         int count = jdbcTemplate.queryForObject(query, Integer.class, date, timeId);
-        if (count != 0) {
-            throw new IllegalArgumentException("[ERROR] 해당 날짜와 시간에 대한 예약 기록이 존재합니다.");
-        }
+        return count != 0;
     }
 
     private RowMapper<ReservationRead> reservationRowMapper() {

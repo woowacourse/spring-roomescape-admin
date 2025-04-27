@@ -34,6 +34,7 @@ public class ReservationService {
     }
 
     public ReservationResponse createReservation(final ReservationRequest request) {
+        checkReservationExist(request);
         ReservationCreate reservationCreate = new ReservationCreate(request.name(), request.date().toString(), request.timeId());
         long id = reservationDao.save(reservationCreate);
 
@@ -90,6 +91,12 @@ public class ReservationService {
 
     public void deleteAllReservationTimes() {
         reservationTimeDao.deleteAll();
+    }
+
+    private void checkReservationExist(final ReservationRequest request) {
+        if (reservationDao.isReservationExist(request.date().toString(), request.timeId())) {
+            throw new IllegalArgumentException("[ERROR] 해당 날짜와 시간에 대한 예약 기록이 존재합니다.");
+        }
     }
 
     private List<Reservation> toReservations(List<ReservationRead> reads) {

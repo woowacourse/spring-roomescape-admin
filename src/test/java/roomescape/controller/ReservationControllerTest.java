@@ -10,106 +10,110 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationControllerTest {
+class ReservationControllerTest extends BaseControllerTest {
 
-    Map<String, String> params = new HashMap<>();
+    Map<String, Object> reservation = new HashMap<>();
 
     @BeforeEach
     void setUp() {
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
-    }
-
-    @Test
-    @DisplayName("예약 추가 후 조회 테스트")
-    void createReservationTest() {
+        truncateTables();
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+    }
+
+    @Test
+    @DisplayName("예약 추가 테스트")
+    void saveReservationTest() {
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("name", is("브라운"))
-                .body("date", is("2023-08-05"))
-                .body("time", is("15:40:00"));
+                .statusCode(200);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
-    }
-
-    @Test
-    @DisplayName("중복된 예약 테스트")
-    void isDuplicateReservationTest() {
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200);
-
-        params.put("name", "솔라");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(400);
+                .body("size()", is(1))
+                .body("[0].name", is("브라운"))
+                .body("[0].date", is("2023-08-05"));;
     }
 
     @Test
     @DisplayName("예약 삭제 테스트")
     void deleteReservationTest() {
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
 
         RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200);
 
         RestAssured.given().log().all()
-                .when().get("/reservations")
+                .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));
     }
 
     @Test
-    @DisplayName("예약 삭제 실패 테스트")
-    void deleteReservationFailTest() {
+    @DisplayName("없는 예약 삭제 테스트")
+    void deleteFailTest() {
+
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+                .statusCode(200);
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/2")
                 .then().log().all()
-                .statusCode(500);
+                .statusCode(404);
+    }
+
+    @Test
+    @DisplayName("중복 예약 테스트")
+    void alreadyExistReservationTest() {
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        reservation.clear();
+
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
     }
 
     @AfterEach
-    void clear() {
-        params.clear();
+    void afterEach() {
+        reservation.clear();
     }
+
 }

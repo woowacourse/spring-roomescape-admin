@@ -1,0 +1,87 @@
+package roomescape.reservationTime;
+
+import java.sql.PreparedStatement;
+import java.util.List;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+
+public class JdbcReservationTimeRepository implements ReservationTimeRepository {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public JdbcReservationTimeRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
+    public ReservationTime saveReservationTime(ReservationTime wantToSaveReservationTime) {
+        String query = "INSERT INTO reservation_time (start_at) values (?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    query, new String[]{"id"});
+            preparedStatement.setTime(1, java.sql.Time.valueOf(wantToSaveReservationTime.getStartAt()));
+            return preparedStatement;
+        }, keyHolder);
+
+        return ReservationTime.toEntity(keyHolder.getKey().longValue(), wantToSaveReservationTime);
+    }
+
+    @Override
+    public void deleteReservationTime(Long wantToDeleteId) {
+        String query = "DELETE FROM reservation_time WHERE ID = ?";
+        jdbcTemplate.update(query, wantToDeleteId);
+    }
+
+    @Override
+    public List<ReservationTime> findAllReservationTimes() {
+        String query = "SELECT id, start_at FROM reservation_time";
+
+        return jdbcTemplate.query(
+                query,
+                (result, rowNum) -> {
+                    return new ReservationTime(
+                            result.getLong("id"),
+                            result.getTime("start_at").toLocalTime()
+                    );
+                }
+        );
+    }
+
+    @Override
+    public ReservationTime findById(Long wantToFindId) {
+        String query = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+        return findReservationTimeById(wantToFindId, query);
+    }
+
+    @Override
+    public boolean isExistTimeByStartTime(ReservationTime wantToValidateTime) {
+        String query = "SELECT COUNT(*) FROM reservation_time WHERE start_at = ?";
+        int count = jdbcTemplate.queryForObject(query, Integer.class,
+                wantToValidateTime.getStartAt());
+        return count > 0;
+    }
+
+    @Override
+    public boolean isExistTimeById(Long wantToValidateReservationTimeId) {
+        String query = "SELECT COUNT(*) FROM reservation_time WHERE id = ?";
+        int count = jdbcTemplate.queryForObject(query, Integer.class, wantToValidateReservationTimeId);
+
+        return count > 0;
+    }
+
+    private ReservationTime findReservationTimeById(Long wantToFindId, String findQuery) {
+        return jdbcTemplate.queryForObject(
+                findQuery,
+                (result, rowNum) -> {
+                    return new ReservationTime(
+                            result.getLong("id"),
+                            result.getTime("start_at").toLocalTime()
+                    );
+                }
+                , wantToFindId);
+    }
+
+}

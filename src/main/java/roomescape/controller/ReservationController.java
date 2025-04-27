@@ -1,9 +1,6 @@
 package roomescape.controller;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,40 +11,34 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import roomescape.entity.Reservation;
-import roomescape.entity.Reservations;
+import roomescape.dto.ReservationRequest;
+import roomescape.reservation.Reservation;
+import roomescape.reservation.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final Reservations reservations;
-    private AtomicLong index = new AtomicLong(1);
+    private final ReservationService reservationService;
 
-    @Autowired
-    public ReservationController(Reservations reservations) {
-        this.reservations = reservations;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
-    @GetMapping()
+    @GetMapping
     public List<Reservation> getReservations(
     ) {
-        return reservations.findAllReservations();
+        return reservationService.findAllReservations();
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Reservation> createReservation(
-            @RequestBody Reservation reservation
-    ) {
-        Reservation newReservation = Reservation.toEntity(reservation, index.getAndIncrement());
+            @RequestBody ReservationRequest reservationRequest
+            ) {
 
-        try{
-            reservations.validateReservationTimeAvailability(newReservation);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
+        validateReservationTimeAvailability(reservationRequest);
 
-        reservations.saveReservation(newReservation);
+        Reservation newReservation = reservationService.saveReservation(reservationRequest);
         return ResponseEntity.ok().body(newReservation);
     }
 
@@ -55,14 +46,28 @@ public class ReservationController {
     public ResponseEntity<List<Reservation>> deleteReservation(
             @PathVariable Long id
     ) {
-        Reservation reservation = reservations.findAllReservations().stream()
-                .filter(it -> Objects.equals(it.getId(), id))
-                .findFirst()
-                .orElseThrow(RuntimeException::new);
+        validateDeleteReservationAvailability(id);
 
-        reservations.deleteReservation(reservation);
+        reservationService.deleteReservation(id);
 
-        return ResponseEntity.ok().body(reservations.findAllReservations());
+        return ResponseEntity.ok().body(reservationService.findAllReservations());
+    }
+
+    private void validateDeleteReservationAvailability(Long id) {
+        try {
+            reservationService.validateDeleteReservationAvailability(id);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    private void validateReservationTimeAvailability(ReservationRequest reservationRequest) {
+        try{
+            reservationService.validateSaveReservationAvailability(reservationRequest);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

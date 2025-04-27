@@ -11,20 +11,21 @@ public class Reservation {
     private final ReservationTime reservationTime;
 
     public Reservation(Long id, String name, LocalDate reservationDate, ReservationTime reservationTime) {
-        validateReservation(name, reservationDate, reservationTime);
         this.id = id;
         this.name = name;
         this.reservationDate = reservationDate;
         this.reservationTime = reservationTime;
+        validateReservation();
+
     }
 
     public static Reservation withoutId(String name, LocalDate reservationDate, ReservationTime reservationTime) {
         return new Reservation(null, name, reservationDate, reservationTime);
     }
 
-    private static void validateReservation(String name, LocalDate reservationDate, ReservationTime reservationTime) {
+    private void validateReservation() {
         if (name == null || reservationDate == null || reservationTime == null) {
-            throw new IllegalArgumentException("Reservation cannot be null");
+            throw new IllegalArgumentException("Reservation field cannot be null");
         }
     }
 

@@ -80,7 +80,7 @@ class ReservationServiceTest {
     @TestConfiguration
     static class TestConfig {
 
-        @Bean(name = "h2ReservationTimeRepository")
+        @Bean
         public ReservationTimeRepository reservationTimeRepository(
                 final JdbcTemplate jdbcTemplate
         ) {
@@ -94,8 +94,8 @@ class ReservationServiceTest {
             return new ReservationTimeService(reservationTimeRepository);
         }
 
-        @Bean(name = "h2ReservationRepository")
-        public ReservationRepository h2ReservationRepository(
+        @Bean
+        public ReservationRepository reservationRepository(
                 final JdbcTemplate jdbcTemplate
         ) {
             return new H2ReservationRepository(jdbcTemplate);

@@ -16,7 +16,7 @@ public class Reservation {
     }
 
     public static Reservation createWithId(final Long id, final String name, final LocalDate date, final Time time) {
-        Objects.requireNonNull(id);
+        Objects.requireNonNull(id, "id가 null 입니다.");
         return new Reservation(id, name, date, time);
     }
 
@@ -38,9 +38,9 @@ public class Reservation {
     private void validateNonNull(
             final String name, final LocalDate date, final Time time
     ) {
-        Objects.requireNonNull(name);
-        Objects.requireNonNull(date);
-        Objects.requireNonNull(time);
+        Objects.requireNonNull(name, "name이 null 입니다.");
+        Objects.requireNonNull(date, "date가 null 입니다.");
+        Objects.requireNonNull(time, "time이 null 입니다.");
     }
 
     public Long getId() {

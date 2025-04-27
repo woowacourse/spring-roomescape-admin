@@ -14,7 +14,7 @@ public class Time {
     }
 
     public static Time createWithId(final Long id, final LocalTime startAt) {
-        Objects.requireNonNull(id);
+        Objects.requireNonNull(id, "id가 null 입니다.");
         return new Time(id, startAt);
     }
 
@@ -25,7 +25,7 @@ public class Time {
     }
 
     private void validateNonNull(final LocalTime startAt) {
-        Objects.requireNonNull(startAt);
+        Objects.requireNonNull(startAt, "startAt이 null 입니다.");
     }
 
     public Long getId() {

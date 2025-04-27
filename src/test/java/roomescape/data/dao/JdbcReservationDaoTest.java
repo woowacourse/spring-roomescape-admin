@@ -102,8 +102,8 @@ class JdbcReservationDaoTest {
 
         // then
         assertThat(actual).containsExactly(
-                new Reservation(1L, "hotteok", LocalDate.of(2025, 1, 1), timeFixture),
-                new Reservation(2L, "hotteok", LocalDate.of(2025, 1, 2), timeFixture)
+                Reservation.createWithId(1L, "hotteok", LocalDate.of(2025, 1, 1), timeFixture),
+                Reservation.createWithId(2L, "hotteok", LocalDate.of(2025, 1, 2), timeFixture)
         );
     }
 

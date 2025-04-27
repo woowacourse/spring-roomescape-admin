@@ -14,10 +14,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class ReservationTest {
 
-    @DisplayName("생성자1로 null은 들어올 수 없다.")
+    @DisplayName("생성자로 null은 들어올 수 없다.")
     @ParameterizedTest
     @MethodSource("provideConstructorArguments")
-    void validateNonNull1(
+    void validateNonNull(
             final String name,
             final LocalDate localDate,
             final Time time
@@ -27,10 +27,10 @@ class ReservationTest {
                 .isInstanceOf(NullPointerException.class);
     }
 
-    @DisplayName("생성자2로 null은 들어올 수 없다.")
+    @DisplayName("id를 포함하여 생성할 때 id에 null은 들어올 수 없다.")
     @ParameterizedTest
     @MethodSource("provideConstructorArguments")
-    void validateNonNull2(
+    void createWithId(
             final String name,
             final LocalDate localDate,
             final Time time
@@ -38,10 +38,10 @@ class ReservationTest {
         // given & when & then
         assertAll(
                 () -> assertThatThrownBy(
-                        () -> new Reservation(null, "hotteok", LocalDate.MAX, new Time(LocalTime.MAX)))
+                        () -> Reservation.createWithId(null, "hotteok", LocalDate.MAX, new Time(LocalTime.MAX)))
                         .isInstanceOf(NullPointerException.class),
                 () -> assertThatThrownBy(
-                        () -> new Reservation(1L, name, localDate, time))
+                        () -> Reservation.createWithId(1L, name, localDate, time))
                         .isInstanceOf(NullPointerException.class)
         );
     }

@@ -12,15 +12,16 @@ public class Reservation {
     private final Time time;
 
     public Reservation(final String name, final LocalDate date, final Time time) {
-        validateNonNull(name, date, time);
-        validateNameIsNotBlank(name);
-        this.name = name;
-        this.date = date;
-        this.time = time;
+        this(null, name, date, time);
     }
 
-    public Reservation(final Long id, final String name, final LocalDate date, final Time time) {
-        validateNonNull(id, name, date, time);
+    public static Reservation createWithId(final Long id, final String name, final LocalDate date, final Time time) {
+        Objects.requireNonNull(id);
+        return new Reservation(id, name, date, time);
+    }
+
+    private Reservation(final Long id, final String name, final LocalDate date, final Time time) {
+        validateNonNull(name, date, time);
         validateNameIsNotBlank(name);
         this.id = id;
         this.name = name;
@@ -37,15 +38,6 @@ public class Reservation {
     private void validateNonNull(
             final String name, final LocalDate date, final Time time
     ) {
-        Objects.requireNonNull(name);
-        Objects.requireNonNull(date);
-        Objects.requireNonNull(time);
-    }
-
-    private void validateNonNull(
-            final Long id, final String name, final LocalDate date, final Time time
-    ) {
-        Objects.requireNonNull(id);
         Objects.requireNonNull(name);
         Objects.requireNonNull(date);
         Objects.requireNonNull(time);

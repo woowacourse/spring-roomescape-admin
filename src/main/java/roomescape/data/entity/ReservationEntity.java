@@ -26,7 +26,7 @@ public record ReservationEntity(
     }
 
     public Reservation toDomain() {
-        return new Reservation(
+        return Reservation.createWithId(
                 id,
                 name,
                 LocalDate.parse(date, DATE_FORMATTER),

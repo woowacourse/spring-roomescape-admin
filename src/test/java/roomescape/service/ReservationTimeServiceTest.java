@@ -1,16 +1,21 @@
 package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import org.assertj.core.api.ThrowableAssert;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import roomescape.TestDao;
 import roomescape.dto.request.ReservationTimeRequest;
 import roomescape.dto.response.ReservationTimeResponse;
+import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 import roomescape.repository.repository.ReservationRepository;
 import roomescape.repository.repository.ReservationTimeRepository;
@@ -61,8 +66,9 @@ class ReservationTimeServiceTest {
         assertThat(reservationTimeRepository.getAll()).size().isEqualTo(0);
     }
 
-    // 실제 DB를 호출하지 않고 TestDao를 사용하는 현재 구조 상 테스트가 힘들어보인다.
-/*    @Test
+    // 실제 DB를 호출하지 않고 TestDao를 사용하는 현재 구조 상 테스트가 힘들다.
+    @Test
+    @Disabled
     @DisplayName("제거를 시도하는 데이터와 연관(FK)된 데이터가 존재할 경우 예외를 반환한다")
     void removeException() {
         // given
@@ -70,11 +76,11 @@ class ReservationTimeServiceTest {
         Reservation reservation = reservationRepository.save(new Reservation(null, "moko", LocalDate.now(), time));
 
         // when
-        ThrowingCallable throwingCallable = () -> service.remove(time.id());
+        ThrowableAssert.ThrowingCallable throwingCallable = () -> service.remove(time.id());
 
         // then
         assertThatThrownBy(throwingCallable)
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("[ERROR] 데이터 무결성을 위반했습니다.");
-    }*/
+    }
 }

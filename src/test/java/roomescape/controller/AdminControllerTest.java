@@ -31,7 +31,7 @@ class AdminControllerTest {
         String result = adminController.reservation();
 
         // then
-        String expected = "admin/reservation-legacy";
+        String expected = "admin/reservation";
         assertThat(result).isEqualTo(expected);
     }
 

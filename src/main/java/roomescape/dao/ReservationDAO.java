@@ -48,7 +48,7 @@ public class ReservationDAO {
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
-    public Reservation addAndGet(String name, LocalDate date, int timeId) {
+    public Reservation addAndGet(String name, LocalDate date, long timeId) {
         SimpleJdbcInsert simpleJdbcInsert = makeSimpleJdbcInsert();
         Map<String, Object> parameters = Map.of(
                 "name", name,
@@ -59,7 +59,7 @@ public class ReservationDAO {
         Number id = simpleJdbcInsert.executeAndReturnKey(parameters);
         Time startAt = jdbcTemplate.queryForObject("SELECT start_at FROM reservation_time WHERE id = ?", Time.class, timeId);
 
-        ReservationTime timeRes = new ReservationTime((long) timeId, startAt.toLocalTime());
+        ReservationTime timeRes = new ReservationTime(timeId, startAt.toLocalTime());
         return new Reservation(id.longValue(), name, date, timeRes);
     }
 

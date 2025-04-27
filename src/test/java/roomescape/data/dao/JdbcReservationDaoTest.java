@@ -12,10 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.business.domain.PlayTime;
 import roomescape.business.domain.Reservation;
-import roomescape.business.domain.Time;
 import roomescape.data.entity.ReservationEntity;
-import roomescape.data.entity.TimeEntity;
+import roomescape.data.entity.PlayTimeEntity;
 
 @JdbcTest
 class JdbcReservationDaoTest {
@@ -23,7 +23,7 @@ class JdbcReservationDaoTest {
     private ReservationDao reservationDao;
 
     private final JdbcTemplate jdbcTemplate;
-    private final Time timeFixture = Time.createWithId(1L, LocalTime.of(10, 10));
+    private final PlayTime playTimeFixture = roomescape.business.domain.PlayTime.createWithId(1L, LocalTime.of(10, 10));
 
     @Autowired
     public JdbcReservationDaoTest(final JdbcTemplate jdbcTemplate) {
@@ -65,7 +65,7 @@ class JdbcReservationDaoTest {
         final Long id = reservationDao.save(new Reservation(
                 "hotteok",
                 LocalDate.of(2025, 1, 1),
-                timeFixture
+                playTimeFixture
         ));
         final ReservationEntity actual = jdbcTemplate.queryForObject("""
                 SELECT
@@ -86,7 +86,7 @@ class JdbcReservationDaoTest {
                 1L,
                 "hotteok",
                 "2025-01-01",
-                TimeEntity.from(timeFixture))
+                PlayTimeEntity.from(playTimeFixture))
         );
     }
 
@@ -102,8 +102,8 @@ class JdbcReservationDaoTest {
 
         // then
         assertThat(actual).containsExactly(
-                Reservation.createWithId(1L, "hotteok", LocalDate.of(2025, 1, 1), timeFixture),
-                Reservation.createWithId(2L, "hotteok", LocalDate.of(2025, 1, 2), timeFixture)
+                Reservation.createWithId(1L, "hotteok", LocalDate.of(2025, 1, 1), playTimeFixture),
+                Reservation.createWithId(2L, "hotteok", LocalDate.of(2025, 1, 2), playTimeFixture)
         );
     }
 

@@ -3,22 +3,22 @@ package roomescape.business.domain;
 import java.time.LocalTime;
 import java.util.Objects;
 
-public class Time {
+public class PlayTime {
 
     private Long id;
 
     private final LocalTime startAt;
 
-    public Time(final LocalTime startAt) {
+    public PlayTime(final LocalTime startAt) {
         this(null, startAt);
     }
 
-    public static Time createWithId(final Long id, final LocalTime startAt) {
+    public static PlayTime createWithId(final Long id, final LocalTime startAt) {
         Objects.requireNonNull(id, "id가 null 입니다.");
-        return new Time(id, startAt);
+        return new PlayTime(id, startAt);
     }
 
-    private Time(final Long id, final LocalTime startAt) {
+    private PlayTime(final Long id, final LocalTime startAt) {
         validateNonNull(startAt);
         this.id = id;
         this.startAt = startAt;
@@ -41,8 +41,8 @@ public class Time {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        final Time time = (Time) o;
-        return Objects.equals(id, time.id) && Objects.equals(startAt, time.startAt);
+        final PlayTime playTime = (PlayTime) o;
+        return Objects.equals(id, playTime.id) && Objects.equals(startAt, playTime.startAt);
     }
 
     @Override

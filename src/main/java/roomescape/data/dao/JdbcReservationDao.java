@@ -28,7 +28,7 @@ public class JdbcReservationDao implements ReservationDao {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservationEntity.name());
             ps.setString(2, reservationEntity.date());
-            ps.setLong(3, reservationEntity.timeEntity().id());
+            ps.setLong(3, reservationEntity.playTimeEntity().id());
             return ps;
         }, keyHolder);
 

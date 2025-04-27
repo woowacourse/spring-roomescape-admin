@@ -10,9 +10,9 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.data.entity.TimeEntity;
+import roomescape.data.entity.PlayTimeEntity;
 import roomescape.fake.FakeReservationDao;
-import roomescape.fake.FakeTimeDao;
+import roomescape.fake.FakePlayTimeDao;
 import roomescape.presentation.dto.ReservationRequest;
 import roomescape.presentation.dto.ReservationResponse;
 
@@ -23,15 +23,15 @@ public class ReservationServiceTest {
 
     private ReservationService reservationService;
 
-    private final FakeTimeDao timeDaoFixture = new FakeTimeDao(new ArrayList<>(List.of(
-            new TimeEntity(1L, FORMATTED_MAX_LOCAL_TIME.toString())
+    private final FakePlayTimeDao timeDaoFixture = new FakePlayTimeDao(new ArrayList<>(List.of(
+            new PlayTimeEntity(1L, FORMATTED_MAX_LOCAL_TIME.toString())
     )));
-    private final TimeService timeServiceFixture = new TimeService(timeDaoFixture);
+    private final PlayTimeService playTimeServiceFixture = new PlayTimeService(timeDaoFixture);
 
     @BeforeEach
     void setUp() {
         reservationService = new ReservationService(
-                timeServiceFixture,
+                playTimeServiceFixture,
                 new FakeReservationDao(timeDaoFixture.getTimes())
         );
     }

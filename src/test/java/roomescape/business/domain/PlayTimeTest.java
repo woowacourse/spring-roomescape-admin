@@ -7,16 +7,16 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class TimeTest {
+class PlayTimeTest {
 
     @DisplayName("객체 생성시 null을 들어올 수 없다.")
     @Test
     void validateNonNull() {
         // given & when & then
         assertAll(
-                () -> assertThatThrownBy(() -> new Time(null))
+                () -> assertThatThrownBy(() -> new PlayTime(null))
                         .isInstanceOf(NullPointerException.class),
-                () -> assertThatThrownBy(() -> Time.createWithId(null, LocalTime.MAX))
+                () -> assertThatThrownBy(() -> roomescape.business.domain.PlayTime.createWithId(null, LocalTime.MAX))
                         .isInstanceOf(NullPointerException.class)
         );
     }

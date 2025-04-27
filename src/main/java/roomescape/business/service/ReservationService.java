@@ -3,8 +3,8 @@ package roomescape.business.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import roomescape.business.domain.PlayTime;
 import roomescape.business.domain.Reservation;
-import roomescape.business.domain.Time;
 import roomescape.data.dao.ReservationDao;
 import roomescape.exception.InvalidReservationDateException;
 import roomescape.exception.ReservationNotFoundException;
@@ -14,18 +14,18 @@ import roomescape.presentation.dto.ReservationResponse;
 @Service
 public class ReservationService {
 
-    private final TimeService timeService;
+    private final PlayTimeService playTimeService;
     private final ReservationDao reservationDao;
 
-    public ReservationService(final TimeService timeService, final ReservationDao reservationDao) {
-        this.timeService = timeService;
+    public ReservationService(final PlayTimeService playTimeService, final ReservationDao reservationDao) {
+        this.playTimeService = playTimeService;
         this.reservationDao = reservationDao;
     }
 
     public ReservationResponse create(final ReservationRequest reservationRequest) {
-        final Time time = timeService.find(reservationRequest.timeId());
+        final PlayTime playTime = playTimeService.find(reservationRequest.timeId());
 
-        final Reservation reservation = reservationRequest.toDomain(time);
+        final Reservation reservation = reservationRequest.toDomain(playTime);
         validateIsFuture(reservation);
 
         final Long id = reservationDao.save(reservation);

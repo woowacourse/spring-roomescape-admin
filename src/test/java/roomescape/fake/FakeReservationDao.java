@@ -6,16 +6,16 @@ import java.util.Objects;
 import roomescape.business.domain.Reservation;
 import roomescape.data.dao.ReservationDao;
 import roomescape.data.entity.ReservationEntity;
-import roomescape.data.entity.TimeEntity;
+import roomescape.data.entity.PlayTimeEntity;
 
 public class FakeReservationDao implements ReservationDao {
 
     private final List<ReservationEntity> reservations = new ArrayList<>();
-    private final List<TimeEntity> times;
+    private final List<PlayTimeEntity> times;
 
     private int index = 1;
 
-    public FakeReservationDao(final List<TimeEntity> times) {
+    public FakeReservationDao(final List<PlayTimeEntity> times) {
         this.times = times;
         final ReservationEntity dummy = new ReservationEntity(null, null, null, null);
         reservations.add(dummy);
@@ -26,7 +26,7 @@ public class FakeReservationDao implements ReservationDao {
         final ReservationEntity temp = ReservationEntity.from(reservation);
         final ReservationEntity reservationEntity = new ReservationEntity(
                 (long) index,
-                temp.name(), temp.date(), temp.timeEntity()
+                temp.name(), temp.date(), temp.playTimeEntity()
         );
         reservations.add(index, reservationEntity);
 
@@ -39,7 +39,7 @@ public class FakeReservationDao implements ReservationDao {
                 .filter(reservationEntity -> reservationEntity.id() != null)
                 .filter(reservationEntity -> times.stream()
                         .filter(timeEntity -> timeEntity.id() != null)
-                        .anyMatch(timeEntity -> Objects.equals(reservationEntity.timeEntity().id(), timeEntity.id()))
+                        .anyMatch(timeEntity -> Objects.equals(reservationEntity.playTimeEntity().id(), timeEntity.id()))
                 )
                 .map(ReservationEntity::toDomain)
                 .toList();

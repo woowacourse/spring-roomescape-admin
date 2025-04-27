@@ -7,33 +7,33 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.business.domain.Time;
-import roomescape.fake.FakeTimeDao;
-import roomescape.presentation.dto.TimeRequest;
-import roomescape.presentation.dto.TimeResponse;
+import roomescape.business.domain.PlayTime;
+import roomescape.fake.FakePlayTimeDao;
+import roomescape.presentation.dto.PlayTimeRequest;
+import roomescape.presentation.dto.PlayTimeResponse;
 
-class TimeServiceTest {
+class PlayPlayTimeServiceTest {
 
     private static final LocalTime FORMATTED_MAX_LOCAL_TIME = LocalTime.of(23, 59);
 
-    private TimeService timeService;
+    private PlayTimeService playTimeService;
 
     @BeforeEach
     void setUp() {
-        timeService = new TimeService(new FakeTimeDao());
+        playTimeService = new PlayTimeService(new FakePlayTimeDao());
     }
 
     @DisplayName("방탈출 시간을 조회한다.")
     @Test
     void find() {
         // given
-        timeService.create(new TimeRequest(FORMATTED_MAX_LOCAL_TIME));
+        playTimeService.create(new PlayTimeRequest(FORMATTED_MAX_LOCAL_TIME));
 
         final Long id = 1L;
-        final Time expected = Time.createWithId(1L, FORMATTED_MAX_LOCAL_TIME);
+        final PlayTime expected = roomescape.business.domain.PlayTime.createWithId(1L, FORMATTED_MAX_LOCAL_TIME);
 
         // when & then
-        assertThat(timeService.find(id))
+        assertThat(playTimeService.find(id))
                 .isEqualTo(expected);
     }
 
@@ -41,11 +41,11 @@ class TimeServiceTest {
     @Test
     void create() {
         // given
-        final TimeRequest timeRequest = new TimeRequest(FORMATTED_MAX_LOCAL_TIME);
-        final TimeResponse expected = new TimeResponse(1L, FORMATTED_MAX_LOCAL_TIME);
+        final PlayTimeRequest playTimeRequest = new PlayTimeRequest(FORMATTED_MAX_LOCAL_TIME);
+        final PlayTimeResponse expected = new PlayTimeResponse(1L, FORMATTED_MAX_LOCAL_TIME);
 
         // when & then
-        assertThat(timeService.create(timeRequest))
+        assertThat(playTimeService.create(playTimeRequest))
                 .isEqualTo(expected);
     }
 
@@ -54,10 +54,10 @@ class TimeServiceTest {
     void findOrThrowIfIdNotExists() {
         // given
         final Long id = 1L;
-        final Time expected = Time.createWithId(1L, FORMATTED_MAX_LOCAL_TIME);
+        final PlayTime expected = roomescape.business.domain.PlayTime.createWithId(1L, FORMATTED_MAX_LOCAL_TIME);
 
         // when & then
-        assertThatThrownBy(() -> timeService.find(id))
+        assertThatThrownBy(() -> playTimeService.find(id))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -65,14 +65,14 @@ class TimeServiceTest {
     @Test
     void findAll() {
         // given
-        timeService.create(new TimeRequest(LocalTime.of(10, 0)));
-        timeService.create(new TimeRequest(LocalTime.of(20, 15)));
+        playTimeService.create(new PlayTimeRequest(LocalTime.of(10, 0)));
+        playTimeService.create(new PlayTimeRequest(LocalTime.of(20, 15)));
 
         // when & then
-        assertThat(timeService.findAll())
+        assertThat(playTimeService.findAll())
                 .containsExactly(
-                        new TimeResponse(1L, LocalTime.of(10, 0)),
-                        new TimeResponse(2L, LocalTime.of(20, 15))
+                        new PlayTimeResponse(1L, LocalTime.of(10, 0)),
+                        new PlayTimeResponse(2L, LocalTime.of(20, 15))
                 );
     }
 
@@ -80,18 +80,18 @@ class TimeServiceTest {
     @Test
     void remove() {
         // given
-        timeService.create(new TimeRequest(FORMATTED_MAX_LOCAL_TIME));
-        timeService.remove(1L);
+        playTimeService.create(new PlayTimeRequest(FORMATTED_MAX_LOCAL_TIME));
+        playTimeService.remove(1L);
 
         // when & then
-        assertThat(timeService.findAll()).isEmpty();
+        assertThat(playTimeService.findAll()).isEmpty();
     }
 
     @DisplayName("삭제하려는 방탈출 시간 id가 없다면 예외가 발생한다.")
     @Test
     void removeOrThrowIfIdNotExists() {
         // given & when & then
-        assertThatThrownBy(() -> timeService.remove(1L))
+        assertThatThrownBy(() -> playTimeService.remove(1L))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

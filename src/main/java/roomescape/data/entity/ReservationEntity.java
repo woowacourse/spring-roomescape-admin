@@ -9,7 +9,7 @@ public record ReservationEntity(
         Long id,
         String name,
         String date,
-        TimeEntity timeEntity
+        PlayTimeEntity playTimeEntity
 ) {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -18,7 +18,7 @@ public record ReservationEntity(
                     rs.getLong(1),
                     rs.getString(2),
                     rs.getString(3),
-                    new TimeEntity(rs.getLong(4), rs.getString(5))
+                    new PlayTimeEntity(rs.getLong(4), rs.getString(5))
             );
 
     public static RowMapper<ReservationEntity> getDefaultRowMapper() {
@@ -30,7 +30,7 @@ public record ReservationEntity(
                 id,
                 name,
                 LocalDate.parse(date, DATE_FORMATTER),
-                timeEntity.toDomain());
+                playTimeEntity.toDomain());
     }
 
     public static ReservationEntity from(final Reservation reservation) {
@@ -38,7 +38,7 @@ public record ReservationEntity(
                 reservation.getId(),
                 reservation.getName(),
                 DATE_FORMATTER.format(reservation.getDate()),
-                TimeEntity.from(reservation.getTime())
+                PlayTimeEntity.from(reservation.getTime())
         );
     }
 }

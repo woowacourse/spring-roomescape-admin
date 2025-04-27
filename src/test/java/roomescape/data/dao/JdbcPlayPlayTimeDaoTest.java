@@ -12,24 +12,24 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.business.domain.Time;
-import roomescape.data.entity.TimeEntity;
+import roomescape.business.domain.PlayTime;
+import roomescape.data.entity.PlayTimeEntity;
 
 @JdbcTest
-class JdbcTimeDaoTest {
+class JdbcPlayPlayTimeDaoTest {
 
-    private TimeDao timeDao;
+    private PlayTimeDao playTimeDao;
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    JdbcTimeDaoTest(final JdbcTemplate jdbcTemplate) {
+    JdbcPlayPlayTimeDaoTest(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @BeforeEach
     void setUp() {
-        timeDao = new JdbcTimeDao(jdbcTemplate);
+        playTimeDao = new JdbcPlayTimeDao(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE IF EXISTS reservation_time CASCADE");
         jdbcTemplate.execute("""
                 CREATE TABLE reservation_time
@@ -45,14 +45,14 @@ class JdbcTimeDaoTest {
     @Test
     void save() {
         // given & when
-        final Long id = timeDao.save(new Time(LocalTime.of(10, 10)));
-        final TimeEntity actual = jdbcTemplate.queryForObject(
+        final Long id = playTimeDao.save(new PlayTime(LocalTime.of(10, 10)));
+        final PlayTimeEntity actual = jdbcTemplate.queryForObject(
                 "SELECT id, start_at FROM reservation_time WHERE id = ?",
-                TimeEntity.getDefaultRowMapper(), id
+                PlayTimeEntity.getDefaultRowMapper(), id
         );
 
         // then
-        assertThat(actual).isEqualTo(new TimeEntity(1L, "10:10"));
+        assertThat(actual).isEqualTo(new PlayTimeEntity(1L, "10:10"));
     }
 
     @DisplayName("데이터베이스에서 방탈출 시간을 찾는다.")
@@ -62,18 +62,18 @@ class JdbcTimeDaoTest {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES ('10:10')");
 
         // when
-        final Optional<Time> actual = timeDao.find(1L);
+        final Optional<PlayTime> actual = playTimeDao.find(1L);
 
         // then
         assertThat(actual).isPresent();
-        assertThat(actual.get()).isEqualTo(Time.createWithId(1L, LocalTime.of(10, 10)));
+        assertThat(actual.get()).isEqualTo(roomescape.business.domain.PlayTime.createWithId(1L, LocalTime.of(10, 10)));
     }
 
     @DisplayName("해당하는 방탈출 시간이 없다면 Optional Empty를 반환한다.")
     @Test
     void findNotExistsTime() {
         // given & when
-        final Optional<Time> actual = timeDao.find(1L);
+        final Optional<PlayTime> actual = playTimeDao.find(1L);
 
         // then
         assertThat(actual).isEmpty();
@@ -87,12 +87,12 @@ class JdbcTimeDaoTest {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES ('11:10')");
 
         // when
-        final List<Time> actual = timeDao.findAll();
+        final List<PlayTime> actual = playTimeDao.findAll();
 
         // then
         assertThat(actual).containsExactly(
-                Time.createWithId(1L, LocalTime.of(10, 10)),
-                Time.createWithId(2L, LocalTime.of(11, 10))
+                roomescape.business.domain.PlayTime.createWithId(1L, LocalTime.of(10, 10)),
+                roomescape.business.domain.PlayTime.createWithId(2L, LocalTime.of(11, 10))
         );
     }
 
@@ -103,13 +103,13 @@ class JdbcTimeDaoTest {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES ('10:10')");
 
         // when
-        final boolean flag = timeDao.remove(1L);
-        final List<Time> times = timeDao.findAll();
+        final boolean flag = playTimeDao.remove(1L);
+        final List<PlayTime> playTimes = playTimeDao.findAll();
 
         // then
         assertAll(
                 () -> assertThat(flag).isTrue(),
-                () -> assertThat(times).isEmpty()
+                () -> assertThat(playTimes).isEmpty()
         );
     }
 
@@ -117,7 +117,7 @@ class JdbcTimeDaoTest {
     @Test
     void removeNotExistsTime() {
         // given & when
-        final boolean flag = timeDao.remove(1L);
+        final boolean flag = playTimeDao.remove(1L);
 
         // then
         assertThat(flag).isFalse();

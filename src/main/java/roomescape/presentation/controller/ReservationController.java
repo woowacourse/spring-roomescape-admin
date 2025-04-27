@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.business.service.ReservationService;
 import roomescape.exception.InvalidReservationDateException;
 import roomescape.exception.ReservationNotFoundException;
-import roomescape.exception.TimeNotFoundException;
+import roomescape.exception.PlayTimeNotFoundException;
 import roomescape.presentation.dto.ReservationRequest;
 import roomescape.presentation.dto.ReservationResponse;
 
@@ -33,7 +33,7 @@ public class ReservationController {
         try {
             final ReservationResponse reservationResponse = reservationService.create(reservationRequest);
             return ResponseEntity.ok(reservationResponse);
-        } catch (TimeNotFoundException e) {
+        } catch (PlayTimeNotFoundException e) {
             return ResponseEntity.notFound().build();
         } catch (InvalidReservationDateException e) {
             return ResponseEntity.unprocessableEntity().build();

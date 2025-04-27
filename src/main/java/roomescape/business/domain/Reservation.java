@@ -10,28 +10,28 @@ public class Reservation {
 
     private final String name;
     private final LocalDate date;
-    private final Time time;
+    private final PlayTime playTime;
 
-    public Reservation(final String name, final LocalDate date, final Time time) {
-        this(null, name, date, time);
+    public Reservation(final String name, final LocalDate date, final PlayTime playTime) {
+        this(null, name, date, playTime);
     }
 
-    public static Reservation createWithId(final Long id, final String name, final LocalDate date, final Time time) {
+    public static Reservation createWithId(final Long id, final String name, final LocalDate date, final PlayTime playTime) {
         Objects.requireNonNull(id, "id가 null 입니다.");
-        return new Reservation(id, name, date, time);
+        return new Reservation(id, name, date, playTime);
     }
 
-    private Reservation(final Long id, final String name, final LocalDate date, final Time time) {
-        validateNonNull(name, date, time);
+    private Reservation(final Long id, final String name, final LocalDate date, final PlayTime playTime) {
+        validateNonNull(name, date, playTime);
         validateNameIsNotBlank(name);
         this.id = id;
         this.name = name;
         this.date = date;
-        this.time = time;
+        this.playTime = playTime;
     }
 
     public boolean isBefore(final LocalDateTime dateTime) {
-        final LocalDateTime reservationDateTime = LocalDateTime.of(date, time.getStartAt());
+        final LocalDateTime reservationDateTime = LocalDateTime.of(date, playTime.getStartAt());
 
         return reservationDateTime.isBefore(dateTime);
     }
@@ -43,11 +43,11 @@ public class Reservation {
     }
 
     private void validateNonNull(
-            final String name, final LocalDate date, final Time time
+            final String name, final LocalDate date, final PlayTime playTime
     ) {
         Objects.requireNonNull(name, "name이 null 입니다.");
         Objects.requireNonNull(date, "date가 null 입니다.");
-        Objects.requireNonNull(time, "time이 null 입니다.");
+        Objects.requireNonNull(playTime, "time이 null 입니다.");
     }
 
     public Long getId() {
@@ -62,8 +62,8 @@ public class Reservation {
         return date;
     }
 
-    public Time getTime() {
-        return time;
+    public PlayTime getTime() {
+        return playTime;
     }
 
     @Override
@@ -73,11 +73,11 @@ public class Reservation {
         }
         final Reservation that = (Reservation) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name)
-               && Objects.equals(date, that.date) && Objects.equals(time, that.time);
+               && Objects.equals(date, that.date) && Objects.equals(playTime, that.playTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, date, time);
+        return Objects.hash(id, name, date, playTime);
     }
 }

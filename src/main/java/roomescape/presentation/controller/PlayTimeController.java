@@ -9,43 +9,43 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.business.service.TimeService;
-import roomescape.presentation.dto.TimeRequest;
-import roomescape.presentation.dto.TimeResponse;
+import roomescape.business.service.PlayTimeService;
+import roomescape.presentation.dto.PlayTimeRequest;
+import roomescape.presentation.dto.PlayTimeResponse;
 
 @RestController
 @RequestMapping("/times")
-public class TimeController {
+public class PlayTimeController {
 
-    private final TimeService timeService;
+    private final PlayTimeService playTimeService;
 
-    public TimeController(final TimeService timeService) {
-        this.timeService = timeService;
+    public PlayTimeController(final PlayTimeService playTimeService) {
+        this.playTimeService = playTimeService;
     }
 
     @PostMapping
-    public ResponseEntity<TimeResponse> create(
-            @RequestBody final TimeRequest timeRequest
+    public ResponseEntity<PlayTimeResponse> create(
+            @RequestBody final PlayTimeRequest playTimeRequest
     ) {
         try {
-            final TimeResponse timeResponse = timeService.create(timeRequest);
-            return ResponseEntity.ok(timeResponse);
+            final PlayTimeResponse playTimeResponse = playTimeService.create(playTimeRequest);
+            return ResponseEntity.ok(playTimeResponse);
         } catch (NullPointerException e) {
             return ResponseEntity.badRequest().build();
         }
     }
 
     @GetMapping
-    public ResponseEntity<List<TimeResponse>> readAll() {
-        final List<TimeResponse> timeResponses = timeService.findAll();
+    public ResponseEntity<List<PlayTimeResponse>> readAll() {
+        final List<PlayTimeResponse> playTimeRespons = playTimeService.findAll();
 
-        return ResponseEntity.ok(timeResponses);
+        return ResponseEntity.ok(playTimeRespons);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") final Long id) {
         try {
-            timeService.remove(id);
+            playTimeService.remove(id);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }

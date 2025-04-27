@@ -20,10 +20,10 @@ class ReservationTest {
     void validateNonNull(
             final String name,
             final LocalDate localDate,
-            final Time time
+            final PlayTime playTime
     ) {
         // given & when & then
-        assertThatThrownBy(() -> new Reservation(name, localDate, time))
+        assertThatThrownBy(() -> new Reservation(name, localDate, playTime))
                 .isInstanceOf(NullPointerException.class);
     }
 
@@ -33,23 +33,23 @@ class ReservationTest {
     void createWithId(
             final String name,
             final LocalDate localDate,
-            final Time time
+            final PlayTime playTime
     ) {
         // given & when & then
         assertAll(
                 () -> assertThatThrownBy(
-                        () -> Reservation.createWithId(null, "hotteok", LocalDate.MAX, new Time(LocalTime.MAX)))
+                        () -> Reservation.createWithId(null, "hotteok", LocalDate.MAX, new PlayTime(LocalTime.MAX)))
                         .isInstanceOf(NullPointerException.class),
                 () -> assertThatThrownBy(
-                        () -> Reservation.createWithId(1L, name, localDate, time))
+                        () -> Reservation.createWithId(1L, name, localDate, playTime))
                         .isInstanceOf(NullPointerException.class)
         );
     }
 
     private static Stream<Arguments> provideConstructorArguments() {
         return Stream.of(
-                Arguments.of(null, LocalDate.MAX, new Time(LocalTime.MAX)),
-                Arguments.of("hotteok", null, new Time(LocalTime.MAX)),
+                Arguments.of(null, LocalDate.MAX, new PlayTime(LocalTime.MAX)),
+                Arguments.of("hotteok", null, new PlayTime(LocalTime.MAX)),
                 Arguments.of("hotteok", LocalDate.MAX, null)
         );
     }
@@ -59,7 +59,7 @@ class ReservationTest {
     @ValueSource(strings = {"", "  ", "     "})
     void validateNameIsNotBlack(final String name) {
         // given & when & then
-        assertThatThrownBy(() -> new Reservation(name, LocalDate.MAX, new Time(LocalTime.MAX)))
+        assertThatThrownBy(() -> new Reservation(name, LocalDate.MAX, new PlayTime(LocalTime.MAX)))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

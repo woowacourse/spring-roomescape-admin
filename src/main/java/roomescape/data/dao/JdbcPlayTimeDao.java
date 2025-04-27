@@ -8,27 +8,27 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.business.domain.Time;
-import roomescape.data.entity.TimeEntity;
+import roomescape.business.domain.PlayTime;
+import roomescape.data.entity.PlayTimeEntity;
 
 @Repository
-public class JdbcTimeDao implements TimeDao {
+public class JdbcPlayTimeDao implements PlayTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public JdbcTimeDao(final JdbcTemplate jdbcTemplate) {
+    public JdbcPlayTimeDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public Long save(final Time time) {
-        final TimeEntity timeEntity = TimeEntity.from(time);
+    public Long save(final PlayTime playTime) {
+        final PlayTimeEntity playTimeEntity = PlayTimeEntity.from(playTime);
         final String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, timeEntity.startAt());
+            ps.setString(1, playTimeEntity.startAt());
             return ps;
         }, keyHolder);
 
@@ -36,22 +36,22 @@ public class JdbcTimeDao implements TimeDao {
     }
 
     @Override
-    public Optional<Time> find(final Long id) {
+    public Optional<PlayTime> find(final Long id) {
         final String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
         try {
-            final TimeEntity timeEntity = jdbcTemplate.queryForObject(sql, TimeEntity.getDefaultRowMapper(), id);
-            return Optional.of(timeEntity.toDomain());
+            final PlayTimeEntity playTimeEntity = jdbcTemplate.queryForObject(sql, PlayTimeEntity.getDefaultRowMapper(), id);
+            return Optional.of(playTimeEntity.toDomain());
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
     @Override
-    public List<Time> findAll() {
+    public List<PlayTime> findAll() {
         final String sql = "SELECT id, start_at FROM reservation_time";
 
-        return jdbcTemplate.query(sql, TimeEntity.getDefaultRowMapper()).stream()
-                .map(TimeEntity::toDomain)
+        return jdbcTemplate.query(sql, PlayTimeEntity.getDefaultRowMapper()).stream()
+                .map(PlayTimeEntity::toDomain)
                 .toList();
     }
 

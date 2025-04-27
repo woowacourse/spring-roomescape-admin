@@ -31,13 +31,15 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
     public int deleteById(long id) {
         ReservationTime deleteReservation = reservationTimes.stream()
                 .filter(reservationTime -> Objects.equals(reservationTime.id(), id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException());
+                .findFirst().get();
+
         int affectedRows = (int) reservationTimes.stream()
                 .filter(reservationTime -> Objects.equals(reservationTime.id(), id))
                 .count();
 
-        reservationTimes.remove(deleteReservation);
+        if (affectedRows > 0) {
+            reservationTimes.remove(deleteReservation);
+        }
         return affectedRows;
     }
 

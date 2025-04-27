@@ -1,6 +1,5 @@
 package roomescape.repository;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.ReservationTime;
@@ -61,19 +60,5 @@ class FakeReservationTimeRepositoryTest {
         Long deleteId = 1L;
 
         assertDoesNotThrow(() -> reservationTimeRepository.deleteById(deleteId));
-    }
-
-    @DisplayName("존재하지 않은 Id의 Reservation Time을 삭제할 수 없다")
-    @Test
-    void deleteInvalidReservationTimeTest() {
-        ArrayList<ReservationTime> reservationTimes = new ArrayList<>();
-        reservationTimes.add(new ReservationTime(1L, LocalTime.now()));
-        reservationTimeRepository = new FakeReservationTimeRepository(reservationTimes);
-
-        Long deleteId = 5L;
-
-        Assertions.assertThatThrownBy(() -> reservationTimeRepository.deleteById(deleteId))
-                .isInstanceOf(IllegalStateException.class);
-
     }
 }

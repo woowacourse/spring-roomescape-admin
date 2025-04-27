@@ -8,16 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.globalException.CustomException;
-import roomescape.reservation.repository.ReservationRepositoryImpl;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.dto.ReservationReqDto;
 import roomescape.reservation.fixture.ReservationFixture;
+import roomescape.reservation.repository.ReservationRepositoryImpl;
 import roomescape.reservationTime.domain.ReservationTime;
 import roomescape.reservationTime.fixture.ReservationTimeFixture;
 import roomescape.reservationTime.repository.ReservationTimeRepositoryImpl;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -39,35 +38,19 @@ class ReservationServiceTest {
         @Test
         void add_failure_byDuplicateDateTime() {
             // given
+            ReservationTime reservationTime1 = createAndSaveReservationTime(LocalTime.of(11, 33));
+            Reservation reservation1 = createReservation("kali", 1, reservationTime1);
 
-            String dummyName1 = "kali";
-            int dummyFuturePlusDay1 = 1;
-            LocalDateTime dummyFuture = LocalDateTime.now().plusDays(dummyFuturePlusDay1);
-            LocalDate dummyDate = dummyFuture.toLocalDate();
-            LocalTime dummyTime = LocalTime.of(11, 33);
-
-            ReservationTime reservationTime1 = ReservationTimeFixture.create(dummyTime);
-            ReservationTime savedReservationTime1 = reservationTimeRepository.add(reservationTime1);
-            Reservation reservation1 = Reservation.of(dummyName1, dummyDate, savedReservationTime1);
-
-            String dummyName2 = "pobi";
-            int dummyFuturePlusDay2 = 2;
-            LocalDateTime dummyFuture2 = LocalDateTime.now().plusDays(dummyFuturePlusDay2);
-            LocalDate dummyDate2 = dummyFuture2.toLocalDate();
-            LocalTime dummyTime2 = LocalTime.of(22, 44);
-
-            ReservationTime reservationTime2 = ReservationTimeFixture.create(dummyTime2);
-            ReservationTime savedReservationTime2 = reservationTimeRepository.add(reservationTime2);
-            Reservation reservation2 = Reservation.of(dummyName2, dummyDate2, savedReservationTime2);
+            ReservationTime reservationTime2 = createAndSaveReservationTime(LocalTime.of(22, 44));
+            Reservation reservation2 = createReservation("pobi", 2, reservationTime2);
 
             reservationRepository.add(reservation1);
             reservationRepository.add(reservation2);
 
             // when & then
-            String dummyName3 = "jason";
-            LocalDate duplicateDate = dummyDate;
-            Long duplicateReservationTimeId = savedReservationTime1.getId();
-            ReservationReqDto reqDto = ReservationFixture.createReqDto(dummyName3, duplicateDate, duplicateReservationTimeId);
+            LocalDate duplicateDate = reservation1.getDate();
+            Long duplicateReservationTimeId = reservationTime1.getId();
+            ReservationReqDto reqDto = ReservationFixture.createReqDto("jason", duplicateDate, duplicateReservationTimeId);
 
             Assertions.assertThatThrownBy(
                     () -> service.add(reqDto)
@@ -78,38 +61,37 @@ class ReservationServiceTest {
         @Test
         void add_success_withDifferenceDateAndSameTime() {
             // given
-            LocalTime duplicateTime = LocalTime.of(11, 22);
-            ReservationTime reservationTime = ReservationTimeFixture.create(duplicateTime);
-            Long reservationTimeId = reservationTimeRepository.insertWithKeyHolder(reservationTime);
-            ReservationTime savedReservationTime = reservationTimeRepository.findByIdOrThrow(reservationTimeId);
+            ReservationTime reservationTime1 = createAndSaveReservationTime(LocalTime.of(11, 33));
+            Reservation reservation1 = createReservation("kali", 1, reservationTime1);
 
-            String dummyName1 = "kali";
-            int dummyFuturePlusDay1 = 1;
-            LocalDateTime dummyFuture = LocalDateTime.now().plusDays(dummyFuturePlusDay1);
-            LocalDate dummyDate = dummyFuture.toLocalDate();
-
-            Reservation reservation1 = ReservationFixture.create(dummyName1, dummyDate, savedReservationTime);
-
-            String dummyName2 = "pobi";
-            int dummyFuturePlusDay2 = 2;
-            LocalDateTime dummyFuture2 = LocalDateTime.now().plusDays(dummyFuturePlusDay2);
-            LocalDate dummyDate2 = dummyFuture2.toLocalDate();
-
-            Reservation reservation2 = ReservationFixture.create(dummyName2, dummyDate2, savedReservationTime);
+            ReservationTime reservationTime2 = createAndSaveReservationTime(LocalTime.of(22, 44));
+            Reservation reservation2 = createReservation("pobi", 2, reservationTime2);
 
             reservationRepository.add(reservation1);
             reservationRepository.add(reservation2);
 
             // when & then
-            String dummyName3 = "jason";
-            int dummyFuturePlusDay3 = 3;
-            LocalDateTime dummyFuture3 = LocalDateTime.now().plusDays(dummyFuturePlusDay3);
-            LocalDate date = dummyFuture3.toLocalDate();
-            ReservationReqDto reqDto = ReservationFixture.createReqDto(dummyName3, date, reservationTimeId);
+            Long duplicateReservationTimeId = reservationTime1.getId();
+            ReservationReqDto reqDto = createReqDto("jason", 3, duplicateReservationTimeId);
 
             Assertions.assertThatCode(
                     () -> service.add(reqDto)
             ).doesNotThrowAnyException();
         }
+    }
+
+    private ReservationTime createAndSaveReservationTime(LocalTime time) {
+        ReservationTime reservationTime = ReservationTimeFixture.create(time);
+        return reservationTimeRepository.add(reservationTime);
+    }
+
+    private Reservation createReservation(String name, int plusDays, ReservationTime time) {
+        LocalDate date = LocalDate.now().plusDays(plusDays);
+        return Reservation.of(name, date, time);
+    }
+
+    private ReservationReqDto createReqDto(String name, int plusDays, Long timeId) {
+        LocalDate date = LocalDate.now().plusDays(plusDays);
+        return ReservationFixture.createReqDto(name, date, timeId);
     }
 }

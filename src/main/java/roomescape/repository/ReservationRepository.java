@@ -42,11 +42,10 @@ public class ReservationRepository {
                     sql, new String[]{"id"});
             ps.setString(1, reservationRequestDto.name());
             ps.setString(2, reservationRequestDto.date());
-            ps.setLong(3, reservationRequestDto.timeId());
+            ps.setLong(3, reservationRequestDto.time_id());
             return ps;
         }, keyHolder);
-        return ReservationRequestDto.toEntity(Objects.requireNonNull(keyHolder.getKey()).longValue(),
-                reservationRequestDto, reservationTime);
+        return reservationRequestDto.toEntity(Objects.requireNonNull(keyHolder.getKey()).longValue(), reservationTime);
     }
 
     public int deleteReservation(Long id) {

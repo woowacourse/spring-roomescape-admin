@@ -9,12 +9,11 @@ import roomescape.model.UserName;
 
 public record ReservationRequestDto(@JsonProperty(value = "name", defaultValue = "name") String name,
                                     @JsonProperty("date") String date,
-                                    @JsonProperty("timeId") Long timeId) {
-    public static Reservation toEntity(Long id, ReservationRequestDto reservationRequestDto, ReservationTime reservationTime) {
-        return new Reservation(
-                id,
-                new UserName(reservationRequestDto.name()),
-                new ReservationDateTime(
-                        new ReservationDate(reservationRequestDto.date()), reservationTime));
+                                    @JsonProperty("time_id") Long time_id) {
+
+    public Reservation toEntity(Long id, ReservationTime reservationTime) {
+        return new Reservation(id,
+                new UserName(name()),
+                new ReservationDateTime(new ReservationDate(date()), reservationTime));
     }
 }

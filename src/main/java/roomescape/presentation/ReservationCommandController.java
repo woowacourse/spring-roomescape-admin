@@ -25,8 +25,8 @@ public class ReservationCommandController {
     }
 
     @PostMapping("reservations")
-    public ResponseEntity<Reservation> add(@RequestBody ReservationRequestDto reservationDto) {
-        Long id = reservationService.addReservation(reservationDto);
+    public ResponseEntity<Reservation> create(@RequestBody ReservationRequestDto reservationDto) {
+        Long id = reservationService.createReservation(reservationDto);
         Reservation reservation = reservationService.readReservationOne(id);
         String location = "/reservations/" + id;
         return ResponseEntity.created(URI.create(location)).body(reservation);
@@ -39,8 +39,8 @@ public class ReservationCommandController {
     }
 
     @PostMapping("times")
-    public ResponseEntity<ReservationTime> add(@RequestBody ReservationTimeRequestDto reservationTimeDto) {
-        Long id = reservationService.addTime(reservationTimeDto);
+    public ResponseEntity<ReservationTime> create(@RequestBody ReservationTimeRequestDto reservationTimeDto) {
+        Long id = reservationService.createTime(reservationTimeDto);
         ReservationTime reservationTime = reservationService.readTimeOne(id);
         String location = "/times/" + id;
         return ResponseEntity.created(URI.create(location)).body(reservationTime);

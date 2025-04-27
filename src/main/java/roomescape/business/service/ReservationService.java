@@ -30,7 +30,7 @@ public class ReservationService {
         return reservationRepository.findById(id);
     }
 
-    public Long addReservation(ReservationRequestDto reservationDto) {
+    public Long createReservation(ReservationRequestDto reservationDto) {
         ReservationTime reservationTime = reservationTimeRepository.findById(reservationDto.timeId());
         return reservationRepository.add(
                 new Reservation(reservationDto.name(), reservationDto.date(), reservationTime));
@@ -40,7 +40,7 @@ public class ReservationService {
         reservationRepository.delete(id);
     }
 
-    public Long addTime(ReservationTimeRequestDto reservationTimeRequestDto) {
+    public Long createTime(ReservationTimeRequestDto reservationTimeRequestDto) {
         return reservationTimeRepository.add(new ReservationTime(reservationTimeRequestDto.startAt()));
     }
 

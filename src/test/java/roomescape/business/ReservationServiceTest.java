@@ -32,8 +32,8 @@ class ReservationServiceTest {
 
     @DisplayName("예약한다")
     @Test
-    void addReservation() {
-        reservationService.addReservation(new ReservationRequestDto("예약자", LocalDate.now(), timeId));
+    void createReservation() {
+        reservationService.createReservation(new ReservationRequestDto("예약자", LocalDate.now(), timeId));
         Assertions.assertThat(reservationService.readReservationAll()).isNotEmpty();
     }
 
@@ -41,7 +41,7 @@ class ReservationServiceTest {
     @Test
     void deleteReservation() {
         // given
-        Long id = reservationService.addReservation(
+        Long id = reservationService.createReservation(
                 new ReservationRequestDto("예약자", LocalDate.now(), timeId));
 
         // when
@@ -55,7 +55,7 @@ class ReservationServiceTest {
     @Test
     void readReservationAll() {
         // given
-        Long id = reservationService.addReservation(
+        Long id = reservationService.createReservation(
                 new ReservationRequestDto("예약자", LocalDate.now(), timeId));
 
         // when
@@ -90,8 +90,8 @@ class ReservationServiceTest {
 
     @DisplayName("예약 가능한 시간을 추가한다")
     @Test
-    void addTime() {
-        Long timeId = reservationService.addTime(new ReservationTimeRequestDto(LocalTime.now()));
+    void createTime() {
+        Long timeId = reservationService.createTime(new ReservationTimeRequestDto(LocalTime.now()));
         Assertions.assertThat(timeId).isEqualTo(1L);
     }
 

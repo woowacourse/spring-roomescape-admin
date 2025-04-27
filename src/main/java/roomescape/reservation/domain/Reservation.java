@@ -13,7 +13,7 @@ public class Reservation {
     private final String name;
     private final LocalDate date;
     private final ReservationTime time;
-    
+
     public Reservation(final Long id, final String name, final LocalDate date, final ReservationTime time) {
         validateNotNull(name, date, time);
         this.id = id;

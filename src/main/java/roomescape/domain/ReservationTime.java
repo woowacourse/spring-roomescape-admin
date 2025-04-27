@@ -1,7 +1,7 @@
 package roomescape.domain;
 
 import java.time.LocalTime;
-import roomescape.exception.reservationTime.ReservationTimeFieldRequiredException;
+import roomescape.exception.reservationtime.ReservationTimeFieldRequiredException;
 
 public class ReservationTime {
     private final Long id;

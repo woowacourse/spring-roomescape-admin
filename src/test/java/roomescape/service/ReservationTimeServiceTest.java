@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
-import roomescape.exception.reservationTime.ReservationTimeNotFoundException;
+import roomescape.exception.reservationtime.ReservationTimeNotFoundException;
 import roomescape.fixture.ReservationTimeRepositoryStub;
 
 class ReservationTimeServiceTest {

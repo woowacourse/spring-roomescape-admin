@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import roomescape.domain.ReservationTime;
-import roomescape.repository.reservationTime.ReservationTimeRepository;
+import roomescape.repository.reservationtime.ReservationTimeRepository;
 
 public class ReservationTimeRepositoryStub implements ReservationTimeRepository {
     private final Map<Long, ReservationTime> times = new HashMap<>();

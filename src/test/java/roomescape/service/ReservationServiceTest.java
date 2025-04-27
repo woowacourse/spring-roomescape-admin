@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
 
 import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ReservationResponse;
@@ -29,7 +28,6 @@ import roomescape.model.exception.ReservationTimeNotFoundException;
 import roomescape.repository.ReservationDao;
 import roomescape.repository.ReservationTimeDao;
 
-@ActiveProfiles("test")
 @JdbcTest
 @Import({ReservationDao.class, ReservationTimeDao.class, ReservationService.class})
 class ReservationServiceTest {

@@ -3,30 +3,30 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.model.ReservationTime;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.repository.JdbcReservationTimeRepository;
 
 @Service
 public class ReservationTimeService {
 
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final JdbcReservationTimeRepository jdbcReservationTimeRepository;
 
-    public ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationTimeService(JdbcReservationTimeRepository jdbcReservationTimeRepository) {
+        this.jdbcReservationTimeRepository = jdbcReservationTimeRepository;
     }
 
-    public ReservationTime addTime(String startAt) {
-        return reservationTimeRepository.addTime(startAt);
+    public ReservationTime addTime(String start_at) {
+        return jdbcReservationTimeRepository.addTime(start_at);
     }
 
     public List<ReservationTime> getAllTime() {
-        return reservationTimeRepository.getAllTime();
+        return jdbcReservationTimeRepository.getAllTime();
     }
 
     public Integer deleteTime(Long id) {
-        return reservationTimeRepository.deleteTime(id);
+        return jdbcReservationTimeRepository.deleteTime(id);
     }
 
     public ReservationTime getReservationTimeById(Long id) {
-        return reservationTimeRepository.getReservationTimeById(id);
+        return jdbcReservationTimeRepository.getReservationTimeById(id);
     }
 }

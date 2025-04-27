@@ -22,11 +22,8 @@ public class FakeTimeDao implements ReservationTimeDao {
     }
 
     @Override
-    public int deleteById(Long id) {
-        if (entities.removeIf(entity -> entity.id().equals(id))) {
-            return 1;
-        }
-        return 0;
+    public boolean deleteById(Long id) {
+        return entities.removeIf(entity -> entity.id().equals(id));
     }
 
     @Override

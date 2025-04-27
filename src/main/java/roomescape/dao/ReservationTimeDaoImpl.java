@@ -43,9 +43,10 @@ public class ReservationTimeDaoImpl implements ReservationTimeDao {
     }
 
     @Override
-    public int deleteById(final Long id) {
+    public boolean deleteById(final Long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.update(sql, id);
+        final int updated = jdbcTemplate.update(sql, id);
+        return updated > 0;
     }
 
     @Override

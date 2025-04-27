@@ -10,7 +10,7 @@ public interface ReservationTimeDao {
 
     List<ReservationTimeEntity> findAll();
 
-    int deleteById(Long id);
+    boolean deleteById(Long id);
 
     Optional<ReservationTimeEntity> findById(Long id);
 }

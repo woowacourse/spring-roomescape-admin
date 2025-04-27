@@ -7,7 +7,7 @@ import java.util.List;
 public interface ReservationDao {
     ReservationEntity save(ReservationEntity entity);
 
-    int deleteById(Long id);
+    boolean deleteById(Long id);
 
     List<ReservationEntity> findAll();
 }

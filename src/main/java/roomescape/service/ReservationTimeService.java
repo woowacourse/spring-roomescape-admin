@@ -47,8 +47,8 @@ public class ReservationTimeService {
     }
 
     public void delete(final Long id) {
-        final int deleted = timeDao.deleteById(id);
-        if (deleted == 0) {
+        final boolean deleted = timeDao.deleteById(id);
+        if (!deleted) {
             throw new NotFoundException("존재하지 않는 id 입니다.");
         }
     }

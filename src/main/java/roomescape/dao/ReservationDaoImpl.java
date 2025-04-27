@@ -33,9 +33,10 @@ public class ReservationDaoImpl implements ReservationDao {
         return newReservation.changeId(id);
     }
 
-    public int deleteById(final Long id) {
+    public boolean deleteById(final Long id) {
         String query = "DELETE FROM reservation WHERE id = ?";
-        return jdbcTemplate.update(query, id);
+        final int updated = jdbcTemplate.update(query, id);
+        return updated > 0;
     }
 
     public List<ReservationEntity> findAll() {

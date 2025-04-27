@@ -59,8 +59,8 @@ public class ReservationService {
     }
 
     public void deleteReservation(final Long id) {
-        final int deleted = reservationDao.deleteById(id);
-        if (deleted == 0) {
+        final boolean deleted = reservationDao.deleteById(id);
+        if (!deleted) {
             throw new NotFoundException("존재하지 않는 id 입니다.");
         }
     }

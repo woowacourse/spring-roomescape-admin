@@ -37,7 +37,7 @@ class ReservationTest {
     @Test
     void 예약_시간이_null이면_예외가_발생한다() {
         // given
-        final String name = null;
+        final String name = "강산";
         final LocalDate date = LocalDate.of(2025, 4, 24);
         final ReservationTime reservationTime = null;
 

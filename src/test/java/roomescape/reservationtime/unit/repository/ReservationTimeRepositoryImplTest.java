@@ -59,6 +59,32 @@ class ReservationTimeRepositoryImplTest {
     }
 
     @Test
+    @DisplayName("startAt이 이미 있는 시간이면 True를 반환한다.")
+    void findByStartAt_true() {
+        // given
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+
+        // when
+        boolean exists = reservationTimeRepository.findByStartAt(LocalTime.of(10, 0));
+
+        // then
+        assertThat(exists).isTrue();
+    }
+
+    @Test
+    @DisplayName("startAt이 없는 시간이면 False를 반환한다.")
+    void findByStartAt_false() {
+        // given
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+
+        // when
+        boolean exists = reservationTimeRepository.findByStartAt(LocalTime.of(10, 10));
+
+        // then
+        assertThat(exists).isFalse();
+    }
+
+    @Test
     @DisplayName("시간을 저장한다.")
     void save() {
         // given

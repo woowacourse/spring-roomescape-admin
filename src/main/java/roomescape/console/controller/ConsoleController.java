@@ -3,7 +3,9 @@ package roomescape.console.controller;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import roomescape.console.constant.Function;
+import roomescape.console.constant.ConsoleFunction;
+import roomescape.console.constant.ReservationFunction;
+import roomescape.console.constant.ReservationTimeFunction;
 import roomescape.console.view.InputView;
 import roomescape.console.view.OutputView;
 import roomescape.presentation.dto.CreateReservationDto;
@@ -36,8 +38,8 @@ public class ConsoleController {
         outputView.printStartMessage();
         while (!quitFlag) {
             try {
-                Function function = Function.getSystemFunction(inputView.selectAdminFunction());
-                processSystemFunction(function);
+                ConsoleFunction consoleFunction = ConsoleFunction.getSystemFunction(inputView.selectAdminFunction());
+                processSystemFunction(consoleFunction);
             } catch (RuntimeException e) {
                 System.out.println(e.getMessage());
             }
@@ -45,26 +47,26 @@ public class ConsoleController {
         outputView.printEndMessage();
     }
 
-    private void processSystemFunction(Function function) {
-        if (function == Function.RESERVATION) {
-            Function reservationFunction = Function.getReservationFunction(
+    private void processSystemFunction(ConsoleFunction consoleFunction) {
+        if (consoleFunction == ConsoleFunction.RESERVATION) {
+            ReservationFunction reservationFunction = ReservationFunction.getReservationFunction(
                     inputView.selectReservationFunction());
             processReservationFunction(reservationFunction);
-        } else if (function == Function.RESERVATION_TIME) {
-            Function reservationTimeFunction = Function.getReservationTimeFunction(
+        } else if (consoleFunction == ConsoleFunction.RESERVATION_TIME) {
+            ReservationTimeFunction reservationTimeFunction = ReservationTimeFunction.getReservationTimeFunction(
                     inputView.selectReservationTimeFunction());
             processReservationTimeFunction(reservationTimeFunction);
-        } else if (function == Function.QUIT) {
+        } else if (consoleFunction == ConsoleFunction.QUIT) {
             quitFlag = true;
         }
     }
 
-    private void processReservationTimeFunction(Function function) {
-        if (function == Function.ADD_RESERVATION_TIME) {
+    private void processReservationTimeFunction(ReservationTimeFunction function) {
+        if (function == ReservationTimeFunction.ADD_RESERVATION_TIME) {
             createReservationTime();
-        } else if (function == Function.GET_RESERVATION_TIMES) {
+        } else if (function == ReservationTimeFunction.GET_RESERVATION_TIMES) {
             getAllReservationTimes();
-        } else if (function == Function.DELETE_RESERVATION_TIME) {
+        } else if (function == ReservationTimeFunction.DELETE_RESERVATION_TIME) {
             deleteReservationTime();
         }
     }
@@ -87,12 +89,12 @@ public class ConsoleController {
         outputView.printSuccessToDeleteReservationTime();
     }
 
-    private void processReservationFunction(Function function) {
-        if (function == Function.ADD_RESERVATION) {
+    private void processReservationFunction(ReservationFunction function) {
+        if (function == ReservationFunction.ADD_RESERVATION) {
             createReservation();
-        } else if (function == Function.GET_RESERVATIONS) {
+        } else if (function == ReservationFunction.GET_RESERVATIONS) {
             getReservations();
-        } else if (function == Function.DELETE_RESERVATION) {
+        } else if (function == ReservationFunction.DELETE_RESERVATION) {
             deleteReservation();
         }
     }

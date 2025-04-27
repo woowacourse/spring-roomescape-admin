@@ -25,4 +25,4 @@
 - [x] h2, jdbc gradle 의존성 추가
 - [x] 테이블 스키마 sql 파일 정의
 - [x] h2 데이터베이스 console 기능 활성화
-- [ ] datasource url 다음으로 설정 `jdbc:h2:mem:database`
+- [x] datasource url 다음으로 설정 `jdbc:h2:mem:database`

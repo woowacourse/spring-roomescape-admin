@@ -21,9 +21,9 @@ function render(data) {
     const row = tableBody.insertRow();
 
     row.insertCell(0).textContent = item.id;
-    row.insertCell(1).textContent = item.name;
-    row.insertCell(2).textContent = item.date;
-    row.insertCell(3).textContent = item.time.startAt;
+    row.insertCell(1).textContent = item.name.name;  // 'name' 객체 안의 'name' 값
+    row.insertCell(2).textContent = item.reservationDateTime.date.date;  // 'date' 객체 안의 'date' 값
+    row.insertCell(3).textContent = item.reservationDateTime.time.start_at;  // 'time' 객체 안의 'start_at' 값
 
     const actionCell = row.insertCell(row.cells.length);
     actionCell.appendChild(createActionButton('삭제', 'btn-danger', deleteRow));
@@ -76,7 +76,7 @@ function addInputRow() {
 
   const nameInput = createInput('text');
   const dateInput = createInput('date');
-  const timeDropdown = createSelect(timesOptions, "시간 선택", 'time-select', 'startAt');
+  const timeDropdown = createSelect(timesOptions, "시간 선택", 'time-select', 'start_at');
 
   const cellFieldsToCreate = ['', nameInput, dateInput, timeDropdown];
 

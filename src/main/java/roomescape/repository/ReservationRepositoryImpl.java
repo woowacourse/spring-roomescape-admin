@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
@@ -13,6 +14,16 @@ import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationRepositoryImpl implements ReservationRepository {
+
+    private static final RowMapper<Reservation> RESERVATION_ROW_MAPPER = (resultSet, rowNumber) -> {
+        long id = resultSet.getLong("id");
+        String name = resultSet.getString("name");
+        LocalDate date = LocalDate.parse(resultSet.getString("date"));
+        long timeId = resultSet.getLong("time_id");
+        LocalTime time = LocalTime.parse(resultSet.getString("time_value"));
+        ReservationTime reservationTime = new ReservationTime(timeId, time);
+        return new Reservation(id, name, date, reservationTime);
+    };
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -37,15 +48,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                 inner join reservation_time as t
                 on r.time_id = t.id
                 """;
-        List<Reservation> query = jdbcTemplate.query(sql, (resultSet, rowNumber) -> {
-            long id = resultSet.getLong("id");
-            String name = resultSet.getString("name");
-            LocalDate date = LocalDate.parse(resultSet.getString("date"));
-            long timeId = resultSet.getLong("time_id");
-            LocalTime time = LocalTime.parse(resultSet.getString("time_value"));
-            ReservationTime reservationTime = new ReservationTime(timeId, time);
-            return new Reservation(id, name, date, reservationTime);
-        });
+        final List<Reservation> query = jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER);
         return query;
     }
 
@@ -72,14 +75,7 @@ public class ReservationRepositoryImpl implements ReservationRepository {
                 inner join reservation_time as t
                 on r.time_id = t.id
                 WHERE r.id = ?""";
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNumber) -> {
-            String name = resultSet.getString("name");
-            LocalDate date = LocalDate.parse(resultSet.getString("date"));
-            long timeId = resultSet.getLong("time_id");
-            LocalTime time = LocalTime.parse(resultSet.getString("time_value"));
-            ReservationTime reservationTime = new ReservationTime(timeId, time);
-            return new Reservation(reservationId, name, date, reservationTime);
-        }, reservationId);
+        return jdbcTemplate.queryForObject(sql, RESERVATION_ROW_MAPPER, reservationId);
     }
 
     // TODO : id 없을 경우

@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 
-public class FakeReservationDao extends ReservationDao{
+public class FakeReservationDao extends ReservationDao {
 
     private final Map<Long, Reservation> database = new HashMap<>();
     private final AtomicLong nextId = new AtomicLong(1L);

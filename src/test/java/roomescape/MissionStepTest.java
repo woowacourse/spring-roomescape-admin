@@ -34,7 +34,7 @@ public class MissionStepTest {
     private ReservationTimeDao reservationTimeDao;
 
     @BeforeEach
-    void beforeEachTest(){
+    void beforeEachTest() {
         reservationTimeDao.saveTime(new ReservationTime(LocalTime.of(10, 10)));
     }
 
@@ -195,12 +195,10 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200);
 
-
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
     }
-
 }

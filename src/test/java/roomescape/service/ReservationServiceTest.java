@@ -17,9 +17,8 @@ class ReservationServiceTest {
 
     private ReservationService reservationService;
     private FakeReservationDao fakeReservationDao;
-
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setUp() {

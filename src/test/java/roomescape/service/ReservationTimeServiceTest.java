@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import roomescape.dto.ReservationTimeCreateRequestDto;
 import roomescape.dto.ReservationTimeResponseDto;
@@ -41,24 +42,30 @@ class ReservationTimeServiceTest {
         assertThat(allTimes).extracting("startAt").containsExactly(LocalTime.of(10, 0), LocalTime.of(11, 0));
     }
 
-    @DisplayName("ReservationTime을 삭제할 수 있다")
-    @Test
-    void deleteReservationTimeByIdTest() {
-        ReservationTimeCreateRequestDto requestDto = new ReservationTimeCreateRequestDto(LocalTime.of(10, 0));
-        ReservationTimeResponseDto responseDto = reservationTimeService.createReservationTime(requestDto);
 
-        reservationTimeService.deleteReservationTimeById(responseDto.id());
+    @Nested
+    @DisplayName("예약시간 삭제")
+    class ReservationTimeDeleteTest {
 
-        List<ReservationTimeResponseDto> allTimes = reservationTimeService.findAllReservationTimes();
-        assertThat(allTimes).isEmpty();
-    }
+        @DisplayName("ReservationTime을 삭제할 수 있다")
+        @Test
+        void deleteReservationTimeByIdTest() {
+            ReservationTimeCreateRequestDto requestDto = new ReservationTimeCreateRequestDto(LocalTime.of(10, 0));
+            ReservationTimeResponseDto responseDto = reservationTimeService.createReservationTime(requestDto);
 
-    @DisplayName("존재하지 않는 ReservationTime을 삭제하려고 하면 예외가 발생한다")
-    @Test
-    void deleteNonExistentReservationTimeTest() {
-        Long nonExistentId = 2L;
+            reservationTimeService.deleteReservationTimeById(responseDto.id());
 
-        assertThatThrownBy(() -> reservationTimeService.deleteReservationTimeById(nonExistentId))
-                .isInstanceOf(IllegalStateException.class);
+            List<ReservationTimeResponseDto> allTimes = reservationTimeService.findAllReservationTimes();
+            assertThat(allTimes).isEmpty();
+        }
+
+        @DisplayName("존재하지 않는 ReservationTime을 삭제하려고 하면 예외가 발생한다")
+        @Test
+        void deleteNonExistentReservationTimeTest() {
+            Long nonExistentId = 2L;
+
+            assertThatThrownBy(() -> reservationTimeService.deleteReservationTimeById(nonExistentId))
+                    .isInstanceOf(IllegalStateException.class);
+        }
     }
 }

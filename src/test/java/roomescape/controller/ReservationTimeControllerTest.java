@@ -3,6 +3,7 @@ package roomescape.controller;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -27,91 +28,101 @@ class ReservationTimeControllerTest {
                 .body("size()", is(0));
     }
 
-    @DisplayName("Time 입력 테스트")
-    @Test
-    void addReservationTimeTest() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "15:40");
+    @Nested
+    @DisplayName("예약시간 생성")
+    class ReservationTimePostTest {
 
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+        @DisplayName("Time 입력 테스트")
+        @Test
+        void addReservationTimeTest() {
+            Map<String, String> params = new HashMap<>();
+            params.put("startAt", "15:40");
 
-        RestAssured.given().log().all()
-                .when().get("/times")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(params)
+                    .when().post("/times")
+                    .then().log().all()
+                    .statusCode(200)
+                    .body("id", is(1));
+
+            RestAssured.given().log().all()
+                    .when().get("/times")
+                    .then().log().all()
+                    .statusCode(200)
+                    .body("size()", is(1));
+        }
+
+        @DisplayName("times 응답의 LocalTime 형식은 xx:xx 이다.")
+        @Test
+        void timeResponseTest() {
+            Map<String, String> params = new HashMap<>();
+            params.put("startAt", "15:40");
+
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(params)
+                    .when().post("/times")
+                    .then().log().all()
+                    .statusCode(200);
+
+            RestAssured.given().log().all()
+                    .when().get("/times")
+                    .then().log().all()
+                    .body("[0].startAt", equalTo("15:40"));
+        }
+
+        @DisplayName("올바른 시간의 포멧만 요청 가능하다.")
+        @Test
+        void invalidRequestTimeTest() {
+            Map<String, String> params = new HashMap<>();
+            params.put("startAt", "15:40:00");
+
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(params)
+                    .when().post("/times")
+                    .then().log().all()
+                    .statusCode(400);
+        }
     }
 
-    @DisplayName("times 응답의 LocalTime 형식은 xx:xx 이다.")
-    @Test
-    void timeResponseTest() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "15:40");
+    @Nested
+    @DisplayName("예약시간 삭제")
+    class DeleteReservationTimeTest {
 
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
+        @DisplayName("저장된 Id 제거 테스트")
+        @Test
+        void deleteTimeTest() {
+            Map<String, String> params = new HashMap<>();
+            params.put("startAt", "15:40");
 
-        RestAssured.given().log().all()
-                .when().get("/times")
-                .then().log().all()
-                .body("[0].startAt", equalTo("15:40"));
-    }
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(params)
+                    .when().post("/times")
+                    .then().log().all()
+                    .statusCode(200);
 
-    @DisplayName("저장된 Id 제거 테스트")
-    @Test
-    void deleteTimeTest() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "15:40");
+            RestAssured.given().log().all()
+                    .when().delete("/times/1")
+                    .then().log().all()
+                    .statusCode(200);
 
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
+            RestAssured.given().log().all()
+                    .when().get("/times")
+                    .then().log().all()
+                    .statusCode(200)
+                    .body("size()", is(0));
+        }
 
-        RestAssured.given().log().all()
-                .when().delete("/times/1")
-                .then().log().all()
-                .statusCode(200);
-
-        RestAssured.given().log().all()
-                .when().get("/times")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
-    }
-
-    @DisplayName("존재하지 않는 Id의 Time 을 삭제할 수 없다")
-    @Test
-    void invalidTimeIdTest() {
-        RestAssured.given().log().all()
-                .when().delete("/times/5")
-                .then().log().all()
-                .statusCode(404);
-    }
-
-    @DisplayName("올바른 시간의 포멧만 요청 가능하다.")
-    @Test
-    void invalidRequestTimeTest() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "15:40:00");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(400);
+        @DisplayName("존재하지 않는 Id의 Time 을 삭제할 수 없다")
+        @Test
+        void invalidTimeIdTest() {
+            RestAssured.given().log().all()
+                    .when().delete("/times/5")
+                    .then().log().all()
+                    .statusCode(404);
+        }
     }
 }

@@ -2,6 +2,7 @@ package roomescape.domain;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -12,19 +13,20 @@ import java.util.stream.Stream;
 
 class ReservationTest {
 
-    @DisplayName("Date 와 ReservationTime 이 존재하지 않으면 생성 불가능하다")
-    @ParameterizedTest
-    @MethodSource("invalidReservationArguments")
-    void invalidReservationDateTimeTest(Long id, String name, LocalDate date, ReservationTime reservationTime) {
-        Assertions.assertThatThrownBy(() -> new Reservation(id, name, date, reservationTime))
+    @DisplayName("Date 이 존재하지 않으면 생성 불가능하다")
+    @Test
+    void invalidReservationDateTimeTest() {
+        Assertions.assertThatThrownBy(() ->
+                        new Reservation(1L, "가이온", null, new ReservationTime(1L, LocalTime.now())))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    static Stream<Arguments> invalidReservationArguments() {
-        return Stream.of(
-                Arguments.of(1L, "가이온", null, new ReservationTime(1L, LocalTime.now())),
-                Arguments.of(1L, "가이온", LocalDate.now(), null)
-        );
+    @DisplayName("ReservationTime이 존재하지 않으면 생성 불가능하다")
+    @Test
+    void invalidReservationTimeTest() {
+        Assertions.assertThatThrownBy(() ->
+                        new Reservation(1L, "가이온", LocalDate.now(), null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @DisplayName("공백이거나 이름이 존재하지 않는 경우 생성할 수 없다.")

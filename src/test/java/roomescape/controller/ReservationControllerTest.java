@@ -30,7 +30,8 @@ class ReservationControllerTest {
     }
 
     @Nested
-    class ReservationInsertTest {
+    @DisplayName("예약 생성")
+    class ReservationPostTest {
 
         @BeforeEach
         void setUp() {
@@ -92,9 +93,10 @@ class ReservationControllerTest {
     }
 
     @Nested
+    @DisplayName("예약 삭제")
     class ReservationDeleteTest {
 
-        @DisplayName("Reservation 삭제 테스트")
+        @DisplayName("존재하는 예약을 삭제할 수 있다")
         @Test
         void deleteReservationTest() {
             Map<String, Object> reservationTime = new HashMap<>();
@@ -131,7 +133,7 @@ class ReservationControllerTest {
                     .body("size()", is(0));
         }
 
-        @DisplayName("존재하지 않는 Id의 Reservation을 삭제할 수 없다")
+        @DisplayName("존재하지 않는 예약을 삭제할 수 없다")
         @Test
         void invalidReservationIdDeleteTest() {
             RestAssured.given().log().all()

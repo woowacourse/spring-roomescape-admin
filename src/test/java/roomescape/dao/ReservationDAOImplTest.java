@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
 
 @JdbcTest
-class ReservationDAOTest {
+class ReservationDAOImplTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -22,10 +22,10 @@ class ReservationDAOTest {
     @DisplayName("모든 reservation 을 조회한다")
     void findAllReservation() {
         // given
-        ReservationDAO reservationDAO = new ReservationDAO(jdbcTemplate);
+        ReservationDAOImpl reservationDAOImpl = new ReservationDAOImpl(jdbcTemplate);
 
         // when
-        List<Reservation> reservations = reservationDAO.findAllReservation();
+        List<Reservation> reservations = reservationDAOImpl.findAllReservation();
 
         // then
         assertThat(reservations).isEmpty();
@@ -35,11 +35,11 @@ class ReservationDAOTest {
     @DisplayName("reservation 을 추가한다")
     void insertReservation() {
         // given
-        ReservationDAO reservationDAO = new ReservationDAO(jdbcTemplate);
+        ReservationDAOImpl reservationDAOImpl = new ReservationDAOImpl(jdbcTemplate);
         Reservation reservation = new Reservation("fuyu", LocalDate.of(2025, 4, 28), LocalTime.of(12, 0));
 
         // when
-        Long id = reservationDAO.insertReservation(reservation);
+        Long id = reservationDAOImpl.insertReservation(reservation);
 
         // then
         assertThat(id).isNotEqualTo(-1);
@@ -49,12 +49,12 @@ class ReservationDAOTest {
     @DisplayName("reservation 을 삭제한다")
     void deleteReservationById() {
         // given
-        ReservationDAO reservationDAO = new ReservationDAO(jdbcTemplate);
+        ReservationDAOImpl reservationDAOImpl = new ReservationDAOImpl(jdbcTemplate);
         Reservation reservation = new Reservation("fuyu", LocalDate.of(2025, 4, 28), LocalTime.of(12, 0));
-        Long id = reservationDAO.insertReservation(reservation);
+        Long id = reservationDAOImpl.insertReservation(reservation);
 
         // when
-        int deletedCount = reservationDAO.deleteReservationById(id);
+        int deletedCount = reservationDAOImpl.deleteReservationById(id);
 
         // then
         assertThat(deletedCount).isEqualTo(1);

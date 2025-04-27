@@ -1,38 +1,46 @@
 package roomescape.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 import org.springframework.stereotype.Service;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
-import roomescape.model.Reservation;
-import roomescape.model.Reservations;
+import roomescape.controller.request.ReservationRequest;
+import roomescape.controller.response.ReservationResponse;
+import roomescape.controller.response.ReservationTimeResponse;
+import roomescape.domain.Reservation;
+import roomescape.repository.ReservationRepository;
+import roomescape.service.exception.ReservationNotFoundException;
 
 @Service
 public class ReservationService {
 
-    private final Reservations reservations;
+    private final ReservationTimeService reservationTimeService;
+    private final ReservationRepository repository;
 
-    public ReservationService(final Reservations reservations) {
-        this.reservations = reservations;
+    public ReservationService(final ReservationTimeService reservationTimeService,
+                              final ReservationRepository repository) {
+        this.reservationTimeService = reservationTimeService;
+        this.repository = repository;
     }
 
-    public List<ReservationResponse> get() {
-        final List<ReservationResponse> responses = new ArrayList<>();
-        for (Entry<Long, Reservation> each : reservations.getReservations().entrySet()) {
-            responses.add(ReservationResponse.from(each.getKey(), each.getValue()));
-        }
-        return responses;
+    public List<ReservationResponse> getAll() {
+        return repository.findAll().stream()
+                .map(ReservationResponse::from)
+                .toList();
     }
 
-    public ReservationResponse create(final ReservationRequest req) {
-        final Reservation reservation = req.toEntity();
-        final long id = reservations.add(reservation);
-        return ReservationResponse.from(id, reservation);
+    private ReservationResponse getById(Long id) {
+        return ReservationResponse.from(repository.findById(id)
+                .orElseThrow(() -> new ReservationNotFoundException("예약을 찾을 수 없습니다.")));
+    }
+
+    public ReservationResponse create(final ReservationRequest request) {
+        final ReservationTimeResponse reservationTimeResponse = reservationTimeService.getById(request.timeId());
+        final Reservation reservation = request.toEntity(reservationTimeResponse);
+        final Reservation savedReservation = repository.add(reservation);
+        return ReservationResponse.from(savedReservation);
     }
 
     public void deleteById(final Long id) {
-        reservations.deleteById(id);
+        final ReservationResponse reservationResponse = getById(id);
+        repository.deleteById(reservationResponse.id());
     }
 }

@@ -35,7 +35,7 @@ class ReservationDAOImplTest {
     void insertReservation() {
         // given
         ReservationDAOImpl reservationDAOImpl = new ReservationDAOImpl(jdbcTemplate);
-        Reservation reservation = new Reservation("fuyu", "2025-04-28", new Time(1L, "10:00"));
+        Reservation reservation = new Reservation("kim", "2025-04-28", new Time(1L, "10:00"));
 
         // when
         Long id = reservationDAOImpl.insertReservation(reservation);
@@ -49,7 +49,7 @@ class ReservationDAOImplTest {
     void deleteReservationById() {
         // given
         ReservationDAOImpl reservationDAOImpl = new ReservationDAOImpl(jdbcTemplate);
-        Reservation reservation = new Reservation("fuyu", "2025-04-28", new Time(1L, "10:00"));
+        Reservation reservation = new Reservation("kim", "2025-04-28", new Time(1L, "10:00"));
         Long id = reservationDAOImpl.insertReservation(reservation);
 
         // when

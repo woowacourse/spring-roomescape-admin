@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({ReservationNotFoundException.class, ReservationTimeNotFoundException.class})
-    protected ResponseEntity<String> handleNotFoundExceptions(ReservationNotFoundException e) {
+    protected ResponseEntity<String> handleNotFoundExceptions(RuntimeException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 

@@ -24,7 +24,7 @@ public class ReservationService {
 
     public Reservation addReservation(ReservationRequestDto reservationRequestDto) {
         ReservationTime reservationTime = reservationTimeService.getReservationTimeById(
-                reservationRequestDto.time_id());
+                reservationRequestDto.timeId());
         return reservationRepository.addReservation(reservationRequestDto, reservationTime);
     }
 

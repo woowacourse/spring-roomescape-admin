@@ -44,7 +44,7 @@ public class JdbcReservationRepository implements ReservationRepository{
                     sql, new String[]{"id"});
             ps.setString(1, reservationRequestDto.name());
             ps.setString(2, reservationRequestDto.date());
-            ps.setLong(3, reservationRequestDto.time_id());
+            ps.setLong(3, reservationRequestDto.timeId());
             return ps;
         }, keyHolder);
         return reservationRequestDto.toEntity(Objects.requireNonNull(keyHolder.getKey()).longValue(), reservationTime);

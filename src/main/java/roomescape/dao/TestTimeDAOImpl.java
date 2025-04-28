@@ -22,9 +22,9 @@ public class TestTimeDAOImpl implements TimeDAO {
 
     @Override
     public int deleteTimeById(final Long id) {
-        Long idMatchedCount = times.stream()
+        final long idMatchedCount = times.stream()
                 .filter(time -> time.getId().equals(id))
                 .count();
-        return idMatchedCount.intValue();
+        return (int) idMatchedCount;
     }
 }

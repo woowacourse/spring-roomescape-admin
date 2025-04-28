@@ -1,7 +1,6 @@
 package roomescape.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDAO;
 import roomescape.domain.Reservation;
@@ -21,7 +20,7 @@ public class ReservationServiceImpl implements ReservationService {
     public List<ReservationResponse> findAllReservations() {
         return reservationDAO.findAllReservation().stream()
                 .map(ReservationResponse::from)
-                .collect(Collectors.toUnmodifiableList());
+                .toList();
     }
 
     @Override
@@ -34,7 +33,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public int deleteReservationById(final Long id) {
-        int count = reservationDAO.deleteReservationById(id);
-        return count;
+        return reservationDAO.deleteReservationById(id);
     }
 }

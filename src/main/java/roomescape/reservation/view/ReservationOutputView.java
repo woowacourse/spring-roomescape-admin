@@ -26,9 +26,9 @@ public class ReservationOutputView {
         System.out.println();
     }
 
-    public void printError(String message) {
-        System.out.println("잘못된 입력값입니다.");
-        System.out.println("다시 입력해주세요");
+    public void printDeleteReservationResult(String errorMessage) {
+        System.out.println("[삭제 실패] " + errorMessage);
+        System.out.println();
     }
 
     public void printAddReservationInfo() {

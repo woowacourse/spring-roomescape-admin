@@ -48,4 +48,10 @@ public class FakeReservationTimeDao implements ReservationTimeDao {
         ReservationTime reservationTime = reservationTimes.remove(id);
         return reservationTime != null;
     }
+
+    @Override
+    public boolean existsByTime(final LocalTime time) {
+        return reservationTimes.values().stream()
+                .anyMatch(reservationTime -> reservationTime.isSameTime(time));
+    }
 }

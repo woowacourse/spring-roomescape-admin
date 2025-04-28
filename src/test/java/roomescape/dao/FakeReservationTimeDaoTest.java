@@ -10,6 +10,7 @@ import roomescape.fake.FakeReservationTimeDao;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class FakeReservationTimeDaoTest {
@@ -28,7 +29,7 @@ class FakeReservationTimeDaoTest {
 
     @Test
     void 예약시간을_추가하면_추가한_예약시간을_반환한다() {
-        ReservationTime newReservationTime = ReservationTime.of(LocalTime.of(10, 0));
+        ReservationTime newReservationTime = ReservationTime.of(LocalTime.of(12, 0));
         assertThat(reservationTimeDao.insert(newReservationTime)).isNotNull();
     }
 
@@ -40,5 +41,13 @@ class FakeReservationTimeDaoTest {
     @Test
     void 특정_예약시간을_삭제했을때_예약시간이_없으면_false를_반환한다() {
         assertThat(reservationTimeDao.deleteById(4L)).isFalse();
+    }
+
+    @Test
+    void 특정_예약시간이_존재하면_true_존재하지않으면_false를_반환한다() {
+        assertAll(
+                () -> assertThat(reservationTimeDao.existsByTime(LocalTime.of(10, 0))).isTrue(),
+                () -> assertThat(reservationTimeDao.existsByTime(LocalTime.of(12, 0))).isFalse()
+        );
     }
 }

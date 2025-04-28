@@ -55,4 +55,11 @@ public class H2ReservationTimeDao implements ReservationTimeDao {
         int deletedRows = jdbcTemplate.update(sql, id);
         return deletedRows > 0;
     }
+
+    @Override
+    public boolean existsByTime(final LocalTime time) {
+        String sql = "SELECT id, start_at FROM reservation_time WHERE start_at = ?";
+        List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, timeRowMapper, time);
+        return !reservationTimes.isEmpty();
+    }
 }

@@ -11,9 +11,12 @@ import roomescape.dto.ReservationTimeRequest;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ReservationTimeServiceTest {
+
+    private static final LocalTime EXISTS_TIME = LocalTime.of(10, 0);
 
     private ReservationTimeService reservationTimeService;
 
@@ -42,5 +45,12 @@ class ReservationTimeServiceTest {
     @Test
     void 특정_예약시간을_삭제했을때_예약시간이_없으면_false를_반환한다() {
         assertThat(reservationTimeService.deleteReservationTimeById(4L)).isFalse();
+    }
+
+    @Test
+    void 예약시간을_추가할때_이미존재하는_예약시간이면_예외가_발생한다() {
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(EXISTS_TIME);
+        assertThatThrownBy(() -> reservationTimeService.createReservationTime(reservationTimeRequest))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

@@ -3,13 +3,15 @@ package roomescape.dto;
 import roomescape.model.Reservation;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
-public record ReservationGetResponse(Long id, String name, LocalDate date, String time) {
+public record ReservationGetResponse(
+        Long id,
+        String name,
+        LocalDate date,
+        ReservationTimeGetResponse time
+) {
 
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
-
-    public static ReservationGetResponse from(Reservation reservation) {
-        return new ReservationGetResponse(reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime().format(TIME_FORMATTER));
+    public static ReservationGetResponse from(Reservation reservationEntity) {
+        return new ReservationGetResponse(reservationEntity.getId(), reservationEntity.getName(), reservationEntity.getDate(), ReservationTimeGetResponse.from(reservationEntity.getTime()));
     }
 }

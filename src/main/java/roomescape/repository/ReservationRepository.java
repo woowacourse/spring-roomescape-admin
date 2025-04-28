@@ -2,13 +2,16 @@ package roomescape.repository;
 
 import roomescape.model.Reservation;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ReservationRepository {
 
     List<Reservation> findAll();
 
-    Reservation insertAndGet(Reservation reservationExcludeIndex);
+    boolean existByDateAndTimeId(LocalDate date, Long timeId);
 
-    void deleteById(Long id);
+    Reservation insert(Reservation reservation);
+
+    int deleteById(Long id);
 }

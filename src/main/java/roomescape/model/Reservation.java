@@ -1,40 +1,31 @@
 package roomescape.model;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Objects;
 
 public class Reservation {
 
-    private final Long id;
+    private final EntityId id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
-    public Reservation(String name, LocalDate date, LocalTime time) {
-        this(null, name, date, time);
-    }
-
-    private Reservation(Long id, String name, LocalDate date, LocalTime time) {
-        validate(name, date, time);
+    public Reservation(EntityId id, String name, LocalDate date, ReservationTime time) {
+        validate(id, name, date, time);
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public static Reservation toEntity(Reservation reservation, Long id) {
-        return new Reservation(id, reservation.name, reservation.date, reservation.time);
-    }
-
-    private void validate(String name, LocalDate date, LocalTime time) {
-        validateNotNull(name, date, time);
+    private void validate(EntityId id, String name, LocalDate date, ReservationTime time) {
+        validateNotNull(id, name, date, time);
         validateName(name);
     }
 
-    private void validateNotNull(String name, LocalDate date, LocalTime time) {
-        if (name == null || date == null || time == null) {
-            throw new IllegalArgumentException("예약자 이름과 예약 날짜, 시간을 올바르게 입력해 주세요.");
+    private void validateNotNull(EntityId id, String name, LocalDate date, ReservationTime time) {
+        if (id == null || name == null || date == null || time == null) {
+            throw new IllegalArgumentException("id와 예약자 이름, 예약 날짜, 시간을 올바르게 입력해 주세요.");
         }
     }
 
@@ -45,7 +36,7 @@ public class Reservation {
     }
 
     public Long getId() {
-        return id;
+        return id.getId();
     }
 
     public String getName() {
@@ -56,7 +47,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 

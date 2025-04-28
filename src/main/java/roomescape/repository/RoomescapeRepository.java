@@ -1,44 +1,21 @@
 package roomescape.repository;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
-@Repository
-public class RoomescapeRepository {
+public interface RoomescapeRepository {
 
-    private final List<Reservation> reservations;
-    private final AtomicLong index = new AtomicLong(1);
+    Reservation findById(final long id);
 
-    public RoomescapeRepository(final List<Reservation> reservations) {
-        this.reservations = new CopyOnWriteArrayList<>(reservations);
-    }
+    List<Reservation> findByDate(LocalDate date);
 
-    public List<Reservation> findAll() {
-        return reservations;
-    }
+    List<Reservation> findAll();
 
-    public Reservation saveReservation(final Reservation reservation) {
-        if (existsSameDateTime(reservation)) {
-            throw new IllegalArgumentException("[ERROR] 이미 존재하는 예약시간입니다.");
-        }
-        Reservation saved = reservation.toEntity(index.getAndIncrement());
-        reservations.add(saved);
-        return saved;
-    }
+    Reservation save(final Reservation reservation);
 
-    public void deleteById(final long id) {
-        Reservation found = reservations.stream()
-                .filter(reservation -> reservation.getId() == id)
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("[ERROR] 예약번호 %d번은 존재하지 않습니다.", id)));
-        reservations.remove(found);
-    }
+    int deleteById(final long id);
 
-    private boolean existsSameDateTime(final Reservation reservation) {
-        return reservations.stream()
-                .anyMatch(reservation::isDuplicateReservation);
-    }
+    boolean existsByDateAndTime(final LocalDate date, final ReservationTime time);
 }

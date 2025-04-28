@@ -1,23 +1,29 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class Reservation {
 
     private long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
-    private Reservation(final long id, final String name, final LocalDate date, final LocalTime time) {
+    private Reservation(final long id, final String name, final LocalDate date, final ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public Reservation(final String name, final LocalDate date, final LocalTime time) {
+    public Reservation(final long id, final String name, final String date, final ReservationTime time) {
+        this.id = id;
+        this.name = name;
+        this.date = LocalDate.parse(date);
+        this.time = time;
+    }
+
+    public Reservation(final String name, final LocalDate date, final ReservationTime time) {
         this.name = name;
         this.date = date;
         this.time = time;
@@ -28,7 +34,7 @@ public class Reservation {
     }
 
     public boolean isDuplicateReservation(Reservation reservation) {
-        return this.date.equals(reservation.date) && this.time.equals(reservation.time);
+        return this.date.equals(reservation.date) && this.time.isSameTime(reservation.time);
     }
 
     public long getId() {
@@ -43,7 +49,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 }

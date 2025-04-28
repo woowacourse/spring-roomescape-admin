@@ -1,44 +1,140 @@
 package roomescape.repository;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import roomescape.domain.Reservation;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class RoomescapeRepositoryTest {
 
-    @DisplayName("같은 날짜 및 시간 예약이 존재하면 예외를 던진다")
-    @Test
-    void saveReservation() {
-        //given
-        LocalDate date = LocalDate.of(2025, 4, 16);
-        LocalTime time = LocalTime.of(10, 10);
-        List<Reservation> reservations = new ArrayList<>();
-        reservations.add(new Reservation("test", date, time));
-        RoomescapeRepository roomescapeRepository = new RoomescapeRepository(reservations);
+    @Autowired
+    RoomescapeRepository repository;
+    @Autowired
+    JdbcTemplate template;
 
-        //when & then
-        Reservation duplicated = new Reservation("test2", date, time);
-        Assertions.assertThatThrownBy(() -> roomescapeRepository.saveReservation(duplicated))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 이미 존재하는 예약시간입니다.");
+    @BeforeEach
+    void setUp() {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        String sql = "insert into reservation_time (start_at) values (?)";
+        template.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, "15:40");
+            return ps;
+        }, keyHolder);
+
+        String reservationSql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
+        template.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(reservationSql, new String[]{"id"});
+            ps.setString(1, "브라운");
+            ps.setString(2, "2023-08-05");
+            ps.setLong(3, 1L);
+            return ps;
+        }, keyHolder);
     }
 
-    @DisplayName("존재하지 않는 예약을 삭제하려는 경우 예외를 던진다")
+    @Test
+    void findById() {
+        //when
+        Reservation reservation = repository.findById(1L);
+
+        //then
+        assertEqualReservationElements(reservation, 1L, "브라운", "2023-08-05", 1L, "15:40");
+    }
+
+    @Test
+    void findByDate() {
+        //when
+        List<Reservation> found = repository.findByDate(LocalDate.of(2023, 8, 5));
+        List<Reservation> notFound = repository.findByDate(LocalDate.of(2023, 8, 6));
+
+        //then
+        assertThat(found).hasSize(1);
+        assertThat(notFound).isEmpty();
+        assertEqualReservationElements(found.getFirst(), 1L, "브라운", "2023-08-05", 1L, "15:40");
+    }
+
+    @Test
+    void findAll() {
+        //when
+        List<Reservation> reservations = repository.findAll();
+
+        //then
+        assertThat(reservations).hasSize(1);
+        assertEqualReservationElements(reservations.getFirst(), 1L, "브라운", "2023-08-05", 1L, "15:40");
+    }
+
+    @Test
+    void save() {
+        //given
+        Reservation reservation = new Reservation("네오", LocalDate.parse("2023-08-05"),
+                ReservationTime.parse("15:40").toEntity(1L));
+
+        //when
+        Reservation saved = repository.save(reservation);
+        Reservation firstReservation = repository.findById(1L);
+        Reservation secondReservation = repository.findById(2L);
+
+        //then
+        assertEqualReservationElements(saved, 2L, "네오", "2023-08-05", 1L, "15:40");
+        assertEqualReservationElements(firstReservation, 1L, "브라운", "2023-08-05", 1L, "15:40");
+        assertEqualReservationElements(secondReservation, 2L, "네오", "2023-08-05", 1L, "15:40");
+        assertThat(repository.findAll()).hasSize(2);
+    }
+
     @Test
     void deleteById() {
-        //given
-        RoomescapeRepository roomescapeRepository = new RoomescapeRepository(new ArrayList<>());
-        long notExistId = 1;
+        //when
+        int deleteCounts = repository.deleteById(1L);
 
-        //when & then
-        Assertions.assertThatThrownBy(() -> roomescapeRepository.deleteById(notExistId))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 예약번호 1번은 존재하지 않습니다.");
+        //then
+        assertThat(deleteCounts).isEqualTo(1);
+        assertThat(repository.findAll()).isEmpty();
+    }
+
+    @Test
+    void existsByDateAndTime() {
+        //given
+        LocalDate date = LocalDate.parse("2023-08-05");
+        LocalDate anotherDate = LocalDate.parse("2023-08-06");
+        ReservationTime time = ReservationTime.parse("15:40");
+        ReservationTime anotherTime = ReservationTime.parse("15:41");
+
+        //when
+        boolean found = repository.existsByDateAndTime(date, time);
+        boolean notFound1 = repository.existsByDateAndTime(date, anotherTime);
+        boolean notFound2 = repository.existsByDateAndTime(anotherDate, time);
+        boolean notFound3 = repository.existsByDateAndTime(anotherDate, anotherTime);
+
+        //then
+        assertThat(found).isTrue();
+        assertThat(notFound1).isFalse();
+        assertThat(notFound2).isFalse();
+        assertThat(notFound3).isFalse();
+    }
+
+    private void assertEqualReservationElements(final Reservation reservation, final long id, final String name,
+                                                final String date, final long timeId, final String time) {
+
+        assertThat(reservation.getId()).isEqualTo(id);
+        assertThat(reservation.getName()).isEqualTo(name);
+        assertThat(reservation.getDate()).isEqualTo(date);
+        assertThat(reservation.getTime().getId()).isEqualTo(timeId);
+        assertThat(reservation.getTime().getStartAt()).isEqualTo(time);
     }
 
 }

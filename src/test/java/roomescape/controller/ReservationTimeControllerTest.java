@@ -3,7 +3,7 @@ package roomescape.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.time.LocalTime;
@@ -14,8 +14,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -30,7 +31,7 @@ import roomescape.service.ReservationTimeService;
 public class ReservationTimeControllerTest {
 
     private static EmbeddedDatabase dataSource;
-    private static JdbcTemplate jdbcTemplate;
+    private static NamedParameterJdbcTemplate namedJdbcTemplate;
     private static ReservationTimeController controller;
 
     @BeforeAll
@@ -39,16 +40,17 @@ public class ReservationTimeControllerTest {
                 .setType(EmbeddedDatabaseType.H2)
                 .addScript("schema.sql")
                 .build();
-        jdbcTemplate = new JdbcTemplate(dataSource);
+        namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 
-        ReservationTimeService service = new ReservationTimeService(new ReservationTimeH2Dao(jdbcTemplate));
+        ReservationTimeService service = new ReservationTimeService(new ReservationTimeH2Dao(namedJdbcTemplate));
         controller = new ReservationTimeController(service);
     }
 
     @BeforeEach
     public void setup() {
-        jdbcTemplate.update("delete from reservation_time");
-        jdbcTemplate.execute("alter table reservation_time alter column id restart with 1");
+        namedJdbcTemplate.update("delete from reservation_time", new MapSqlParameterSource());
+        namedJdbcTemplate.update("alter table reservation_time alter column id restart with 1",
+                new MapSqlParameterSource());
     }
 
     @Test
@@ -58,9 +60,14 @@ public class ReservationTimeControllerTest {
         ReservationTime reservationTime1 = new ReservationTime(1L, LocalTime.of(15, 0));
         ReservationTime reservationTime2 = new ReservationTime(2L, LocalTime.of(16, 0));
 
-        List<ReservationTime> reservations = List.of(reservationTime1, reservationTime2);
-        String sql = "insert into reservation_time (start_at) values (?)";
-        jdbcTemplate.batchUpdate(sql, getBatchPreparedStatementSetter(reservations));
+        List<ReservationTime> reservationTimes = List.of(reservationTime1, reservationTime2);
+        String sql = "insert into reservation_time (start_at) values (:startAt)";
+
+        SqlParameterSource[] batch = reservationTimes.stream()
+                .map(time -> new MapSqlParameterSource("startAt", Time.valueOf(time.startAt())))
+                .toArray(SqlParameterSource[]::new);
+
+        namedJdbcTemplate.batchUpdate(sql, batch);
 
         //when
         List<ReservationTimeResponse> result = controller.readReservationTime();
@@ -81,11 +88,12 @@ public class ReservationTimeControllerTest {
         //when
         controller.postReservationTime(dto);
         //then
-        String sql = "select * from reservation_time where id=?";
-        ReservationTime reservationTime = jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new ReservationTime(
-                rs.getLong("id"),
-                rs.getTime("start_at").toLocalTime()
-        ), 1L);
+        String sql = "select * from reservation_time where id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource("id", 1L);
+
+        ReservationTime reservationTime = namedJdbcTemplate.queryForObject(sql, params,
+                (rs, rowNum) -> getReservationTime(rs));
+
         Assertions.assertNotNull(reservationTime);
         assertThat(reservationTime).isEqualTo(dto.toEntity(1L));
     }
@@ -98,16 +106,23 @@ public class ReservationTimeControllerTest {
         ReservationTime reservationTime2 = new ReservationTime(2L, LocalTime.of(15, 55));
 
         List<ReservationTime> reservationTimes = List.of(reservationTime1, reservationTime2);
-        String insertSql = "insert into reservation_time (start_at) values (?)";
-        jdbcTemplate.batchUpdate(insertSql, getBatchPreparedStatementSetter(reservationTimes));
-        long reservationId = 1L;
+        String insertSql = "insert into reservation_time (start_at) values (:startAt)";
+
+        SqlParameterSource[] batch = reservationTimes.stream()
+                .map(time -> new MapSqlParameterSource("startAt", Time.valueOf(time.startAt())))
+                .toArray(SqlParameterSource[]::new);
+
+        namedJdbcTemplate.batchUpdate(insertSql, batch);
+        long reservationTimeId = 1L;
 
         //when
-        controller.deleteReservationTime(reservationId);
+        controller.deleteReservationTime(reservationTimeId);
 
         //then
-        String selectSql = "select * from reservation_time where id=?";
-        assertThatThrownBy(() -> jdbcTemplate.queryForObject(selectSql, Reservation.class, 1L))
+        String selectSql = "select * from reservation_time where id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource("id", 1L);
+
+        assertThatThrownBy(() -> namedJdbcTemplate.queryForObject(selectSql, params, Reservation.class))
                 .isInstanceOf(EmptyResultDataAccessException.class);
     }
 
@@ -123,18 +138,10 @@ public class ReservationTimeControllerTest {
                 .hasMessage("[ERROR] 예약 데이터를 찾을 수 없습니다:999");
     }
 
-    private BatchPreparedStatementSetter getBatchPreparedStatementSetter(List<ReservationTime> reservationTimes) {
-        return new BatchPreparedStatementSetter() {
-            @Override
-            public void setValues(PreparedStatement ps, int i) throws SQLException {
-                ReservationTime reservationTime = reservationTimes.get(i);
-                ps.setTime(1, Time.valueOf(reservationTime.startAt()));
-            }
-
-            @Override
-            public int getBatchSize() {
-                return reservationTimes.size();
-            }
-        };
+    private static ReservationTime getReservationTime(ResultSet rs) throws SQLException {
+        return new ReservationTime(
+                rs.getLong("id"),
+                rs.getTime("start_at").toLocalTime()
+        );
     }
 }

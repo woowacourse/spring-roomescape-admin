@@ -1,11 +1,11 @@
 package roomescape.dao;
 
-import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.util.List;
 import java.util.Objects;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -15,42 +15,44 @@ import roomescape.exceptions.EntityNotFoundException;
 @Repository
 public class ReservationTimeH2Dao implements ReservationTimeDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedJdbcTemplate;
 
-    public ReservationTimeH2Dao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public ReservationTimeH2Dao(NamedParameterJdbcTemplate namedJdbcTemplate) {
+        this.namedJdbcTemplate = namedJdbcTemplate;
     }
 
     @Override
     public boolean existsTimeById(long id) {
-        String sql = "SELECT COUNT(*) FROM reservation_time WHERE id = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+        String sql = "select COUNT(*) from reservation_time where id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
+        Integer count = namedJdbcTemplate.queryForObject(sql, params, Integer.class);
         return count != null && count != 0;
     }
 
     @Override
     public List<ReservationTime> findAll() {
         String sql = "select * from reservation_time";
-        return jdbcTemplate.query(sql, getReservationRowMapper());
+        return namedJdbcTemplate.query(sql, getReservationRowMapper());
     }
 
     @Override
     public ReservationTime save(ReservationTime reservationTime) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "insert into reservation_time (start_at) values (?)";
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setTime(1, Time.valueOf(reservationTime.startAt()));
-            return ps;
-        }, keyHolder);
+        String sql = "insert into  reservation_time (start_at) values (:startAt)";
+        MapSqlParameterSource params = new MapSqlParameterSource("startAt", Time.valueOf(reservationTime.startAt()));
+
+        namedJdbcTemplate.update(sql, params, keyHolder, new String[]{"id"});
+
         Long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
         return new ReservationTime(id, reservationTime.startAt());
     }
 
     @Override
     public void deleteById(long id) {
-        String sql = "delete from reservation_time where id=?";
-        int result = jdbcTemplate.update(sql, id);
+        String sql = "delete from reservation_time where id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
+        int result = namedJdbcTemplate.update(sql, params);
+
         if (result == 0) {
             throw new EntityNotFoundException("예약 데이터를 찾을 수 없습니다:" + id);
         }

@@ -1,6 +1,7 @@
 package roomescape;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import roomescape.reservation.controller.CommandDispatcher;
 import roomescape.reservation.controller.ConsoleReservationController;
 import roomescape.reservation.repository.MemoryReservationRepository;
@@ -15,7 +16,8 @@ import roomescape.reservationTime.service.ReservationTimeService;
 import roomescape.reservationTime.view.ReservationTimeInputView;
 import roomescape.reservationTime.view.ReservationTimeOutputView;
 
-public class ConsoleLauncher {
+@SpringBootApplication
+public class RoomEscapeApplication {
 
     public static void main(String[] args) {
         System.out.println("실행 방식을 선택하세요:");
@@ -29,7 +31,7 @@ public class ConsoleLauncher {
         if ("1".equals(mode)) {
             runConsoleMode();
         } else if ("2".equals(mode)) {
-            SpringApplication.run(RoomescapeApplication.class, args);
+            SpringApplication.run(RoomEscapeApplication.class, args);
         } else {
             System.out.println("잘못된 입력입니다. 프로그램을 종료합니다.");
         }

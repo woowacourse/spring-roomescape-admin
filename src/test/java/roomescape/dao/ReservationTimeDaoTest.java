@@ -106,7 +106,7 @@ class ReservationTimeDaoTest {
         Long id = 1L;
 
         // when
-        int deletedCount = reservationTimeDao.delete(1L);
+        int deletedCount = reservationTimeDao.deleteById(1L);
 
         // then
         List<ReservationTime> times = jdbcTemplate.query("SELECT * FROM RESERVATION_TIME",

@@ -138,7 +138,7 @@ class ReservationDaoTest {
         Long id = 1L;
 
         // when
-        int deleted = reservationDao.delete(id);
+        int deleted = reservationDao.deleteById(id);
 
         // then
         List<Reservation> reservations = jdbcTemplate.query("""

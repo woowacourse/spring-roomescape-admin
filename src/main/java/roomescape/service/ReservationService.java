@@ -69,6 +69,6 @@ public class ReservationService {
     public void deleteReservation(Long id) {
         reservationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("예약이 존재하지 않습니다."));
-        reservationRepository.delete(id);
+        reservationRepository.deleteById(id);
     }
 }

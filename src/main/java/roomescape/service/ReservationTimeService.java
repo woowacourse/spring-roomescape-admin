@@ -37,6 +37,6 @@ public class ReservationTimeService {
     public void deleteReservationTime(Long id) {
         reservationTimeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("예약 시간을 찾을 수 없습니다."));
-        reservationTimeRepository.delete(id);
+        reservationTimeRepository.deleteById(id);
     }
 }

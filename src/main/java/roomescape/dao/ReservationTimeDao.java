@@ -57,7 +57,7 @@ public class ReservationTimeDao {
         return jdbcTemplate.query(sql, reservationTimeRowMapper);
     }
 
-    public int delete(Long id) {
+    public int deleteById(Long id) {
         String sql = "DELETE FROM RESERVATION_TIME WHERE id = ?";
         return jdbcTemplate.update(sql, id);
     }

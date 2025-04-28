@@ -24,7 +24,7 @@ class ReservationTest {
     ) {
         // given & when & then
         assertThatThrownBy(() -> new Reservation(name, localDate, playTime))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @DisplayName("id를 포함하여 생성할 때 id에 null은 들어올 수 없다.")
@@ -39,10 +39,10 @@ class ReservationTest {
         assertAll(
                 () -> assertThatThrownBy(
                         () -> Reservation.createWithId(null, "hotteok", LocalDate.MAX, new PlayTime(LocalTime.MAX)))
-                        .isInstanceOf(NullPointerException.class),
+                        .isInstanceOf(IllegalArgumentException.class),
                 () -> assertThatThrownBy(
                         () -> Reservation.createWithId(1L, name, localDate, playTime))
-                        .isInstanceOf(NullPointerException.class)
+                        .isInstanceOf(IllegalArgumentException.class)
         );
     }
 

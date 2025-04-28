@@ -15,9 +15,9 @@ class PlayTimeTest {
         // given & when & then
         assertAll(
                 () -> assertThatThrownBy(() -> new PlayTime(null))
-                        .isInstanceOf(NullPointerException.class),
+                        .isInstanceOf(IllegalArgumentException.class),
                 () -> assertThatThrownBy(() -> roomescape.business.domain.PlayTime.createWithId(null, LocalTime.MAX))
-                        .isInstanceOf(NullPointerException.class)
+                        .isInstanceOf(IllegalArgumentException.class)
         );
     }
 }

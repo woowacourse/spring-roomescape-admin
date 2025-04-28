@@ -30,7 +30,7 @@ public class PlayTimeController {
         try {
             final PlayTimeResponse playTimeResponse = playTimeService.create(playTimeRequest);
             return ResponseEntity.ok(playTimeResponse);
-        } catch (NullPointerException e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
     }

@@ -16,8 +16,16 @@ public class Reservation {
         this(null, name, date, playTime);
     }
 
-    public static Reservation createWithId(final Long id, final String name, final LocalDate date, final PlayTime playTime) {
-        Objects.requireNonNull(id, "id가 null 입니다.");
+    public static Reservation createWithId(
+            final Long id,
+            final String name,
+            final LocalDate date,
+            final PlayTime playTime
+    ) {
+        if (id == null) {
+            throw new IllegalArgumentException("id가 null 입니다.");
+        }
+
         return new Reservation(id, name, date, playTime);
     }
 
@@ -45,9 +53,15 @@ public class Reservation {
     private void validateNonNull(
             final String name, final LocalDate date, final PlayTime playTime
     ) {
-        Objects.requireNonNull(name, "name이 null 입니다.");
-        Objects.requireNonNull(date, "date가 null 입니다.");
-        Objects.requireNonNull(playTime, "time이 null 입니다.");
+        if (name == null) {
+            throw new IllegalArgumentException("name이 null 입니다.");
+        }
+        if (date == null) {
+            throw new IllegalArgumentException("date가 null 입니다.");
+        }
+        if (playTime == null) {
+            throw new IllegalArgumentException("time이 null 입니다.");
+        }
     }
 
     public Long getId() {

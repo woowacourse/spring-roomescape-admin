@@ -14,7 +14,10 @@ public class PlayTime {
     }
 
     public static PlayTime createWithId(final Long id, final LocalTime startAt) {
-        Objects.requireNonNull(id, "id가 null 입니다.");
+        if (id == null) {
+            throw new IllegalArgumentException("id가 null 입니다.");
+        }
+
         return new PlayTime(id, startAt);
     }
 
@@ -25,7 +28,9 @@ public class PlayTime {
     }
 
     private void validateNonNull(final LocalTime startAt) {
-        Objects.requireNonNull(startAt, "startAt이 null 입니다.");
+        if (startAt == null) {
+            throw new IllegalArgumentException("startAt이 null 입니다.");
+        }
     }
 
     public Long getId() {

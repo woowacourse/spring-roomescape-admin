@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.business.service.ReservationService;
 import roomescape.exception.InvalidReservationDateException;
-import roomescape.exception.ReservationNotFoundException;
 import roomescape.exception.PlayTimeNotFoundException;
+import roomescape.exception.ReservationNotFoundException;
 import roomescape.presentation.dto.ReservationRequest;
 import roomescape.presentation.dto.ReservationResponse;
 
@@ -37,7 +37,7 @@ public class ReservationController {
             return ResponseEntity.notFound().build();
         } catch (InvalidReservationDateException e) {
             return ResponseEntity.unprocessableEntity().build();
-        } catch (NullPointerException e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
     }

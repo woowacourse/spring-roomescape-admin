@@ -1,5 +1,6 @@
 package roomescape.reservationTime.controller;
 
+import roomescape.globalException.CustomException;
 import roomescape.reservationTime.domain.dto.ReservationTimeReqDto;
 import roomescape.reservationTime.domain.dto.ReservationTimeResDto;
 import roomescape.reservationTime.service.ReservationTimeService;
@@ -58,7 +59,11 @@ public class ConsoleReservationTimeController {
         List<ReservationTimeResDto> resDtos = service.findAll();
         outputView.printAllReservationTimes(resDtos);
         Long id = inputView.readReservationTimeId();
-        service.delete(id); // TODO 2025. 4. 28. 16:06: 예외에 따라 반환 로직이 달라짐 예외 캐치해야 함
-        outputView.printDeleteReservationTimeResult();
+        try {
+            service.delete(id);
+            outputView.printDeleteReservationTimeResult();
+        } catch (CustomException e) {
+            outputView.printDeleteReservationTimeResult();
+        }
     }
 }

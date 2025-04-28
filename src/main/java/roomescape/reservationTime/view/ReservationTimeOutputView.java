@@ -22,6 +22,11 @@ public class ReservationTimeOutputView {
         System.out.println("예약 시간 삭제가 정상적으로 진행되었습니다.");
     }
 
+    public void printDeleteReservationTimeResult(String errorMessage) {
+        System.out.println("[삭제 실패] " + errorMessage);
+        System.out.println();
+    }
+
     public void printAllReservationTimesInfo() {
         System.out.println("예약 시간 리스트 반환 기능을 고르셨습니다.");
     }

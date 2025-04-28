@@ -6,9 +6,9 @@ import java.time.LocalTime;
 import java.util.List;
 import org.springframework.boot.test.context.SpringBootTest;
 import roomescape.reservationtime.ReservationTime;
+import roomescape.reservationtime.dao.FakeReservationTimeDao;
 import roomescape.reservationtime.dto.request.ReservationTimeRequest;
 import roomescape.reservationtime.dto.response.ReservationTimeResponse;
-import roomescape.reservationtime.stub.StubReservationTimeDao;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class ReservationTimeServiceTest {
 
-    private StubReservationTimeDao stubReservationTimeDao;
+    private FakeReservationTimeDao fakeReservationTimeDao;
     private ReservationTimeService reservationTimeService;
 
     private final ReservationTime fakeReservationTime1 = new ReservationTime(1L, LocalTime.of(10, 0));
@@ -25,8 +25,8 @@ class ReservationTimeServiceTest {
 
     @BeforeEach
     void setUp() {
-        stubReservationTimeDao = new StubReservationTimeDao(fakeReservationTime1, fakeReservationTime2);
-        reservationTimeService = new ReservationTimeService(stubReservationTimeDao);
+        fakeReservationTimeDao = new FakeReservationTimeDao(fakeReservationTime1, fakeReservationTime2);
+        reservationTimeService = new ReservationTimeService(fakeReservationTimeDao);
     }
 
     @Test

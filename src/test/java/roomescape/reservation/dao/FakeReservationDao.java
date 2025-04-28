@@ -1,18 +1,17 @@
-package roomescape.reservation.stub;
+package roomescape.reservation.dao;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.reservation.Reservation;
-import roomescape.reservation.dao.ReservationDao;
 
-public class StubReservationDao implements ReservationDao {
+public class FakeReservationDao implements ReservationDao {
 
     private final List<Reservation> fakeReservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
 
-    public StubReservationDao(Reservation... reservations) {
+    public FakeReservationDao(Reservation... reservations) {
         Arrays.stream(reservations).forEach(reservation -> fakeReservations.add(reservation));
     }
 

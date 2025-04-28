@@ -1,4 +1,4 @@
-package roomescape.reservationtime.stub;
+package roomescape.reservationtime.dao;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,14 +7,13 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.reservationtime.ReservationTime;
-import roomescape.reservationtime.dao.ReservationTimeDao;
 
-public class StubReservationTimeDao implements ReservationTimeDao {
+public class FakeReservationTimeDao implements ReservationTimeDao {
 
     private final List<ReservationTime> fakeReservationTimes = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(1);
 
-    public StubReservationTimeDao(ReservationTime... reservationTimes) {
+    public FakeReservationTimeDao(ReservationTime... reservationTimes) {
         Arrays.stream(reservationTimes)
                 .forEach(reservationTime -> fakeReservationTimes.add(reservationTime));
     }

@@ -1,9 +1,7 @@
 package roomescape.model;
 
 import java.time.DateTimeException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 public class ReservationDateTime {
     private final ReservationDate date;
@@ -24,9 +22,8 @@ public class ReservationDateTime {
     }
 
     private void validateDateTime(ReservationDate reservationDate, ReservationTime reservationTime) {
-        LocalDate date = LocalDate.parse(reservationDate.getDate());
-        LocalTime time = reservationTime.getStartAt();
-        LocalDateTime dateTime = LocalDateTime.of(date, time);
+
+        LocalDateTime dateTime = LocalDateTime.of(reservationDate.getDate(), reservationTime.getStartAt());
         LocalDateTime now = LocalDateTime.now();
         if (dateTime.isBefore(now)) {
             throw new DateTimeException("과거 예약은 불가능합니다.");

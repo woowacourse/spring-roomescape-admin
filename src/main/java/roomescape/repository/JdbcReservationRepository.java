@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
@@ -30,7 +31,7 @@ public class JdbcReservationRepository implements ReservationRepository{
                 rs.getLong("id"),
                 new UserName(rs.getString("name")),
                 new ReservationDateTime(
-                        new ReservationDate(rs.getString("date")),
+                        new ReservationDate(LocalDate.parse(rs.getString("date"))),
                         new ReservationTime(rs.getLong("time_id"), rs.getTime("start_at").toLocalTime())
                 )
         ));
@@ -44,7 +45,7 @@ public class JdbcReservationRepository implements ReservationRepository{
             PreparedStatement ps = connection.prepareStatement(
                     sql, new String[]{"id"});
             ps.setString(1, reservationRequestDto.name());
-            ps.setString(2, reservationRequestDto.date());
+            ps.setString(2, reservationRequestDto.date().toString());
             ps.setLong(3, reservationRequestDto.timeId());
             return ps;
         }, keyHolder);

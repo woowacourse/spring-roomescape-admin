@@ -1,16 +1,15 @@
 package roomescape.model;
 
-import static roomescape.util.FormatValidator.validateDateFormat;
+import java.time.LocalDate;
 
 public class ReservationDate {
-    private final String date;
+    private final LocalDate date;
 
-    public ReservationDate(String date) {
-        validateDateFormat(date);
+    public ReservationDate(LocalDate date) {
         this.date = date;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 

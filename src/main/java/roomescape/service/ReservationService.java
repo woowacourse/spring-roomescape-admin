@@ -35,14 +35,14 @@ public class ReservationService {
 
     public ReservationResponse create(ReservationRequest request) {
         Optional<ReservationTime> reservationTime = reservationTimeDao.findById(request.timeId());
-        if (reservationTime.isPresent()) {
-            Reservation reservation = new Reservation(
-                request.name(),
-                request.date(),
-                reservationTime.get());
-            return ReservationResponse.from(reservationDao.save(reservation));
+        if (reservationTime.isEmpty()) {
+            throw new IllegalArgumentException("해당하는 시간이 없습니다");
         }
-        throw new IllegalArgumentException("해당하는 시간이 없습니다");
+        Reservation reservation = new Reservation(
+            request.name(),
+            request.date(),
+            reservationTime.get());
+        return ReservationResponse.from(reservationDao.save(reservation));
     }
 
     public void deleteReservation(Long id) {

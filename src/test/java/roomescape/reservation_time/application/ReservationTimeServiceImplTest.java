@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import roomescape.reservation_time.domain.ReservationTime;
 import roomescape.reservation_time.domain.ReservationTimeId;
 import roomescape.reservation_time.domain.ReservationTimeRepository;
-import roomescape.reservation_time.ui.dto.ReservationTimeRequestDto;
-import roomescape.reservation_time.ui.dto.ReservationTimeResponseDto;
+import roomescape.reservation_time.ui.dto.CreateReservationTimeWebRequest;
+import roomescape.reservation_time.ui.dto.ReservationTimeResponse;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Transactional
 @SpringBootTest
-class DefaultReservationTimeServiceTest {
+class ReservationTimeServiceImplTest {
 
     @Autowired
     private ReservationTimeService reservationTimeService;
@@ -38,7 +38,7 @@ class DefaultReservationTimeServiceTest {
                 ReservationTimeId.unassigned(), LocalTime.of(11, 0)));
 
         // when
-        final List<ReservationTimeResponseDto> times = reservationTimeService.getAll();
+        final List<ReservationTimeResponse> times = reservationTimeService.getAll();
 
         // then
         assertThat(times).hasSize(2);
@@ -48,10 +48,10 @@ class DefaultReservationTimeServiceTest {
     @DisplayName("예약 시간을 생성할 수 있다")
     void createReservationTime() {
         // given
-        final ReservationTimeRequestDto requestDto = new ReservationTimeRequestDto(LocalTime.of(12, 30));
+        final CreateReservationTimeWebRequest requestDto = new CreateReservationTimeWebRequest(LocalTime.of(12, 30));
 
         // when
-        final ReservationTimeResponseDto responseDto = reservationTimeService.create(requestDto);
+        final ReservationTimeResponse responseDto = reservationTimeService.create(requestDto);
 
         // then
         assertThat(responseDto.startAt()).isEqualTo(LocalTime.of(12, 30));

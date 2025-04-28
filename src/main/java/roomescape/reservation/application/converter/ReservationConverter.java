@@ -1,14 +1,13 @@
 package roomescape.reservation.application.converter;
 
+import roomescape.reservation.application.dto.CreateReservationServiceRequest;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.ReservationDate;
 import roomescape.reservation.domain.ReservationId;
 import roomescape.reservation.domain.ReserverName;
 import roomescape.reservation.infrastructure.entity.ReservationEntity;
-import roomescape.reservation.ui.dto.ReservationRequestDto;
-import roomescape.reservation.ui.dto.ReservationResponseDto;
+import roomescape.reservation.ui.dto.ReservationResponse;
 import roomescape.reservation_time.application.converter.ReservationTimeConverter;
-import roomescape.reservation_time.domain.ReservationTime;
 
 import java.util.List;
 
@@ -22,24 +21,23 @@ public class ReservationConverter {
                 ReservationTimeConverter.toDomain(reservationEntity.getTime()));
     }
 
-    public static Reservation toDomain(final ReservationRequestDto requestDto,
-                                       final ReservationTime reservationTime) {
+    public static Reservation toDomain(final CreateReservationServiceRequest request) {
         return Reservation.of(
                 ReservationId.unassigned(),
-                ReserverName.from(requestDto.name()),
-                ReservationDate.from(requestDto.date()),
-                reservationTime);
+                ReserverName.from(request.name()),
+                ReservationDate.from(request.date()),
+                request.time());
     }
 
-    public static ReservationResponseDto toDto(final Reservation reservation) {
-        return new ReservationResponseDto(
+    public static ReservationResponse toDto(final Reservation reservation) {
+        return new ReservationResponse(
                 reservation.getId().getValue(),
                 reservation.getName().getValue(),
                 reservation.getDate().getValue(),
                 ReservationTimeConverter.toDto(reservation.getTime()));
     }
 
-    public static List<ReservationResponseDto> toDto(final List<Reservation> reservations) {
+    public static List<ReservationResponse> toDto(final List<Reservation> reservations) {
         return reservations.stream()
                 .map(ReservationConverter::toDto)
                 .toList();

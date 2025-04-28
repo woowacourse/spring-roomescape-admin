@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.common.uri.UriFactory;
 import roomescape.reservation_time.application.ReservationTimeService;
 import roomescape.reservation_time.domain.ReservationTimeId;
-import roomescape.reservation_time.ui.dto.ReservationTimeRequestDto;
-import roomescape.reservation_time.ui.dto.ReservationTimeResponseDto;
+import roomescape.reservation_time.ui.dto.CreateReservationTimeWebRequest;
+import roomescape.reservation_time.ui.dto.ReservationTimeResponse;
 
 import java.net.URI;
 import java.util.List;
@@ -28,18 +28,18 @@ public class ReservationTimeController {
     private final ReservationTimeService reservationTimeService;
 
     @GetMapping
-    public ResponseEntity<List<ReservationTimeResponseDto>> getAll() {
-        final List<ReservationTimeResponseDto> reservationTimeResponseDtos = reservationTimeService.getAll();
-        return ResponseEntity.ok(reservationTimeResponseDtos);
+    public ResponseEntity<List<ReservationTimeResponse>> getAll() {
+        final List<ReservationTimeResponse> reservationTimeResponses = reservationTimeService.getAll();
+        return ResponseEntity.ok(reservationTimeResponses);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTimeResponseDto> create(
-            @RequestBody final ReservationTimeRequestDto reservationTimeRequestDto) {
-        final ReservationTimeResponseDto reservationTimeResponseDto = reservationTimeService.create(reservationTimeRequestDto);
-        final URI location = UriFactory.buildPath(BASE_PATH, String.valueOf(reservationTimeResponseDto.id()));
+    public ResponseEntity<ReservationTimeResponse> create(
+            @RequestBody final CreateReservationTimeWebRequest createReservationTimeWebRequest) {
+        final ReservationTimeResponse reservationTimeResponse = reservationTimeService.create(createReservationTimeWebRequest);
+        final URI location = UriFactory.buildPath(BASE_PATH, String.valueOf(reservationTimeResponse.id()));
         return ResponseEntity.created(location)
-                .body(reservationTimeResponseDto);
+                .body(reservationTimeResponse);
     }
 
     @DeleteMapping("/{id}")

@@ -1,19 +1,19 @@
 package roomescape.reservation_time.application.converter;
 
+import roomescape.reservation_time.application.dto.CreateReservationTimeServiceRequest;
 import roomescape.reservation_time.domain.ReservationTime;
 import roomescape.reservation_time.domain.ReservationTimeId;
 import roomescape.reservation_time.infrastructure.entity.ReservationTimeEntity;
-import roomescape.reservation_time.ui.dto.ReservationTimeRequestDto;
-import roomescape.reservation_time.ui.dto.ReservationTimeResponseDto;
+import roomescape.reservation_time.ui.dto.ReservationTimeResponse;
 
 import java.util.List;
 
 public class ReservationTimeConverter {
 
-    public static ReservationTime toDomain(final ReservationTimeRequestDto requestDto) {
+    public static ReservationTime toDomain(final CreateReservationTimeServiceRequest request) {
         return ReservationTime.of(
                 ReservationTimeId.unassigned(),
-                requestDto.startAt());
+                request.startAt());
     }
 
     public static ReservationTime toDomain(final ReservationTimeEntity entity) {
@@ -22,13 +22,13 @@ public class ReservationTimeConverter {
                 entity.getTime().toLocalTime());
     }
 
-    public static ReservationTimeResponseDto toDto(final ReservationTime reservationTime) {
-        return new ReservationTimeResponseDto(
+    public static ReservationTimeResponse toDto(final ReservationTime reservationTime) {
+        return new ReservationTimeResponse(
                 reservationTime.getId().getValue(),
                 reservationTime.getValue());
     }
 
-    public static List<ReservationTimeResponseDto> toDto(final List<ReservationTime> reservationTimes) {
+    public static List<ReservationTimeResponse> toDto(final List<ReservationTime> reservationTimes) {
         return reservationTimes.stream()
                 .map(ReservationTimeConverter::toDto)
                 .toList();

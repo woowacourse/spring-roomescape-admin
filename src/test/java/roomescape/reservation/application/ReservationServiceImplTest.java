@@ -10,8 +10,8 @@ import roomescape.reservation.domain.ReservationDate;
 import roomescape.reservation.domain.ReservationId;
 import roomescape.reservation.domain.ReservationRepository;
 import roomescape.reservation.domain.ReserverName;
-import roomescape.reservation.ui.dto.ReservationRequestDto;
-import roomescape.reservation.ui.dto.ReservationResponseDto;
+import roomescape.reservation.ui.dto.CreateReservationWebRequest;
+import roomescape.reservation.ui.dto.ReservationResponse;
 import roomescape.reservation_time.domain.ReservationTime;
 import roomescape.reservation_time.domain.ReservationTimeId;
 import roomescape.reservation_time.domain.ReservationTimeRepository;
@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Transactional
 @SpringBootTest
-class DefaultReservationServiceTest {
+class ReservationServiceImplTest {
 
     @Autowired
     private ReservationService reservationService;
@@ -46,15 +46,15 @@ class DefaultReservationServiceTest {
                         ReservationTimeId.unassigned(),
                         LocalTime.of(10, 0)));
 
-        final ReservationRequestDto requestDto = new ReservationRequestDto(
+        final CreateReservationWebRequest requestDto = new CreateReservationWebRequest(
                 "브라운",
                 LocalDate.of(2023, 8, 5),
                 reservationTime.getId().getValue()
         );
 
         // when
-        final ReservationResponseDto responseDto = reservationService.create(requestDto);
-        final List<ReservationResponseDto> reservations = reservationService.getAll();
+        final ReservationResponse responseDto = reservationService.create(requestDto);
+        final List<ReservationResponse> reservations = reservationService.getAll();
 
         // then
         assertThat(reservations).hasSize(1);

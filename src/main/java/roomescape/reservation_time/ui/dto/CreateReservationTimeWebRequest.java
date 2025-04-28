@@ -7,14 +7,14 @@ import roomescape.common.validate.Validator;
 import java.time.LocalTime;
 
 @FieldNameConstants(level = AccessLevel.PRIVATE)
-public record ReservationTimeRequestDto(LocalTime startAt) {
+public record CreateReservationTimeWebRequest(LocalTime startAt) {
 
-    public ReservationTimeRequestDto {
+    public CreateReservationTimeWebRequest {
         validate(startAt);
     }
 
     private void validate(final LocalTime startAt) {
-        Validator.of(ReservationTimeRequestDto.class)
+        Validator.of(CreateReservationTimeWebRequest.class)
                 .notNullField(Fields.startAt, startAt);
     }
 }

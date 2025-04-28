@@ -1,16 +1,16 @@
 package roomescape.reservation.application;
 
 import roomescape.reservation.domain.ReservationId;
-import roomescape.reservation.ui.dto.ReservationRequestDto;
-import roomescape.reservation.ui.dto.ReservationResponseDto;
+import roomescape.reservation.ui.dto.CreateReservationWebRequest;
+import roomescape.reservation.ui.dto.ReservationResponse;
 
 import java.util.List;
 
 public interface ReservationService {
 
-    List<ReservationResponseDto> getAll();
+    List<ReservationResponse> getAll();
 
-    ReservationResponseDto create(ReservationRequestDto reservationRequestDto);
+    ReservationResponse create(CreateReservationWebRequest createReservationWebRequest);
 
     void delete(ReservationId id);
 }

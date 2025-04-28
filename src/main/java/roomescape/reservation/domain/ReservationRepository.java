@@ -5,6 +5,8 @@ import java.util.Optional;
 
 public interface ReservationRepository {
 
+    boolean existsById(ReservationId id);
+
     Optional<Reservation> findById(ReservationId id);
 
     List<Reservation> findAll();

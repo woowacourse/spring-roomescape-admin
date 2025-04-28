@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.common.uri.UriFactory;
 import roomescape.reservation.application.ReservationService;
 import roomescape.reservation.domain.ReservationId;
-import roomescape.reservation.ui.dto.ReservationRequestDto;
-import roomescape.reservation.ui.dto.ReservationResponseDto;
+import roomescape.reservation.ui.dto.CreateReservationWebRequest;
+import roomescape.reservation.ui.dto.ReservationResponse;
 
 import java.net.URI;
 import java.util.List;
@@ -29,18 +29,18 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponseDto>> getAll() {
-        final List<ReservationResponseDto> reservations = reservationService.getAll();
+    public ResponseEntity<List<ReservationResponse>> getAll() {
+        final List<ReservationResponse> reservations = reservationService.getAll();
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponseDto> create(
-            @RequestBody @Valid final ReservationRequestDto reservationRequestDto) {
-        final ReservationResponseDto reservationResponseDto = reservationService.create(reservationRequestDto);
-        final URI location = UriFactory.buildPath(BASE_PATH, String.valueOf(reservationResponseDto.id()));
+    public ResponseEntity<ReservationResponse> create(
+            @RequestBody @Valid final CreateReservationWebRequest createReservationWebRequest) {
+        final ReservationResponse reservationResponse = reservationService.create(createReservationWebRequest);
+        final URI location = UriFactory.buildPath(BASE_PATH, String.valueOf(reservationResponse.id()));
         return ResponseEntity.created(location)
-                .body(reservationResponseDto);
+                .body(reservationResponse);
     }
 
     @DeleteMapping("/{id}")

@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservation.ui.ReservationController;
-import roomescape.reservation.ui.dto.ReservationResponseDto;
+import roomescape.reservation.ui.dto.ReservationResponse;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -115,11 +115,11 @@ public class MissionStepTest {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
                 "브라운", "2023-08-05", 1);
 
-        final List<ReservationResponseDto> reservations = RestAssured.given().log().all()
+        final List<ReservationResponse> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", ReservationResponseDto.class);
+                .jsonPath().getList(".", ReservationResponse.class);
 
         final Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 

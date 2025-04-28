@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class FakeReservationDao implements ReservationDao {
 
-    private static final ReservationTime TEST_TIME = ReservationTime.of(LocalTime.now());
+    private static final ReservationTime TEST_TIME = ReservationTime.of(LocalTime.of(10, 0));
 
     private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
     private final AtomicLong index = new AtomicLong(1L);

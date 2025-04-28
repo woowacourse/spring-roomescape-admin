@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class FakeReservationDaoTest {
 
-    private static final ReservationTime TEST_TIME = ReservationTime.of(LocalTime.now());
+    private static final ReservationTime TEST_TIME = ReservationTime.of(LocalTime.of(10, 0));
 
     private ReservationDao reservationDao;
 

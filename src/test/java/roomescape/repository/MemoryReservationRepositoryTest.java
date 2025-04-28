@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationDateTime;
+import roomescape.domain.ReservationTime;
 
 class MemoryReservationRepositoryTest {
     private final LocalDate RESERVATION_DATE = LocalDate.of(2025, 1, 2);
@@ -21,16 +22,16 @@ class MemoryReservationRepositoryTest {
     @BeforeEach
     void setUp() {
         memoryReservationRepository = new MemoryReservationRepository();
-        RESERVATION_DATE_TIME = ReservationDateTime.of(RESERVATION_DATE, RESERVATION_TIME);
+        RESERVATION_DATE_TIME = ReservationDateTime.of(RESERVATION_DATE, new ReservationTime(1L, RESERVATION_TIME));
     }
 
     @Test
     void 예약을_조회한다() {
         // given
         Reservation reservation = new Reservation(1L, "name1", RESERVATION_DATE_TIME);
-        memoryReservationRepository.add(reservation);
+        memoryReservationRepository.save(reservation);
         // when
-        List<Reservation> reservations = memoryReservationRepository.getReservations();
+        List<Reservation> reservations = memoryReservationRepository.findAll();
 
         // then
         assertThat(reservations).contains(new Reservation(1L, "name1", RESERVATION_DATE_TIME));
@@ -40,11 +41,11 @@ class MemoryReservationRepositoryTest {
     void 예약이_존재하는지_확인한다() {
         // given
         Reservation reservation = new Reservation(1L, "name1", RESERVATION_DATE_TIME);
-        memoryReservationRepository.add(reservation);
+        memoryReservationRepository.save(reservation);
         // when & then
         SoftAssertions softly = new SoftAssertions();
-        softly.assertThat(memoryReservationRepository.existReservation(1L)).isTrue();
-        softly.assertThat(memoryReservationRepository.existReservation(2L)).isFalse();
+        softly.assertThat(memoryReservationRepository.findById(1L).isPresent()).isTrue();
+        softly.assertThat(memoryReservationRepository.findById(2L).isPresent()).isFalse();
         softly.assertAll();
     }
 
@@ -53,9 +54,9 @@ class MemoryReservationRepositoryTest {
         // given
         Reservation reservation = new Reservation(1L, "name1", RESERVATION_DATE_TIME);
         // when
-        memoryReservationRepository.add(reservation);
+        memoryReservationRepository.save(reservation);
         // then
-        List<Reservation> reservations = memoryReservationRepository.getReservations();
+        List<Reservation> reservations = memoryReservationRepository.findAll();
         assertThat(reservations).hasSize(1);
     }
 
@@ -65,10 +66,10 @@ class MemoryReservationRepositoryTest {
         Reservation reservation1 = new Reservation(1L, "name1", RESERVATION_DATE_TIME);
         Reservation reservation2 = new Reservation(1L, "name2", RESERVATION_DATE_TIME);
         // when
-        memoryReservationRepository.add(reservation1);
-        memoryReservationRepository.add(reservation2);
+        memoryReservationRepository.save(reservation1);
+        memoryReservationRepository.save(reservation2);
         // then
-        List<Reservation> reservations = memoryReservationRepository.getReservations();
+        List<Reservation> reservations = memoryReservationRepository.findAll();
         assertThat(reservations).contains(
                 new Reservation(1L, "name1", RESERVATION_DATE_TIME),
                 new Reservation(2L, "name2", RESERVATION_DATE_TIME)
@@ -79,11 +80,11 @@ class MemoryReservationRepositoryTest {
     void 예약을_삭제한다() {
         // given
         Reservation reservation = new Reservation(1L, "name1", RESERVATION_DATE_TIME);
-        memoryReservationRepository.add(reservation);
+        memoryReservationRepository.save(reservation);
         // when
         memoryReservationRepository.deleteById(1L);
 
         // then
-        assertThat(memoryReservationRepository.getReservations()).hasSize(0);
+        assertThat(memoryReservationRepository.findAll()).hasSize(0);
     }
 }

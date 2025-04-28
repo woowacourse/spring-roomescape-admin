@@ -3,18 +3,17 @@ package roomescape.repository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
-@Repository
 public class MemoryReservationRepository implements ReservationRepository {
 
     private final List<Reservation> reservations = Collections.synchronizedList(new ArrayList<>());
     private final AtomicLong index = new AtomicLong(1);
 
-    public Reservation add(final Reservation reservation) {
-        Reservation newReservation = new Reservation(index.getAndIncrement(), reservation);
+    public Reservation save(final Reservation reservation) {
+        Reservation newReservation = reservation.withId(index.getAndIncrement());
         reservations.add(newReservation);
         return newReservation;
     }
@@ -23,12 +22,12 @@ public class MemoryReservationRepository implements ReservationRepository {
         reservations.removeIf(reservation -> reservation.isEqualId(id));
     }
 
-    public boolean existReservation(final Long id) {
+    public Optional<Reservation> findById(final Long id) {
         return reservations.stream()
-                .anyMatch(reservation -> reservation.isEqualId(id));
+                .filter(reservation -> reservation.isEqualId(id)).findFirst();
     }
 
-    public List<Reservation> getReservations() {
+    public List<Reservation> findAll() {
         return Collections.unmodifiableList(reservations);
     }
 }

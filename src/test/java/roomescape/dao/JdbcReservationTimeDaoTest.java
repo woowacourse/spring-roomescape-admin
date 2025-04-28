@@ -5,11 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalTime;
 import java.util.List;
 import javax.sql.DataSource;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import roomescape.model.ReservationTime;
 
 class JdbcReservationTimeDaoTest {
@@ -17,25 +17,16 @@ class JdbcReservationTimeDaoTest {
     private static JdbcReservationTimeDao dao;
     private static JdbcTemplate jdbcTemplate;
 
-    @BeforeAll
-    static void setUpAll() {
-        DataSource dataSource = DataSourceBuilder.create().url("jdbc:h2:mem:testDB").username("sa").build();
+    @BeforeEach
+    void setUp() {
+        DataSource dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2).addScript("schema.sql")
+                .build();
         jdbcTemplate = new JdbcTemplate(dataSource);
-
-        jdbcTemplate.execute("CREATE TABLE reservation_time("
-                + "id BIGINT AUTO_INCREMENT PRIMARY KEY,"
-                + "start_at TIME NOT NULL)");
-
         dao = new JdbcReservationTimeDao(jdbcTemplate);
     }
 
-    @BeforeEach
-    void setUpDate() {
-        jdbcTemplate.execute("TRUNCATE TABLE reservation_time");
-    }
-
     @Test
-    void 예약시간_저장후_조회() {
+    void 예약시간_저장() {
         ReservationTime reservationTime = new ReservationTime(null, LocalTime.of(10,0));
         ReservationTime saved = dao.save(reservationTime);
         List<ReservationTime> all = dao.findAll();

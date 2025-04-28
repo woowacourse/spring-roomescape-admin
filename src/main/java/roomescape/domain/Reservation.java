@@ -36,19 +36,19 @@ public class Reservation {
         this.date = date;
     }
 
-    public void validateNullDate(LocalDate date) {
+    private void validateNullDate(LocalDate date) {
         if (date == null) {
             throw new IllegalArgumentException("예약 날짜는 비어있을 수 없습니다.");
         }
     }
 
-    public void validatePastDate(LocalDate reservationDate, ReservationTime reservationTime) {
+    private void validatePastDate(LocalDate reservationDate, ReservationTime reservationTime) {
         if (isBefore(reservationDate, reservationTime)) {
             throw new IllegalArgumentException("예약은 과거일 수 없습니다.");
         }
     }
 
-    public boolean isBefore(LocalDate reservationDate, ReservationTime reservationTime) {
+    private boolean isBefore(LocalDate reservationDate, ReservationTime reservationTime) {
         LocalDateTime reservationDateAndTime = LocalDateTime.of(reservationDate, reservationTime.getStartAt());
         return reservationDateAndTime.isBefore(LocalDateTime.now());
     }

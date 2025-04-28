@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class ReservationTimeId extends DomainId {
 
-    protected ReservationTimeId(final Long value, final boolean assigned) {
+    private ReservationTimeId(final Long value, final boolean assigned) {
         super(value, assigned);
     }
 

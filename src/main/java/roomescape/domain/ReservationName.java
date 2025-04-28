@@ -22,4 +22,20 @@ public class ReservationName {
             throw new IllegalArgumentException("예약명은 10자 이내여야 합니다.");
         }
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ReservationName that)) {
+            return false;
+        }
+        return Objects.equals(getValue(), that.getValue());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getValue());
+    }
 }

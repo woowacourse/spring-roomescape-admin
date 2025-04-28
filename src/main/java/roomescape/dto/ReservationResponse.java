@@ -1,7 +1,6 @@
 package roomescape.dto;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import roomescape.domain.Reservation;
 
@@ -9,7 +8,7 @@ public record ReservationResponse(
         Long id,
         String name,
         LocalDate date,
-        LocalTime time
+        ReservationTimeResponse time
 ) {
 
     public static ReservationResponse from(final Reservation reservation) {
@@ -17,7 +16,7 @@ public record ReservationResponse(
                 reservation.id(),
                 reservation.name(),
                 reservation.date(),
-                reservation.time()
+                ReservationTimeResponse.from(reservation.reservationTime())
         );
     }
 

@@ -12,7 +12,7 @@ public class TestClockConfig {
 
     @Bean
     @Primary
-    public Clock clock() {
+    public Clock testClock() {
         return FIXED_CLOCK;
     }
 }

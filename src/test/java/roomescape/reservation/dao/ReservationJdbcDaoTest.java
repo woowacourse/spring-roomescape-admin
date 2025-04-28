@@ -37,7 +37,7 @@ public class ReservationJdbcDaoTest {
 
     @DisplayName("모든 예약자 조회 테스트")
     @Test
-    void test1() {
+    void findAllReservations() {
         //given
         String insertQuery = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         jdbcTemplate.update(
@@ -56,7 +56,7 @@ public class ReservationJdbcDaoTest {
 
     @DisplayName("예약 추가 테스트")
     @Test
-    void test2() {
+    void insertReservation() {
         //given
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(13,31));
 
@@ -74,7 +74,7 @@ public class ReservationJdbcDaoTest {
 
     @DisplayName("특정 ID 예약 삭제 테스트")
     @Test
-    void test3() {
+    void deleteReservationById() {
         //given
         String insertQuery = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();

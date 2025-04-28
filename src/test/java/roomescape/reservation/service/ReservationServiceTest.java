@@ -35,7 +35,7 @@ class ReservationServiceTest {
 
     @DisplayName("요청받은 Reservation에 대해서 create 테스트")
     @Test
-    void test1() {
+    void createReservationByRequest() {
         //given
         TimeRequest timeRequest = new TimeRequest(LocalTime.of(17,48));
         reservationTimeDao.insertTime(timeRequest);
@@ -55,7 +55,7 @@ class ReservationServiceTest {
 
     @DisplayName("요청받은 timeId가 존재하지 않는 경우 예약을 생성할 수 없다")
     @Test
-    void test2() {
+    void createFailReservationIfTimeIdNotExist() {
         //given
         TimeRequest timeRequest = new TimeRequest(LocalTime.of(17, 48));
         reservationTimeDao.insertTime(timeRequest);
@@ -75,7 +75,7 @@ class ReservationServiceTest {
 
     @DisplayName("id를 통한 Reservation 삭제 테스트")
     @Test
-    void test3() {
+    void deleteReservationById() {
         //given
         Reservation reservation = reservationDao.insertReservation(
                 new Reservation(
@@ -93,7 +93,7 @@ class ReservationServiceTest {
 
     @DisplayName("모든 예약 정보 조회")
     @Test
-    void test4() {
+    void findAllReservations() {
         //given
         reservationDao.insertReservation(
                 new Reservation(

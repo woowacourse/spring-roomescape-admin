@@ -32,7 +32,7 @@ public class MissionStepTest {
 
     @DisplayName("/admin 요청 시 응답 코드 확인")
     @Test
-    void test1() {
+    void checkOkStatusByAdminRequest() {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
@@ -41,7 +41,7 @@ public class MissionStepTest {
 
     @DisplayName("/admin/reservation 요청 시 응답 코드 확인")
     @Test
-    void test2() {
+    void checkOkStatusByAdminReservationRequest() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
@@ -50,7 +50,7 @@ public class MissionStepTest {
 
     @DisplayName("/reservations로 POST 요청 시 응답 상태 및 response body 값 확인")
     @Test
-    void test3() {
+    void checkOkStatusAndBodyByReservationsPostRequest() {
         //given
         Map<String, String> time = new HashMap<>();
         time.put("startAt", "10:00");
@@ -79,7 +79,7 @@ public class MissionStepTest {
 
     @DisplayName("/reservations로 GET 요청 시 응답 상태 및 response body 값 확인")
     @Test
-    void test4() {
+    void checkOkStatusAndBodyByReservationsGetRequest() {
         //given
         Map<String, String> time = new HashMap<>();
         time.put("startAt", "10:00");
@@ -114,7 +114,7 @@ public class MissionStepTest {
 
     @DisplayName("/reservations/1 delete 요청 시 응답 상태 확인")
     @Test
-    void test5() {
+    void checkOkStatusByReservationsOneDeleteRequest() {
         //given
         Map<String, String> time = new HashMap<>();
         time.put("startAt", "10:00");
@@ -155,7 +155,7 @@ public class MissionStepTest {
 
     @DisplayName("Reservation Table이 존재하는지 확인")
     @Test
-    void test6() {
+    void checkReservationTableIsExist() {
         //when & then
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
@@ -168,7 +168,7 @@ public class MissionStepTest {
 
     @DisplayName("예약 하나 추가 후 조회 API를 통해 조회한 예약 수와 DB 쿼리를 통해 조회한 예약 수가 같은지 비교")
     @Test
-    void test7() {
+    void compareApiSizeAndDbQuery() {
         //given
         Map<String, String> time = new HashMap<>();
         time.put("startAt", "10:00");
@@ -197,7 +197,7 @@ public class MissionStepTest {
 
     @DisplayName("예약 추가 API, 테이블 예약 정보 추가 확인")
     @Test
-    void test8() {
+    void checkInsertReservationAPI() {
         //given
         Map<String, String> time = new HashMap<>();
         time.put("startAt", "10:00");
@@ -230,7 +230,7 @@ public class MissionStepTest {
 
     @DisplayName("예약 취소 API, 테이블 예약 정보 삭제 확인")
     @Test
-    void test9() {
+    void checkReservationDeleteAPI() {
         //given
         Map<String, String> time = new HashMap<>();
         time.put("startAt", "10:00");
@@ -268,7 +268,7 @@ public class MissionStepTest {
 
     @DisplayName("timd_id에 해당하는 리소스가 없는 경우 404 not found 상태 반환 확인")
     @Test
-    void test10() {
+    void checkNotFoundStatusByNoTimeId() {
         //given
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
@@ -286,7 +286,7 @@ public class MissionStepTest {
 
     @DisplayName("times POST 요청 왔을 때 상태 반환 200 확인")
     @Test
-    void test11() {
+    void checkOkStatusByTimesPostRequest() {
         //given
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
@@ -302,7 +302,7 @@ public class MissionStepTest {
 
     @DisplayName("/times GET 요청 시 200 확인")
     @Test
-    void test12() {
+    void checkOkStatusByTimesGetRequest() {
         //given
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
@@ -324,7 +324,7 @@ public class MissionStepTest {
 
     @DisplayName("특정 time_id DELETE 요청 시 200 상태 확인")
     @Test
-    void test13() {
+    void checkOkStatusByTimeIdDeleteRequest() {
         //given
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
@@ -338,7 +338,7 @@ public class MissionStepTest {
 
     @DisplayName("예약시간 등록 후 /reservations 페이지에서 GET 요청 시 보여지는 등록된 시간 갯수 확인")
     @Test
-    void test14() {
+    void checkRegisteredTimeCounts() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -371,7 +371,7 @@ public class MissionStepTest {
 
     @DisplayName("계층 분리 확인하는 테스트 코드")
     @Test
-    void test15() {
+    void checkLayeredArchitecture() {
         boolean isJdbcTemplateInjected = false;
 
         for (Field field : reservationController.getClass().getDeclaredFields()) {

@@ -36,7 +36,7 @@ public class ReservationTimeJdbcDaoTest {
 
     @DisplayName("모든 예약 시간 조회 테스트")
     @Test
-    void test1() {
+    void findAllReservationTimes() {
         //given
         String insertQuery = "INSERT into reservation_time (start_at) VALUES (?)";
         jdbcTemplate.update(
@@ -53,7 +53,7 @@ public class ReservationTimeJdbcDaoTest {
 
     @DisplayName("예약 시간 추가 테스트")
     @Test
-    void test2() {
+    void insertReservationTime() {
         //given
         TimeRequest timeRequest = new TimeRequest(
                 LocalTime.of(17,5)
@@ -68,7 +68,7 @@ public class ReservationTimeJdbcDaoTest {
 
     @DisplayName("예약 시간 삭제 테스트")
     @Test
-    void test3() {
+    void deleteReservationTime() {
         //given
         LocalTime localTime = LocalTime.of(16,20);
         String insertQuery = "INSERT into reservation_time (start_at) VALUES (?)";

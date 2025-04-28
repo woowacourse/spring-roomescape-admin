@@ -6,12 +6,22 @@ import java.time.LocalTime;
 public class Reservation {
 
     private static final int VALID_MAX_NAME_LENGTH = 4;
-    private long id;
-    private final String name;
-    private final LocalDate date;
-    private final LocalTime time;
 
-    public Reservation(final String name, final LocalDate date, final LocalTime time) {
+    private Long id;
+    private String name;
+    private LocalDate date;
+    private ReservationTime time;
+
+    public Reservation(final Long id, final String name, final LocalDate date, final ReservationTime time) {
+        validateNameLength(name);
+        validateDateTime(date, time);
+        this.id = id;
+        this.name = name;
+        this.date = date;
+        this.time = time;
+    }
+
+    public Reservation(final String name, final LocalDate date, final ReservationTime time) {
         validateNameLength(name);
         validateDateTime(date, time);
         this.name = name;
@@ -19,7 +29,7 @@ public class Reservation {
         this.time = time;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -31,11 +41,11 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getReservationTime() {
         return time;
     }
 
-    public void setId(long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 
@@ -49,7 +59,7 @@ public class Reservation {
         }
     }
 
-    private void validateDateTime(final LocalDate date, final LocalTime time) {
+    private void validateDateTime(final LocalDate date, final ReservationTime time) {
         if (date.isBefore(LocalDate.now()) || date.isEqual(LocalDate.now()) && time.isBefore(LocalTime.now())) {
             throw new IllegalArgumentException("예약 날짜와 시각은 현재보다 이전일 수 없습니다.");
         }

@@ -1,37 +1,39 @@
-package roomescape.repository;
+package roomescape.fake;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.repository.ReservationDao;
 
-@Repository
-public class ReservationInMemoryRepository implements ReservationRepository {
-
+public class FakeReservationDaoImpl implements ReservationDao {
     private final Map<Long, Reservation> sources = new ConcurrentHashMap<>();
     private final AtomicLong id = new AtomicLong(1L);
 
     @Override
-    public long save(final Reservation reservation) {
+    public Long save(final Reservation reservation) {
         long id = this.id.getAndIncrement();
         reservation.setId(id);
         sources.put(id, reservation);
 
-        return this.id.get();
+        return id;
     }
 
     @Override
     public List<Reservation> findAll() {
-        return sources.values().stream().toList();
+        return new ArrayList<>(sources.values());
     }
 
     @Override
-    public void deleteById(final long id) {
-        if (!sources.containsKey(id)) {
-            throw new IllegalArgumentException("id에 해당하는 예약 내역이 없습니다.");
-        }
+    public void deleteById(Long id) {
         sources.remove(id);
+    }
+
+    @Override
+    public Optional<Reservation> findById(Long id) {
+        return Optional.ofNullable(sources.get(id));
     }
 }

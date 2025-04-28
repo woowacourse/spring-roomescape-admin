@@ -27,14 +27,14 @@ public class ReservationTimeService {
 
     public List<ReservationTimeResponse> readReservationTime() {
         return repository.findAll().stream()
-                .map(ReservationTimeResponse::toDto)
+                .map(ReservationTimeResponse::from)
                 .toList();
     }
 
     @Transactional
     public ReservationTimeResponse postReservationTime(ReservationTimeRequest request) {
         ReservationTime newReservation = repository.save(request.toEntity());
-        return ReservationTimeResponse.toDto(newReservation);
+        return ReservationTimeResponse.from(newReservation);
     }
 
     @Transactional

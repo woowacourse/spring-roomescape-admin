@@ -74,8 +74,8 @@ public class ReservationTimeControllerTest {
 
         //then
         assertThat(result.size()).isEqualTo(2);
-        assertThat(result.getFirst()).isEqualTo(ReservationTimeResponse.toDto(reservationTime1));
-        assertThat(result.getLast()).isEqualTo(ReservationTimeResponse.toDto(reservationTime2));
+        assertThat(result.getFirst()).isEqualTo(ReservationTimeResponse.from(reservationTime1));
+        assertThat(result.getLast()).isEqualTo(ReservationTimeResponse.from(reservationTime2));
     }
 
     @Test

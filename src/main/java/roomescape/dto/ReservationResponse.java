@@ -10,7 +10,7 @@ public record ReservationResponse(
         Long timeId
 ) {
 
-    public static ReservationResponse toDto(final Reservation reservation) {
+    public static ReservationResponse from(final Reservation reservation) {
         return new ReservationResponse(reservation.id(), reservation.name(),
                 reservation.date(),
                 reservation.time().id());

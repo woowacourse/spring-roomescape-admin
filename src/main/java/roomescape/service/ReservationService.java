@@ -20,14 +20,14 @@ public class ReservationService {
 
     public List<ReservationResponse> readReservation() {
         return reservationDao.findAll().stream()
-                .map(ReservationResponse::toDto)
+                .map(ReservationResponse::from)
                 .toList();
     }
 
     @Transactional
     public ReservationResponse postReservation(ReservationRequest request) {
         Reservation newReservation = reservationDao.save(request.toEntity(), request.timeId());
-        return ReservationResponse.toDto(newReservation);
+        return ReservationResponse.from(newReservation);
     }
 
     @Transactional

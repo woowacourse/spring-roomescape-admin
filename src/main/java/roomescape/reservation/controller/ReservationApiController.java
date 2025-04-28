@@ -46,6 +46,6 @@ public class ReservationApiController {
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationService.deleteById(id);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

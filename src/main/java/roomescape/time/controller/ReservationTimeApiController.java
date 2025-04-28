@@ -45,6 +45,6 @@ public class ReservationTimeApiController {
     public ResponseEntity<Void> deleteTime(@PathVariable Long id) {
         reservationTimeService.deleteById(id);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

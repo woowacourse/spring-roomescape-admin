@@ -1,10 +1,11 @@
 package roomescape.repository;
 
+import java.time.LocalTime;
 import java.util.List;
 import roomescape.model.ReservationTime;
 
 public interface ReservationTimeRepository {
-    ReservationTime addTime(String start_at);
+    ReservationTime addTime(LocalTime start_at);
 
     List<ReservationTime> getAllTime();
 

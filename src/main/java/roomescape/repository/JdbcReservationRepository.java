@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import java.sql.PreparedStatement;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,7 +31,7 @@ public class JdbcReservationRepository implements ReservationRepository{
                 new UserName(rs.getString("name")),
                 new ReservationDateTime(
                         new ReservationDate(rs.getString("date")),
-                        new ReservationTime(rs.getLong("time_id"), rs.getString("start_at"))
+                        new ReservationTime(rs.getLong("time_id"), rs.getTime("start_at").toLocalTime())
                 )
         ));
     }

@@ -3,6 +3,7 @@ package roomescape.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.dto.ReservationRequestDto;
@@ -21,7 +22,7 @@ class ReservationServiceTest {
     @DisplayName("예약 생성")
     void test1() {
         // given
-        Long timeId = reservationTimeService.addTime("10:00").getId();
+        Long timeId = reservationTimeService.addTime(LocalTime.parse("10:00")).getId();
 
         // when
         Reservation reservation = reservationService.addReservation(
@@ -38,8 +39,8 @@ class ReservationServiceTest {
     @DisplayName("예약 전체 조회")
     void test2() {
         // given
-        Long timeId_1 = reservationTimeService.addTime("10:00").getId();
-        Long timeId_2 = reservationTimeService.addTime("11:00").getId();
+        Long timeId_1 = reservationTimeService.addTime(LocalTime.parse("10:00")).getId();
+        Long timeId_2 = reservationTimeService.addTime(LocalTime.parse("11:00")).getId();
         Reservation reservation = reservationService.addReservation(
                 new ReservationRequestDto("띠용", "2025-05-05", timeId_1));
         Reservation reservation2 = reservationService.addReservation(
@@ -53,7 +54,7 @@ class ReservationServiceTest {
     @DisplayName("예약 삭제")
     void test3() {
         // given
-        Long timeId = reservationTimeService.addTime("10:00").getId();
+        Long timeId = reservationTimeService.addTime(LocalTime.parse("10:00")).getId();
         Reservation reservation = reservationService.addReservation(
                 new ReservationRequestDto("띠용", "2025-05-05", timeId));
 

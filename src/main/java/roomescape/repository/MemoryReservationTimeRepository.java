@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -14,7 +15,7 @@ public class MemoryReservationTimeRepository implements ReservationTimeRepositor
     }
 
     @Override
-    public ReservationTime addTime(String start_at) {
+    public ReservationTime addTime(LocalTime start_at) {
         ReservationTime reservationTime = new ReservationTime(id.getAndIncrement(), start_at);
         reservationTimes.add(reservationTime);
         return reservationTime;

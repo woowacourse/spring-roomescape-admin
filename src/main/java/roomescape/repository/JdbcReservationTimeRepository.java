@@ -1,6 +1,9 @@
 package roomescape.repository;
 
+import static java.time.LocalTime.parse;
+
 import java.sql.PreparedStatement;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,16 +21,16 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTime addTime(String start_at) {
+    public ReservationTime addTime(LocalTime startAt) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "insert into reservation_time (start_at) values (?)";
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, start_at);
+            ps.setString(1, startAt.toString());
             return ps;
         }, keyHolder);
         return new ReservationTime(Objects.requireNonNull(keyHolder.getKey())
-                .longValue(), start_at);
+                .longValue(), startAt);
     }
 
     @Override
@@ -35,7 +38,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         String sql = "select * from reservation_time";
         return jdbcTemplate.query(sql, (rs, rowNum) -> new ReservationTime(
                 rs.getLong("id"),
-                rs.getString("start_at")
+                parse(rs.getString("start_at"))
         ));
     }
 
@@ -48,6 +51,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     public ReservationTime getReservationTimeById(Long id) {
         String sql = "select start_at from reservation_time where id = ?";
         String start_at = jdbcTemplate.queryForObject(sql, String.class, id);
-        return new ReservationTime(id, start_at);
+        return new ReservationTime(id, parse(start_at));
     }
+
 }

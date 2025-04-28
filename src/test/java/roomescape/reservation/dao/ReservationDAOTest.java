@@ -153,7 +153,7 @@ class ReservationDAOTest {
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
 
         // then
         Integer countAfterDelete = countReservations();

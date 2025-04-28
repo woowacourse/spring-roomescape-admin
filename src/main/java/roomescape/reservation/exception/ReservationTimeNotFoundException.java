@@ -8,7 +8,7 @@ public class ReservationTimeNotFoundException extends RuntimeException {
         super(MESSAGE + id);
     }
 
-    public ReservationTimeNotFoundException(Long id, Throwable e) {
-        super(MESSAGE + id);
+    public ReservationTimeNotFoundException(Long id, Throwable cause) {
+        super(MESSAGE + id, cause);
     }
 }

@@ -10,8 +10,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import roomescape.dao.ReservationDaoInterface;
-import roomescape.dao.ReservationTimeDaoInterface;
+import roomescape.dao.ReservationDao;
+import roomescape.dao.ReservationTimeDao;
 import roomescape.entity.ReservationTime;
 import roomescape.entity.ReservationWithTimeId;
 import roomescape.model.Reservation;
@@ -70,7 +70,7 @@ class ReservationServiceTest {
         assertThat(affectedRow).isEqualTo(1);
     }
 
-    static class FakeReservationDaoDao implements ReservationDaoInterface {
+    static class FakeReservationDaoDao implements ReservationDao {
         private long nextId = 1L;
         private List<Reservation> reservations = new ArrayList<>();
 
@@ -90,7 +90,7 @@ class ReservationServiceTest {
         }
     }
 
-    static class FakeReservationTimeDao implements ReservationTimeDaoInterface {
+    static class FakeReservationTimeDao implements ReservationTimeDao {
 
         @Override
         public ReservationTime addReservation(ReservationTime reservationTime) {

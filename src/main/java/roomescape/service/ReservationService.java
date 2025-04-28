@@ -3,8 +3,8 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import roomescape.dao.ReservationDaoInterface;
-import roomescape.dao.ReservationTimeDaoInterface;
+import roomescape.dao.ReservationDao;
+import roomescape.dao.ReservationTimeDao;
 import roomescape.entity.ReservationTime;
 import roomescape.entity.ReservationWithTimeId;
 import roomescape.model.Reservation;
@@ -12,10 +12,10 @@ import roomescape.model.Reservation;
 @Service
 public class ReservationService {
 
-    private final ReservationDaoInterface reservationDao;
-    private final ReservationTimeDaoInterface reservationTimeDao;
+    private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationService(ReservationDaoInterface reservationDao, ReservationTimeDaoInterface reservationTimeDao) {
+    public ReservationService(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
         this.reservationDao = reservationDao;
         this.reservationTimeDao = reservationTimeDao;
     }

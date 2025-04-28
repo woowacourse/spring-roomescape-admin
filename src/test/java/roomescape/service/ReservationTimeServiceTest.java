@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import roomescape.dao.ReservationTimeDaoInterface;
+import roomescape.dao.ReservationTimeDao;
 import roomescape.entity.ReservationTime;
 
 public class ReservationTimeServiceTest {
@@ -40,7 +40,7 @@ public class ReservationTimeServiceTest {
 
     }
 
-    static class FakeReservationTimeDao implements ReservationTimeDaoInterface {
+    static class FakeReservationTimeDao implements ReservationTimeDao {
 
         @Override
         public ReservationTime addReservation(ReservationTime reservationTime) {

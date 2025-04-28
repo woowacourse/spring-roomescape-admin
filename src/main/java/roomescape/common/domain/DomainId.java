@@ -1,13 +1,27 @@
 package roomescape.common.domain;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldNameConstants;
+import roomescape.common.validate.Validator;
 
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@FieldNameConstants
+@EqualsAndHashCode
 public abstract class DomainId {
 
     private final Long value;
     private final boolean assigned;
+
+    protected DomainId(final Long value, final boolean assigned) {
+        validate(value);
+
+        this.value = value;
+        this.assigned = assigned;
+    }
+
+    private static void validate(final Long value) {
+        Validator.of(DomainId.class)
+                .notNullField(Fields.value, value);
+    }
 
     public Long getValue() {
         if (assigned) {

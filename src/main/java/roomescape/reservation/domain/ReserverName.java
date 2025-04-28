@@ -3,9 +3,12 @@ package roomescape.reservation.domain;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.experimental.FieldNameConstants;
+import roomescape.common.validate.Validator;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@FieldNameConstants(level = AccessLevel.PRIVATE)
 public class ReserverName {
 
     private final String value;
@@ -16,12 +19,7 @@ public class ReserverName {
     }
 
     private static void validate(final String value) {
-        validateBlank(value);
-    }
-
-    private static void validateBlank(final String value) {
-        if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException("예약자 이름은 빈 칸일 수 없습니다.");
-        }
+        Validator.of(ReserverName.class)
+                .notBlankField(Fields.value, value);
     }
 }

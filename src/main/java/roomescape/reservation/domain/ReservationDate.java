@@ -2,12 +2,17 @@ package roomescape.reservation.domain;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.experimental.FieldNameConstants;
+import roomescape.common.validate.Validator;
 
 import java.time.LocalDate;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@FieldNameConstants(level = AccessLevel.PRIVATE)
+@EqualsAndHashCode
 public final class ReservationDate {
 
     private final LocalDate value;
@@ -18,12 +23,7 @@ public final class ReservationDate {
     }
 
     private static void validate(final LocalDate value) {
-        validateNull(value);
-    }
-
-    private static void validateNull(final LocalDate value) {
-        if (value == null) {
-            throw new IllegalArgumentException("예약 시간은 null 일 수 없습니다");
-        }
+        Validator.of(ReservationDate.class)
+                .notNullField(Fields.value, value);
     }
 }

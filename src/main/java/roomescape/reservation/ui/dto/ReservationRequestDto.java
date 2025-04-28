@@ -1,12 +1,24 @@
 package roomescape.reservation.ui.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.experimental.FieldNameConstants;
+import roomescape.common.validate.Validator;
 
 import java.time.LocalDate;
 
-public record ReservationRequestDto(@NotBlank String name,
-                                    @NotNull LocalDate date,
-                                    @NotNull Long timeId) {
+@FieldNameConstants(level = AccessLevel.PRIVATE)
+public record ReservationRequestDto(String name,
+                                    LocalDate date,
+                                    Long timeId) {
 
+    public ReservationRequestDto {
+        validate(name, date, timeId);
+    }
+
+    private void validate(final String name, final LocalDate date, final Long timeId) {
+        Validator.of(ReservationRequestDto.class)
+                .notBlankField(Fields.name, name)
+                .notNullField(Fields.date, date)
+                .notNullField(Fields.timeId, timeId);
+    }
 }

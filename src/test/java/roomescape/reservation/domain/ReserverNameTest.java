@@ -15,8 +15,12 @@ class ReserverNameTest {
         // when
         // then
         assertAll(() -> {
-            assertThatThrownBy(() -> ReserverName.from(String.valueOf(null)));
-            assertThatThrownBy(() -> ReserverName.from(""));
+            assertThatThrownBy(() -> ReserverName.from(null))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("ReserverName.value 은(는) 비어있을 수 없습니다.");
+            assertThatThrownBy(() -> ReserverName.from(""))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("ReserverName.value 은(는) 비어있을 수 없습니다.");
         });
     }
 }

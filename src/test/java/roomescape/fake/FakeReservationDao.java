@@ -47,4 +47,12 @@ public class FakeReservationDao implements ReservationDao {
         Reservation removedReservation = reservations.remove(id);
         return removedReservation != null;
     }
+
+    @Override
+    public boolean duplicateReservationByCustomer(final Reservation reservation, final ReservationTime reservationTime) {
+        return reservations.values().stream()
+                .anyMatch(r -> r.getCustomerName().equals(reservation.getCustomerName()) &&
+                        r.getReservationDate().equals(reservation.getReservationDate()) &&
+                        r.getReservationTime().isSameTime(reservationTime));
+    }
 }

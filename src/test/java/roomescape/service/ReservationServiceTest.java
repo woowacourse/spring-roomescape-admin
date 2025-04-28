@@ -13,6 +13,7 @@ import roomescape.dto.ReservationRequest;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ReservationServiceTest {
@@ -33,7 +34,7 @@ class ReservationServiceTest {
 
     @Test
     void 예약을_추가하면_추가한_예약을_반환한다() {
-        ReservationRequest reservationRequest = new ReservationRequest("듀이", LocalDate.now(), 1L);
+        ReservationRequest reservationRequest = new ReservationRequest("피글렛", LocalDate.now(), 1L);
         assertThat(reservationService.createReservation(reservationRequest)).isNotNull();
     }
 
@@ -45,5 +46,12 @@ class ReservationServiceTest {
     @Test
     void 특정_예약을_삭제했을때_예약이_없으면_false를_반환한다() {
         assertThat(reservationService.deleteReservationById(4L)).isFalse();
+    }
+
+    @Test
+    void 예약을_추가할때_같은예약자가_같은날짜와_시간에_예약하면_예외가_발생한다() {
+        ReservationRequest reservationRequest = new ReservationRequest("듀이", LocalDate.now(), 1L);
+        assertThatThrownBy(() -> reservationService.createReservation(reservationRequest))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

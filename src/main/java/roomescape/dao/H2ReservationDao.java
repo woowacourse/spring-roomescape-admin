@@ -70,4 +70,12 @@ public class H2ReservationDao implements ReservationDao {
         int deletedRows = jdbcTemplate.update(sql, id);
         return deletedRows > 0;
     }
+
+    @Override
+    public boolean duplicateReservationByCustomer(final Reservation reservation, final ReservationTime reservationTime) {
+        String sql = "SELECT count(*) FROM reservation WHERE name = ? AND date = ? AND time_id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class,
+                reservation.getCustomerName(), reservation.getReservationDate(), reservationTime.getId());
+        return count != null && count > 0;
+    }
 }

@@ -29,7 +29,11 @@ public class ReservationService {
 
     public ReservationResponse createReservation(final ReservationRequest reservationRequest) {
         ReservationTime reservationTime = reservationTimeDao.findById(reservationRequest.timeId());
-        Reservation newReservation = reservationDao.insert(reservationRequest.toEntity(reservationTime));
+        Reservation reservation = reservationRequest.toEntity(reservationTime);
+        if (reservationDao.duplicateReservationByCustomer(reservation, reservationTime)) {
+            throw new IllegalArgumentException("[ERROR] 같은 예약자가 같은 날짜, 시간에 중복으로 예약할 수 없습니다.");
+        }
+        Reservation newReservation = reservationDao.insert(reservation);
         return ReservationResponse.toDto(newReservation);
     }
 

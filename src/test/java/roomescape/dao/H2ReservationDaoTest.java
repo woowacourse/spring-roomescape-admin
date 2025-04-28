@@ -59,4 +59,17 @@ class H2ReservationDaoTest {
     void 특정_예약을_취소했을때_예약이_없으면_false를_반환한다() {
         assertThat(reservationDao.deleteById(1L)).isFalse();
     }
+
+    @Test
+    void 특정_예약자와_예약날짜_예약시간이_존재하면_true를_반환한다() {
+        Reservation reservation = Reservation.of("듀이", LocalDate.now(), TEST_TIME);
+        Reservation savedReservation = reservationDao.insert(reservation);
+        assertThat(reservationDao.duplicateReservationByCustomer(savedReservation, TEST_TIME)).isTrue();
+    }
+
+    @Test
+    void 특정_예약자와_예약날짜_예약시간이_존재하지_않으면_false를_반환한다() {
+        Reservation notExistReservation = Reservation.of("듀이", LocalDate.now(), TEST_TIME);
+        assertThat(reservationDao.duplicateReservationByCustomer(notExistReservation, TEST_TIME)).isFalse();
+    }
 }

@@ -20,7 +20,7 @@ class MemoryReservationRepositoryTest {
     private static final ReservationTime DEFAULT_DUMMY_TIME = new ReservationTime(LocalTime.of(11, 22));
 
     private final MemoryReservationRepository repository = new MemoryReservationRepository();
-    private final ReservationHelper helper = new ReservationHelper(repository);
+    private final ReservationHelper helper = new ReservationHelper();
     private Long reservationId;
 
     @BeforeEach

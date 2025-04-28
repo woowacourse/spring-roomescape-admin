@@ -43,7 +43,7 @@ public class ReservationService {
         reservationDao.removeReservation(id);
     }
 
-    public List<ReservationResponse>  findAllReservations() {
+    public List<ReservationResponse> findAllReservations() {
         List<Reservation> reservations = reservationDao.findAllReservations();
 
         return reservations.stream()

@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.model.EntityId;
@@ -28,9 +29,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     @Override
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(
-                new EntityId(resultSet.getLong("id")),
-                resultSet.getObject("start_at", LocalTime.class)));
+        return jdbcTemplate.query(sql, mapResultsToReservationTime());
     }
 
     @Override
@@ -58,12 +57,16 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
         try {
             return jdbcTemplate.queryForObject(sql,
-                    (resultSet, rowNum) -> new ReservationTime(
-                            new EntityId(resultSet.getLong("id")),
-                            resultSet.getObject("start_at", LocalTime.class)),
+                    mapResultsToReservationTime(),
                     id);
         } catch (EmptyResultDataAccessException exception) {
             throw new IllegalArgumentException("존재하지 않는 예약시간의 id입니다.");
         }
+    }
+
+    private RowMapper<ReservationTime> mapResultsToReservationTime() {
+        return (resultSet, rowNum) -> new ReservationTime(
+                new EntityId(resultSet.getLong("id")),
+                resultSet.getObject("start_at", LocalTime.class));
     }
 }

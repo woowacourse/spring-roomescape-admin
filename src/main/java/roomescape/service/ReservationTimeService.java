@@ -2,7 +2,7 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.CreateReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
@@ -22,8 +22,9 @@ public class ReservationTimeService {
                 .toList();
     }
 
-    public ReservationTimeResponse createReservationTime(final ReservationTimeRequest reservationTimeRequest) {
-        Long id = reservationTimeRepository.add(reservationTimeRequest.toReservationTime());
+    public ReservationTimeResponse createReservationTime(
+            final CreateReservationTimeRequest createReservationTimeRequest) {
+        Long id = reservationTimeRepository.add(createReservationTimeRequest.toReservationTime());
         ReservationTime addedReservationTime = reservationTimeRepository.findById(id);
         return ReservationTimeResponse.from(addedReservationTime);
     }

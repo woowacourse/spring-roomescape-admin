@@ -1,8 +1,11 @@
 package roomescape.controller;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.model.Reservation;
 import roomescape.service.ReservationService;
 
@@ -21,26 +25,25 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    @Autowired
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 
-    @GetMapping("")
-    public ResponseEntity<List<Reservation>> reservations() {
-        List<Reservation> reservations = reservationService.getReservations();
+    @GetMapping
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        List<ReservationResponse> reservations = reservationService.getReservations();
         return ResponseEntity.ok(reservations);
     }
 
-    @PostMapping("")
-    public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation newReservation = reservationService.addReservation(reservationRequest);
-        return ResponseEntity.ok().body(newReservation);
+    @PostMapping
+    public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest reservationRequest) {
+        ReservationResponse newReservation = reservationService.addReservation(reservationRequest);
+        return ResponseEntity.ok(newReservation);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Reservation> deleteReservation(@PathVariable long id) {
-        Reservation oldReservation = reservationService.deleteReservation(id);
-        return ResponseEntity.ok().body(oldReservation);
+    public ResponseEntity<Void> deleteReservation(@PathVariable long id) {
+        reservationService.deleteReservation(id);
+        return ResponseEntity.ok().build();
     }
 }

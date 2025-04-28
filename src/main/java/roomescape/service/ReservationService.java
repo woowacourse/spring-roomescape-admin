@@ -35,14 +35,15 @@ public class ReservationService {
 
     public ReservationResponse createReservation(final ReservationRequest request) {
         checkReservationExist(request);
-        ReservationCreate reservationCreate = new ReservationCreate(request.name(), request.date().toString(), request.timeId());
-        long id = reservationDao.save(reservationCreate);
-
         ReservationTimeRead readTime = reservationTimeDao.findById(request.timeId());
         ReservationTime time = toReservationTime(readTime);
 
+        Reservation reservation = toReservation(request, time);
+        ReservationCreate reservationCreate = toReservationCreate(reservation);
+        long id = reservationDao.save(reservationCreate);
+
         ReservationTimeResponse timeResponse = toReservationTimeResponse(time);
-        Reservation reservation = toReservation(id, time, reservationCreate);
+        reservation.setId(id);
         return toReservationResponse(reservation, timeResponse);
     }
 
@@ -67,10 +68,11 @@ public class ReservationService {
     }
 
     public ReservationTimeResponse createReservationTime(final ReservationTimeRequest request) {
-        ReservationTimeCreate reservationTimeCreate = new ReservationTimeCreate(request.startAt().toString());
+        ReservationTime reservationTime = toReservationTime(request);
+        ReservationTimeCreate reservationTimeCreate = toReservationTimeCreate(reservationTime);
         long id = reservationTimeDao.save(reservationTimeCreate);
 
-        ReservationTime reservationTime = toReservationTime(id, reservationTimeCreate);
+        reservationTime.setId(id);
         return toReservationTimeResponse(reservationTime);
     }
 
@@ -113,16 +115,24 @@ public class ReservationService {
                 new ReservationTime(read.timeId(), LocalTime.parse(read.timeValue(), TIME_FORMATTER)));
     }
 
+    private ReservationCreate toReservationCreate(Reservation reservation) {
+        return new ReservationCreate(reservation.getName(), reservation.getDate().toString(), reservation.getTime().getId());
+    }
+
+    private Reservation toReservation(ReservationRequest request, ReservationTime time) {
+        return new Reservation(request.name(), request.date(), time);
+    }
+
     private ReservationTime toReservationTime(ReservationTimeRead read) {
         return new ReservationTime(read.id(), LocalTime.parse(read.startAt(), TIME_FORMATTER));
     }
 
-    private ReservationTime toReservationTime(final long id, final ReservationTimeCreate create) {
-        return new ReservationTime(id, LocalTime.parse(create.startAt(), TIME_FORMATTER));
+    private ReservationTime toReservationTime(ReservationTimeRequest request) {
+        return new ReservationTime(request.startAt());
     }
 
-    private Reservation toReservation(final long id, final ReservationTime time, final ReservationCreate create) {
-        return new Reservation(id, create.name(), LocalDate.parse(create.date(), DATE_FORMATTER), time);
+    private ReservationTimeCreate toReservationTimeCreate(ReservationTime time) {
+        return new ReservationTimeCreate(time.getStartAt().toString());
     }
 
     private ReservationResponse toReservationResponse(final Reservation reservation, final ReservationTimeResponse timeResponse) {

@@ -1,0 +1,30 @@
+package roomescape.dao;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import roomescape.domain.Time;
+
+public class TestTimeDAOImpl implements TimeDAO {
+
+    final List<Time> times = new ArrayList<>();
+
+    @Override
+    public List<Time> findAllTime() {
+        return Collections.unmodifiableList(times);
+    }
+
+    @Override
+    public Long insertTime(final Time time) {
+        times.add(time);
+        return (long) times.size();
+    }
+
+    @Override
+    public int deleteTimeById(final Long id) {
+        Long idMatchedCount = times.stream()
+                .filter(time -> time.getId().equals(id))
+                .count();
+        return idMatchedCount.intValue();
+    }
+}

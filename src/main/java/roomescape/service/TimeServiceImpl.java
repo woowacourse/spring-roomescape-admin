@@ -19,10 +19,9 @@ public class TimeServiceImpl implements TimeService {
     @Override
     public List<TimeResponse> findAllTime() {
         final List<Time> times = timeDAO.findAllTime();
-        final List<TimeResponse> timeResponses = times.stream()
+        return times.stream()
                 .map(TimeResponse::from)
                 .toList();
-        return timeResponses;
     }
 
     @Override
@@ -35,7 +34,6 @@ public class TimeServiceImpl implements TimeService {
 
     @Override
     public int deleteTimeById(final Long id) {
-        int count = timeDAO.deleteTimeById(id);
-        return count;
+        return timeDAO.deleteTimeById(id);
     }
 }

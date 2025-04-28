@@ -2,13 +2,13 @@ package roomescape.model;
 
 public class Reservation {
     private final Long id;
-    private final UserName name;
+    private final UserName userName;
     private final ReservationDateTime reservationDateTime;
 
 
-    public Reservation(Long id, UserName name, ReservationDateTime reservationDateTime) {
+    public Reservation(Long id, UserName userName, ReservationDateTime reservationDateTime) {
         this.id = id;
-        this.name = name;
+        this.userName = userName;
         this.reservationDateTime = reservationDateTime;
     }
 
@@ -16,8 +16,8 @@ public class Reservation {
         return id;
     }
 
-    public UserName getName() {
-        return name;
+    public UserName getUserName() {
+        return userName;
     }
 
     public ReservationDateTime getReservationDateTime() {

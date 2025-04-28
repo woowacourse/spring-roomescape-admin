@@ -8,7 +8,7 @@ import roomescape.time.controller.response.ReservationTimeResponse;
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.service.ReservationTimeService;
 
-public class StubReservationTimeService implements ReservationTimeService {
+public class FakeReservationTimeService implements ReservationTimeService {
 
     @Override
     public ReservationTimeResponse create(ReservationTimeCreateRequest request) {

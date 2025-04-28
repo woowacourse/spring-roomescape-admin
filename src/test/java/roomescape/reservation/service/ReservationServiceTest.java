@@ -33,6 +33,7 @@ public class ReservationServiceTest {
 
         ReservationResponse response = reservationService.create(request);
 
+        assertThat(response.id()).isEqualTo(3L);
         assertThat(response.name()).isEqualTo("폰트");
         assertThat(response.date()).isEqualTo(LocalDate.of(2025, 4, 30));
         assertThat(response.time()).isEqualTo(new ReservationTimeResponse(1L, "10:00"));

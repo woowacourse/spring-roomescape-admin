@@ -13,27 +13,26 @@ public class ReservationTestConfig {
 
     @Bean
     public ReservationService reservationService() {
-        return new ReservationService(stubReservationRepository(), stubReservationTimeService());
+        return new ReservationService(fakeReservationRepository(), fakeReservationTimeService());
     }
 
     @Bean
-    public ReservationRepository stubReservationRepository() {
-        return new StubReservationRepository();
+    public ReservationRepository fakeReservationRepository() {
+        return new FakeReservationRepository();
     }
 
     @Bean
-    public ReservationTimeService stubReservationTimeService() {
-        return new StubReservationTimeService();
+    public ReservationTimeService fakeReservationTimeService() {
+        return new FakeReservationTimeService();
     }
 
     @Bean
     public ReservationTimeService reservationTimeService() {
-        return new ReservationTimeServiceImpl(stubReservationTimeRepository());
+        return new ReservationTimeServiceImpl(fakeReservationTimeRepository());
     }
 
     @Bean
-    public ReservationTimeRepository stubReservationTimeRepository() {
-        return new StubReservationTimeRepository();
+    public ReservationTimeRepository fakeReservationTimeRepository() {
+        return new FakeReservationTimeRepository();
     }
-
 }

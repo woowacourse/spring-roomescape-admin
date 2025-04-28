@@ -29,6 +29,7 @@ public class ReservationTimeServiceTest {
 
         ReservationTimeResponse response = reservationTimeService.create(request);
 
+        assertThat(response.id()).isEqualTo(3L);
         assertThat(response.startAt()).isEqualTo("10:00");
     }
 
@@ -54,5 +55,4 @@ public class ReservationTimeServiceTest {
         assertThatThrownBy(() -> reservationTimeService.deleteById(3L))
                 .isInstanceOf(NoSuchElementException.class);
     }
-
 }

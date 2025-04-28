@@ -9,7 +9,7 @@ import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.service.ReservationRepository;
 import roomescape.time.domain.ReservationTime;
 
-public class StubReservationRepository implements ReservationRepository {
+public class FakeReservationRepository implements ReservationRepository {
 
     List<Reservation> reservations = new ArrayList<>(List.of(
             new Reservation(
@@ -25,11 +25,18 @@ public class StubReservationRepository implements ReservationRepository {
                     new ReservationTime(2L, LocalTime.of(11, 0))
             )
     ));
+    Long currentId = 3L;
 
     @Override
     public Reservation save(Reservation reservation) {
-        reservations.add(reservation);
-        return reservation;
+        Reservation saved = new Reservation(
+                currentId++,
+                reservation.getReserverName(),
+                reservation.getDate(),
+                reservation.getReservationTime()
+        );
+        reservations.add(saved);
+        return saved;
     }
 
     @Override

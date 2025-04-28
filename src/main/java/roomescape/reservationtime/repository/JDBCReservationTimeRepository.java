@@ -43,7 +43,7 @@ public class JDBCReservationTimeRepository implements ReservationTimeRepository 
         long generatedId = simpleJdbcInsert.executeAndReturnKey(
                 Map.of("start_at", reservationTime.getStartAt())).longValue();
 
-        return new ReservationTime(generatedId, reservationTime.getStartAt());
+        return ReservationTime.of(generatedId, reservationTime.getStartAt());
     }
 
     @Override

@@ -2,23 +2,40 @@ package roomescape.reservationtime.domain;
 
 import java.time.LocalTime;
 import java.util.Objects;
+import roomescape.common.domain.Id;
 
 public class ReservationTime {
-    private final Long id;
+    private final Id id;
     private final LocalTime startAt;
 
-    public ReservationTime(final Long id, final LocalTime startAt) {
+    private ReservationTime(final Id id, final LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
     }
 
-    public ReservationTime(final Long id, final String startAt) {
+    private ReservationTime(final Id id, final String startAt) {
         this.id = id;
         this.startAt = LocalTime.parse(startAt);
     }
 
+    public static ReservationTime of(final Long id, final LocalTime startAt) {
+        return new ReservationTime(Id.from(id), startAt);
+    }
+
+    public static ReservationTime of(final Long id, final String startAt) {
+        return new ReservationTime(Id.from(id), startAt);
+    }
+
+    public static ReservationTime withUnassignedId(final LocalTime startAt) {
+        return new ReservationTime(Id.unassigned(), startAt);
+    }
+
     public Long getId() {
-        return id;
+        return id.getValue();
+    }
+
+    public void setId(Long value) {
+        id.setValue(value);
     }
 
     public LocalTime getStartAt() {

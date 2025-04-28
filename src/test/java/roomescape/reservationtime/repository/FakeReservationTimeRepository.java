@@ -16,7 +16,8 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public List<ReservationTime> getAll() {
-        return reservationTimes.values().stream()
+        return reservationTimes.entrySet().stream()
+                .map(entry -> ReservationTime.of(entry.getKey(), entry.getValue().getStartAt()))
                 .toList();
     }
 
@@ -24,7 +25,7 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
     public ReservationTime put(final ReservationTime reservationTime) {
         long id = index.getAndIncrement();
         reservationTimes.put(id, reservationTime);
-        return new ReservationTime(id, reservationTime.getStartAt());
+        return ReservationTime.of(id, reservationTime.getStartAt());
     }
 
     @Override

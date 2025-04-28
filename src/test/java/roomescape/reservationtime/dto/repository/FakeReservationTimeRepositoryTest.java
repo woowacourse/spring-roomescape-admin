@@ -21,8 +21,8 @@ class FakeReservationTimeRepositoryTest {
 
     @Test
     void getAll_shouldReturnAllSavedReservationTimes() {
-        ReservationTime t1 = new ReservationTime(1L, LocalTime.of(10, 0));
-        ReservationTime t2 = new ReservationTime(1L, LocalTime.of(14, 30));
+        ReservationTime t1 = ReservationTime.of(1L, LocalTime.of(10, 0));
+        ReservationTime t2 = ReservationTime.of(1L, LocalTime.of(14, 30));
 
         repository.put(t1);
         repository.put(t2);
@@ -35,7 +35,7 @@ class FakeReservationTimeRepositoryTest {
 
     @Test
     void findById_shouldReturnCorrectTime() {
-        ReservationTime time = new ReservationTime(1L, LocalTime.of(11, 0));
+        ReservationTime time = ReservationTime.of(1L, LocalTime.of(11, 0));
         repository.put(time);
 
         Optional<ReservationTime> found = repository.findById(1L);
@@ -45,7 +45,7 @@ class FakeReservationTimeRepositoryTest {
 
     @Test
     void deleteById_shouldRemoveEntry() {
-        ReservationTime time = new ReservationTime(1L, LocalTime.of(12, 0));
+        ReservationTime time = ReservationTime.of(1L, LocalTime.of(12, 0));
         repository.put(time);
 
         repository.deleteById(1L);
@@ -57,7 +57,7 @@ class FakeReservationTimeRepositoryTest {
     @Test
     void checkExistsByStartAt_shouldReturnTrueIfExists() {
         LocalTime time = LocalTime.of(13, 0);
-        repository.put(new ReservationTime(1L, time));
+        repository.put(ReservationTime.of(1L, time));
 
         boolean exists = repository.checkExistsByStartAt(time);
         assertThat(exists).isTrue();

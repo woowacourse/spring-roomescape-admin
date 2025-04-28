@@ -58,7 +58,7 @@ public class JDBCReservationRepository implements ReservationRepository {
                         reservation.getTime().getId())
         ).longValue();
 
-        return new Reservation(generatedId, reservation.getName(), reservation.getDate(), reservation.getTime());
+        return Reservation.of(generatedId, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     @Override

@@ -15,7 +15,7 @@ public class FakeReservationRepository implements ReservationRepository {
     @Override
     public List<Reservation> getAll() {
         return reservations.entrySet().stream()
-                .map(entry -> new Reservation(entry.getKey(), entry.getValue().getName(),
+                .map(entry -> Reservation.of(entry.getKey(), entry.getValue().getName(),
                         entry.getValue().getDate(), entry.getValue().getTime()))
                 .toList();
     }
@@ -24,7 +24,7 @@ public class FakeReservationRepository implements ReservationRepository {
     public Reservation put(final Reservation reservation) {
         Long id = index.getAndIncrement();
         reservations.put(id, reservation);
-        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+        return Reservation.of(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     @Override

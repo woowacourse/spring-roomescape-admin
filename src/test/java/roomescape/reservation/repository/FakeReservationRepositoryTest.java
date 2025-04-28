@@ -21,7 +21,7 @@ class FakeReservationRepositoryTest {
 
     @Test
     void put_shouldStoreReservation() {
-        Reservation reservation = new Reservation(1L, "브라운", futureDate, new ReservationTime(1L, "15:40"));
+        Reservation reservation = Reservation.of(1L, "브라운", futureDate, ReservationTime.of(1L, "15:40"));
 
         repository.put(reservation);
 
@@ -30,8 +30,8 @@ class FakeReservationRepositoryTest {
 
     @Test
     void getAll_shouldReturnAllSavedReservations() {
-        Reservation r1 = new Reservation(1L, "브라운", futureDate, new ReservationTime(1L, "15:40"));
-        Reservation r2 = new Reservation(1L, "존", futureDate, new ReservationTime(1L, "16:00"));
+        Reservation r1 = Reservation.of(1L, "브라운", futureDate, ReservationTime.of(1L, "15:40"));
+        Reservation r2 = Reservation.of(1L, "존", futureDate, ReservationTime.of(1L, "16:00"));
 
         repository.put(r1);
         repository.put(r2);
@@ -42,7 +42,7 @@ class FakeReservationRepositoryTest {
 
     @Test
     void deleteById_shouldRemoveReservation() {
-        repository.put(new Reservation(1L, "브라운", futureDate, new ReservationTime(1L, "15:40")));
+        repository.put(Reservation.of(1L, "브라운", futureDate, ReservationTime.of(1L, "15:40")));
 
         repository.deleteById(1L);
 

@@ -4,20 +4,29 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
+import roomescape.common.domain.Id;
 import roomescape.reservationtime.domain.ReservationTime;
 
 public class Reservation {
-    private final Long id;
+    private final Id id;
     private final String name;
     private final LocalDate date;
     private final ReservationTime time;
 
-    public Reservation(final Long id, final String name, final LocalDate date, final ReservationTime time) {
+    private Reservation(final Id id, final String name, final LocalDate date, final ReservationTime time) {
         validateDateTime(date, time.getStartAt());
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public static Reservation of(final Long id, final String name, final LocalDate date, final ReservationTime time) {
+        return new Reservation(Id.from(id), name, date, time);
+    }
+
+    public static Reservation withUnassignedId(final String name, final LocalDate date, final ReservationTime time) {
+        return new Reservation(Id.unassigned(), name, date, time);
     }
 
     private void validateDateTime(LocalDate date, LocalTime time) {
@@ -39,7 +48,11 @@ public class Reservation {
     }
 
     public Long getId() {
-        return id;
+        return id.getValue();
+    }
+
+    public void setId(Long value) {
+        id.setValue(value);
     }
 
     @Override

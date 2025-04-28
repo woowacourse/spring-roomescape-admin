@@ -40,7 +40,7 @@ public class ReservationService {
         ReservationTime time = reservationTimeRepository.findById(request.timeId())
                 .orElseThrow(() -> new NoSuchElementException("요청한 id와 일치하는 예약 시간 정보가 없습니다."));
         Reservation newReservation = reservationRepository.put(
-                new Reservation(null, request.name(), request.date(), time));
+                Reservation.withUnassignedId(request.name(), request.date(), time));
         return ReservationResponse.from(newReservation, time);
     }
 }

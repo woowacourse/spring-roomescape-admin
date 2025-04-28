@@ -36,13 +36,9 @@ public class ReservationService {
     public ReservationResponse create(ReservationRequest request) {
         Optional<ReservationTime> reservationTime = reservationTimeDao.findById(request.timeId());
         if (reservationTime.isPresent()) {
-            LocalDate date = LocalDate.parse(
-                request.date(),
-                DateTimeFormatter.ofPattern("yyyy-MM-dd")
-            );
             Reservation reservation = new Reservation(
                 request.name(),
-                date,
+                request.date(),
                 reservationTime.get());
             return ReservationResponse.from(reservationDao.save(reservation));
         }

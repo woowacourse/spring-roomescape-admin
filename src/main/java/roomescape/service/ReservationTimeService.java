@@ -1,7 +1,5 @@
 package roomescape.service;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationTimeDao;
@@ -19,9 +17,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse create(ReservationTimeRequest request) {
-        ReservationTime reservationTime = new ReservationTime(
-            LocalTime.parse(request.startAt(), DateTimeFormatter.ofPattern("HH:mm"))
-        );
+        ReservationTime reservationTime = new ReservationTime(request.startAt());
         reservationTime = reservationTimeDao.create(reservationTime);
         return ReservationTimeResponse.from(reservationTime);
     }

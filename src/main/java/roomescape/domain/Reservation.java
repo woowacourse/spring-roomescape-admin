@@ -14,7 +14,6 @@ public class Reservation {
                        final LocalDate date,
                        final ReservationTime reservationTime) {
         validateNullDate(date);
-        validatePastDate(date, reservationTime);
         this.id = id;
         this.person = person;
         this.date = date;
@@ -25,7 +24,6 @@ public class Reservation {
         this.id = id;
         this.person = reservation.getPerson();
         this.date = reservation.getDate();
-        validatePastDate(date, reservationTime);
         this.reservationTime = reservationTime;
     }
 
@@ -42,15 +40,9 @@ public class Reservation {
         }
     }
 
-    private void validatePastDate(LocalDate reservationDate, ReservationTime reservationTime) {
-        if (isBefore(reservationDate, reservationTime)) {
-            throw new IllegalArgumentException("예약은 과거일 수 없습니다.");
-        }
-    }
-
-    private boolean isBefore(LocalDate reservationDate, ReservationTime reservationTime) {
-        LocalDateTime reservationDateAndTime = LocalDateTime.of(reservationDate, reservationTime.getStartAt());
-        return reservationDateAndTime.isBefore(LocalDateTime.now());
+    public boolean isBefore(LocalDateTime today) {
+        LocalDateTime reservationDateAndTime = LocalDateTime.of(date, reservationTime.getStartAt());
+        return reservationDateAndTime.isBefore(today);
     }
 
     public String getPersonName() {

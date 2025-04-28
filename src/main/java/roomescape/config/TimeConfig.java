@@ -1,7 +1,13 @@
 package roomescape.config;
 
-import java.time.LocalDateTime;
+import java.time.Clock;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-public interface TimeConfig {
-    LocalDateTime now();
+@Configuration
+public class TimeConfig {
+    @Bean
+    public Clock clock() {
+        return Clock.systemDefaultZone();
+    }
 }

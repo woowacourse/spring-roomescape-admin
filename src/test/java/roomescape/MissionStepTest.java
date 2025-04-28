@@ -15,13 +15,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.config.TestTimeConfig;
 import roomescape.controller.ReservationController;
 import roomescape.service.dto.ReservationResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@Import(TestTimeConfig.class)
 public class MissionStepTest {
 
     @Autowired
@@ -72,7 +75,7 @@ public class MissionStepTest {
     void 삼단계() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2025-08-05");
+        params.put("date", "2031-08-05");
         params.put("timeId", "1");
 
         RestAssured.given().log().all()
@@ -114,7 +117,7 @@ public class MissionStepTest {
 
     @Test
     void 오단계() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2025-08-05",
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05",
                 "1");
 
         List<ReservationResponse> reservations = RestAssured.given().log().all()
@@ -132,7 +135,7 @@ public class MissionStepTest {
     void 육단계() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2025-08-05");
+        params.put("date", "2031-08-05");
         params.put("timeId", "1");
 
         RestAssured.given().log().all()
@@ -182,7 +185,7 @@ public class MissionStepTest {
     void 팔단계() {
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
-        reservation.put("date", "2025-08-05");
+        reservation.put("date", "2031-08-05");
         reservation.put("timeId", 1);
 
         RestAssured.given().log().all()

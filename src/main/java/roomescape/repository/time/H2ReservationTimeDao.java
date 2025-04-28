@@ -56,6 +56,6 @@ public class H2ReservationTimeDao implements ReservationTimeDao {
     public boolean deleteById(long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
 
-        return jdbcTemplate.update(sql, id) == 1;
+        return jdbcTemplate.update(sql, id) >= 1;
     }
 }

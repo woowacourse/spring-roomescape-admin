@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.dao.ReservationTimeRepository;
 import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
+import roomescape.repository.ReservationTimeRepository;
 
 public class ReservationTimeFakeRepository implements ReservationTimeRepository {
 
@@ -21,7 +21,7 @@ public class ReservationTimeFakeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public boolean existsTimeById(long id) {
+    public boolean existsTimeById(Long id) {
         return reservationTimes.containsKey(id);
     }
 
@@ -44,7 +44,7 @@ public class ReservationTimeFakeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         if (!reservationTimes.containsKey(id)) {
             throw new EntityNotFoundException("예약 시간을 찾을 수 없습니다: " + id);
         }

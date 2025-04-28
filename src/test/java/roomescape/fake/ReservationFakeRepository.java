@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.dao.ReservationRepository;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
+import roomescape.repository.ReservationRepository;
 
 public class ReservationFakeRepository implements ReservationRepository {
 

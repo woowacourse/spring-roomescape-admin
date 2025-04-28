@@ -1,15 +1,15 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import java.util.List;
 import roomescape.entity.ReservationTime;
 
 public interface ReservationTimeRepository {
 
-    boolean existsTimeById(long id);
+    boolean existsTimeById(Long id);
 
     List<ReservationTime> findAll();
 
     ReservationTime save(ReservationTime reservationTime);
 
-    void deleteById(long id);
+    void deleteById(Long id);
 }

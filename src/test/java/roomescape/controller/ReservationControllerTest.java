@@ -22,13 +22,13 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import roomescape.dao.ReservationJDBCDao;
-import roomescape.dao.ReservationTimeJDBCDao;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
+import roomescape.repository.ReservationJDBCDao;
+import roomescape.repository.ReservationTimeJDBCDao;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
 
@@ -51,9 +51,9 @@ public class ReservationControllerTest {
 
         namedJdbcTemplate.update(timeSql, params, keyHolder, new String[]{"id"});
 
-        ReservationService service = new ReservationService(new ReservationJDBCDao(namedJdbcTemplate));
         ReservationTimeService timeService = new ReservationTimeService(new ReservationTimeJDBCDao(namedJdbcTemplate));
-        controller = new ReservationController(service, timeService);
+        ReservationService service = new ReservationService(new ReservationJDBCDao(namedJdbcTemplate), timeService);
+        controller = new ReservationController(service);
     }
 
     @BeforeEach

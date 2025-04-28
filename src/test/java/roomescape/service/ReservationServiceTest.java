@@ -7,16 +7,20 @@ import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.dao.ReservationRepository;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.exceptions.EntityNotFoundException;
 import roomescape.fake.ReservationFakeRepository;
+import roomescape.fake.ReservationTimeFakeRepository;
+import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 public class ReservationServiceTest {
 
     private final ReservationRepository reservationRepository = new ReservationFakeRepository();
-    private final ReservationService reservationService = new ReservationService(reservationRepository);
+    private final ReservationTimeRepository reservationTimeRepository = new ReservationTimeFakeRepository();
+    private final ReservationTimeService timeService = new ReservationTimeService(reservationTimeRepository);
+    private final ReservationService reservationService = new ReservationService(reservationRepository, timeService);
 
     @Test
     @DisplayName("조회된 엔티티를 DTO로 매핑해 반환한다.")
@@ -34,9 +38,10 @@ public class ReservationServiceTest {
         //given
         List<ReservationResponse> given = reservationService.readReservation();
         assertThat(given.size()).isEqualTo(1);
+
+        //when
         long timeId = 1L;
         ReservationRequest request = new ReservationRequest("브라운", LocalDate.now(), timeId);
-        //when
         ReservationResponse actual = reservationService.postReservation(request);
         //then
         assertThat(actual.id()).isEqualTo(2);

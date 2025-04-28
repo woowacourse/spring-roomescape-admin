@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import java.sql.Time;
 import java.util.List;
@@ -22,7 +22,7 @@ public class ReservationTimeJDBCDao implements ReservationTimeRepository {
     }
 
     @Override
-    public boolean existsTimeById(long id) {
+    public boolean existsTimeById(Long id) {
         String sql = "select COUNT(*) from reservation_time where id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
         Integer count = namedJdbcTemplate.queryForObject(sql, params, Integer.class);
@@ -48,7 +48,7 @@ public class ReservationTimeJDBCDao implements ReservationTimeRepository {
     }
 
     @Override
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         String sql = "delete from reservation_time where id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
         int result = namedJdbcTemplate.update(sql, params);

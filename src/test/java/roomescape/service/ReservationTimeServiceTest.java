@@ -7,11 +7,11 @@ import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.dao.ReservationTimeRepository;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.exceptions.EntityNotFoundException;
 import roomescape.fake.ReservationTimeFakeRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 public class ReservationTimeServiceTest {
 

@@ -11,17 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.service.ReservationService;
-import roomescape.service.ReservationTimeService;
 
 @RestController
 public class ReservationController {
 
     private final ReservationService service;
-    private final ReservationTimeService timeService;
 
-    public ReservationController(ReservationService service, ReservationTimeService timeService) {
+    public ReservationController(ReservationService service) {
         this.service = service;
-        this.timeService = timeService;
     }
 
     @GetMapping("/reservations")
@@ -31,7 +28,6 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ReservationResponse postReservation(@RequestBody ReservationRequest request) {
-        timeService.existsTimeById(request.timeId());
         return service.postReservation(request);
     }
 

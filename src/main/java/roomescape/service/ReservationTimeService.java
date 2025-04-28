@@ -3,11 +3,11 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.dao.ReservationTimeRepository;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
+import roomescape.repository.ReservationTimeRepository;
 
 @Service
 @Transactional(readOnly = true)

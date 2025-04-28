@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class DateTimeConfig {
-    
+public class DefaultTimeConfig implements TimeConfig {
+
     @Bean
     public LocalDateTime now() {
         return LocalDateTime.now();

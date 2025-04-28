@@ -8,14 +8,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.controller.api.ReservationRestController;
-import roomescape.dto.ReservationGetResponse;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,6 +51,9 @@ public class MissionStepTest {
                 .body("size()", is(0)); // 아직 생성 요청이 없으니 Controller에서 임의로 넣어준 Reservation 갯수 만큼 검증하거나 0개임을 확인하세요.
     }
 
+    /*
+     * API 명세 변경으로 인해 미션 테스트 주석 처리
+     */
 //    @Test
 //    void 삼단계_예약의_추가와_삭제가_이루어진다() {
 //        Map<String, String> params = new HashMap<>();
@@ -97,6 +98,9 @@ public class MissionStepTest {
         }
     }
 
+    /*
+     * API 명세 변경으로 인해 미션 테스트 주석 처리
+     */
 //    @Test
 //    void 오단계_예약을_추가한다() {
 //        jdbcTemplate.update("INSERT INTO reservation(name, date, time) VALUES(?, ?, ?)", "브라운", "2023-08-05", "15:40");
@@ -111,6 +115,9 @@ public class MissionStepTest {
 //        assertThat(reservationGetResponses.size()).isEqualTo(count);
 //    }
 
+    /*
+     * API 명세 변경으로 인해 미션 테스트 주석 처리
+     */
 //    @Test
 //    void 육단계_예약을_추가하고_삭제한다() {
 //        Map<String, String> params = new HashMap<>();

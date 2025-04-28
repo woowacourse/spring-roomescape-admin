@@ -16,7 +16,7 @@ import roomescape.ReservationTestFixture;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class ReservationApiControllerTest {
+class ReservationRestControllerTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

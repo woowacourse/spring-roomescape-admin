@@ -2,15 +2,14 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.controller.dto.ReservationRequest;
-import roomescape.controller.dto.ReservationResponse;
 import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
+import roomescape.service.dto.ReservationRequest;
+import roomescape.service.dto.ReservationResponse;
 
 @Service
 public class ReservationService {
 
-    private static final int NOT_EFFECTED_ROW_COUNT = 0;
     private final ReservationDao reservationDao;
 
     public ReservationService(final ReservationDao reservationDao) {

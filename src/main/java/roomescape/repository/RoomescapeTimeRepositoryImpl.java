@@ -1,7 +1,6 @@
 package roomescape.repository;
 
 import java.sql.PreparedStatement;
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -53,9 +52,10 @@ public class RoomescapeTimeRepositoryImpl implements RoomescapeTimeRepository {
 
     private RowMapper<ReservationTime> reservationTimeRowMapper() {
         return (rs, rowNum) -> {
-            ReservationTime reservationTime = new ReservationTime(LocalTime.parse(rs.getString("start_at")))
-                    .toEntity(rs.getLong("id"));
-            return reservationTime;
+            return new ReservationTime(
+                    rs.getLong("id"),
+                    rs.getString("start_at")
+            );
         };
     }
 }

@@ -12,6 +12,11 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
+    public ReservationTime(final long id, final String input) {
+        this.id = id;
+        this.startAt = LocalTime.parse(input);
+    }
+
     public ReservationTime(final LocalTime startAt) {
         this.startAt = startAt;
     }

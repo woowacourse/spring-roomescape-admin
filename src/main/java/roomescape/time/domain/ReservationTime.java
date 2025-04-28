@@ -12,8 +12,8 @@ public class ReservationTime {
         this.startAt = time;
     }
 
-    public ReservationTime(LocalTime time) {
-        this(null, time);
+    public static ReservationTime create(LocalTime time) {
+        return new ReservationTime(null, time);
     }
 
     public Long getId() {

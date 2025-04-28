@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.time.controller.request.ReservationTimeCreateRequest;
 import roomescape.time.controller.response.ReservationTimeResponse;
-import roomescape.time.service.ReservationTimeService;
+import roomescape.time.service.ReservationTimeServiceImpl;
 
 @RestController
 public class ReservationTimeApiController {
 
-    private final ReservationTimeService reservationTimeService;
+    private final ReservationTimeServiceImpl reservationTimeService;
 
-    public ReservationTimeApiController(ReservationTimeService reservationTimeService) {
+    public ReservationTimeApiController(ReservationTimeServiceImpl reservationTimeService) {
         this.reservationTimeService = reservationTimeService;
     }
 

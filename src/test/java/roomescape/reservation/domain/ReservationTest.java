@@ -18,7 +18,7 @@ public class ReservationTest {
     void 현재나_이전_시간에는_예약할_수_없다(int minuteOffset) {
         LocalDate today = LocalDate.now();
         LocalTime time = LocalTime.now().minusMinutes(minuteOffset);
-        ReservationTime reservationTime = new ReservationTime(time);
+        ReservationTime reservationTime = ReservationTime.create(time);
 
         assertThatThrownBy(() -> Reservation.create(
                 "홍길동", today, reservationTime))
@@ -28,7 +28,7 @@ public class ReservationTest {
     @Test
     void 현재_이후_시간에는_예약이_성공한다() {
         LocalDate today = LocalDate.now();
-        ReservationTime futureTime = new ReservationTime(LocalTime.now().plusMinutes(10));
+        ReservationTime futureTime = ReservationTime.create(LocalTime.now().plusMinutes(10));
 
         assertThatCode(() -> Reservation.create(
                 "홍길동", today, futureTime))

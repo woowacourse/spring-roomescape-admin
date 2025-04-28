@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import roomescape.reservation.controller.request.ReservationCreateRequest;
 import roomescape.reservation.controller.response.ReservationResponse;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.repository.ReservationRepository;
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.service.ReservationTimeService;
 

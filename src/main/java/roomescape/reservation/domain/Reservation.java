@@ -13,7 +13,7 @@ public class Reservation {
     private final ReservationDate reservationDate;
     private final ReservationTime reservationTime;
 
-    private Reservation(
+    public Reservation(
             Long id,
             String reserverName,
             LocalDate reservationDate,
@@ -23,15 +23,6 @@ public class Reservation {
         this.reserverName = new ReserverName(reserverName);
         this.reservationDate = new ReservationDate(reservationDate);
         this.reservationTime = reservationTime;
-    }
-
-    public static Reservation create(
-            Long id,
-            String reserverName,
-            LocalDate reservationDate,
-            ReservationTime reservationTime
-    ) {
-        return new Reservation(id, reserverName, reservationDate, reservationTime);
     }
 
     public static Reservation create(

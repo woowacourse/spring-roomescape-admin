@@ -12,14 +12,15 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.service.ReservationRepository;
 import roomescape.time.domain.ReservationTime;
 
 @Repository
-public class ReservationRepository {
+public class ReservationJdbcRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationJdbcRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -30,7 +31,7 @@ public class ReservationRepository {
                 "on r.time_id = t.id";
 
         return jdbcTemplate.query(sql, (resultSet, rowNum) ->
-                Reservation.create(
+                new Reservation(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         LocalDate.parse(resultSet.getString("date")),
@@ -52,7 +53,7 @@ public class ReservationRepository {
                 .addValue("time_id", reservation.getTimeId());
         Long id = jdbcInsert.executeAndReturnKey(parameters).longValue();
 
-        return Reservation.create(id, reservation.getReserverName(), reservation.getDate(),
+        return new Reservation(id, reservation.getReserverName(), reservation.getDate(),
                 new ReservationTime(reservation.getTimeId(), reservation.getStartAt()));
     }
 
@@ -66,7 +67,7 @@ public class ReservationRepository {
         Reservation reservation;
         try {
             reservation = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
-                    Reservation.create(
+                    new Reservation(
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
                             LocalDate.parse(resultSet.getString("date")),

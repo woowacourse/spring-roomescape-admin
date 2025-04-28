@@ -11,7 +11,7 @@ import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.fixture.ReservationFixture;
 import roomescape.reservationTime.domain.ReservationTime;
 import roomescape.reservationTime.fixture.ReservationTimeFixture;
-import roomescape.reservationTime.repository.ReservationTimeRepositoryImpl;
+import roomescape.reservationTime.repository.H2ReservationTimeRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,13 +19,13 @@ import java.time.LocalTime;
 import java.util.List;
 
 @JdbcTest
-@Import({ReservationRepositoryImpl.class, ReservationTimeRepositoryImpl.class})
+@Import({roomescape.reservation.repository.H2ReservationRepository.class, H2ReservationTimeRepository.class})
 class ReservationRepositoryImplTest {
 
     @Autowired
-    private ReservationRepositoryImpl reservationRepository;
+    private roomescape.reservation.repository.H2ReservationRepository reservationRepository;
     @Autowired
-    private ReservationTimeRepositoryImpl reservationTimeRepository;
+    private H2ReservationTimeRepository reservationTimeRepository;
 
     @DisplayName("존재하지 않는 예약 ID로 조회하면 예외가 발생한다.")
     @Test

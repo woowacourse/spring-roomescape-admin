@@ -24,11 +24,11 @@ public class ReservationDAO {
     }
 
     public Reservation insert(Reservation reservation) {
-        Long reservationId = insertWithKeyHolder(reservation);
+        Long reservationId = insertAndGetGeneratedId(reservation);
         return reservation.withId(reservationId);
     }
 
-    private Long insertWithKeyHolder(Reservation reservation) {
+    private Long insertAndGetGeneratedId(Reservation reservation) {
         String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();

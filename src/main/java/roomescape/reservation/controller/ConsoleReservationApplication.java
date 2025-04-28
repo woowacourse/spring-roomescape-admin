@@ -12,7 +12,7 @@ import roomescape.reservationTime.view.ReservationTimeOutputView;
 
 import java.util.List;
 
-public class ConsoleReservationController {
+public class ConsoleReservationApplication {
 
     private final ReservationInputView reservationInputView;
     private final ReservationOutputView reservationOutputView;
@@ -20,7 +20,7 @@ public class ConsoleReservationController {
     private final ReservationService service;
     private final ReservationTimeService reservationTimeService;
 
-    public ConsoleReservationController(ReservationInputView reservationInputView, ReservationOutputView reservationOutputView, ReservationTimeOutputView reservationTimeOutputView, ReservationService service, ReservationTimeService reservationTimeService) {
+    public ConsoleReservationApplication(ReservationInputView reservationInputView, ReservationOutputView reservationOutputView, ReservationTimeOutputView reservationTimeOutputView, ReservationService service, ReservationTimeService reservationTimeService) {
         this.reservationInputView = reservationInputView;
         this.reservationOutputView = reservationOutputView;
         this.reservationTimeOutputView = reservationTimeOutputView;

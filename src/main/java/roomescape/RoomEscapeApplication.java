@@ -3,13 +3,13 @@ package roomescape;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import roomescape.reservation.controller.CommandDispatcher;
-import roomescape.reservation.controller.ConsoleReservationController;
+import roomescape.reservation.controller.ConsoleReservationApplication;
 import roomescape.reservation.repository.MemoryReservationRepository;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.service.ReservationService;
 import roomescape.reservation.view.ReservationInputView;
 import roomescape.reservation.view.ReservationOutputView;
-import roomescape.reservationTime.controller.ConsoleReservationTimeController;
+import roomescape.reservationTime.controller.ConsoleReservationTimeApplication;
 import roomescape.reservationTime.repository.MemoryReservationTimeRepository;
 import roomescape.reservationTime.repository.ReservationTimeRepository;
 import roomescape.reservationTime.service.ReservationTimeService;
@@ -50,8 +50,8 @@ public class RoomEscapeApplication {
         ReservationService reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
         ReservationTimeService reservationTimeService = new ReservationTimeService(reservationTimeRepository);
 
-        ConsoleReservationController reservationController = new ConsoleReservationController(reservationInputView, reservationOutputView, reservationTimeOutputView, reservationService, reservationTimeService);
-        ConsoleReservationTimeController reservationTimeController = new ConsoleReservationTimeController(reservationTimeInputView, reservationTimeOutputView, reservationTimeService);
+        ConsoleReservationApplication reservationController = new ConsoleReservationApplication(reservationInputView, reservationOutputView, reservationTimeOutputView, reservationService, reservationTimeService);
+        ConsoleReservationTimeApplication reservationTimeController = new ConsoleReservationTimeApplication(reservationTimeInputView, reservationTimeOutputView, reservationTimeService);
 
         CommandDispatcher dispatcher = new CommandDispatcher(reservationController, reservationTimeController);
 

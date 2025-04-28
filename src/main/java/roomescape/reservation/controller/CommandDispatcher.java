@@ -1,6 +1,6 @@
 package roomescape.reservation.controller;
 
-import roomescape.reservationTime.controller.ConsoleReservationTimeController;
+import roomescape.reservationTime.controller.ConsoleReservationTimeApplication;
 
 import java.util.Map;
 
@@ -8,7 +8,7 @@ public class CommandDispatcher {
 
     private final Map<String, Runnable> commandMap;
 
-    public CommandDispatcher(ConsoleReservationController reservationController, ConsoleReservationTimeController reservationTimeController) {
+    public CommandDispatcher(ConsoleReservationApplication reservationController, ConsoleReservationTimeApplication reservationTimeController) {
         commandMap = Map.of(
                 "1", reservationController::readAllReservation,
                 "2", reservationController::addReservation,

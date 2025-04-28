@@ -9,13 +9,13 @@ import roomescape.reservationTime.view.ReservationTimeOutputView;
 
 import java.util.List;
 
-public class ConsoleReservationTimeController {
+public class ConsoleReservationTimeApplication {
 
     private final ReservationTimeInputView inputView;
     private final ReservationTimeOutputView outputView;
     private final ReservationTimeService service;
 
-    public ConsoleReservationTimeController(ReservationTimeInputView inputView, ReservationTimeOutputView outputView, ReservationTimeService service) {
+    public ConsoleReservationTimeApplication(ReservationTimeInputView inputView, ReservationTimeOutputView outputView, ReservationTimeService service) {
         this.inputView = inputView;
         this.outputView = outputView;
         this.service = service;

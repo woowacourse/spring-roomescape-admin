@@ -16,16 +16,15 @@ import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationDao {
+
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert insertReservation;
-    private ReservationTimeDao reservationTimeDao;
 
     public ReservationDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertReservation = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
-        reservationTimeDao = new ReservationTimeDao(jdbcTemplate);
     }
 
     public List<Reservation> findAll() {
@@ -56,13 +55,13 @@ public class ReservationDao {
         return new ReservationTime(LocalTime.parse(time));
     }
 
-    public Reservation insert(Reservation reservation, long timeId) {
+    public Reservation insert(Reservation reservation, ReservationTime reservationTime) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", reservation.getPersonName());
         parameters.put("date", reservation.getDate());
-        parameters.put("time_id", timeId);
+        parameters.put("time_id", reservationTime.getId());
         long newId = insertReservation.executeAndReturnKey(parameters).longValue();
-        ReservationTime reservationTime = reservationTimeDao.findById(timeId);
+
         return new Reservation(newId, reservation, reservationTime);
     }
 

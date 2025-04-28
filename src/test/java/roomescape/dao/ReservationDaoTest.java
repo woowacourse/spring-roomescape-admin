@@ -5,6 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Person;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @JdbcTest
 class ReservationDaoTest {
@@ -57,8 +59,8 @@ class ReservationDaoTest {
     void insertTest() {
         Person person = new Person("아마");
         Reservation reservation = new Reservation(person, LocalDate.of(2025, 10, 25));
-
-        reservationDao.insert(reservation, 1);
+        ReservationTime reservationTime = new ReservationTime(1, LocalTime.of(10, 0));
+        reservationDao.insert(reservation, reservationTime);
         int size = jdbcTemplate.queryForObject("select count(*) from reservation", Integer.class);
         assertThat(size).isEqualTo(3);
     }

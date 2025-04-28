@@ -1,12 +1,10 @@
 package roomescape.service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
-import roomescape.dao.ReservationTimeDao;
 import roomescape.dao.ReservationDao;
+import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
@@ -46,6 +44,9 @@ public class ReservationService {
     }
 
     public void deleteReservation(Long id) {
-        reservationDao.deleteById(id);
+        int deleteCount = reservationDao.deleteById(id);
+        if(deleteCount == 0) {
+            throw new IllegalArgumentException("해당 id가 존재하지 않습니다.");
+        }
     }
 }

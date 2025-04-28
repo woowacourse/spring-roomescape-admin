@@ -40,7 +40,7 @@ public class ReservationTimeDAO implements EntityRepository<ReservationTime> {
         String sql = "select * from reservation_time";
 
         return jdbcTemplate.query(sql,
-                (resultSet, rowNum) -> parseReservationTime(resultSet)
+                (resultSet, rowNum) -> reservationTimeOf(resultSet)
         );
     }
 
@@ -53,7 +53,7 @@ public class ReservationTimeDAO implements EntityRepository<ReservationTime> {
         try {
             ReservationTime reservationTime = jdbcTemplate.queryForObject(sql,
                     params,
-                    (resultSet, rowNum) -> parseReservationTime(resultSet)
+                    (resultSet, rowNum) -> reservationTimeOf(resultSet)
             );
 
             return Optional.ofNullable(reservationTime);
@@ -62,7 +62,7 @@ public class ReservationTimeDAO implements EntityRepository<ReservationTime> {
         }
     }
 
-    private ReservationTime parseReservationTime(ResultSet resultSet) throws SQLException {
+    private ReservationTime reservationTimeOf(ResultSet resultSet) throws SQLException {
         return new ReservationTime(
                 resultSet.getLong("id"),
                 LocalTime.parse(resultSet.getString("start_at"))

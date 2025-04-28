@@ -44,7 +44,7 @@ public class ReservationDAO implements EntityRepository<Reservation> {
                 """;
 
         return jdbcTemplate.query(sql,
-                (resultSet, rowNum) -> parseReservation(resultSet)
+                (resultSet, rowNum) -> reservationOf(resultSet)
         );
     }
 
@@ -58,21 +58,21 @@ public class ReservationDAO implements EntityRepository<Reservation> {
 
         Map<String, Long> params = Map.of("reservation_id", id);
 
-        return parseReservation(sql, params);
+        return reservationOf(sql, params);
     }
 
-    private Optional<Reservation> parseReservation(String sql, Map<String, Long> params) {
+    private Optional<Reservation> reservationOf(String sql, Map<String, Long> params) {
         try {
             Reservation reservation = jdbcTemplate.queryForObject(sql,
                     params,
-                    (resultSet, rowNum) -> parseReservation(resultSet));
+                    (resultSet, rowNum) -> reservationOf(resultSet));
             return Optional.ofNullable(reservation);
         } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException("entity not found");
         }
     }
 
-    private Reservation parseReservation(ResultSet resultSet) throws SQLException {
+    private Reservation reservationOf(ResultSet resultSet) throws SQLException {
         return new Reservation(
                 resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),

@@ -44,7 +44,7 @@ public class ReservationControllerMockMvcTest {
     }
 
     @Test
-    @DisplayName("/admin/reservation 요청 시 예약 관리 페이지 응답")
+    @DisplayName("예약 목록을 조회한다.")
     void readReservation() {
         ReservationResponse response1 = new ReservationResponse(1L, "브라운", LocalDate.now().plusDays(1), 1L);
         ReservationResponse response2 = new ReservationResponse(2L, "네오", LocalDate.now().plusDays(1), 1L);
@@ -67,7 +67,7 @@ public class ReservationControllerMockMvcTest {
     }
 
     @Test
-    @DisplayName("예약 관리 페이지 내에서 예약 추가")
+    @DisplayName("예약 관리 페이지 내에서 예약 추가한다.")
     void postReservation() {
         LocalDate fixedDate = LocalDate.of(2023, 5, 15);
         Long expectedTimeId = 1L;
@@ -90,7 +90,7 @@ public class ReservationControllerMockMvcTest {
     }
 
     @Test
-    @DisplayName("존재하는 ID로 삭제 요청 시 성공적으로 처리되어야 한다")
+    @DisplayName("존재하는 ID로 삭제 요청 시 성공적으로 처리되어야 한다.")
     void deleteExistingReservation() {
         long reservationId = 1L;
 
@@ -105,7 +105,7 @@ public class ReservationControllerMockMvcTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 ID로 삭제 요청 시 404 응답이 반환되어야 한다")
+    @DisplayName("존재하지 않는 ID로 삭제 요청 시 404 응답이 반환되어야 한다.")
     void deleteNonExistingReservation() {
         long nonExistingId = 999L;
 
@@ -122,7 +122,7 @@ public class ReservationControllerMockMvcTest {
     }
 
     @Test
-    @DisplayName("서버 내부 오류 발생 시 500 응답이 반환되어야 한다")
+    @DisplayName("서버 내부 오류 발생 시 500 응답이 반환되어야 한다.")
     void handleServerInternalError() {
         when(reservationService.readReservation()).thenThrow(new RuntimeException("데이터베이스 오류"));
 

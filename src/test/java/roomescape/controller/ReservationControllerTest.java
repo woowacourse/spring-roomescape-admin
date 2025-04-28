@@ -89,7 +89,7 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("예약 관리 페이지 내에서 예약 추가")
+    @DisplayName("예약 관리 페이지 내에서 예약 추가한다.")
     void postReservation() {
         //given
         LocalDate fixedDate = LocalDate.of(2026, 5, 15);
@@ -111,7 +111,7 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("존재하는 ID로 삭제 요청 시 성공적으로 처리되어야 한다")
+    @DisplayName("존재하는 ID로 삭제 요청 시 성공적으로 처리되어야 한다.")
     void deleteExistingReservation() {
         //given
         ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(15, 0));
@@ -146,7 +146,7 @@ public class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 ID로 삭제 요청 시 404 응답이 반환되어야 한다")
+    @DisplayName("존재하지 않는 ID로 삭제 요청 시 404 응답이 반환되어야 한다.")
     void deleteNonExistingReservation() {
         //given
         long nonExistingId = 999L;

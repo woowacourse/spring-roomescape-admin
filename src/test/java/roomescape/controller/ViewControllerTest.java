@@ -12,7 +12,7 @@ import org.springframework.test.annotation.DirtiesContext;
 public class ViewControllerTest {
 
     @Test
-    @DisplayName("/admin으로 요청시 메인 페이지 응답")
+    @DisplayName("/admin으로 요청 시 메인 페이지로 응답한다.")
     void getMainPage() {
         RestAssured.given().log().all()
                 .when().get("/admin")
@@ -21,7 +21,7 @@ public class ViewControllerTest {
     }
 
     @Test
-    @DisplayName("/admin/reservation 요청 시 예약 관리 페이지 응답")
+    @DisplayName("/admin/reservation 요청 시 예약 관리 페이지로 응답한다.")
     void getReservationPage() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")

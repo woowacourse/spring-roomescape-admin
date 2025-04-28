@@ -99,7 +99,7 @@ public class ReservationTimeControllerTest {
     }
 
     @Test
-    @DisplayName("존재하는 ID로 삭제 요청 시 성공적으로 처리되어야 한다")
+    @DisplayName("존재하는 ID로 삭제 요청 시 성공적으로 처리되어야 한다.")
     void deleteExistingReservationTime() {
         //given
         ReservationTime reservationTime1 = new ReservationTime(1L, LocalTime.of(15, 50));
@@ -127,7 +127,7 @@ public class ReservationTimeControllerTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 ID로 삭제 요청 시 404 응답이 반환되어야 한다")
+    @DisplayName("존재하지 않는 ID로 삭제 요청 시 404 응답이 반환되어야 한다.")
     void deleteNonExistingReservationTime() {
         //given
         long nonExistingId = 999L;

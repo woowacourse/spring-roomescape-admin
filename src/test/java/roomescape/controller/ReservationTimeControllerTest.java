@@ -20,7 +20,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import roomescape.dao.ReservationTimeH2Dao;
+import roomescape.dao.ReservationTimeJDBCDao;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.entity.Reservation;
@@ -42,7 +42,7 @@ public class ReservationTimeControllerTest {
                 .build();
         namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 
-        ReservationTimeService service = new ReservationTimeService(new ReservationTimeH2Dao(namedJdbcTemplate));
+        ReservationTimeService service = new ReservationTimeService(new ReservationTimeJDBCDao(namedJdbcTemplate));
         controller = new ReservationTimeController(service);
     }
 

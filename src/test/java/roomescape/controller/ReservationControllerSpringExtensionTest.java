@@ -25,8 +25,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import roomescape.config.SpringExtensionTestConfig;
-import roomescape.dao.ReservationH2Dao;
-import roomescape.dao.ReservationTimeH2Dao;
+import roomescape.dao.ReservationJDBCDao;
+import roomescape.dao.ReservationTimeJDBCDao;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.entity.Reservation;
@@ -55,8 +55,8 @@ public class ReservationControllerSpringExtensionTest {
 
         namedJdbcTemplate.update(timeSql, params, keyHolder, new String[]{"id"});
 
-        ReservationService service = new ReservationService(new ReservationH2Dao(namedJdbcTemplate));
-        ReservationTimeService timeService = new ReservationTimeService(new ReservationTimeH2Dao(namedJdbcTemplate));
+        ReservationService service = new ReservationService(new ReservationJDBCDao(namedJdbcTemplate));
+        ReservationTimeService timeService = new ReservationTimeService(new ReservationTimeJDBCDao(namedJdbcTemplate));
         controller = new ReservationController(service, timeService);
     }
 

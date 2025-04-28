@@ -14,11 +14,11 @@ import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
 
 @Repository
-public class ReservationH2Dao implements ReservationDao {
+public class ReservationJDBCDao implements ReservationDao {
 
     private final NamedParameterJdbcTemplate namedJdbcTemplate;
 
-    public ReservationH2Dao(NamedParameterJdbcTemplate namedJdbcTemplate) {
+    public ReservationJDBCDao(NamedParameterJdbcTemplate namedJdbcTemplate) {
         this.namedJdbcTemplate = namedJdbcTemplate;
     }
 

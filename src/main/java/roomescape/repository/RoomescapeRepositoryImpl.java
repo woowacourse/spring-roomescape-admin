@@ -22,36 +22,19 @@ public class RoomescapeRepositoryImpl implements RoomescapeRepository {
 
     @Override
     public Reservation findById(final long id) {
-        String sql =  """
-                SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value
-                FROM reservation as r 
-                INNER JOIN reservation_time AS t
-                ON r.time_id = t.id
-                WHERE r.id = ?
-                """;
+        String sql = joinReservationAndTime("WHERE r.id = ?");
         return template.queryForObject(sql, reservationRowMapper(), id);
     }
 
     @Override
     public List<Reservation> findByDate(final LocalDate date) {
-        String sql = """
-                SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value
-                FROM reservation as r 
-                INNER JOIN reservation_time AS t
-                ON r.time_id = t.id
-                WHERE r.date = ?
-                """;
+        String sql = joinReservationAndTime("WHERE r.date = ?");
         return template.query(sql, reservationRowMapper(), date.toString());
     }
 
     @Override
     public List<Reservation> findAll() {
-        String sql = """
-                SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value
-                FROM reservation as r 
-                INNER JOIN reservation_time AS t
-                ON r.time_id = t.id
-                """;
+        String sql = joinReservationAndTime("");
         return template.query(sql, reservationRowMapper());
     }
 
@@ -79,13 +62,7 @@ public class RoomescapeRepositoryImpl implements RoomescapeRepository {
 
     @Override
     public boolean existsByDateAndTime(final LocalDate date, final ReservationTime time) {
-        String sql = """
-                SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value
-                FROM reservation as r 
-                INNER JOIN reservation_time AS t
-                ON r.time_id = t.id
-                WHERE r.date = ? and t.start_at = ?
-                """;
+        String sql = joinReservationAndTime("WHERE r.date = ? and t.start_at = ?");
         List<Reservation> result = template.query(sql, reservationRowMapper(), date.toString(),
                 time.getStartAt().toString());
         return !result.isEmpty();
@@ -102,5 +79,15 @@ public class RoomescapeRepositoryImpl implements RoomescapeRepository {
             ).toEntity(rs.getLong("reservation_id"));
             return reservation;
         };
+    }
+
+    private String joinReservationAndTime(String where) {
+        String sql = """
+                SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value
+                FROM reservation as r 
+                INNER JOIN reservation_time AS t
+                ON r.time_id = t.id
+                """;
+        return sql + where;
     }
 }

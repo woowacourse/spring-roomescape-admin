@@ -18,7 +18,6 @@ public class ReservationCommandUseCaseImpl implements ReservationCommandUseCase 
 
     @Override
     public Reservation create(final CreateReservationServiceRequest createReservationServiceRequest) {
-
         return reservationRepository.save(
                 ReservationConverter.toDomain(createReservationServiceRequest));
     }

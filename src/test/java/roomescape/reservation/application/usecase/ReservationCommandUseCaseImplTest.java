@@ -1,35 +1,33 @@
-package roomescape.reservation.application;
+package roomescape.reservation.application.usecase;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.reservation.application.dto.CreateReservationServiceRequest;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.ReservationDate;
 import roomescape.reservation.domain.ReservationId;
 import roomescape.reservation.domain.ReservationRepository;
 import roomescape.reservation.domain.ReserverName;
-import roomescape.reservation.ui.dto.CreateReservationWebRequest;
-import roomescape.reservation.ui.dto.ReservationResponse;
 import roomescape.reservation_time.domain.ReservationTime;
 import roomescape.reservation_time.domain.ReservationTimeId;
 import roomescape.reservation_time.domain.ReservationTimeRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@Transactional
 @SpringBootTest
-class ReservationServiceImplTest {
+@Transactional
+class ReservationCommandUseCaseImplTest {
 
     @Autowired
-    private ReservationService reservationService;
+    private ReservationCommandUseCaseImpl reservationCommandUseCase;
 
     @Autowired
     private ReservationRepository reservationRepository;
@@ -38,7 +36,7 @@ class ReservationServiceImplTest {
     private ReservationTimeRepository reservationTimeRepository;
 
     @Test
-    @DisplayName("예약을 생성하고 조회할 수 있다")
+    @DisplayName("예약을 생성할 수 있다")
     void createAndFindReservation() {
         // given
         final ReservationTime reservationTime = reservationTimeRepository.save(
@@ -46,20 +44,24 @@ class ReservationServiceImplTest {
                         ReservationTimeId.unassigned(),
                         LocalTime.of(10, 0)));
 
-        final CreateReservationWebRequest requestDto = new CreateReservationWebRequest(
+        final CreateReservationServiceRequest requestDto = new CreateReservationServiceRequest(
                 "브라운",
                 LocalDate.of(2023, 8, 5),
-                reservationTime.getId().getValue()
+                reservationTime
         );
 
         // when
-        final ReservationResponse responseDto = reservationService.create(requestDto);
-        final List<ReservationResponse> reservations = reservationService.getAll();
+        final Reservation reservation = reservationCommandUseCase.create(requestDto);
 
         // then
-        assertThat(reservations).hasSize(1);
-        assertThat(reservations.getFirst().id()).isEqualTo(responseDto.id());
-        assertThat(reservations.getFirst().name()).isEqualTo("브라운");
+        final Reservation found = reservationRepository.findById(reservation.getId())
+                .orElseThrow(NoSuchElementException::new);
+
+        assertThat(reservation).isEqualTo(found);
+        assertThat(reservation.getId()).isEqualTo(found.getId());
+        assertThat(reservation.getName()).isEqualTo(found.getName());
+        assertThat(reservation.getDate()).isEqualTo(found.getDate());
+        assertThat(reservation.getTime()).isEqualTo(found.getTime());
     }
 
     @Test
@@ -79,7 +81,7 @@ class ReservationServiceImplTest {
         ));
 
         // when
-        reservationService.delete(reservation.getId());
+        reservationCommandUseCase.delete(reservation.getId());
 
         // then
         assertThat(reservationRepository.findAll()).isEmpty();
@@ -93,7 +95,7 @@ class ReservationServiceImplTest {
 
         // when
         // then
-        assertThatThrownBy(() -> reservationService.delete(id))
+        assertThatThrownBy(() -> reservationCommandUseCase.delete(id))
                 .isInstanceOf(NoSuchElementException.class);
     }
 }

@@ -43,7 +43,7 @@ public class ConsoleReservationTimeController {
             service.delete(id);
             outputView.printDeleteReservationTimeResult();
         } catch (CustomException e) {
-            outputView.printDeleteReservationTimeResult();
+            outputView.printDeleteReservationTimeResult(e.getMessage());
         }
     }
 }

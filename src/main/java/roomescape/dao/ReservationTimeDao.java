@@ -2,7 +2,6 @@ package roomescape.dao;
 
 import roomescape.entity.ReservationTime;
 
-import java.time.LocalTime;
 import java.util.List;
 
 public interface ReservationTimeDao {
@@ -15,5 +14,5 @@ public interface ReservationTimeDao {
 
     boolean deleteById(final Long id);
 
-    boolean existsByTime(final LocalTime time);
+    boolean exists(final ReservationTime reservationTime);
 }

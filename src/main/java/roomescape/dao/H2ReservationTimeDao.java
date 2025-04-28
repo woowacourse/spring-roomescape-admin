@@ -57,9 +57,9 @@ public class H2ReservationTimeDao implements ReservationTimeDao {
     }
 
     @Override
-    public boolean existsByTime(final LocalTime time) {
+    public boolean exists(final ReservationTime reservationTime) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE start_at = ?";
-        List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, timeRowMapper, time);
+        List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, timeRowMapper, reservationTime.getStartAt());
         return !reservationTimes.isEmpty();
     }
 }

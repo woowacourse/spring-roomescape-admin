@@ -50,7 +50,7 @@ public class FakeReservationTimeDao implements ReservationTimeDao {
     }
 
     @Override
-    public boolean existsByTime(final LocalTime time) {
+    public boolean exists(final ReservationTime time) {
         return reservationTimes.values().stream()
                 .anyMatch(reservationTime -> reservationTime.isSameTime(time));
     }

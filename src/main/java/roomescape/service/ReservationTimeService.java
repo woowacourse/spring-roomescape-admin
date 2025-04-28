@@ -25,7 +25,7 @@ public class ReservationTimeService {
 
     public ReservationTimeResponse createReservationTime(final ReservationTimeRequest reservationTimeRequest) {
         ReservationTime reservationTime = reservationTimeRequest.toEntity();
-        if (reservationTimeDao.existsByTime(reservationTime.getStartAt())) {
+        if (reservationTimeDao.exists(reservationTime)) {
             throw new IllegalArgumentException("[ERROR] 이미 존재하는 예약 시간입니다.");
         }
         ReservationTime newReservationTime = reservationTimeDao.insert(reservationTime);

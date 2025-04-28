@@ -25,8 +25,8 @@ public class ReservationTime {
         return new ReservationTime(id, startAt);
     }
 
-    public boolean isSameTime(final LocalTime time) {
-        return startAt.equals(time);
+    public boolean isSameTime(final ReservationTime time) {
+        return startAt.equals(time.getStartAt());
     }
 
     public Long getId() {

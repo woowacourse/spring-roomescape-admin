@@ -61,11 +61,13 @@ class H2ReservationTimeDaoTest {
 
     @Test
     void 특정_예약시간이_존재하면_true를_반환한다() {
-        assertThat(reservationTimeDao.existsByTime(LocalTime.of(10, 0))).isTrue();
+        ReservationTime existReservationTime = ReservationTime.of(LocalTime.of(10, 0));
+        assertThat(reservationTimeDao.exists(existReservationTime)).isTrue();
     }
 
     @Test
     void 특정_예약시간이_존재하지않으면_false를_반환한다() {
-        assertThat(reservationTimeDao.existsByTime(LocalTime.of(12, 0))).isFalse();
+        ReservationTime notExistReservationTime = ReservationTime.of(LocalTime.of(12, 0));
+        assertThat(reservationTimeDao.exists(notExistReservationTime)).isFalse();
     }
 }

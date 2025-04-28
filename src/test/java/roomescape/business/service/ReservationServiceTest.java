@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -62,7 +63,7 @@ public class ReservationServiceTest {
 
         // when & then
         assertThatThrownBy(() -> reservationService.create(reservationRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(NoSuchElementException.class)
                 .hasMessage("해당하는 방탈출 시간 id를 찾을 수 없습니다. id : 2");
     }
 
@@ -120,6 +121,6 @@ public class ReservationServiceTest {
     void removeOrThrowIfIdNotExists() {
         // given & when & then
         assertThatThrownBy(() -> reservationService.remove(1L))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(NoSuchElementException.class);
     }
 }

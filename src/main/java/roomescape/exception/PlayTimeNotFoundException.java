@@ -1,6 +1,8 @@
 package roomescape.exception;
 
-public class PlayTimeNotFoundException extends IllegalArgumentException {
+import java.util.NoSuchElementException;
+
+public class PlayTimeNotFoundException extends NoSuchElementException {
 
     private static final String DEFAULT_MESSAGE = "해당하는 방탈출 시간 id를 찾을 수 없습니다. id : ";
 

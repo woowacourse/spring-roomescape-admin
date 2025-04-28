@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalTime;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,7 +59,7 @@ class PlayPlayTimeServiceTest {
 
         // when & then
         assertThatThrownBy(() -> playTimeService.find(id))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(NoSuchElementException.class);
     }
 
     @DisplayName("모든 방탈출 시간을 조회한다.")
@@ -92,6 +93,6 @@ class PlayPlayTimeServiceTest {
     void removeOrThrowIfIdNotExists() {
         // given & when & then
         assertThatThrownBy(() -> playTimeService.remove(1L))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(NoSuchElementException.class);
     }
 }

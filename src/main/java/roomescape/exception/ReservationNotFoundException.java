@@ -1,6 +1,8 @@
 package roomescape.exception;
 
-public class ReservationNotFoundException extends IllegalArgumentException {
+import java.util.NoSuchElementException;
+
+public class ReservationNotFoundException extends NoSuchElementException {
 
     private static final String DEFAULT_MESSAGE = "해당하는 예약 id를 찾을 수 없습니다. id : ";
 

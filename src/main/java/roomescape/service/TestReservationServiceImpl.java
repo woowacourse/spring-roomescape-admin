@@ -2,7 +2,6 @@ package roomescape.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
@@ -15,7 +14,7 @@ public class TestReservationServiceImpl implements ReservationService {
     public List<ReservationResponse> findAllReservations() {
         return reservations.stream()
                 .map(ReservationResponse::from)
-                .collect(Collectors.toUnmodifiableList());
+                .toList();
     }
 
     @Override
@@ -28,9 +27,8 @@ public class TestReservationServiceImpl implements ReservationService {
 
     @Override
     public int deleteReservationById(final Long id) {
-        final int count = (int) reservations.stream()
+        return (int) reservations.stream()
                 .filter(reservation -> reservation.getId().equals(id))
                 .count();
-        return count;
     }
 }

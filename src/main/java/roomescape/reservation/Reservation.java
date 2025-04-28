@@ -17,7 +17,7 @@ public class Reservation {
         this.reservationTime = reservationTime;
     }
 
-    public static Reservation reservationWithoutId(final String name, final LocalDate date, final ReservationTime reservationTime) {
+    public static Reservation createWithoutId(final String name, final LocalDate date, final ReservationTime reservationTime) {
         return new Reservation(null, name, date, reservationTime);
     }
 

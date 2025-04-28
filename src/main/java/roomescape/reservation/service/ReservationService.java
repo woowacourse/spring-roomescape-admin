@@ -23,7 +23,6 @@ public class ReservationService {
 
     public List<ReservationResponse> findAll() {
         List<Reservation> reservationDaoAll = reservationDao.findAll();
-
         return reservationDaoAll.stream()
                 .map(ReservationResponse::toDto)
                 .toList();
@@ -32,7 +31,11 @@ public class ReservationService {
     public Long create(ReservationCreateRequest request) {
         ReservationTime reservationTime = reservationTimeDao.findById(request.timeId())
                 .orElseThrow(NoSuchElementException::new);
-        Reservation reservation = request.toReservation(reservationTime);
+        Reservation reservation = Reservation.createWithoutId(
+                request.name(),
+                request.date(),
+                reservationTime
+        );
         return reservationDao.create(reservation);
     }
 

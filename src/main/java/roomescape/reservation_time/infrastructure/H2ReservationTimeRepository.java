@@ -31,6 +31,17 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
     );
 
     @Override
+    public boolean existsById(final ReservationTimeId id) {
+        final String sql = """
+                select exists
+                    (select 1 from reservation_time where id = ?)
+                """;
+
+        return Boolean.TRUE.equals(
+                jdbcTemplate.queryForObject(sql, Boolean.class, id.getValue()));
+    }
+
+    @Override
     public Optional<ReservationTime> findById(final ReservationTimeId id) {
         final String sql = "select id, start_at from reservation_time where id = ?";
         return JdbcUtils.queryForOptional(jdbcTemplate, sql, reservationTimeMapper, id.getValue())

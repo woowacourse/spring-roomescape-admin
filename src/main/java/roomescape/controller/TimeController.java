@@ -8,44 +8,32 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dao.TimeDAO;
-import roomescape.domain.Time;
 import roomescape.dto.TimeRequest;
 import roomescape.dto.TimeResponse;
+import roomescape.service.TimeService;
 
 @RestController
 public class TimeController {
 
-    private final TimeDAO timeDAO;
+    private final TimeService timeService;
 
-    public TimeController(final TimeDAO timeDAO) {
-        this.timeDAO = timeDAO;
+    public TimeController(final TimeService timeService) {
+        this.timeService = timeService;
     }
 
     @GetMapping("/times")
     public ResponseEntity<List<TimeResponse>> readTimes() {
-        final List<Time> times = timeDAO.findAllTime();
-        final List<TimeResponse> timeResponses = times.stream()
-                .map(TimeResponse::from)
-                .toList();
-        return ResponseEntity.ok(timeResponses);
+        return ResponseEntity.ok(timeService.findAllTime());
     }
 
     @PostMapping("/times")
     public ResponseEntity<TimeResponse> createTime(@RequestBody final TimeRequest timeRequest) {
-        final Time time = timeRequest.toEntity();
-        final Long id = timeDAO.insertTime(time);
-        if (id == -1L) {
-            return ResponseEntity.badRequest()
-                    .build();
-        }
-        time.setId(id);
-        return ResponseEntity.ok(TimeResponse.from(time));
+        return ResponseEntity.ok(timeService.createTime(timeRequest));
     }
 
     @DeleteMapping("/times/{id}")
     public ResponseEntity<Void> deleteTime(@PathVariable("id") final Long id) {
-        int count = timeDAO.deleteTimeById(id);
+        int count = timeService.deleteTimeById(id);
         if (count == 0) {
             return ResponseEntity.badRequest()
                     .build();

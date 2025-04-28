@@ -7,38 +7,17 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
-import roomescape.dao.TimeDAO;
-import roomescape.domain.Time;
 import roomescape.dto.TimeRequest;
 import roomescape.dto.TimeResponse;
+import roomescape.service.TestTimeServiceImpl;
 
 class TimeControllerTest {
-
-    private final TimeDAO testTimeDAO = new TimeDAO() {
-        @Override
-        public List<Time> findAllTime() {
-            return List.of();
-        }
-
-        @Override
-        public Long insertTime(final Time time) {
-            return 1L;
-        }
-
-        @Override
-        public int deleteTimeById(final Long id) {
-            if (id == 1L) {
-                return 1;
-            }
-            return 0;
-        }
-    };
 
     @Test
     @DisplayName("모든 시간 목록을 조회한다")
     void read_all_times() {
         // given
-        TimeController timeController = new TimeController(testTimeDAO);
+        TimeController timeController = new TimeController(new TestTimeServiceImpl());
 
         // when
         ResponseEntity<List<TimeResponse>> response = timeController.readTimes();
@@ -59,7 +38,7 @@ class TimeControllerTest {
         // given
         String startAt = "10:00";
         TimeRequest timeRequest = new TimeRequest(startAt);
-        TimeController timeController = new TimeController(testTimeDAO);
+        TimeController timeController = new TimeController(new TestTimeServiceImpl());
 
         // when
         ResponseEntity<TimeResponse> response = timeController.createTime(timeRequest);
@@ -76,7 +55,7 @@ class TimeControllerTest {
         // given
         String startAt = "10:00";
         TimeRequest timeRequest = new TimeRequest(startAt);
-        TimeController timeController = new TimeController(testTimeDAO);
+        TimeController timeController = new TimeController(new TestTimeServiceImpl());
         ResponseEntity<TimeResponse> createdResponse = timeController.createTime(timeRequest);
         Long id = createdResponse.getBody()
                 .id();
@@ -94,7 +73,7 @@ class TimeControllerTest {
     @DisplayName("존재하지 않는 예약 삭제시 400 반환")
     void delete_time_when_not_exist_id() {
         // given
-        TimeController timeController = new TimeController(testTimeDAO);
+        TimeController timeController = new TimeController(new TestTimeServiceImpl());
 
         // when
         ResponseEntity<Void> response = timeController.deleteTime(2L);

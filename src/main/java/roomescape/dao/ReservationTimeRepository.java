@@ -3,7 +3,7 @@ package roomescape.dao;
 import java.util.List;
 import roomescape.entity.ReservationTime;
 
-public interface ReservationTimeDao {
+public interface ReservationTimeRepository {
 
     boolean existsTimeById(long id);
 

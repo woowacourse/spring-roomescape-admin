@@ -13,7 +13,7 @@ import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
 
 @Repository
-public class ReservationTimeJDBCDao implements ReservationTimeDao {
+public class ReservationTimeJDBCDao implements ReservationTimeRepository {
 
     private final NamedParameterJdbcTemplate namedJdbcTemplate;
 

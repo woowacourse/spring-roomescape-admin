@@ -7,16 +7,16 @@ import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.dao.ReservationTimeDao;
+import roomescape.dao.ReservationTimeRepository;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.exceptions.EntityNotFoundException;
-import roomescape.fake.ReservationTimeFakeDao;
+import roomescape.fake.ReservationTimeFakeRepository;
 
 public class ReservationTimeServiceTest {
 
-    private final ReservationTimeDao reservationTimeDao = new ReservationTimeFakeDao();
-    private final ReservationTimeService reservationService = new ReservationTimeService(reservationTimeDao);
+    private final ReservationTimeRepository reservationTimeRepository = new ReservationTimeFakeRepository();
+    private final ReservationTimeService reservationService = new ReservationTimeService(reservationTimeRepository);
 
     @Test
     @DisplayName("time_id를 찾을 수 없다면, 예외가 발생한다.")

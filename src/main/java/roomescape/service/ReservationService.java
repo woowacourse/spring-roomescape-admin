@@ -3,7 +3,7 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.dao.ReservationDao;
+import roomescape.dao.ReservationRepository;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.entity.Reservation;
@@ -12,26 +12,26 @@ import roomescape.entity.Reservation;
 @Transactional(readOnly = true)
 public class ReservationService {
 
-    private final ReservationDao reservationDao;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationService(ReservationDao reservationDao) {
-        this.reservationDao = reservationDao;
+    public ReservationService(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
     }
 
     public List<ReservationResponse> readReservation() {
-        return reservationDao.findAll().stream()
+        return reservationRepository.findAll().stream()
                 .map(ReservationResponse::from)
                 .toList();
     }
 
     @Transactional
     public ReservationResponse postReservation(ReservationRequest request) {
-        Reservation newReservation = reservationDao.save(request.toEntity(), request.timeId());
+        Reservation newReservation = reservationRepository.save(request.toEntity(), request.timeId());
         return ReservationResponse.from(newReservation);
     }
 
     @Transactional
     public void deleteReservation(long id) {
-        reservationDao.deleteById(id);
+        reservationRepository.deleteById(id);
     }
 }

@@ -7,16 +7,16 @@ import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.dao.ReservationDao;
+import roomescape.dao.ReservationRepository;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.exceptions.EntityNotFoundException;
-import roomescape.fake.ReservationFakeDao;
+import roomescape.fake.ReservationFakeRepository;
 
 public class ReservationServiceTest {
 
-    private final ReservationDao reservationDao = new ReservationFakeDao();
-    private final ReservationService reservationService = new ReservationService(reservationDao);
+    private final ReservationRepository reservationRepository = new ReservationFakeRepository();
+    private final ReservationService reservationService = new ReservationService(reservationRepository);
 
     @Test
     @DisplayName("조회된 엔티티를 DTO로 매핑해 반환한다.")

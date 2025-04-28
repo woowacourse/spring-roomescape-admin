@@ -3,7 +3,7 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.dao.ReservationTimeDao;
+import roomescape.dao.ReservationTimeRepository;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.entity.ReservationTime;
@@ -13,9 +13,9 @@ import roomescape.exceptions.EntityNotFoundException;
 @Transactional(readOnly = true)
 public class ReservationTimeService {
 
-    private final ReservationTimeDao repository;
+    private final ReservationTimeRepository repository;
 
-    public ReservationTimeService(ReservationTimeDao repository) {
+    public ReservationTimeService(ReservationTimeRepository repository) {
         this.repository = repository;
     }
 

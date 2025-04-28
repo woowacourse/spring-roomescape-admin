@@ -3,7 +3,7 @@ package roomescape.dao;
 import java.util.List;
 import roomescape.entity.Reservation;
 
-public interface ReservationDao {
+public interface ReservationRepository {
 
     List<Reservation> findAll();
 

@@ -7,18 +7,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.dao.ReservationDao;
+import roomescape.dao.ReservationRepository;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
 
-public class ReservationFakeDao implements ReservationDao {
+public class ReservationFakeRepository implements ReservationRepository {
 
     private final Map<Long, Reservation> reservations = new HashMap<>();
     private final Map<Long, ReservationTime> reservationTimes = new HashMap<>();
     private final AtomicLong idGenerator = new AtomicLong(1);
 
-    public ReservationFakeDao() {
+    public ReservationFakeRepository() {
         ReservationTime defaultTime = new ReservationTime(1L, LocalTime.now());
         reservationTimes.put(1L, defaultTime);
 

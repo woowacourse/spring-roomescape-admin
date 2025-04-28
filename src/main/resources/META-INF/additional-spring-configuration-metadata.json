@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "room-escape.console-view.enabled",
+      "type": "java.lang.Boolean",
+      "description": "true : 콘솔 사용 / false : 콘솔 미사용."
+    }
+  ]
+}

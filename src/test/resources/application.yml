@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:database
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  sql:
+    init:
+      mode: always
+      platform: h2
+
+server:
+  port: 9090
+
+room-escape:
+  console-view:
+    enabled: false

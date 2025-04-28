@@ -22,9 +22,9 @@ public class TestReservationDAOImpl implements ReservationDAO {
 
     @Override
     public int deleteReservationById(final Long id) {
-        final Long idMatchedCount = reservations.stream()
+        final long idMatchedCount = reservations.stream()
                 .filter(reservation -> reservation.getId().equals(id))
                 .count();
-        return idMatchedCount.intValue();
+        return (int) idMatchedCount;
     }
 }

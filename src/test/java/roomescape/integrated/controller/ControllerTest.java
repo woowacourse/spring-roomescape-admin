@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -14,11 +14,11 @@ import org.springframework.http.HttpStatus;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@Disabled
 class ControllerTest {
 
+    @DisplayName("URL을 기반으로 HTML 요청")
     @Test
-    void url을_기반으로_html을_요청받을_수_있다() {
+    void requestHtmlOfUrl() {
         ExtractableResponse<Response> response = RestAssured.given()
                 .log().all()
                 .when().get("admin")

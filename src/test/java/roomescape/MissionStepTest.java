@@ -19,6 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.controller.ReservationController;
 import roomescape.controller.response.ReservationResponse;
+import roomescape.persistence.ReservationDao;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -29,6 +30,9 @@ public class MissionStepTest {
 
     @Autowired
     private ReservationController reservationController;
+
+    @Autowired
+    private ReservationDao reservationDao;
 
 
     @Test
@@ -205,6 +209,5 @@ public class MissionStepTest {
 
         assertThat(isJdbcTemplateInjected).isFalse();
     }
-
 
 }

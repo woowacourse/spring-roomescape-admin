@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
-import roomescape.entity.ReservationTime;
+import roomescape.model.ReservationTime;
 import roomescape.entity.ReservationWithTimeId;
 import roomescape.model.Reservation;
 

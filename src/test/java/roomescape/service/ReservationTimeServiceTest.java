@@ -6,7 +6,7 @@ import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import roomescape.dao.ReservationTimeDao;
-import roomescape.entity.ReservationTime;
+import roomescape.model.ReservationTime;
 
 public class ReservationTimeServiceTest {
 

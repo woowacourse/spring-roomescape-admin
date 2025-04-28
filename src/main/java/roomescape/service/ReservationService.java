@@ -5,7 +5,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
-import roomescape.entity.ReservationTime;
+import roomescape.model.ReservationTime;
 import roomescape.entity.ReservationWithTimeId;
 import roomescape.model.Reservation;
 

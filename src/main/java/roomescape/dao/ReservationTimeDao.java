@@ -1,7 +1,7 @@
 package roomescape.dao;
 
 import java.util.List;
-import roomescape.entity.ReservationTime;
+import roomescape.model.ReservationTime;
 
 public interface ReservationTimeDao {
 

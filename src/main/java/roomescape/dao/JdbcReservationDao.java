@@ -23,13 +23,14 @@ public class JdbcReservationDao implements ReservationDao {
     public ReservationEntity save(ReservationEntity newReservation) {
         String query = "INSERT INTO reservation (name, date, time_id) VALUES (:name, :date, :time_id)";
         SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("name", newReservation.name())
-                        .addValue("date", newReservation.date().toString())
+                .addValue("name", newReservation.getName())
+                        .addValue("date", newReservation.getFormattedDate())
                                 .addValue("time_id", newReservation.getTimeId());
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(query, params, keyHolder);
         final long id = keyHolder.getKey().longValue();
-        return newReservation.changeId(id);
+        newReservation.setId(id);
+        return newReservation;
     }
 
     public boolean deleteById(final Long id) {

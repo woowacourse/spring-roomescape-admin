@@ -23,13 +23,13 @@ public class FakeTimeDao implements ReservationTimeDao {
 
     @Override
     public boolean deleteById(Long id) {
-        return entities.removeIf(entity -> entity.id().equals(id));
+        return entities.removeIf(entity -> entity.getId().equals(id));
     }
 
     @Override
     public Optional<ReservationTimeEntity> findById(Long id) {
         return entities.stream()
-                .filter(entity -> entity.id().equals(id))
+                .filter(entity -> entity.getId().equals(id))
                 .findFirst();
     }
 }

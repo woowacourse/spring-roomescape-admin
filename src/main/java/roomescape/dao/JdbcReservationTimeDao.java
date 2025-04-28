@@ -23,11 +23,11 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
     public ReservationTimeEntity save(ReservationTimeEntity entity) {
         String sql = "INSERT INTO reservation_time (start_at) VALUES (:start_at)";
         MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("start_at", entity.startAt().toString());
+                .addValue("start_at", entity.getFormattedTime());
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(sql, params, keyHolder);
         final long id = keyHolder.getKey().longValue();
-        return new ReservationTimeEntity(id, entity.startAt());
+        return new ReservationTimeEntity(id, entity.getStartAt());
     }
 
     @Override

@@ -12,10 +12,10 @@ public record ReservationResponse(
 ) {
     public static ReservationResponse from(ReservationEntity reservation) {
         return new ReservationResponse(
-                reservation.id(),
-                reservation.name(),
-                reservation.date(),
-                ReservationTimeResponse.from(reservation.time())
+                reservation.getId(),
+                reservation.getName(),
+                reservation.getDate(),
+                ReservationTimeResponse.from(reservation.getTime())
         );
     }
 }

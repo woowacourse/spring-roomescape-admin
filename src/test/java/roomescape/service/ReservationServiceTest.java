@@ -58,7 +58,7 @@ class ReservationServiceTest {
         timeDao.save(timeEntity);
         reservationDao.save(reservationEntity);
 
-        ReservationRequest requestDto = new ReservationRequest(date, "test", timeEntity.id());
+        ReservationRequest requestDto = new ReservationRequest(date, "test", timeEntity.getId());
 
         // when & then
         assertThatThrownBy(() -> {

@@ -17,7 +17,7 @@ public class FakeReservationDao implements ReservationDao {
 
     @Override
     public boolean deleteById(Long id) {
-        return entities.removeIf(entity -> entity.id().equals(id));
+        return entities.removeIf(entity -> entity.getId().equals(id));
     }
 
     @Override

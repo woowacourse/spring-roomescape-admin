@@ -3,25 +3,55 @@ package roomescape.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public record ReservationEntity(
-        Long id,
-        String name,
-        LocalDate date,
-        ReservationTimeEntity time
-) {
+public class ReservationEntity {
+    private Long id;
+    private String name;
+    private LocalDate date;
+    private ReservationTimeEntity time;
+
+    public ReservationEntity(Long id, String name, LocalDate date, ReservationTimeEntity time) {
+        this.id = id;
+        this.name = name;
+        this.date = date;
+        this.time = time;
+    }
+
     public boolean isDuplicatedWith(ReservationEntity other) {
         return date.isEqual(other.date) && time.isDuplicatedWith(other.time);
     }
 
-    public ReservationEntity changeId(final Long id) {
-        return new ReservationEntity(id, name, date, time);
+    public void setId(final Long id) {
+        if (this.id != null) {
+            throw new IllegalStateException("id 값이 이미 설정되어 있습니다.");
+        }
+        this.id = id;
+    }
+
+    public String getFormattedDate() {
+        return date.toString();
     }
 
     public LocalDateTime getDateTime() {
-        return LocalDateTime.of(date, time.startAt());
+        return LocalDateTime.of(date, time.getStartAt());
     }
 
     public Long getTimeId() {
-        return time.id();
+        return time.getId();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public ReservationTimeEntity getTime() {
+        return time;
     }
 }

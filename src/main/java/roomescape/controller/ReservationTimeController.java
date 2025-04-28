@@ -9,20 +9,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
-import roomescape.service.ReservationService;
+import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.ReservationTimeResponse;
+import roomescape.service.ReservationTimeService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/reservations")
-public class ReservationController {
+@RequestMapping("/times")
+public class ReservationTimeController {
 
-    private final ReservationService reservationService;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationController(final ReservationService reservationService) {
-        this.reservationService = reservationService;
+    public ReservationTimeController(final ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -31,18 +31,18 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponse>> getReservations(){
-        return ResponseEntity.ok().body(reservationService.getReservations());
+    public ResponseEntity<List<ReservationTimeResponse>> getReservationTimes() {
+        return ResponseEntity.ok().body(reservationTimeService.getAllReservationTimes());
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> createReservation(@RequestBody final ReservationRequest reservationRequest) {
-        return ResponseEntity.ok().body(reservationService.createReservation(reservationRequest));
+    public ResponseEntity<ReservationTimeResponse> createReservationTime(@RequestBody final ReservationTimeRequest reservationTimeRequest) {
+        return ResponseEntity.ok().body(reservationTimeService.createReservationTime(reservationTimeRequest));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") final Long id) {
-        if (reservationService.deleteReservationById(id)) {
+    public ResponseEntity<Void> deleteReservationTime(@PathVariable("id") final Long id) {
+        if (reservationTimeService.deleteReservationTimeById(id)) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.noContent().build();

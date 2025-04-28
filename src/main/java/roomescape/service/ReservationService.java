@@ -9,7 +9,7 @@ import roomescape.dto.ReservationResponse;
 import roomescape.entity.Reservation;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ReservationService {
 
     private final ReservationDao reservationDao;
@@ -24,11 +24,13 @@ public class ReservationService {
                 .toList();
     }
 
+    @Transactional
     public ReservationResponse postReservation(ReservationRequest request) {
         Reservation newReservation = reservationDao.save(request.toEntity(), request.timeId());
         return ReservationResponse.toDto(newReservation);
     }
 
+    @Transactional
     public void deleteReservation(long id) {
         reservationDao.deleteById(id);
     }

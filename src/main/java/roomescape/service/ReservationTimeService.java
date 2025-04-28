@@ -10,7 +10,7 @@ import roomescape.entity.ReservationTime;
 import roomescape.exceptions.EntityNotFoundException;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ReservationTimeService {
 
     private final ReservationTimeDao repository;
@@ -31,11 +31,13 @@ public class ReservationTimeService {
                 .toList();
     }
 
+    @Transactional
     public ReservationTimeResponse postReservationTime(ReservationTimeRequest request) {
         ReservationTime newReservation = repository.save(request.toEntity());
         return ReservationTimeResponse.toDto(newReservation);
     }
 
+    @Transactional
     public void deleteReservationTime(long id) {
         repository.deleteById(id);
     }

@@ -2,6 +2,7 @@ package roomescape.reservation.domain;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.experimental.FieldNameConstants;
 import roomescape.common.validate.Validator;
@@ -9,6 +10,7 @@ import roomescape.common.validate.Validator;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @FieldNameConstants(level = AccessLevel.PRIVATE)
+@EqualsAndHashCode
 public class ReserverName {
 
     private final String value;

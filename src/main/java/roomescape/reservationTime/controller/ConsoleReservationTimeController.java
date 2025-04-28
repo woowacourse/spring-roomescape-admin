@@ -27,7 +27,7 @@ public class ConsoleReservationTimeController {
          * (저장되어 있는 예약시간 리스트 반환) : outputView.printAllReservationTimes(resDtos);
          */
         outputView.printAllReservationTimesInfo();
-        List<ReservationTimeResDto> resDtos = service.readAll();
+        List<ReservationTimeResDto> resDtos = service.findAll();
         outputView.printAllReservationTimes(resDtos);
     }
 
@@ -55,7 +55,7 @@ public class ConsoleReservationTimeController {
          * 예약 시간 삭제가 정상적으로 진행되었습니다. : outputView.printDeleteReservationTimeResult();
          */
         outputView.printDeleteReservationTimeInfo();
-        List<ReservationTimeResDto> resDtos = service.readAll();
+        List<ReservationTimeResDto> resDtos = service.findAll();
         outputView.printAllReservationTimes(resDtos);
         Long id = inputView.readReservationTimeId();
         service.delete(id); // TODO 2025. 4. 28. 16:06: 예외에 따라 반환 로직이 달라짐 예외 캐치해야 함

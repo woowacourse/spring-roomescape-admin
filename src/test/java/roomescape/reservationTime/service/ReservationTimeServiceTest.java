@@ -41,7 +41,7 @@ class ReservationTimeServiceTest {
         void readAll_success_whenDataExists() {
             // given
             // when
-            List<ReservationTimeResDto> resDtos = service.readAll();
+            List<ReservationTimeResDto> resDtos = service.findAll();
 
             // then
             assertSoftly(s -> {
@@ -62,7 +62,7 @@ class ReservationTimeServiceTest {
             deleteAll();
 
             // when
-            List<ReservationTimeResDto> resDtos = service.readAll();
+            List<ReservationTimeResDto> resDtos = service.findAll();
 
             // then
             Assertions.assertThat(resDtos).hasSize(0);
@@ -83,7 +83,7 @@ class ReservationTimeServiceTest {
             service.add(ReservationTimeFixture.createReqDto(dummyTime1));
 
             // then
-            List<ReservationTimeResDto> resDtos = service.readAll();
+            List<ReservationTimeResDto> resDtos = service.findAll();
             Assertions.assertThat(resDtos)
                     .extracting(ReservationTimeResDto::startAt)
                     .contains(dummyTime1);
@@ -101,7 +101,7 @@ class ReservationTimeServiceTest {
             service.delete(testDataConfig.getDefaultDummyTimeId());
 
             // when
-            List<ReservationTimeResDto> resDtos = service.readAll();
+            List<ReservationTimeResDto> resDtos = service.findAll();
 
             // then
             Assertions.assertThat(resDtos).hasSize(0);

@@ -20,7 +20,7 @@ public class ReservationTimeController {
 
     @GetMapping("times")
     public ResponseEntity<List<ReservationTimeResDto>> readAll() {
-        List<ReservationTimeResDto> resDtos = service.readAll();
+        List<ReservationTimeResDto> resDtos = service.findAll();
         return ResponseEntity.ok(resDtos);
     }
 

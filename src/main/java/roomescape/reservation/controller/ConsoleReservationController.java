@@ -49,7 +49,7 @@ public class ConsoleReservationController {
         * 이름, 날짜(YYYY-mm-dd), 시간 id
         */
         reservationOutputView.printAddReservationInfo();
-        List<ReservationTimeResDto> resDtos = reservationTimeService.readAll();
+        List<ReservationTimeResDto> resDtos = reservationTimeService.findAll();
         reservationTimeOutputView.printAllReservationTimes(resDtos);
         ReservationReqDto reqDto = reservationInputView.readReservationReqDto();
         ReservationResDto resDto = service.add(reqDto);

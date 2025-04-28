@@ -1,6 +1,7 @@
 package roomescape.service.reservation;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -13,6 +14,7 @@ import roomescape.domain.reservation.Reservation;
 import roomescape.domain.time.ReservationTime;
 import roomescape.dto.reservation.ReservationCreateRequest;
 import roomescape.dto.reservation.ReservationResponse;
+import roomescape.exception.NotFoundException;
 import roomescape.repository.reservation.FakeReservationDao;
 import roomescape.repository.time.FakeReservationTimeDao;
 import roomescape.service.time.ReservationTimeService;
@@ -78,5 +80,12 @@ class ReservationServiceTest {
         reservationService.deleteById(reservation.getId());
 
         assertThat(reservationDao.findAll()).isEmpty();
+    }
+
+    @Test
+    void 존재하지_않는_예약은_삭제할_수_없다() {
+        assertThatThrownBy(() -> reservationService.deleteById(1L))
+            .isInstanceOf(NotFoundException.class)
+            .hasMessage("존재하지 않는 예약입니다.");
     }
 }

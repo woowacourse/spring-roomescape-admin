@@ -1,4 +1,4 @@
-package roomescape.reservation.service;
+package roomescape.reservation.service.config;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;

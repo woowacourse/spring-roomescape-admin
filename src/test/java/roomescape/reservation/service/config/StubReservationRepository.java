@@ -1,4 +1,4 @@
-package roomescape.reservation.service;
+package roomescape.reservation.service.config;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.service.ReservationRepository;
 import roomescape.time.domain.ReservationTime;
 
 public class StubReservationRepository implements ReservationRepository {
@@ -26,14 +27,19 @@ public class StubReservationRepository implements ReservationRepository {
     ));
 
     @Override
+    public Reservation save(Reservation reservation) {
+        reservations.add(reservation);
+        return reservation;
+    }
+
+    @Override
     public List<Reservation> findAll() {
         return reservations;
     }
 
     @Override
-    public Reservation save(Reservation reservation) {
-        reservations.add(reservation);
-        return reservation;
+    public void deleteById(Long id) {
+        reservations.removeIf(reservation -> reservation.getId().equals(id));
     }
 
     @Override
@@ -41,10 +47,5 @@ public class StubReservationRepository implements ReservationRepository {
         return reservations.stream()
                 .filter(reservation -> reservation.getId().equals(id))
                 .findFirst();
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        reservations.removeIf(reservation -> reservation.getId().equals(id));
     }
 }

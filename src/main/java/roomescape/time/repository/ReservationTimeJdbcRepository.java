@@ -11,13 +11,14 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.time.domain.ReservationTime;
+import roomescape.time.service.ReservationTimeRepository;
 
 @Repository
-public class ReservationTimeRepository {
+public class ReservationTimeJdbcRepository implements ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeJdbcRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

@@ -13,6 +13,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import roomescape.reservation.controller.request.ReservationCreateRequest;
 import roomescape.reservation.controller.response.ReservationResponse;
+import roomescape.reservation.service.config.ReservationTestConfig;
 import roomescape.time.controller.response.ReservationTimeResponse;
 
 @SpringJUnitConfig(classes = ReservationTestConfig.class)

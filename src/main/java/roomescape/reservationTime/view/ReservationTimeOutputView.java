@@ -36,7 +36,7 @@ public class ReservationTimeOutputView {
     }
 
     public void printDeleteReservationTimeInfo() {
-        System.out.println("예약이 정상적으로 삭제되었습니다.");
+        System.out.println("예약 시간이 정상적으로 삭제되었습니다.");
     }
 
     private void printReservationTime(ReservationTimeResDto dto) {

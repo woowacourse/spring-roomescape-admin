@@ -136,7 +136,7 @@ public class ReservationServiceTest {
         Reservation reservationEntity2 = reservationService.createReservationAtNewDateTime(new ReservationCreateRequest(name, date, reservationTimeEntity2.getId()));
 
         // Then
-        assertThat(reservationService.getAllReservation()).containsExactlyInAnyOrder(reservationEntity1, reservationEntity2);
+        assertThat(reservationService.getAllReservations()).containsExactlyInAnyOrder(reservationEntity1, reservationEntity2);
     }
 
     @Test
@@ -154,7 +154,7 @@ public class ReservationServiceTest {
         reservationService.deleteReservationById(deleteId);
 
         // Then
-        assertThat(reservationService.getAllReservation()).isEqualTo(Collections.emptyList());
+        assertThat(reservationService.getAllReservations()).isEqualTo(Collections.emptyList());
     }
 
     @Test

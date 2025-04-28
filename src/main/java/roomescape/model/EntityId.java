@@ -2,8 +2,8 @@ package roomescape.model;
 
 public class EntityId {
 
-    public static final long UNASSIGNED_ID_VALUE = -1L;
-    public static final int MINIMUM_VALUE = 1;
+    public static final Long UNASSIGNED_ID_VALUE = -1L;
+    public static final Long MINIMUM_VALUE = 1L;
     private final Long id;
 
     private EntityId() {

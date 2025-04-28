@@ -26,7 +26,7 @@ public class ReservationService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public List<Reservation> getAllReservation() {
+    public List<Reservation> getAllReservations() {
         return reservationRepository.findAll();
     }
 

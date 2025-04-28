@@ -49,7 +49,7 @@ public class ReservationTimeRestController {
         try {
             reservationService.deleteReservationTimeById(id);
         } catch (IllegalArgumentException exception) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
         }
     }
 }

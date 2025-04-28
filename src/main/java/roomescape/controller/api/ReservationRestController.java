@@ -28,7 +28,7 @@ public class ReservationRestController {
 
     @GetMapping
     public List<ReservationGetResponse> getAllReservations() {
-        List<Reservation> reservations = reservationService.getAllReservation();
+        List<Reservation> reservations = reservationService.getAllReservations();
         return reservations.stream()
                 .map(ReservationGetResponse::from)
                 .toList();
@@ -49,7 +49,7 @@ public class ReservationRestController {
         try {
             reservationService.deleteReservationById(id);
         } catch (IllegalArgumentException exception) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, exception.getMessage());
         }
     }
 }

@@ -13,7 +13,7 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class RoomescapeTimeRepositoryImpl implements RoomescapeTimeRepository {
 
-    private JdbcTemplate template;
+    private final JdbcTemplate template;
 
     public RoomescapeTimeRepositoryImpl(final JdbcTemplate template) {
         this.template = template;

@@ -43,7 +43,7 @@ public class MissionStepTest {
     @Test
     void checkOkStatusByAdminReservationRequest() {
         RestAssured.given().log().all()
-                .when().get("/admin/reservation")
+                .when().get("/reservation")
                 .then().log().all()
                 .statusCode(200);
     }

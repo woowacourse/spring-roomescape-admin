@@ -1,7 +1,6 @@
 package roomescape.time.dao;
 
 import java.sql.Time;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -34,7 +33,7 @@ public class ReservationTimeJdbcDao implements ReservationTimeDao{
 
     @Override
     public List<ReservationTime> findAllTimes() {
-        String sql = "SELECT * from reservation_time";
+        String sql = "SELECT * FROM reservation_time";
         return jdbcTemplate.query(
                 sql,
                 reservationTimeRowMapper
@@ -43,8 +42,9 @@ public class ReservationTimeJdbcDao implements ReservationTimeDao{
 
     @Override
     public ReservationTime insertTime(final TimeRequest timeRequest) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("start_at", Time.valueOf(timeRequest.startAt()));
+        Map<String, Object> parameters = Map.of(
+                "start_at", Time.valueOf(timeRequest.startAt())
+        );
 
         Number insertedId = simpleJdbcInsert.executeAndReturnKey(parameters);
         return new ReservationTime(insertedId.longValue(), timeRequest.startAt());
@@ -52,13 +52,13 @@ public class ReservationTimeJdbcDao implements ReservationTimeDao{
 
     @Override
     public void deleteTime(final Long id) {
-        String sql = "DELETE from reservation_time where id = ?";
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 
     @Override
     public ReservationTime findReservationTimeById(final Long id) {
-        String sql = "SELECT id, start_at from reservation_time where id = ?";
+        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
         return jdbcTemplate.queryForObject(
                 sql,
                 reservationTimeRowMapper,

@@ -39,7 +39,7 @@ public class ReservationJdbcDaoTest {
     @Test
     void test1() {
         //given
-        String insertQuery = "INSERT into reservation (name, date, time_id) VALUES (?, ?, ?)";
+        String insertQuery = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         jdbcTemplate.update(
                 insertQuery,
                 "피케이",

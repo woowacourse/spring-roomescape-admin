@@ -2,18 +2,15 @@ package roomescape.dto;
 
 import roomescape.entity.Reservation;
 
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
+import java.time.LocalDate;
 
-public record ReservationResponse(Long id, String name, String date, ReservationTimeResponse time) {
-
-    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.KOREA);
+public record ReservationResponse(Long id, String name, LocalDate date, ReservationTimeResponse time) {
 
     public static ReservationResponse toDto(final Reservation reservation) {
          return new ReservationResponse(
                  reservation.getId(),
                  reservation.getCustomerName(),
-                 reservation.getReservationDate().format(DATE_FORMATTER),
+                 reservation.getReservationDate(),
                  ReservationTimeResponse.toDto(reservation.getReservationTime())
          );
     }

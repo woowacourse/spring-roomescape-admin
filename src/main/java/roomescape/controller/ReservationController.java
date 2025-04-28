@@ -26,12 +26,8 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody @Valid ReservationRequest request) {
-        try {
-            ReservationResponse saved = reservationService.createReservation(request);
-            return ResponseEntity.ok(saved);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+        ReservationResponse saved = reservationService.createReservation(request);
+        return ResponseEntity.ok(saved);
     }
 
     @GetMapping
@@ -42,21 +38,13 @@ public class ReservationController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ReservationResponse> getReservation(@PathVariable Long id) {
-        try {
-            ReservationResponse reservation = reservationService.getReservation(id);
-            return ResponseEntity.ok(reservation);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+        ReservationResponse reservation = reservationService.getReservation(id);
+        return ResponseEntity.ok(reservation);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        try {
-            reservationService.deleteReservation(id);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+        reservationService.deleteReservation(id);
+        return ResponseEntity.ok().build();
     }
 }

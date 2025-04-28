@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.controller.request.ReservationCreateRequest;
+import roomescape.reservation.controller.response.ReservationResponse;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.time.domain.ReservationTime;
@@ -21,14 +22,18 @@ public class ReservationService {
         this.reservationTimeService = reservationTimeService;
     }
 
-    public List<Reservation> getAll() {
-        return reservationRepository.findAll();
+    public List<ReservationResponse> getAll() {
+        List<Reservation> reservations = reservationRepository.findAll();
+
+        return ReservationResponse.from(reservations);
     }
 
-    public Reservation create(ReservationCreateRequest request) {
+    public ReservationResponse create(ReservationCreateRequest request) {
         ReservationTime reservationTime = reservationTimeService.getReservationTime(request.timeId());
         Reservation reservation = Reservation.create(request.name(), request.date(), reservationTime);
-        return reservationRepository.save(reservation);
+        Reservation created = reservationRepository.save(reservation);
+
+        return ReservationResponse.from(created);
     }
 
     public void deleteById(Long id) {

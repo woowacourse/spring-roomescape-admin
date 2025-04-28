@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.time.controller.request.ReservationTimeCreateRequest;
 import roomescape.time.controller.response.ReservationTimeResponse;
-import roomescape.time.domain.ReservationTime;
 import roomescape.time.service.ReservationTimeService;
 
 @RestController
@@ -27,18 +26,18 @@ public class ReservationTimeApiController {
     public ResponseEntity<ReservationTimeResponse> createTime(
             @RequestBody ReservationTimeCreateRequest request
     ) {
-        ReservationTime created = reservationTimeService.create(request);
+        ReservationTimeResponse response = reservationTimeService.create(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(ReservationTimeResponse.from(created));
+                .body(response);
     }
 
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTimeResponse>> getTimes() {
-        List<ReservationTime> reservationTimes = reservationTimeService.getAll();
+        List<ReservationTimeResponse> responses = reservationTimeService.getAll();
 
-        return ResponseEntity.ok(ReservationTimeResponse.from(reservationTimes));
+        return ResponseEntity.ok(responses);
     }
 
     @DeleteMapping("/times/{id}")

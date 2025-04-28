@@ -11,7 +11,7 @@ public final class Reservation {
     private final LocalDate date;
     private final ReservationTime time;
 
-    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
+    private Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         validateNotBlankName(name);
         validateNotNullDateTime(date, time);
         validateNotPastDateTime(LocalDateTime.of(date, time.getStartAt()));
@@ -23,6 +23,17 @@ public final class Reservation {
 
     public Reservation(String name, LocalDate date, ReservationTime time) {
         this(null, name, date, time);
+    }
+
+    public static Reservation toEntity(Long id, String name, LocalDate date, ReservationTime time) {
+        validateNotNullId(id);
+        return new Reservation(id, name, date, time);
+    }
+
+    private static void validateNotNullId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("id는 null일 수 없습니다.");
+        }
     }
 
     private void validateNotNullDateTime(LocalDate date, ReservationTime time) {

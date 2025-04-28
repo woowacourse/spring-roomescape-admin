@@ -19,11 +19,14 @@ public class H2ReservationRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertReservation;
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
-        Reservation reservation = new Reservation(
+        Reservation reservation = Reservation.toEntity(
                 resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
                 LocalDate.parse(resultSet.getString("date")),
-                new ReservationTime(resultSet.getLong("time_id"), LocalTime.parse(resultSet.getString("time_value")))
+                ReservationTime.toEntity(
+                        resultSet.getLong("time_id"),
+                        LocalTime.parse(resultSet.getString("time_value"))
+                )
         );
         return reservation;
     };

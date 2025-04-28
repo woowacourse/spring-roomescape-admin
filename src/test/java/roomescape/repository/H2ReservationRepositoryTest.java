@@ -52,7 +52,7 @@ class H2ReservationRepositoryTest {
 
         jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)", 1, reservationTime);
 
-        reservation = new Reservation(null, "브라운", reservationDate, new ReservationTime(1L, reservationTime));
+        reservation = new Reservation("브라운", reservationDate, ReservationTime.toEntity(1L, reservationTime));
     }
 
     @DisplayName("예약을 추가할 수 있다.")

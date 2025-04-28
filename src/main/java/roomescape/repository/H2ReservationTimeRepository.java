@@ -17,7 +17,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertReservationTime;
     private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) -> {
-        ReservationTime reservationTime = new ReservationTime(
+        ReservationTime reservationTime = ReservationTime.toEntity(
                 resultSet.getLong("id"),
                 LocalTime.parse(resultSet.getString("start_at"))
         );

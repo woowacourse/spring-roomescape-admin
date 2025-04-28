@@ -8,7 +8,7 @@ public final class ReservationTime {
     private final Long id;
     private final LocalTime startAt;
 
-    public ReservationTime(final Long id, final LocalTime startAt) {
+    private ReservationTime(final Long id, final LocalTime startAt) {
         validateNotNullTime(startAt);
         this.id = id;
         this.startAt = startAt;
@@ -16,6 +16,17 @@ public final class ReservationTime {
 
     public ReservationTime(final LocalTime startAt) {
         this(null, startAt);
+    }
+
+    public static ReservationTime toEntity(Long id, LocalTime startAt) {
+        validateNotNullId(id);
+        return new ReservationTime(id, startAt);
+    }
+
+    private static void validateNotNullId(final Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("id는 null일 수 없습니다.");
+        }
     }
 
     private void validateNotNullTime(final LocalTime time) {

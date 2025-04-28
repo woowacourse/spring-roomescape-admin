@@ -15,7 +15,7 @@ class ReservationTimeTest {
         LocalTime time = LocalTime.of(10, 0);
 
         // when & then
-        assertThatCode(() -> new ReservationTime(1L, time))
+        assertThatCode(() -> ReservationTime.toEntity(1L, time))
                 .doesNotThrowAnyException();
     }
 
@@ -26,7 +26,7 @@ class ReservationTimeTest {
         LocalTime time = null;
 
         // when & then
-        assertThatCode(() -> new ReservationTime(1L, time))
+        assertThatCode(() -> ReservationTime.toEntity(1L, time))
                 .isInstanceOf(UserIllegalArgumentException.class)
                 .hasMessage("예약 시간이 입력되지 않았습니다.");
     }

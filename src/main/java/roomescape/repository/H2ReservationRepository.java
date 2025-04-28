@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -61,7 +62,12 @@ public class H2ReservationRepository implements ReservationRepository {
                 on r.time_id = t.id
                 where r.id = ?
                 """;
-        return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
+
+        try {
+            return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("해당 id의 예약이 존재하지 않습니다.");
+        }
     }
 
     @Override
@@ -84,6 +90,11 @@ public class H2ReservationRepository implements ReservationRepository {
     @Override
     public void removeById(final Long id) {
         String sql = "delete from reservation where id = ?";
-        jdbcTemplate.update(sql, id);
+
+        try {
+            jdbcTemplate.update(sql, id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("해당 id의 예약이 존재하지 않습니다.");
+        }
     }
 }

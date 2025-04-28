@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -44,7 +45,12 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
     @Override
     public ReservationTime findById(final Long id) {
         String sql = "select id, start_at from reservation_time where id = ?";
-        return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, id);
+
+        try {
+            return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("해당 id의 예약 시간이 존재하지 않습니다.");
+        }
     }
 
     @Override
@@ -56,6 +62,11 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
     @Override
     public void removeById(final Long id) {
         String sql = "delete from reservation_time where id = ?";
-        jdbcTemplate.update(sql, id);
+
+        try {
+            jdbcTemplate.update(sql, id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("해당 id의 예약 시간이 존재하지 않습니다.");
+        }
     }
 }

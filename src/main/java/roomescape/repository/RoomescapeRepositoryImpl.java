@@ -62,10 +62,8 @@ public class RoomescapeRepositoryImpl implements RoomescapeRepository {
 
     @Override
     public boolean existsByDateAndTime(final LocalDate date, final ReservationTime time) {
-        String sql = joinReservationAndTime("WHERE r.date = ? and t.start_at = ?");
-        List<Reservation> result = template.query(sql, reservationRowMapper(), date.toString(),
-                time.getStartAt().toString());
-        return !result.isEmpty();
+        String sql = wrapExistsQuery(joinReservationAndTime("WHERE r.date = ? and t.start_at = ?"));
+        return template.queryForObject(sql, Boolean.class, date.toString(), time.getStartAt().toString());
     }
 
     private RowMapper<Reservation> reservationRowMapper() {
@@ -79,6 +77,10 @@ public class RoomescapeRepositoryImpl implements RoomescapeRepository {
             ).toEntity(rs.getLong("reservation_id"));
             return reservation;
         };
+    }
+
+    private String wrapExistsQuery(String sql) {
+        return "SELECT EXISTS(" + sql + ")";
     }
 
     private String joinReservationAndTime(String where) {

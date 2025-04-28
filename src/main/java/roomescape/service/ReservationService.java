@@ -5,31 +5,31 @@ import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
-import roomescape.repository.JdbcReservationRepository;
+import roomescape.repository.ReservationRepository;
 
 @Service
 public class ReservationService {
-    private final JdbcReservationRepository jdbcReservationRepository;
+    private final ReservationRepository reservationRepository;
     private final ReservationTimeService reservationTimeService;
 
-    public ReservationService(JdbcReservationRepository jdbcReservationRepository,
+    public ReservationService(ReservationRepository reservationRepository,
                               ReservationTimeService reservationTimeService) {
-        this.jdbcReservationRepository = jdbcReservationRepository;
+        this.reservationRepository = reservationRepository;
         this.reservationTimeService = reservationTimeService;
     }
 
     public List<Reservation> getAllReservations() {
-        return jdbcReservationRepository.getAllReservations();
+        return reservationRepository.getAllReservations();
     }
 
     public Reservation addReservation(ReservationRequestDto reservationRequestDto) {
         ReservationTime reservationTime = reservationTimeService.getReservationTimeById(
                 reservationRequestDto.time_id());
-        return jdbcReservationRepository.addReservation(reservationRequestDto, reservationTime);
+        return reservationRepository.addReservation(reservationRequestDto, reservationTime);
     }
 
     public Integer deleteReservation(long id) {
-        return jdbcReservationRepository.deleteReservation(id);
+        return reservationRepository.deleteReservation(id);
     }
 
 }

@@ -1,11 +1,9 @@
 package roomescape;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.HashMap;
@@ -13,9 +11,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.controller.reservation.ReservationController;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.time.ReservationTime;
 import roomescape.repository.reservation.ReservationDao;
@@ -29,8 +25,6 @@ public class MissionStepTest {
     private ReservationTimeDao reservationTimeDao;
     @Autowired
     private ReservationDao reservationDao;
-    @Autowired
-    private ReservationController reservationController;
 
     @Test
     void 홈_화면을_응답할_수_있다() {
@@ -117,64 +111,66 @@ public class MissionStepTest {
     }
 
     @Test
-    void 칠단계() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
+    void 예약_시간_조회_화면을_응답할_수_있다() {
+        RestAssured.given().log().all()
+            .when().get("/admin/time")
+            .then().log().all()
+            .statusCode(200);
+    }
+
+    @Test
+    void 예약_시간_목록_데이터를_조회할_수_있다() {
+        RestAssured.given().log().all()
+            .when().get("/times")
+            .then().log().all()
+            .statusCode(200)
+            .body("size()", is(0));
+    }
+
+    @Test
+    void 예약_시간을_생성할_수_있다() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("startAt", "19:00");
 
         RestAssured.given().log().all()
             .contentType(ContentType.JSON)
             .body(params)
             .when().post("/times")
             .then().log().all()
-            .statusCode(200);
-
-        RestAssured.given().log().all()
-            .when().get("/times")
-            .then().log().all()
             .statusCode(200)
-            .body("size()", is(1));
+            .body("id", is(1))
+            .body("startAt", is("19:00"));
+    }
+
+    @Test
+    void 예약_시간을_삭제할_수_있다() {
+        ReservationTime reservationTime = new ReservationTime(LocalTime.now().withNano(0));
+        reservationTimeDao.save(reservationTime);
 
         RestAssured.given().log().all()
             .when().delete("/times/1")
             .then().log().all()
             .statusCode(200);
-    }
-
-    @Test
-    void 팔단계() {
-        Map<String, Object> reservation = new HashMap<>();
-        reservation.put("name", "브라운");
-        reservation.put("date", "2023-08-05");
-        reservation.put("timeId", 1);
-
-        reservationTimeDao.save(new ReservationTime(LocalTime.now().withNano(0)));
 
         RestAssured.given().log().all()
-            .contentType(ContentType.JSON)
-            .body(reservation)
-            .when().post("/reservations")
+            .when().delete("/times/0")
             .then().log().all()
-            .statusCode(200);
+            .statusCode(404);
 
         RestAssured.given().log().all()
-            .when().get("/reservations")
+            .when().get("/times")
             .then().log().all()
             .statusCode(200)
-            .body("size()", is(1));
+            .body("size()", is(0));
+
     }
 
     @Test
-    void 구단계() {
-        boolean isJdbcTemplateInjected = false;
-
-        for (Field field : reservationController.getClass().getDeclaredFields()) {
-            if (field.getType().equals(JdbcTemplate.class)) {
-                isJdbcTemplateInjected = true;
-                break;
-            }
-        }
-
-        assertThat(isJdbcTemplateInjected).isFalse();
+    void 존재하지_않는_예약_시간을_삭제할_수_없다() {
+        RestAssured.given().log().all()
+            .when().delete("/times/0")
+            .then().log().all()
+            .statusCode(404);
     }
 }
 

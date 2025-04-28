@@ -6,13 +6,13 @@ import roomescape.reservation.controller.ConsoleReservationController;
 import roomescape.reservation.repository.MemoryReservationRepository;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.service.ReservationService;
+import roomescape.reservation.view.ReservationInputView;
+import roomescape.reservation.view.ReservationOutputView;
 import roomescape.reservationTime.controller.ConsoleReservationTimeController;
 import roomescape.reservationTime.repository.MemoryReservationTimeRepository;
 import roomescape.reservationTime.repository.ReservationTimeRepository;
 import roomescape.reservationTime.service.ReservationTimeService;
-import roomescape.reservation.view.ReservationInputView;
 import roomescape.reservationTime.view.ReservationTimeInputView;
-import roomescape.reservation.view.ReservationOutputView;
 import roomescape.reservationTime.view.ReservationTimeOutputView;
 
 public class ConsoleLauncher {

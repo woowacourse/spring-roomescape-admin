@@ -16,14 +16,14 @@ import roomescape.business.domain.PlayTime;
 import roomescape.persistence.entity.PlayTimeEntity;
 
 @JdbcTest
-class JdbcPlayPlayTimeDaoTest {
+class JdbcPlayTimeDaoTest {
 
     private PlayTimeDao playTimeDao;
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    JdbcPlayPlayTimeDaoTest(final JdbcTemplate jdbcTemplate) {
+    JdbcPlayTimeDaoTest(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

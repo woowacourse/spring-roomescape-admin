@@ -13,7 +13,7 @@ import roomescape.fake.FakePlayTimeDao;
 import roomescape.presentation.dto.PlayTimeRequest;
 import roomescape.presentation.dto.PlayTimeResponse;
 
-class PlayPlayTimeServiceTest {
+class PlayTimeServiceTest {
 
     private static final LocalTime FORMATTED_MAX_LOCAL_TIME = LocalTime.of(23, 59);
 

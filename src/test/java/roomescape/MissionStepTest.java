@@ -114,4 +114,19 @@ public class MissionStepTest {
             .statusCode(200)
             .body("size()", is(0));
     }
+
+    @Test
+    @DisplayName("/reservations DELETE id가 존재하지 않는다면 404를 반환한다")
+    void reservation_delete_not_exist_api() {
+        RestAssured.given().log().all()
+            .when().delete("/reservations/1")
+            .then().log().all()
+            .statusCode(404);
+
+        RestAssured.given().log().all()
+            .when().get("/reservations")
+            .then().log().all()
+            .statusCode(200)
+            .body("size()", is(0));
+    }
 }

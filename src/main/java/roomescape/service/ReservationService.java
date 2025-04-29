@@ -43,10 +43,8 @@ public class ReservationService {
         return ReservationResponse.from(reservationDao.save(reservation));
     }
 
-    public void deleteReservation(Long id) {
+    public boolean deleteReservation(Long id) {
         int deleteCount = reservationDao.deleteById(id);
-        if(deleteCount == 0) {
-            throw new IllegalArgumentException("해당 id가 존재하지 않습니다.");
-        }
+        return deleteCount != 0;
     }
 }

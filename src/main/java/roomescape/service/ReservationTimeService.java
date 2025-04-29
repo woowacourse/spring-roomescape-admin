@@ -29,10 +29,8 @@ public class ReservationTimeService {
             .toList();
     }
 
-    public void deleteReservationTime(Long id) {
+    public boolean deleteReservationTime(Long id) {
         int deleteCount = reservationTimeDao.deleteById(id);
-        if (deleteCount == 0) {
-            throw new IllegalArgumentException("해당 id가 존재하지 않습니다");
-        }
+        return deleteCount != 0;
     }
 }

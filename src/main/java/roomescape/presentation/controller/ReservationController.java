@@ -1,0 +1,41 @@
+package roomescape.presentation.controller;
+
+import java.util.List;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import roomescape.presentation.dto.CreateReservationDto;
+import roomescape.presentation.dto.ReservationResponseDto;
+import roomescape.service.ReservationService;
+
+@RestController
+@RequestMapping("/reservations")
+public class ReservationController {
+
+    private final ReservationService reservationService;
+
+    public ReservationController(@Qualifier("webReservationService") ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
+
+    @GetMapping
+    public List<ReservationResponseDto> getReservations() {
+        return reservationService.getAllReservations();
+    }
+
+    @PostMapping
+    public ReservationResponseDto createReservation(
+            @RequestBody CreateReservationDto createReservationDto) {
+        return reservationService.createReservation(createReservationDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteReservation(@PathVariable("id") Long id) {
+        reservationService.deleteReservation(id);
+    }
+}

@@ -17,12 +17,12 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class AdminReservationControllerTest {
+public class ReservationsControllerTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private AdminReservationController adminReservationController;
+    private ReservationsController reservationsController;
 
     @DisplayName("어드민 시간 관리에 기반한 예약 내역의 데이터를 조회, 추가하여 반영한다")
     @Test
@@ -61,7 +61,7 @@ public class AdminReservationControllerTest {
     void checkAdminReservationControllerJdbcTemplate_NoDependency() {
         boolean isJdbcTemplateInjected = false;
 
-        for (Field field : adminReservationController.getClass().getDeclaredFields()) {
+        for (Field field : reservationsController.getClass().getDeclaredFields()) {
             if (field.getType().equals(JdbcTemplate.class)) {
                 isJdbcTemplateInjected = true;
                 break;

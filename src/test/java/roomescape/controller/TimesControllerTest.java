@@ -13,7 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class AdminReservationTimeControllerTest {
+public class TimesControllerTest {
 
     @DisplayName("어드민 시간 관리 페이지의 데이터를 추가, 조회, 삭제하여 반영한다")
     @Test

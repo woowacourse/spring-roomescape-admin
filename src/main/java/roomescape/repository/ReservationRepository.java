@@ -17,8 +17,7 @@ public class ReservationRepository {
     private static final String DUPLICATE_TIME_EXCEPTION_MESSAGE = "해당 시간대는 이미 예약되어 있습니다.";
     private static final String INVALID_ID_EXCEPTION_MESSAGE = "해당 아이디는 존재하지 않습니다.";
     private static final int EMPTY_ROW_COUNT = 0;
-
-    private final RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> new Reservation(
+    private static final RowMapper<Reservation> RESERVATION_ROW_MAPPER = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("reservation_id"),
             resultSet.getString("name"),
             LocalDate.parse(resultSet.getString("date")),
@@ -27,6 +26,7 @@ public class ReservationRepository {
                     LocalTime.parse(resultSet.getString("time_value"))
             )
     );
+
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationRepository(final JdbcTemplate jdbcTemplate) {
@@ -46,7 +46,7 @@ public class ReservationRepository {
                 ON r.time_id = t.id 
                 WHERE r.id = ?
                 """;
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        return jdbcTemplate.queryForObject(sql, RESERVATION_ROW_MAPPER, id);
     }
 
     public List<Reservation> readAllReservations() {
@@ -61,11 +61,11 @@ public class ReservationRepository {
                 INNER JOIN reservation_time AS t 
                 ON r.time_id = t.id
                 """;
-        return jdbcTemplate.query(sql, rowMapper);
+        return jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER);
     }
 
     public synchronized Reservation createReservation(final Reservation reservation) {
-        checkDuplicates(reservation);
+        validateUniqueDateAndTimeId(reservation);
 
         Number id = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
@@ -89,15 +89,13 @@ public class ReservationRepository {
         }
     }
 
-    private void checkDuplicates(final Reservation reservation) {
+    private void validateUniqueDateAndTimeId(final Reservation reservation) {
         List<Reservation> reservations = readAllReservations();
 
-        boolean isDuplicate = reservations.stream()
-                .anyMatch(reserve -> reserve.isSameDate(reservation) &&
-                        reserve.isSameTimeId(reservation)
-                );
+        boolean hasDuplicateDateAndTimeId = reservations.stream()
+                .anyMatch(reserve -> reserve.isSameDateAndTimeId(reservation));
 
-        if (isDuplicate) {
+        if (hasDuplicateDateAndTimeId) {
             throw new IllegalArgumentException(DUPLICATE_TIME_EXCEPTION_MESSAGE);
         }
     }

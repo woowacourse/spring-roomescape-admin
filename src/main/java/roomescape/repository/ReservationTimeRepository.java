@@ -15,11 +15,11 @@ public class ReservationTimeRepository {
     private static final String DUPLICATE_TIME_EXCEPTION_MESSAGE = "해당 시간대는 이미 추가되어 있습니다.";
     private static final String INVALID_ID_EXCEPTION_MESSAGE = "해당 아이디는 존재하지 않습니다.";
     private static final int EMPTY_ROW_COUNT = 0;
-
-    private final RowMapper<ReservationTime> rowMapper = (resultSet, rowNum) -> new ReservationTime(
+    private static final RowMapper<ReservationTime> RESERVATION_TIME_ROW_MAPPER = (resultSet, rowNum) -> new ReservationTime(
             resultSet.getLong("id"),
             LocalTime.parse(resultSet.getString("start_at"))
     );
+
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationTimeRepository(final JdbcTemplate jdbcTemplate) {
@@ -28,11 +28,11 @@ public class ReservationTimeRepository {
 
     public List<ReservationTime> readAllReservationTimes() {
         String sql = "select id, start_at from reservation_time";
-        return jdbcTemplate.query(sql, rowMapper);
+        return jdbcTemplate.query(sql, RESERVATION_TIME_ROW_MAPPER);
     }
 
     public synchronized ReservationTime createReservationTime(final ReservationTime reservationTime) {
-        checkDuplicates(reservationTime);
+        validateUniqueStartAt(reservationTime);
 
         Number id = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")
@@ -55,15 +55,14 @@ public class ReservationTimeRepository {
         }
     }
 
-    private void checkDuplicates(final ReservationTime reservationTime) {
+    private void validateUniqueStartAt(final ReservationTime reservationTime) {
         List<ReservationTime> reservationTimes = readAllReservationTimes();
 
-        boolean isDuplicate = reservationTimes.stream()
-                .anyMatch(reserveTime ->
-                        reserveTime.getStartAt().equals(reservationTime.getStartAt())
+        boolean hasDuplicateStartAt = reservationTimes.stream()
+                .anyMatch(reserveTime -> reserveTime.getStartAt().equals(reservationTime.getStartAt())
                 );
 
-        if (isDuplicate) {
+        if (hasDuplicateStartAt) {
             throw new IllegalArgumentException(DUPLICATE_TIME_EXCEPTION_MESSAGE);
         }
     }

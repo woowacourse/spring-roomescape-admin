@@ -15,11 +15,11 @@ import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
-public class AdminReservationController {
+public class ReservationsController {
 
     private final ReservationService reservationService;
 
-    public AdminReservationController(final ReservationService reservationService) {
+    public ReservationsController(final ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 

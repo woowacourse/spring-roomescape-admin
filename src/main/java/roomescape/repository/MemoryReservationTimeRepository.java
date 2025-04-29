@@ -15,8 +15,8 @@ public class MemoryReservationTimeRepository implements ReservationTimeRepositor
     }
 
     @Override
-    public ReservationTime addTime(LocalTime start_at) {
-        ReservationTime reservationTime = new ReservationTime(id.getAndIncrement(), start_at);
+    public ReservationTime addTime(LocalTime startAt) {
+        ReservationTime reservationTime = new ReservationTime(id.getAndIncrement(), startAt);
         reservationTimes.add(reservationTime);
         return reservationTime;
     }

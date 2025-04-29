@@ -50,8 +50,8 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     @Override
     public ReservationTime getReservationTimeById(Long id) {
         String sql = "select start_at from reservation_time where id = ?";
-        String start_at = jdbcTemplate.queryForObject(sql, String.class, id);
-        return new ReservationTime(id, parse(start_at));
+        String startAt = jdbcTemplate.queryForObject(sql, String.class, id);
+        return new ReservationTime(id, parse(startAt));
     }
 
 }

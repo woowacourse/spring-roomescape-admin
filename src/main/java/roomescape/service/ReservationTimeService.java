@@ -16,8 +16,8 @@ public class ReservationTimeService {
         this.reservationTimeRepository = jdbcReservationTimeRepository;
     }
 
-    public ReservationTime addTime(LocalTime start_at) {
-        return reservationTimeRepository.addTime(start_at);
+    public ReservationTime addTime(LocalTime startAt) {
+        return reservationTimeRepository.addTime(startAt);
     }
 
     public List<ReservationTime> getAllTime() {

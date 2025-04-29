@@ -1,45 +1,47 @@
 package roomescape.reservation.service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Optional;
+import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.controller.request.ReservationCreateRequest;
+import roomescape.reservation.controller.response.ReservationResponse;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.domain.Reservations;
-import roomescape.reservation.service.exception.ReservationNotFoundException;
+import roomescape.time.domain.ReservationTime;
+import roomescape.time.service.ReservationTimeService;
 
 @Service
 public class ReservationService {
 
-    private final Reservations reservations = new Reservations();
+    private final ReservationRepository reservationRepository;
+    private final ReservationTimeService reservationTimeService;
 
-    public Reservations findReservations() {
-        return reservations;
+    public ReservationService(ReservationRepository reservationRepository,
+                              ReservationTimeService reservationTimeService) {
+        this.reservationRepository = reservationRepository;
+        this.reservationTimeService = reservationTimeService;
     }
 
-    public Reservation createReservation(ReservationCreateRequest request) {
-        Reservation reservation = new Reservation(
-                reservations.generateId(),
-                request.name(),
-                LocalDateTime.of(LocalDate.parse(request.date()), LocalTime.parse(request.time()))
-        );
-        reservations.create(reservation);
-        return reservation;
+    public List<ReservationResponse> getAll() {
+        List<Reservation> reservations = reservationRepository.findAll();
+
+        return ReservationResponse.from(reservations);
     }
 
-    public Reservation findReservation(Long id) {
-        Optional<Reservation> reservation = reservations.findById(id);
+    public ReservationResponse create(ReservationCreateRequest request) {
+        ReservationTime reservationTime = reservationTimeService.getReservationTime(request.timeId());
+        Reservation reservation = Reservation.create(request.name(), request.date(), reservationTime);
+        Reservation created = reservationRepository.save(reservation);
 
-        if (reservation.isEmpty()) {
-            throw new ReservationNotFoundException("[ERROR] 예약을 찾을 수 없습니다.");
-        }
-
-        return reservation.get();
+        return ReservationResponse.from(created);
     }
 
-    public void delete(Reservation reservation) {
-        reservations.delete(reservation);
+    public void deleteById(Long id) {
+        Reservation reservation = getReservation(id);
+        reservationRepository.deleteById(reservation.getId());
+    }
+
+    private Reservation getReservation(Long id) {
+        return reservationRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("[ERROR] 예약을 찾을 수 없습니다."));
     }
 }

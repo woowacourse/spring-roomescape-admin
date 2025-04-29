@@ -23,7 +23,7 @@ public class ReservationController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Reservation>> reservations() {
+    public ResponseEntity<List<Reservation>> getReservations() {
         return ResponseEntity.ok(reservationService.getAllReservations());
     }
 

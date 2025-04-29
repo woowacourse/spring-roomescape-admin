@@ -6,28 +6,22 @@ import java.time.LocalTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import roomescape.reservationtime.ReservationTime;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 class JdbcReservationTimeDaoTest {
 
     @Autowired
     private ReservationTimeDao reservationTimeDao;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @BeforeEach
-    void setUp() {
-        jdbcTemplate.update("delete from reservation_time");
-    }
-
     @Test
     void 예약_시간을_추가할_수_있다() {
+
         // given
         ReservationTime reservationTime = new ReservationTime(LocalTime.of(10, 0));
 

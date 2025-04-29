@@ -1,29 +1,27 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.util.Objects;
 
 public class Reservation {
-    private final long id;
+
+    private final Long id;
     private final String name;
-    private final LocalDateTime dateTime;
+    private final LocalDate date;
+    private final ReservationTime time;
 
-    public Reservation(long id, String name, LocalDateTime dateTime) {
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;
-        this.name = name;
-        this.dateTime = dateTime;
+        this.name = Objects.requireNonNull(name);
+        this.date = Objects.requireNonNull(date);
+        this.time = Objects.requireNonNull(time);
     }
 
-    public Reservation(long id, String name, LocalDate date, LocalTime time) {
-        this(id, name, LocalDateTime.of(date, time));
+    public Reservation(String name, LocalDate date, ReservationTime time) {
+        this(null, name, date, time);
     }
 
-    public boolean isSameId(long id) {
-        return this.id == id;
-    }
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -32,10 +30,25 @@ public class Reservation {
     }
 
     public LocalDate getDate() {
-        return dateTime.toLocalDate();
+        return date;
     }
 
-    public LocalTime getTime() {
-        return dateTime.toLocalTime();
+    public ReservationTime getTime() {
+        return time;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Reservation that = (Reservation) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name)
+            && Objects.equals(date, that.date) && Objects.equals(time, that.time);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, date, time);
     }
 }

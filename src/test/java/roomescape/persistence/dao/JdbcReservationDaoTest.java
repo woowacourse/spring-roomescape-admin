@@ -23,7 +23,7 @@ class JdbcReservationDaoTest {
     private ReservationDao reservationDao;
 
     private final JdbcTemplate jdbcTemplate;
-    private final PlayTime playTimeFixture = roomescape.business.domain.PlayTime.createWithId(1L, LocalTime.of(10, 10));
+    private final PlayTime playTimeFixture = PlayTime.createWithId(1L, LocalTime.of(10, 10));
 
     @Autowired
     public JdbcReservationDaoTest(final JdbcTemplate jdbcTemplate) {

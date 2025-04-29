@@ -31,7 +31,7 @@ class PlayTimeServiceTest {
         playTimeService.create(new PlayTimeRequest(FORMATTED_MAX_LOCAL_TIME));
 
         final Long id = 1L;
-        final PlayTime expected = roomescape.business.domain.PlayTime.createWithId(1L, FORMATTED_MAX_LOCAL_TIME);
+        final PlayTime expected = PlayTime.createWithId(1L, FORMATTED_MAX_LOCAL_TIME);
 
         // when & then
         assertThat(playTimeService.find(id))
@@ -55,7 +55,7 @@ class PlayTimeServiceTest {
     void findOrThrowIfIdNotExists() {
         // given
         final Long id = 1L;
-        final PlayTime expected = roomescape.business.domain.PlayTime.createWithId(1L, FORMATTED_MAX_LOCAL_TIME);
+        final PlayTime expected = PlayTime.createWithId(1L, FORMATTED_MAX_LOCAL_TIME);
 
         // when & then
         assertThatThrownBy(() -> playTimeService.find(id))

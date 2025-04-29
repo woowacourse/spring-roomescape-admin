@@ -14,7 +14,7 @@ public record PlayTimeEntity(Long id, String startAt) {
                     rs.getString(2));
 
     public PlayTime toDomain() {
-        return roomescape.business.domain.PlayTime.createWithId(
+        return PlayTime.createWithId(
                 id,
                 LocalTime.parse(startAt, TIME_FORMATTER)
         );

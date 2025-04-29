@@ -66,7 +66,7 @@ class JdbcPlayTimeDaoTest {
 
         // then
         assertThat(actual).isPresent();
-        assertThat(actual.get()).isEqualTo(roomescape.business.domain.PlayTime.createWithId(1L, LocalTime.of(10, 10)));
+        assertThat(actual.get()).isEqualTo(PlayTime.createWithId(1L, LocalTime.of(10, 10)));
     }
 
     @DisplayName("해당하는 방탈출 시간이 없다면 Optional Empty를 반환한다.")
@@ -91,8 +91,8 @@ class JdbcPlayTimeDaoTest {
 
         // then
         assertThat(actual).containsExactly(
-                roomescape.business.domain.PlayTime.createWithId(1L, LocalTime.of(10, 10)),
-                roomescape.business.domain.PlayTime.createWithId(2L, LocalTime.of(11, 10))
+                PlayTime.createWithId(1L, LocalTime.of(10, 10)),
+                PlayTime.createWithId(2L, LocalTime.of(11, 10))
         );
     }
 

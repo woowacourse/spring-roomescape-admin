@@ -15,6 +15,7 @@ import roomescape.model.ReservationTime;
 public class ReservationDAO {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
         ReservationTime time = new ReservationTime(
                 resultSet.getLong("time_id"),
@@ -30,6 +31,10 @@ public class ReservationDAO {
 
     public ReservationDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingColumns("name", "date", "time_id")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<Reservation> findAll() {
@@ -48,7 +53,6 @@ public class ReservationDAO {
     }
 
     public Reservation addAndGet(String name, LocalDate date, long timeId) {
-        SimpleJdbcInsert simpleJdbcInsert = makeSimpleJdbcInsert();
         Map<String, Object> parameters = Map.of(
                 "name", name,
                 "date", date,
@@ -60,13 +64,6 @@ public class ReservationDAO {
 
         ReservationTime timeRes = new ReservationTime(timeId, startAt.toLocalTime());
         return new Reservation(id.longValue(), name, date, timeRes);
-    }
-
-    private SimpleJdbcInsert makeSimpleJdbcInsert() {
-        return new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("reservation")
-                .usingColumns("name", "date", "time_id")
-                .usingGeneratedKeyColumns("id");
     }
 
     public int deleteById(Long id) {

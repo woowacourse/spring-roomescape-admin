@@ -12,11 +12,16 @@ class PlayTimeTest {
     @DisplayName("객체 생성시 null을 들어올 수 없다.")
     @Test
     void validateNonNull() {
-        // given & when & then
+        // given
+        final LocalTime invalidStartAt = null;
+        final LocalTime validStartAt = LocalTime.MAX;
+        final Long invalidId = null;
+
+        // when & then
         assertAll(
-                () -> assertThatThrownBy(() -> new PlayTime(null))
+                () -> assertThatThrownBy(() -> new PlayTime(invalidStartAt))
                         .isInstanceOf(IllegalArgumentException.class),
-                () -> assertThatThrownBy(() -> roomescape.business.domain.PlayTime.createWithId(null, LocalTime.MAX))
+                () -> assertThatThrownBy(() -> PlayTime.createWithId(invalidId, validStartAt))
                         .isInstanceOf(IllegalArgumentException.class)
         );
     }

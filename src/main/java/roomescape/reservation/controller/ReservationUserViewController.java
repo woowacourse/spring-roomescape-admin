@@ -16,7 +16,7 @@ public class ReservationUserViewController {
         return "admin/reservation";
     }
 
-    @GetMapping("time")
+    @GetMapping("admin/time")
     public String time() {
         return "admin/time";
     }

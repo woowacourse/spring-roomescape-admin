@@ -22,7 +22,7 @@ public class ReservationTimeService {
         this.repository = repository;
     }
 
-    public List<ReservationTimeResDto> readAll() {
+    public List<ReservationTimeResDto> findAll() {
         List<ReservationTime> reservationTimes = repository.findAll();
         return reservationTimes.stream()
                 .map(this::convertToReservationTimeResDto)

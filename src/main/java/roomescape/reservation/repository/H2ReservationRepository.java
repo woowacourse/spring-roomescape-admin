@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ReservationRepositoryImpl implements ReservationRepository {
+public class H2ReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationRepositoryImpl(final JdbcTemplate jdbcTemplate, ReservationTimeRepository reservationTimeRepository) {
+    public H2ReservationRepository(final JdbcTemplate jdbcTemplate, ReservationTimeRepository reservationTimeRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.reservationTimeRepository = reservationTimeRepository;
     }
@@ -109,3 +109,4 @@ public class ReservationRepositoryImpl implements ReservationRepository {
         }
     }
 }
+

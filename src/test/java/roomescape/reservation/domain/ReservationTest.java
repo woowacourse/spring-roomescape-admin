@@ -30,7 +30,7 @@ class ReservationTest {
 
             // when & then
             Assertions.assertThatThrownBy(
-                    () -> ReservationFixture.create(dummyName, dummyPastDate, reservationTime)
+                    () -> Reservation.of(dummyName, dummyPastDate, reservationTime)
             ).isInstanceOf(CustomException.class);
         }
 
@@ -46,7 +46,7 @@ class ReservationTest {
 
             // when & then
             Assertions.assertThatCode(
-                    () -> ReservationFixture.create(dummyName, dummyPastDate, reservationTime)
+                    () -> Reservation.of(dummyName, dummyPastDate, reservationTime)
             ).doesNotThrowAnyException();
         }
 

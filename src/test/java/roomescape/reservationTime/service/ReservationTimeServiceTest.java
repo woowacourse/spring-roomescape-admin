@@ -13,7 +13,7 @@ import roomescape.reservationTime.ReservationTimeTestDataConfig;
 import roomescape.reservationTime.domain.ReservationTime;
 import roomescape.reservationTime.domain.dto.ReservationTimeResDto;
 import roomescape.reservationTime.fixture.ReservationTimeFixture;
-import roomescape.reservationTime.repository.ReservationTimeRepositoryImpl;
+import roomescape.reservationTime.repository.H2ReservationTimeRepository;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -22,7 +22,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static roomescape.reservationTime.ReservationTimeTestDataConfig.DEFAULT_DUMMY_TIME;
 
 @JdbcTest
-@Import({ReservationTimeRepositoryImpl.class, ReservationTimeService.class, ReservationTimeTestDataConfig.class})
+@Import({H2ReservationTimeRepository.class, ReservationTimeService.class, ReservationTimeTestDataConfig.class})
 class ReservationTimeServiceTest {
 
     @Autowired
@@ -41,7 +41,7 @@ class ReservationTimeServiceTest {
         void readAll_success_whenDataExists() {
             // given
             // when
-            List<ReservationTimeResDto> resDtos = service.readAll();
+            List<ReservationTimeResDto> resDtos = service.findAll();
 
             // then
             assertSoftly(s -> {
@@ -62,7 +62,7 @@ class ReservationTimeServiceTest {
             deleteAll();
 
             // when
-            List<ReservationTimeResDto> resDtos = service.readAll();
+            List<ReservationTimeResDto> resDtos = service.findAll();
 
             // then
             Assertions.assertThat(resDtos).hasSize(0);
@@ -83,7 +83,7 @@ class ReservationTimeServiceTest {
             service.add(ReservationTimeFixture.createReqDto(dummyTime1));
 
             // then
-            List<ReservationTimeResDto> resDtos = service.readAll();
+            List<ReservationTimeResDto> resDtos = service.findAll();
             Assertions.assertThat(resDtos)
                     .extracting(ReservationTimeResDto::startAt)
                     .contains(dummyTime1);
@@ -101,7 +101,7 @@ class ReservationTimeServiceTest {
             service.delete(testDataConfig.getDefaultDummyTimeId());
 
             // when
-            List<ReservationTimeResDto> resDtos = service.readAll();
+            List<ReservationTimeResDto> resDtos = service.findAll();
 
             // then
             Assertions.assertThat(resDtos).hasSize(0);

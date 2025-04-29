@@ -14,11 +14,11 @@ import java.time.LocalTime;
 import java.util.List;
 
 @JdbcTest
-@Import({ReservationTimeRepositoryImpl.class})
-class ReservationTimeRepositoryImplTest {
+@Import({H2ReservationTimeRepository.class})
+class H2ReservationTimeRepositoryTest {
 
     @Autowired
-    private ReservationTimeRepositoryImpl repository;
+    private H2ReservationTimeRepository repository;
 
     @DisplayName("존재하지 않는 예약 ID로 조회하면 예외가 발생한다.")
     @Test

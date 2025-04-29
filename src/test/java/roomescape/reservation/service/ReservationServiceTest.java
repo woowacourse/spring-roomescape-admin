@@ -11,10 +11,10 @@ import roomescape.globalException.CustomException;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.dto.ReservationReqDto;
 import roomescape.reservation.fixture.ReservationFixture;
-import roomescape.reservation.repository.ReservationRepositoryImpl;
+import roomescape.reservation.repository.H2ReservationRepository;
 import roomescape.reservationTime.domain.ReservationTime;
 import roomescape.reservationTime.fixture.ReservationTimeFixture;
-import roomescape.reservationTime.repository.ReservationTimeRepositoryImpl;
+import roomescape.reservationTime.repository.H2ReservationTimeRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -26,9 +26,9 @@ class ReservationServiceTest {
     @Autowired
     private ReservationService service;
     @Autowired
-    private ReservationRepositoryImpl reservationRepository;
+    private H2ReservationRepository reservationRepository;
     @Autowired
-    private ReservationTimeRepositoryImpl reservationTimeRepository;
+    private H2ReservationTimeRepository reservationTimeRepository;
 
     @Nested
     @DisplayName("예약 추가하기 기능")

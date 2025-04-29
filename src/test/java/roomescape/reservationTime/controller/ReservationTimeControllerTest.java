@@ -10,13 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTestContextBootstrapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.BootstrapWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import roomescape.reservationTime.ReservationTimeTestDataConfig;
 import roomescape.reservationTime.domain.dto.ReservationTimeReqDto;
 import roomescape.reservationTime.domain.dto.ReservationTimeResDto;
+import roomescape.reservationTime.fixture.ReservationTimeFixture;
+import roomescape.reservationTime.service.ReservationTimeService;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -30,7 +31,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public class ReservationTimeControllerTest {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private ReservationTimeService service;
 
     @Nested
     @DisplayName("GET /times 요청")
@@ -39,8 +40,8 @@ public class ReservationTimeControllerTest {
         @DisplayName("데이터가 있을 때 200 OK와 함께 예약 시간을 반환한다")
         @Test
         void readAll_success_whenDataExists() {
-            // given 
-            jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "15:40");
+            // given
+            service.add(ReservationTimeFixture.createReqDto(LocalTime.of(15, 40)));
 
             // when & then
             List<ReservationTimeResDto> resDtos = RestAssured.given().log().all()
@@ -49,7 +50,7 @@ public class ReservationTimeControllerTest {
                     .statusCode(HttpStatus.OK.value()).extract()
                     .jsonPath().getList(".", ReservationTimeResDto.class);
 
-            Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
+            int count = service.findAll().size();
             assertThat(resDtos.size()).isEqualTo(count);
         }
 
@@ -63,7 +64,7 @@ public class ReservationTimeControllerTest {
                     .statusCode(HttpStatus.OK.value()).extract()
                     .jsonPath().getList(".", ReservationTimeResDto.class);
 
-            Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation_time", Integer.class);
+            int count = service.findAll().size();
             assertThat(resDtos.size()).isEqualTo(count);
         }
     }
@@ -95,7 +96,7 @@ public class ReservationTimeControllerTest {
         void add_failure_whenDuplicateInput() {
             // given
             LocalTime dummyTime = LocalTime.of(11, 22);
-            jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", dummyTime.toString());
+            service.add(ReservationTimeFixture.createReqDto(dummyTime));
 
             // when
             ReservationTimeReqDto dto = new ReservationTimeReqDto(dummyTime);
@@ -122,8 +123,8 @@ public class ReservationTimeControllerTest {
                     .then().log().all()
                     .statusCode(HttpStatus.NO_CONTENT.value());
 
-            Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-            assertThat(countAfterDelete).isEqualTo(0);
+            int count = service.findAll().size();
+            assertThat(count).isEqualTo(0);
         }
 
         @DisplayName("존재하지 않는 ID로 삭제 요청 시 400 Bad Request를 반환한다")

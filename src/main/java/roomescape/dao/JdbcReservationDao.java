@@ -29,8 +29,12 @@ public class JdbcReservationDao implements ReservationDao {
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(query, params, keyHolder);
         final long id = keyHolder.getKey().longValue();
-        newReservation.setId(id);
-        return newReservation;
+        return new ReservationEntity(
+                id,
+                newReservation.getName(),
+                newReservation.getDate(),
+                newReservation.getTime()
+        );
     }
 
     public boolean deleteById(final Long id) {

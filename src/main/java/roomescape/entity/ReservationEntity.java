@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class ReservationEntity {
-    private Long id;
+    private final Long id;
     private String name;
     private LocalDate date;
     private ReservationTimeEntity time;
@@ -18,13 +18,6 @@ public class ReservationEntity {
 
     public boolean isDuplicatedWith(ReservationEntity other) {
         return date.isEqual(other.date) && time.isDuplicatedWith(other.time);
-    }
-
-    public void setId(final Long id) {
-        if (this.id != null) {
-            throw new IllegalStateException("id 값이 이미 설정되어 있습니다.");
-        }
-        this.id = id;
     }
 
     public String getFormattedDate() {

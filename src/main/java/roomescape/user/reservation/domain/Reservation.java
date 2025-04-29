@@ -1,19 +1,20 @@
-package roomescape.user.domain;
+package roomescape.user.reservation.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode(of = {"id"})
 public class Reservation {
 
     private final Long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
-    public Reservation(final Long id, final String name, final LocalDate date, final LocalTime time) {
+    public Reservation(final Long id, final String name, final LocalDate date, final ReservationTime time) {
         validateNotNull(name, date, time);
         this.id = id;
         this.name = name;
@@ -21,7 +22,7 @@ public class Reservation {
         this.time = time;
     }
 
-    private void validateNotNull(final String name, final LocalDate date, final LocalTime time) {
+    private void validateNotNull(final String name, final LocalDate date, final ReservationTime time) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Name cannot be null or blank");
         }
@@ -33,20 +34,11 @@ public class Reservation {
         }
     }
 
-    @Override
-    public boolean equals(final Object object) {
-        if (this == object) {
-            return true;
-        }
-        if (!(object instanceof Reservation that)) {
-            return false;
-        }
-
-        return Objects.equals(id, that.id);
+    public Long extractTimeId() {
+        return time.getId();
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public LocalTime extractTime() {
+        return time.getStartAt();
     }
 }

@@ -4,7 +4,7 @@ import java.util.List;
 import roomescape.model.ReservationTime;
 
 public interface ReservationTimeRepository {
-    ReservationTime create(ReservationTime reservationTime);
+    ReservationTime save(ReservationTime reservationTime);
 
     ReservationTime findById(Long id);
 

@@ -1,8 +1,6 @@
 package roomescape.controller;
 
 import java.util.List;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,13 +48,8 @@ public class RoomEscapeController {
     }
 
     @DeleteMapping("/times/{id}")
-    public ResponseEntity<Void> deleteReservationTime(@PathVariable("id") Long id) {
-        try {
-            reservationService.deleteReservationTime(id);
-            return ResponseEntity.ok().build();
-        } catch (EmptyResultDataAccessException e) {
-            return ResponseEntity.badRequest().build();
-        }
+    public void deleteReservationTime(@PathVariable("id") Long id) {
+        reservationService.deleteReservationTime(id);
     }
 
 }

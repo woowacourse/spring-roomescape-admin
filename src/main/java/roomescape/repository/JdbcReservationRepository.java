@@ -41,7 +41,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation create(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         String name = reservation.getName();
         LocalDate reservationDate = reservation.getReservationDate();
         ReservationTime reservationTime = reservation.getReservationTime();

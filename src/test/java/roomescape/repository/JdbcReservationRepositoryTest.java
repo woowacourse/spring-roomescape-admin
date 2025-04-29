@@ -57,7 +57,7 @@ class JdbcReservationRepositoryTest {
 
     @Test
     @DisplayName("예약을 추가할 수 있다")
-    void createTest() {
+    void saveTest() {
         // given
         jdbcTemplate.update("insert into reservation_time(id,start_at) values(?,?)", 1L, "10:00");
         ReservationTime reservationTime = ReservationTime.of(1L, LocalTime.of(10, 0));
@@ -65,7 +65,7 @@ class JdbcReservationRepositoryTest {
                 reservationTime);
 
         // when
-        repository.create(reservation);
+        repository.save(reservation);
 
         // then
         assertThat(repository.findAll()).hasSize(1);
@@ -79,7 +79,7 @@ class JdbcReservationRepositoryTest {
         ReservationTime reservationTime = ReservationTime.of(1L, LocalTime.of(10, 0));
         Reservation reservation = Reservation.of("멍구", LocalDate.of(2000, 11, 2),
                 reservationTime);
-        Reservation reservationEntity = repository.create(reservation);
+        Reservation reservationEntity = repository.save(reservation);
 
         // when
         repository.deleteById(reservationEntity.getId());

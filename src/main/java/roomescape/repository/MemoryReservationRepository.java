@@ -23,7 +23,7 @@ public class MemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation create(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         long currentIndex = index.incrementAndGet();
         Reservation reservationEntity = reservation.assignId(currentIndex);
         reservations.add(reservationEntity);

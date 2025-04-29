@@ -39,11 +39,11 @@ class JdbcReservationTimeRepositoryTest {
 
     @Test
     @DisplayName("reservationTime 추가 테스트")
-    void createTest() {
+    void saveTest() {
         // given
         ReservationTime time = ReservationTime.of(LocalTime.of(11, 0));
         // when
-        ReservationTime timeEntity = repository.create(time);
+        ReservationTime timeEntity = repository.save(time);
         // then
         ReservationTime findTime = repository.findById(timeEntity.getId());
         assertThat(findTime).isNotNull();
@@ -57,9 +57,9 @@ class JdbcReservationTimeRepositoryTest {
         ReservationTime time1 = ReservationTime.of(LocalTime.of(11, 0));
         ReservationTime time2 = ReservationTime.of(LocalTime.of(12, 0));
         ReservationTime time3 = ReservationTime.of(LocalTime.of(10, 0));
-        repository.create(time1);
-        repository.create(time2);
-        ReservationTime time3Entity = repository.create(time3);
+        repository.save(time1);
+        repository.save(time2);
+        ReservationTime time3Entity = repository.save(time3);
         // when
         ReservationTime findTime = repository.findById(time3Entity.getId());
         // then
@@ -73,9 +73,9 @@ class JdbcReservationTimeRepositoryTest {
         ReservationTime time1 = ReservationTime.of(LocalTime.of(11, 0));
         ReservationTime time2 = ReservationTime.of(LocalTime.of(12, 0));
         ReservationTime time3 = ReservationTime.of(LocalTime.of(10, 0));
-        repository.create(time1);
-        repository.create(time2);
-        repository.create(time3);
+        repository.save(time1);
+        repository.save(time2);
+        repository.save(time3);
         // when
         List<ReservationTime> allReservationTimes = repository.findAll();
         // then
@@ -89,9 +89,9 @@ class JdbcReservationTimeRepositoryTest {
         ReservationTime time1 = ReservationTime.of(LocalTime.of(11, 0));
         ReservationTime time2 = ReservationTime.of(LocalTime.of(12, 0));
         ReservationTime time3 = ReservationTime.of(LocalTime.of(10, 0));
-        repository.create(time1);
-        repository.create(time2);
-        ReservationTime time3Entity = repository.create(time3);
+        repository.save(time1);
+        repository.save(time2);
+        ReservationTime time3Entity = repository.save(time3);
         // when
         repository.deleteById(time3Entity.getId());
         // then

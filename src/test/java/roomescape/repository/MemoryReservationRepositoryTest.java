@@ -26,13 +26,13 @@ class MemoryReservationRepositoryTest {
 
     @DisplayName("예약을 추가할 수 있다")
     @Test
-    void createTest() {
+    void saveTest() {
         // given
         ReservationTime reservationTime = ReservationTime.of(1L, LocalTime.of(10, 0));
         Reservation reservation = Reservation.of("멍구", LocalDate.of(2000, 11, 2), reservationTime);
 
         // when
-        repository.create(reservation);
+        repository.save(reservation);
 
         // then
         assertThat(repository.findAll()).hasSize(1);
@@ -44,7 +44,7 @@ class MemoryReservationRepositoryTest {
         // given
         ReservationTime reservationTime = ReservationTime.of(1L, LocalTime.of(10, 0));
         Reservation reservation = Reservation.of("멍구", LocalDate.of(2000, 11, 2), reservationTime);
-        Reservation reservationEntity = repository.create(reservation);
+        Reservation reservationEntity = repository.save(reservation);
 
         // when
         repository.deleteById(reservationEntity.getId());

@@ -20,7 +20,7 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTime create(ReservationTime reservationTime) {
+    public ReservationTime save(ReservationTime reservationTime) {
         long currentIndex = index.incrementAndGet();
         ReservationTime reservationTimeEntity = reservationTime.assignId(currentIndex);
         reservationTimes.add(reservationTimeEntity);

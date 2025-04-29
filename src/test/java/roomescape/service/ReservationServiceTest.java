@@ -26,7 +26,7 @@ class ReservationServiceTest {
     void beforeEach() {
         ReservationRepository reservationRepository = new FakeReservationRepository();
         ReservationTimeRepository reservationTimeRepository = new FakeReservationTimeRepository();
-        reservationTimeRepository.create(ReservationTime.of(LocalTime.of(10, 0)));
+        reservationTimeRepository.save(ReservationTime.of(LocalTime.of(10, 0)));
         reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
     }
 
@@ -34,7 +34,7 @@ class ReservationServiceTest {
     @DisplayName("존재하지 않은 시간대의 아이디를 넣으면 예외가 발생한다.")
     void createReservation_NoTime() {
         // given
-        ReservationRequest request = new ReservationRequest("2000-11-02", "코기", 100L);
+        ReservationRequest request = ReservationRequest.of("코기", "2000-11-02", 100L);
         // when & then
         assertThatThrownBy(() -> reservationService.createReservation(request))
                 .isInstanceOf(EmptyResultDataAccessException.class);
@@ -44,7 +44,7 @@ class ReservationServiceTest {
     @DisplayName("정상적으로 예약 생성 후 DTO를 반환한다.")
     void createReservationTest() {
         // given
-        ReservationRequest request = new ReservationRequest("2000-11-02", "코기", 1L);
+        ReservationRequest request = ReservationRequest.of("코기", "2000-11-02", 1L);
         // when
         ReservationResponse reservation = reservationService.createReservation(request);
         // then
@@ -61,8 +61,8 @@ class ReservationServiceTest {
     @DisplayName("전체 예약 정보를 DTO로 변환한다.")
     void findAllReservations() {
         // given
-        ReservationRequest request1 = new ReservationRequest("2000-11-02", "코기", 1L);
-        ReservationRequest request2 = new ReservationRequest("2000-11-03", "멍구", 1L);
+        ReservationRequest request1 = ReservationRequest.of("코기", "2000-11-02", 1L);
+        ReservationRequest request2 = ReservationRequest.of("멍구", "2000-11-03", 1L);
         reservationService.createReservation(request1);
         reservationService.createReservation(request2);
         // when
@@ -87,7 +87,7 @@ class ReservationServiceTest {
     @DisplayName("정상적으로 삭제를 한다.")
     void deleteReservationTest() {
         // given
-        ReservationRequest request = new ReservationRequest("2000-11-02", "코기", 1L);
+        ReservationRequest request = ReservationRequest.of("코기", "2000-11-02", 1L);
         ReservationResponse reservation = reservationService.createReservation(request);
         // when
         reservationService.deleteReservation(reservation.id());
@@ -99,7 +99,7 @@ class ReservationServiceTest {
     @DisplayName("정상적으로 예약 시간을 저장하고 dto를 반환한다.")
     void createReservationTimeTest() {
         // given
-        ReservationTimeRequest request = new ReservationTimeRequest("09:00");
+        ReservationTimeRequest request = ReservationTimeRequest.of("09:00");
         // when
         ReservationTimeResponse reservationTime = reservationService.createReservationTime(request);
         // then
@@ -124,7 +124,7 @@ class ReservationServiceTest {
     @DisplayName("정상적인 요청에 대해 삭제를 진행한다.")
     void deleteReservationTimeTest() {
         // given
-        ReservationTimeRequest request = new ReservationTimeRequest("09:00");
+        ReservationTimeRequest request = ReservationTimeRequest.of("09:00");
         ReservationTimeResponse reservationTime = reservationService.createReservationTime(request);
         // when
         reservationService.deleteReservationTime(reservationTime.id());

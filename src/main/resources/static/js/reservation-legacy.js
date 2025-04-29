@@ -15,7 +15,6 @@ function render(data) {
 
     data.forEach(item => {
         const row = tableBody.insertRow();
-
         row.insertCell(0).textContent = item.id;
         row.insertCell(1).textContent = item.name;
         row.insertCell(2).textContent = item.date;
@@ -121,7 +120,7 @@ function requestCreate(reservation) {
 
     return fetch(RESERVATION_API_ENDPOINT, requestOptions)
         .then(response => {
-            if (response.status === 201) return response.json();
+            if (response.status === 200) return response.json();
             throw new Error('Create failed');
         });
 }
@@ -133,7 +132,7 @@ function requestDelete(id) {
 
     return fetch(`${RESERVATION_API_ENDPOINT}/${id}`, requestOptions)
         .then(response => {
-            if (response.status !== 204) throw new Error('Delete failed');
+            if (response.status !== 200) throw new Error('Delete failed');
         });
 }
 

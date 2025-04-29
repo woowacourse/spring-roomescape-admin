@@ -1,5 +1,6 @@
 package roomescape.model;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDate;
@@ -17,5 +18,17 @@ public class ReservationTest {
 
         assertThatThrownBy(() -> new Reservation(null, date, new ReservationTime(1L, time)))
                 .isInstanceOf(NullPointerException.class);
+    }
+
+    @DisplayName("예약 내역의 날짜와 시간 아이디 일치 여부를 확인하는 기능을 구현한다")
+    @Test
+    void checkSameDateAndTimeId() {
+        LocalDate date = LocalDate.parse("2025-04-19");
+        LocalTime time = LocalTime.parse("20:00");
+
+        Reservation reservation1 = new Reservation("kim", date, new ReservationTime(1L, time));
+        Reservation reservation2 = new Reservation("park", date, new ReservationTime(1L, time));
+
+        assertThat(reservation1.isSameDateAndTimeId(reservation2)).isTrue();
     }
 }

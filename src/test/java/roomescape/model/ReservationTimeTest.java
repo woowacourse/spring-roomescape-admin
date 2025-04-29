@@ -1,5 +1,6 @@
 package roomescape.model;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.time.LocalTime;
@@ -12,5 +13,16 @@ public class ReservationTimeTest {
     @Test
     void createReservationTime() {
         assertThatCode(() -> new ReservationTime(1L, LocalTime.parse("10:00"))).doesNotThrowAnyException();
+    }
+
+    @DisplayName("시간 내역의 아이디 일치 여부를 확인하는 기능을 구현한다")
+    @Test
+    void checkSameTimeId() {
+        LocalTime time = LocalTime.parse("20:00");
+
+        ReservationTime reservationTime1 = new ReservationTime(1L, time);
+        ReservationTime reservationTime2 = new ReservationTime(1L, time);
+
+        assertThat(reservationTime1.isSameId(reservationTime2)).isTrue();
     }
 }

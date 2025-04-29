@@ -15,8 +15,8 @@ public class Reservation {
 
     public Reservation(String name, LocalDate date, ReservationTime time) {
         this.name = Objects.requireNonNull(name, NULL_VALUE_EXCEPTION_MESSAGE);
-        this.date = date;
-        this.time = time;
+        this.date = Objects.requireNonNull(date, NULL_VALUE_EXCEPTION_MESSAGE);
+        this.time = Objects.requireNonNull(time, NULL_VALUE_EXCEPTION_MESSAGE);
     }
 
     public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
@@ -24,12 +24,8 @@ public class Reservation {
         this.id = id;
     }
 
-    public boolean isSameDate(final Reservation reservation) {
-        return date.equals(reservation.getDate());
-    }
-
-    public boolean isSameTimeId(final Reservation reservation) {
-        return time.isSameId(reservation.getTime());
+    public boolean isSameDateAndTimeId(final Reservation reservation) {
+        return date.equals(reservation.getDate()) && time.isSameId(reservation.getTime());
     }
 
     public Long getId() {
@@ -54,5 +50,21 @@ public class Reservation {
 
     public LocalTime getTimeStartAt() {
         return time.getStartAt();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        Reservation that = (Reservation) other;
+        return Objects.equals(id, that.id)
+                && Objects.equals(date, that.date)
+                && Objects.equals(time, that.time);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, date, time);
     }
 }

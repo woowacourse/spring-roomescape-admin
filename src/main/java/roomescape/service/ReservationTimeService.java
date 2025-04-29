@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import java.util.List;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationTimeDAO;
 import roomescape.dto.ReservationTimeReqDto;
@@ -29,7 +30,10 @@ public class ReservationTimeService {
     }
 
     public void deleteById(Long id) {
-        reservationTimeDAO.deleteById(id);
+        int rows = reservationTimeDAO.deleteById(id);
+        if (rows == 0) {
+            throw new EmptyResultDataAccessException(rows);
+        }
     }
 
     private ReservationTimeResDto convertToReservationTimeResDto(ReservationTime reservationTime) {

@@ -30,11 +30,12 @@ public class ReservationTimeDAOFixture extends ReservationTimeDAO {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public int deleteById(Long id) {
         ReservationTime target = data.stream()
                 .filter(time -> time.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 id입니다."));
         data.remove(target);
+        return 1;
     }
 }

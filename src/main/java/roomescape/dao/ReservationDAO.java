@@ -4,7 +4,6 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -70,10 +69,7 @@ public class ReservationDAO {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public void deleteById(Long id) {
-        int rows = jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
-        if (rows == 0) {
-            throw new EmptyResultDataAccessException(rows);
-        }
+    public int deleteById(Long id) {
+        return jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
     }
 }

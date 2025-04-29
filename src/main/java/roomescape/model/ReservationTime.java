@@ -4,7 +4,7 @@ import java.time.LocalTime;
 
 public final class ReservationTime {
 
-    private final Long id;
+    private Long id;
     private final LocalTime startAt;
 
     private ReservationTime(final Long id, final LocalTime startAt) {
@@ -22,6 +22,10 @@ public final class ReservationTime {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
     }
 
     public LocalTime getStartAt() {

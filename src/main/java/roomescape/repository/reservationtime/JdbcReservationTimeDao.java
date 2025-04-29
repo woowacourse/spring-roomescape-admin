@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.repository.reservationtime;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,18 +10,19 @@ import org.springframework.stereotype.Repository;
 import roomescape.model.ReservationTime;
 
 @Repository
-public class ReservationTimeDao {
+public class JdbcReservationTimeDao implements ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertActor;
 
-    public ReservationTimeDao(final JdbcTemplate jdbcTemplate) {
+    public JdbcReservationTimeDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertActor = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");
     }
 
+    @Override
     public long save(final ReservationTime time) {
         final Map<String, Object> reservationTime = new HashMap<>(1);
         reservationTime.put("start_at", time.getStartAt());
@@ -29,17 +30,20 @@ public class ReservationTimeDao {
         return getGenerateId(number);
     }
 
+    @Override
     public List<ReservationTime> findAll() {
         final String sql = "select id, start_at from reservation_time";
         final RowMapper<ReservationTime> rowMapper = getRowMapper();
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    @Override
     public void deleteById(final Long id) {
         final String sql = "delete from reservation_time where id = ?";
         jdbcTemplate.update(sql, id);
     }
 
+    @Override
     public ReservationTime findById(final Long id) {
         final String sql = "select id, start_at from reservation_time where id =?";
         final RowMapper<ReservationTime> rowMapper = getRowMapper();

@@ -8,12 +8,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.dao.ReservationTimeDAO;
 import roomescape.model.ReservationTime;
 
-public class ReservationTimeDAOFixture extends ReservationTimeDAO {
+public class FakeReservationTimeDAO extends ReservationTimeDAO {
 
     private final List<ReservationTime> data = new ArrayList<>();
     private final AtomicLong atomicLong = new AtomicLong(1);
 
-    public ReservationTimeDAOFixture(JdbcTemplate jdbcTemplate) {
+    public FakeReservationTimeDAO(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
     }
 

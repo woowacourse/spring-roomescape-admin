@@ -8,13 +8,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.dao.ReservationTimeDAO;
 import roomescape.dto.ReservationTimeReqDto;
 import roomescape.dto.ReservationTimeResDto;
-import roomescape.fixture.ReservationTimeDAOFixture;
+import roomescape.fixture.FakeReservationTimeDAO;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ReservationTimeServiceTest {
 
-    private final ReservationTimeDAO reservationTimeDAO = new ReservationTimeDAOFixture(new JdbcTemplate());
+    private final ReservationTimeDAO reservationTimeDAO = new FakeReservationTimeDAO(new JdbcTemplate());
     private final ReservationTimeService reservationTimeService = new ReservationTimeService(reservationTimeDAO);
 
     @Test

@@ -10,13 +10,13 @@ import roomescape.dao.ReservationDAO;
 import roomescape.dto.ReservationReqDto;
 import roomescape.dto.ReservationResDto;
 import roomescape.dto.ReservationTimeResDto;
-import roomescape.fixture.ReservationDAOFixture;
+import roomescape.fixture.FakeReservationDAO;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ReservationServiceTest {
 
-    private final ReservationDAO reservationDAO = new ReservationDAOFixture(new JdbcTemplate());
+    private final ReservationDAO reservationDAO = new FakeReservationDAO(new JdbcTemplate());
     private final ReservationService reservationService = new ReservationService(reservationDAO);
 
     @Test

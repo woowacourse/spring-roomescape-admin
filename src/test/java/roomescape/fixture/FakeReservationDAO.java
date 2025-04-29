@@ -10,12 +10,12 @@ import roomescape.dao.ReservationDAO;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 
-public class ReservationDAOFixture extends ReservationDAO {
+public class FakeReservationDAO extends ReservationDAO {
 
     private final List<Reservation> data = new ArrayList<>();
     private final AtomicLong atomicLong = new AtomicLong(1);
 
-    public ReservationDAOFixture(JdbcTemplate jdbcTemplate) {
+    public FakeReservationDAO(JdbcTemplate jdbcTemplate) {
         super(jdbcTemplate);
     }
 

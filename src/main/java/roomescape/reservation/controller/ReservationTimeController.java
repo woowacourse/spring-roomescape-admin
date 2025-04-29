@@ -18,18 +18,15 @@ import java.util.List;
 @RestController
 public class ReservationTimeController {
 
-    private final ReservationTimeService timeService;
     private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(ReservationTimeService timeService, ReservationTimeService reservationTimeService) {
-        this.timeService = timeService;
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
         this.reservationTimeService = reservationTimeService;
     }
 
     @PostMapping
     public ResponseEntity<ReservationTime> create(@RequestBody ReservationTimeReqDTO timeDto) {
         return ResponseEntity.ok(reservationTimeService.create(timeDto));
-
     }
 
     @GetMapping
@@ -39,7 +36,7 @@ public class ReservationTimeController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBy(@PathVariable Long id) {
-        timeService.deleteBy(id);
+        reservationTimeService.deleteBy(id);
         return ResponseEntity.noContent().build();
     }
 }

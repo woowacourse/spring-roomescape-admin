@@ -3,16 +3,16 @@ package roomescape.service.reservationtime;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.model.ReservationTime;
-import roomescape.repository.reservationtime.JdbcReservationTimeDao;
+import roomescape.repository.reservationtime.ReservationTimeDao;
 import roomescape.service.reservationtime.request.ReservationTimeServiceRequest;
 import roomescape.service.reservationtime.response.ReservationTimeResponse;
 
 @Service
 public final class ReservationTimeService {
 
-    private final JdbcReservationTimeDao jdbcReservationTimeDao;
+    private final ReservationTimeDao jdbcReservationTimeDao;
 
-    public ReservationTimeService(final JdbcReservationTimeDao jdbcReservationTimeDao) {
+    public ReservationTimeService(final ReservationTimeDao jdbcReservationTimeDao) {
         this.jdbcReservationTimeDao = jdbcReservationTimeDao;
     }
 

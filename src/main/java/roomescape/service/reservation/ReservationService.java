@@ -4,19 +4,19 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
-import roomescape.repository.reservation.JdbcReservationDao;
-import roomescape.repository.reservationtime.JdbcReservationTimeDao;
+import roomescape.repository.reservation.ReservationDao;
+import roomescape.repository.reservationtime.ReservationTimeDao;
 import roomescape.service.reservation.request.ReservationServiceRequest;
 import roomescape.service.reservation.response.ReservationResponse;
 
 @Service
 public final class ReservationService {
 
-    private final JdbcReservationDao jdbcReservationDao;
-    private final JdbcReservationTimeDao jdbcReservationTimeDao;
+    private final ReservationDao jdbcReservationDao;
+    private final ReservationTimeDao jdbcReservationTimeDao;
 
-    public ReservationService(final JdbcReservationDao jdbcReservationDao,
-                              final JdbcReservationTimeDao jdbcReservationTimeDao) {
+    public ReservationService(final ReservationDao jdbcReservationDao,
+                              final ReservationTimeDao jdbcReservationTimeDao) {
         this.jdbcReservationDao = jdbcReservationDao;
         this.jdbcReservationTimeDao = jdbcReservationTimeDao;
     }

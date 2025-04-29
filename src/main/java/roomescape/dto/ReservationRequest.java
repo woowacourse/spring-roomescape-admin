@@ -1,16 +1,16 @@
-package roomescape;
+package roomescape.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalTime;
+import roomescape.domain.Reservation;
 
 public record ReservationRequest(
         @NotBlank String name,
         @NotNull LocalDate date,
-        @NotNull LocalTime time
+        @NotNull Long timeId
 ) {
     public Reservation toEntity() {
-        return new Reservation(null, name, date, time);
+        return new Reservation(null, name, date, null);
     }
 }

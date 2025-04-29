@@ -5,11 +5,13 @@ import java.util.Optional;
 
 public interface ReservationRepository {
 
-    Optional<Reservation> findById(long id);
+    boolean existsById(ReservationId id);
+
+    Optional<Reservation> findById(ReservationId id);
 
     List<Reservation> findAll();
 
     Reservation save(Reservation reservation);
 
-    void deleteById(long id);
+    void deleteById(ReservationId id);
 }

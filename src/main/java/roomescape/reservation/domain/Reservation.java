@@ -1,38 +1,40 @@
 package roomescape.reservation.domain;
 
-import roomescape.common.domain.DomainEntityId;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.experimental.FieldNameConstants;
+import roomescape.common.validate.Validator;
+import roomescape.reservation_time.domain.ReservationTime;
 
-import java.time.LocalDateTime;
-
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@FieldNameConstants(level = AccessLevel.PRIVATE)
+@EqualsAndHashCode(of = "id")
 public class Reservation {
 
-    private final DomainEntityId id;
-    private final String name;
-    private final ReservationDateTime datetime;
+    private final ReservationId id;
+    private final ReserverName name;
+    private final ReservationDate date;
+    private final ReservationTime time;
 
-    public Reservation(final DomainEntityId id, final String name, final ReservationDateTime datetime) {
-        this.id = id;
-        this.name = name;
-        this.datetime = datetime;
+    public static Reservation of(final ReservationId id,
+                                 final ReserverName name,
+                                 final ReservationDate date,
+                                 final ReservationTime time) {
+        validate(id, name, date, time);
+        return new Reservation(id, name, date, time);
     }
 
-    public static Reservation of(final Long id, final String name, final LocalDateTime dateTime) {
-        return new Reservation(DomainEntityId.from(id), name, ReservationDateTime.from(dateTime));
-    }
-
-    public static Reservation of(final String name, final LocalDateTime dateTime) {
-        return of(null, name, dateTime);
-    }
-
-    public Long getId() {
-        return id.getValue();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public LocalDateTime getDatetime() {
-        return datetime.getDateTime();
+    private static void validate(final ReservationId id,
+                                 final ReserverName name,
+                                 final ReservationDate date,
+                                 final ReservationTime time) {
+        Validator.of(Reservation.class)
+                .notNullField(Fields.id, id)
+                .notNullField(Fields.name, name)
+                .notNullField(Fields.date, date)
+                .notNullField(Fields.time, time);
     }
 }

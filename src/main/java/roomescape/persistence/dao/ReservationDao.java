@@ -1,4 +1,4 @@
-package roomescape.data.dao;
+package roomescape.persistence.dao;
 
 import java.util.List;
 import roomescape.business.domain.Reservation;

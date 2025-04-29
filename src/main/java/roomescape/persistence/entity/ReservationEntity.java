@@ -1,4 +1,4 @@
-package roomescape.data.entity;
+package roomescape.persistence.entity;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

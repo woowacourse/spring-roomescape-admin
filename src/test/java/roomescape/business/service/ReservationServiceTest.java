@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.data.entity.PlayTimeEntity;
+import roomescape.persistence.entity.PlayTimeEntity;
 import roomescape.fake.FakeReservationDao;
 import roomescape.fake.FakePlayTimeDao;
 import roomescape.presentation.dto.ReservationRequest;

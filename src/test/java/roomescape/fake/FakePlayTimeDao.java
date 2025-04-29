@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import roomescape.business.domain.PlayTime;
-import roomescape.data.dao.PlayTimeDao;
-import roomescape.data.entity.PlayTimeEntity;
+import roomescape.persistence.dao.PlayTimeDao;
+import roomescape.persistence.entity.PlayTimeEntity;
 
 public class FakePlayTimeDao implements PlayTimeDao {
 

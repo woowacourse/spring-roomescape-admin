@@ -3,7 +3,7 @@ package roomescape.business.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.business.domain.PlayTime;
-import roomescape.data.dao.PlayTimeDao;
+import roomescape.persistence.dao.PlayTimeDao;
 import roomescape.exception.PlayTimeNotFoundException;
 import roomescape.presentation.dto.PlayTimeRequest;
 import roomescape.presentation.dto.PlayTimeResponse;

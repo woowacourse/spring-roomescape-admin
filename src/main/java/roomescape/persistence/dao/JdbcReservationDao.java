@@ -1,4 +1,4 @@
-package roomescape.data.dao;
+package roomescape.persistence.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -7,7 +7,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.business.domain.Reservation;
-import roomescape.data.entity.ReservationEntity;
+import roomescape.persistence.entity.ReservationEntity;
 
 @Repository
 public class JdbcReservationDao implements ReservationDao {

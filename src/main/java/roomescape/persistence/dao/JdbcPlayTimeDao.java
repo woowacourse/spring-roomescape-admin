@@ -1,4 +1,4 @@
-package roomescape.data.dao;
+package roomescape.persistence.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.business.domain.PlayTime;
-import roomescape.data.entity.PlayTimeEntity;
+import roomescape.persistence.entity.PlayTimeEntity;
 
 @Repository
 public class JdbcPlayTimeDao implements PlayTimeDao {

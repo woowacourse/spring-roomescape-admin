@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.business.domain.PlayTime;
 import roomescape.business.domain.Reservation;
-import roomescape.data.dao.ReservationDao;
+import roomescape.persistence.dao.ReservationDao;
 import roomescape.exception.InvalidReservationDateException;
 import roomescape.exception.ReservationNotFoundException;
 import roomescape.presentation.dto.ReservationRequest;

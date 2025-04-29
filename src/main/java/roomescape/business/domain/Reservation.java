@@ -16,19 +16,6 @@ public class Reservation {
         this(null, name, date, playTime);
     }
 
-    public static Reservation createWithId(
-            final Long id,
-            final String name,
-            final LocalDate date,
-            final PlayTime playTime
-    ) {
-        if (id == null) {
-            throw new IllegalArgumentException("id가 null 입니다.");
-        }
-
-        return new Reservation(id, name, date, playTime);
-    }
-
     private Reservation(final Long id, final String name, final LocalDate date, final PlayTime playTime) {
         validateNonNull(name, date, playTime);
         validateNameIsNotBlank(name);
@@ -62,6 +49,19 @@ public class Reservation {
         if (playTime == null) {
             throw new IllegalArgumentException("time이 null 입니다.");
         }
+    }
+
+    public static Reservation createWithId(
+            final Long id,
+            final String name,
+            final LocalDate date,
+            final PlayTime playTime
+    ) {
+        if (id == null) {
+            throw new IllegalArgumentException("id가 null 입니다.");
+        }
+
+        return new Reservation(id, name, date, playTime);
     }
 
     public Long getId() {

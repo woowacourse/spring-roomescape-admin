@@ -13,14 +13,6 @@ public class PlayTime {
         this(null, startAt);
     }
 
-    public static PlayTime createWithId(final Long id, final LocalTime startAt) {
-        if (id == null) {
-            throw new IllegalArgumentException("id가 null 입니다.");
-        }
-
-        return new PlayTime(id, startAt);
-    }
-
     private PlayTime(final Long id, final LocalTime startAt) {
         validateNonNull(startAt);
         this.id = id;
@@ -31,6 +23,14 @@ public class PlayTime {
         if (startAt == null) {
             throw new IllegalArgumentException("startAt이 null 입니다.");
         }
+    }
+
+    public static PlayTime createWithId(final Long id, final LocalTime startAt) {
+        if (id == null) {
+            throw new IllegalArgumentException("id가 null 입니다.");
+        }
+
+        return new PlayTime(id, startAt);
     }
 
     public Long getId() {

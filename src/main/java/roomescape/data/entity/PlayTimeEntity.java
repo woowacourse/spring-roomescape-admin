@@ -13,10 +13,6 @@ public record PlayTimeEntity(Long id, String startAt) {
                     rs.getLong(1),
                     rs.getString(2));
 
-    public static RowMapper<PlayTimeEntity> getDefaultRowMapper() {
-        return DEFAULT_ROW_MAPPER;
-    }
-
     public PlayTime toDomain() {
         return roomescape.business.domain.PlayTime.createWithId(
                 id,
@@ -29,5 +25,9 @@ public record PlayTimeEntity(Long id, String startAt) {
                 playTime.getId(),
                 TIME_FORMATTER.format(playTime.getStartAt())
         );
+    }
+
+    public static RowMapper<PlayTimeEntity> getDefaultRowMapper() {
+        return DEFAULT_ROW_MAPPER;
     }
 }

@@ -21,10 +21,6 @@ public record ReservationEntity(
                     new PlayTimeEntity(rs.getLong(4), rs.getString(5))
             );
 
-    public static RowMapper<ReservationEntity> getDefaultRowMapper() {
-        return DEFAULT_ROW_MAPPER;
-    }
-
     public Reservation toDomain() {
         return Reservation.createWithId(
                 id,
@@ -40,5 +36,9 @@ public record ReservationEntity(
                 DATE_FORMATTER.format(reservation.getDate()),
                 PlayTimeEntity.from(reservation.getTime())
         );
+    }
+
+    public static RowMapper<ReservationEntity> getDefaultRowMapper() {
+        return DEFAULT_ROW_MAPPER;
     }
 }

@@ -13,6 +13,6 @@ public record ReservationRequest(LocalDate date, String name, Long timeId) {
     }
 
     public ReservationEntity toEntity(ReservationTimeEntity timeEntity) {
-        return new ReservationEntity(null, name, date, timeEntity);
+        return new ReservationEntity(0L, name, date, timeEntity);
     }
 }

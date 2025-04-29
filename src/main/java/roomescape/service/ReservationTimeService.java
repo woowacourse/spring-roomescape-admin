@@ -20,13 +20,13 @@ public class ReservationTimeService {
     public List<ReservationTimeResDto> findAll() {
         List<ReservationTime> reservationTimes = reservationTimeDAO.findAll();
         return reservationTimes.stream()
-                .map(this::convertToReservationTimeResDto)
+                .map(ReservationTimeResDto::of)
                 .toList();
     }
 
     public ReservationTimeResDto addAndGet(ReservationTimeReqDto dto) {
         ReservationTime newReservationTime = reservationTimeDAO.addAndGet(dto.startAt());
-        return convertToReservationTimeResDto(newReservationTime);
+        return ReservationTimeResDto.of(newReservationTime);
     }
 
     public void deleteById(Long id) {
@@ -34,9 +34,5 @@ public class ReservationTimeService {
         if (rows == 0) {
             throw new EmptyResultDataAccessException(rows);
         }
-    }
-
-    private ReservationTimeResDto convertToReservationTimeResDto(ReservationTime reservationTime) {
-        return new ReservationTimeResDto(reservationTime.getId(), reservationTime.getTime());
     }
 }

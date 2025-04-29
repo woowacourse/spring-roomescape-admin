@@ -24,8 +24,8 @@ public class JdbcReservationDao implements ReservationDao {
         String query = "INSERT INTO reservation (name, date, time_id) VALUES (:name, :date, :time_id)";
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", newReservation.getName())
-                        .addValue("date", newReservation.getFormattedDate())
-                                .addValue("time_id", newReservation.getTimeId());
+                .addValue("date", newReservation.getFormattedDate())
+                .addValue("time_id", newReservation.getTimeId());
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(query, params, keyHolder);
         final long id = keyHolder.getKey().longValue();

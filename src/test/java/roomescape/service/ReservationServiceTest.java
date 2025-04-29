@@ -1,11 +1,13 @@
 package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.model.Reservation;
@@ -19,21 +21,36 @@ class ReservationServiceTest {
     private final ReservationService reservationService = new ReservationService(memoryReservationRepository,
             reservationTimeService);
 
-    @Test
-    @DisplayName("예약 생성")
-    void test1() {
-        // given
-        Long timeId = reservationTimeService.addTime(LocalTime.parse("10:00")).getId();
+    @Nested
+    class ReservastionCreateTest {
+        @Test
+        @DisplayName("예약 생성")
+        void test1() {
+            // given
+            Long timeId = reservationTimeService.addTime(LocalTime.parse("10:00")).getId();
 
-        // when
-        Reservation reservation = reservationService.addReservation(
-                new ReservationRequestDto("테스트", LocalDate.parse("2025-05-05"), timeId));
+            // when
+            Reservation reservation = reservationService.addReservation(
+                    new ReservationRequestDto("테스트", LocalDate.parse("2025-05-05"), timeId));
 
-        // then
-        assertAll(() -> assertThat(reservation).isNotNull(),
-                () -> assertThat(reservation.getId()).isNotNull(),
-                () -> assertThat(reservation.getUserName().getName()).isEqualTo("테스트")
-        );
+            // then
+            assertAll(() -> assertThat(reservation).isNotNull(),
+                    () -> assertThat(reservation.getId()).isNotNull(),
+                    () -> assertThat(reservation.getUserName().getName()).isEqualTo("테스트")
+            );
+        }
+
+        @Test
+        @DisplayName("과거 예약 방지")
+        void test2() {
+            // given
+            Long timeId = reservationTimeService.addTime(LocalTime.parse("10:00")).getId();
+
+            // when & then
+            assertThatThrownBy(() -> reservationService.addReservation(
+                    new ReservationRequestDto("과거맨", LocalDate.parse("1999-05-05"), timeId))).hasMessage(
+                    "과거 예약은 불가능합니다.");
+        }
     }
 
     @Test

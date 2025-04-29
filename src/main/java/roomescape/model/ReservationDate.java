@@ -13,4 +13,7 @@ public class ReservationDate {
         return date;
     }
 
+    public static ReservationDate of(LocalDate date) {
+        return new ReservationDate(date);
+    }
 }

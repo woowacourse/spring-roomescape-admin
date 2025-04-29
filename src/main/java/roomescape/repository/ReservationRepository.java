@@ -11,5 +11,5 @@ public interface ReservationRepository {
 
     Reservation addReservation(ReservationRequestDto reservationRequestDto, ReservationTime reservationTime);
 
-    int deleteReservation(Long id);
+    void deleteReservation(Long id);
 }

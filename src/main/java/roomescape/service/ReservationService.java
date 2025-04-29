@@ -32,8 +32,8 @@ public class ReservationService {
         return reservationRepository.addReservation(reservationRequestDto, reservationTime);
     }
 
-    public Integer deleteReservation(long id) {
-        return reservationRepository.deleteReservation(id);
+    public void deleteReservation(long id) {
+        reservationRepository.deleteReservation(id);
     }
 
     private void validateDateTime(ReservationDate reservationDate, ReservationTime reservationTime) {

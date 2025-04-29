@@ -24,8 +24,8 @@ public class ReservationTimeService {
         return reservationTimeRepository.getAllTime();
     }
 
-    public Integer deleteTime(Long id) {
-        return reservationTimeRepository.deleteTime(id);
+    public void deleteTime(Long id) {
+        reservationTimeRepository.deleteTime(id);
     }
 
     public ReservationTime getReservationTimeById(Long id) {

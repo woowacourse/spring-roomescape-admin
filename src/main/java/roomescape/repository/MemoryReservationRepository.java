@@ -9,7 +9,7 @@ import roomescape.model.ReservationTime;
 
 public class MemoryReservationRepository implements ReservationRepository{
     private final List<Reservation> reservations;
-    private final AtomicLong id = new AtomicLong(0);
+    private final AtomicLong id = new AtomicLong(1L);
 
     public MemoryReservationRepository() {
         this.reservations = new ArrayList<Reservation>();
@@ -28,13 +28,12 @@ public class MemoryReservationRepository implements ReservationRepository{
     }
 
     @Override
-    public int deleteReservation(Long id) {
+    public void deleteReservation(Long id) {
         for (Reservation reservation : reservations) {
             if (reservation.getId().equals(id)) {
                 reservations.remove(reservation);
-                return 1;
+                return;
             }
         }
-        return 0;
     }
 }

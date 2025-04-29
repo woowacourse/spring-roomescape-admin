@@ -5,9 +5,11 @@ import roomescape.model.Reservation;
 
 public interface ReservationRepository {
 
-    List<Reservation> findAll();
+    Long add(Reservation reservation);
 
-    Reservation add(Reservation reservation);
+    Reservation findById(Long id);
+
+    List<Reservation> findAll();
 
     void removeById(Long id);
 }

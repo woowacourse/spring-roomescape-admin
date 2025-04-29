@@ -2,53 +2,59 @@ package roomescape.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import roomescape.exception.DomainException;
+import roomescape.exception.UserIllegalArgumentException;
 
 public final class Reservation {
 
     private final Long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+    private Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         validateNotBlankName(name);
         validateNotNullDateTime(date, time);
-        validateNotPastDateTime(LocalDateTime.of(date, time));
+        validateNotPastDateTime(LocalDateTime.of(date, time.getStartAt()));
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public Reservation(String name, LocalDate date, LocalTime time) {
+    public Reservation(String name, LocalDate date, ReservationTime time) {
         this(null, name, date, time);
     }
 
-    private void validateNotNullDateTime(LocalDate date, LocalTime time) {
+    public static Reservation toEntity(Long id, String name, LocalDate date, ReservationTime time) {
+        validateNotNullId(id);
+        return new Reservation(id, name, date, time);
+    }
+
+    private static void validateNotNullId(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("id는 null일 수 없습니다.");
+        }
+    }
+
+    private void validateNotNullDateTime(LocalDate date, ReservationTime time) {
         if (date == null) {
-            throw new DomainException("예약 날짜가 입력되지 않았습니다.");
+            throw new UserIllegalArgumentException("예약 날짜가 입력되지 않았습니다.");
         }
         if (time == null) {
-            throw new DomainException("예약 시간이 입력되지 않았습니다.");
+            throw new UserIllegalArgumentException("예약 시간이 입력되지 않았습니다.");
         }
     }
 
     private void validateNotBlankName(String name) {
         if (name == null || name.isBlank()) {
-            throw new DomainException("예약자명이 입력되지 않았습니다.");
+            throw new UserIllegalArgumentException("예약자명이 입력되지 않았습니다.");
         }
     }
 
     private void validateNotPastDateTime(LocalDateTime reservationDateTime) {
         if (reservationDateTime.isBefore(LocalDateTime.now())) {
-            throw new DomainException("과거 일시로 예약을 생성할 수 없습니다.");
+            throw new UserIllegalArgumentException("과거 일시로 예약을 생성할 수 없습니다.");
         }
-    }
-
-    public static Reservation toEntity(Long id, Reservation reservation) {
-        return new Reservation(id, reservation.name, reservation.date, reservation.time);
     }
 
     public Long getId() {
@@ -63,7 +69,7 @@ public final class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 }

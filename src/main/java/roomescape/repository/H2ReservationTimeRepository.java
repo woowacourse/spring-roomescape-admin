@@ -1,0 +1,72 @@
+package roomescape.repository;
+
+import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
+import roomescape.model.ReservationTime;
+
+@Repository
+public class H2ReservationTimeRepository implements ReservationTimeRepository {
+
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert insertReservationTime;
+    private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) -> {
+        ReservationTime reservationTime = ReservationTime.toEntity(
+                resultSet.getLong("id"),
+                LocalTime.parse(resultSet.getString("start_at"))
+        );
+        return reservationTime;
+    };
+
+    public H2ReservationTimeRepository(final JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.insertReservationTime = new SimpleJdbcInsert(this.jdbcTemplate)
+                .withTableName("reservation_time")
+                .usingColumns("start_at")
+                .usingGeneratedKeyColumns("id");
+    }
+
+    @Override
+    public Long add(final ReservationTime reservationTime) {
+        Map<String, LocalTime> parameters = new HashMap<>(1);
+        parameters.put("start_at", reservationTime.getStartAt());
+
+        Number newId = insertReservationTime.executeAndReturnKey(parameters);
+
+        return newId.longValue();
+    }
+
+    @Override
+    public ReservationTime findById(final Long id) {
+        String sql = "select id, start_at from reservation_time where id = ?";
+
+        try {
+            return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("해당 id의 예약 시간이 존재하지 않습니다.");
+        }
+    }
+
+    @Override
+    public List<ReservationTime> findAll() {
+        String sql = "select id, start_at from reservation_time";
+        return jdbcTemplate.query(sql, reservationTimeRowMapper);
+    }
+
+    @Override
+    public void removeById(final Long id) {
+        String sql = "delete from reservation_time where id = ?";
+
+        try {
+            jdbcTemplate.update(sql, id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("해당 id의 예약 시간이 존재하지 않습니다.");
+        }
+    }
+}

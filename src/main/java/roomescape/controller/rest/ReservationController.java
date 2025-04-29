@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.controller.rest;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,10 +10,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/reservations")
-public class ReservationRestController {
+public class ReservationController {
     private final ReservationService service;
 
-    public ReservationRestController(ReservationService service) {
+    public ReservationController(ReservationService service) {
         this.service = service;
     }
 

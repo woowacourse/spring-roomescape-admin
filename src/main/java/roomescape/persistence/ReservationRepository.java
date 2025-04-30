@@ -64,9 +64,7 @@ public class ReservationRepository implements GeneralRepository<Reservation> {
         parameters.put("name", reservation.getName());
         parameters.put("date", reservation.getDate());
         parameters.put("time_id", reservation.getTime().getId());
-        Long id = (Long) jdbcInsert.executeAndReturnKey(parameters);
-        reservation.setId(id);
-        return id;
+        return (Long) jdbcInsert.executeAndReturnKey(parameters);
     }
 
     @Override

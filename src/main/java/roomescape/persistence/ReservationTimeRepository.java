@@ -45,9 +45,7 @@ public class ReservationTimeRepository implements GeneralRepository<ReservationT
     public Long add(ReservationTime reservationTime) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("start_at", reservationTime.getStartAt());
-        Long id = (Long) jdbcInsert.executeAndReturnKey(parameters);
-        reservationTime.setId(id);
-        return id;
+        return (Long) jdbcInsert.executeAndReturnKey(parameters);
     }
 
     @Override

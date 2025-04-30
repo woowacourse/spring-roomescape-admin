@@ -25,4 +25,13 @@ public class AdminDisplayControllerTest {
                 .then().log().all()
                 .statusCode(200);
     }
+
+    @DisplayName("어드민 예약 시간 관리 페이지를 출력한다")
+    @Test
+    void checkDisplayAdminReservationTime() {
+        RestAssured.given().log().all()
+                .when().get("/admin/time")
+                .then().log().all()
+                .statusCode(200);
+    }
 }

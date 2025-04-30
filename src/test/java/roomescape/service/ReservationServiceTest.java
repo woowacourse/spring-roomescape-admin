@@ -6,17 +6,20 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.dao.ReservationRepository;
+import roomescape.dao.ReservationTimeRepository;
 import roomescape.dto.ReservationReqDto;
 import roomescape.dto.ReservationResDto;
 import roomescape.dto.ReservationTimeResDto;
 import roomescape.fixture.FakeReservationDAO;
+import roomescape.fixture.FakeReservationTimeDAO;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ReservationServiceTest {
 
     private final ReservationRepository reservationDAO = new FakeReservationDAO();
-    private final ReservationService reservationService = new ReservationService(reservationDAO);
+    private final ReservationTimeRepository reservationTimeDAO = new FakeReservationTimeDAO();
+    private final ReservationService reservationService = new ReservationService(reservationDAO, reservationTimeDAO);
 
     @Test
     @DisplayName("전체 예약 데이터를 조회해 응답 DTO 객체로 반환한다")
@@ -44,6 +47,7 @@ class ReservationServiceTest {
         LocalDate date = LocalDate.of(2024, 8, 10);
         long timeId = 1;
         LocalTime startAt = LocalTime.of(10, 0);
+        reservationTimeDAO.addAndGet(startAt);
 
         // when
         ReservationReqDto request = new ReservationReqDto(name, date, timeId);

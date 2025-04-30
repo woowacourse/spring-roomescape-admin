@@ -16,11 +16,12 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
 import roomescape.dao.ReservationRepository;
+import roomescape.dao.ReservationTimeRepository;
 import roomescape.dto.ReservationReqDto;
 import roomescape.dto.ReservationResDto;
 import roomescape.dto.ReservationTimeResDto;
 import roomescape.fixture.FakeReservationDAO;
-import roomescape.model.Reservation;
+import roomescape.fixture.FakeReservationTimeDAO;
 import roomescape.service.ReservationService;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,7 +33,8 @@ import static org.hamcrest.Matchers.is;
 class ReservationControllerTest {
 
     private final ReservationRepository reservationDAO = new FakeReservationDAO();
-    private final ReservationService reservationService = new ReservationService(reservationDAO);
+    private final ReservationTimeRepository reservationTimeDAO = new FakeReservationTimeDAO();
+    private final ReservationService reservationService = new ReservationService(reservationDAO, reservationTimeDAO);
     private final ReservationController reservationController = new ReservationController(reservationService);
 
     @Test
@@ -45,8 +47,8 @@ class ReservationControllerTest {
         LocalTime startAt = LocalTime.of(10, 0);
 
         // when
-        Reservation reservation = reservationDAO.addAndGet(name, date, timeId);
-        ReservationResDto reservationResDto = new ReservationResDto(reservation.getId(), name, date, new ReservationTimeResDto(timeId, startAt));
+        long id = reservationDAO.addAndGet(name, date, timeId);
+        ReservationResDto reservationResDto = new ReservationResDto(id, name, date, new ReservationTimeResDto(timeId, startAt));
         ResponseEntity<List<ReservationResDto>> actual = reservationController.readAll();
         ResponseEntity<List<ReservationResDto>> expected = ResponseEntity.ok(List.of(reservationResDto));
 
@@ -62,6 +64,7 @@ class ReservationControllerTest {
         LocalDate date = LocalDate.of(2024, 8, 10);
         long timeId = 1;
         LocalTime startAt = LocalTime.of(10, 0);
+        reservationTimeDAO.addAndGet(startAt);
 
         // when
         ReservationReqDto reservationReqDto = new ReservationReqDto(name, date, timeId);
@@ -77,11 +80,10 @@ class ReservationControllerTest {
     @DisplayName("예약을 삭제하고 결과를 응답 객체로 반환한다")
     void deleteReservation() {
         // given
-        Reservation reservation = reservationDAO.addAndGet("브라운", LocalDate.of(2024, 8, 10), 1);
+        long id = reservationDAO.addAndGet("브라운", LocalDate.of(2024, 8, 10), 1);
 
         // when
-
-        ResponseEntity<Void> actual = reservationController.delete(reservation.getId());
+        ResponseEntity<Void> actual = reservationController.delete(id);
         ResponseEntity<Void> expected = ResponseEntity.noContent().build();
 
         // then

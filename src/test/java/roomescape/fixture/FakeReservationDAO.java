@@ -20,10 +20,10 @@ public class FakeReservationDAO implements ReservationRepository {
     }
 
     @Override
-    public Reservation addAndGet(String name, LocalDate date, long timeId) {
+    public long addAndGet(String name, LocalDate date, long timeId) {
         Reservation newData = new Reservation(atomicLong.getAndIncrement(), name, date, new ReservationTime(timeId, LocalTime.of(10, 0)));
         data.add(newData);
-        return newData;
+        return newData.getId();
     }
 
     @Override

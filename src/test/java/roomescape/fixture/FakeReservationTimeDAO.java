@@ -18,6 +18,14 @@ public class FakeReservationTimeDAO implements ReservationTimeRepository {
     }
 
     @Override
+    public ReservationTime findById(long id) {
+        return data.stream()
+                .filter(reservationTime -> reservationTime.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 id입니다."));
+    }
+
+    @Override
     public ReservationTime addAndGet(LocalTime startAt) {
         ReservationTime newData = new ReservationTime(atomicLong.getAndIncrement(), startAt);
         data.add(newData);

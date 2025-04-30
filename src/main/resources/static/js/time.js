@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function render(data) {
+  console.log(data);    // 콘솔 테스트
   const tableBody = document.getElementById('table-body');
   tableBody.innerHTML = '';
 

@@ -12,11 +12,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
-import roomescape.dao.ReservationDAO;
+import roomescape.dao.ReservationRepository;
 import roomescape.dto.ReservationReqDto;
 import roomescape.dto.ReservationResDto;
 import roomescape.dto.ReservationTimeResDto;
@@ -32,7 +31,7 @@ import static org.hamcrest.Matchers.is;
 @Sql("/test-data.sql")
 class ReservationControllerTest {
 
-    private final ReservationDAO reservationDAO = new FakeReservationDAO(new JdbcTemplate());
+    private final ReservationRepository reservationDAO = new FakeReservationDAO();
     private final ReservationService reservationService = new ReservationService(reservationDAO);
     private final ReservationController reservationController = new ReservationController(reservationService);
 

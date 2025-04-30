@@ -4,18 +4,13 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.dao.ReservationTimeDAO;
+import roomescape.dao.ReservationTimeRepository;
 import roomescape.model.ReservationTime;
 
-public class FakeReservationTimeDAO extends ReservationTimeDAO {
+public class FakeReservationTimeDAO implements ReservationTimeRepository {
 
     private final List<ReservationTime> data = new ArrayList<>();
     private final AtomicLong atomicLong = new AtomicLong(1);
-
-    public FakeReservationTimeDAO(JdbcTemplate jdbcTemplate) {
-        super(jdbcTemplate);
-    }
 
     @Override
     public List<ReservationTime> findAll() {

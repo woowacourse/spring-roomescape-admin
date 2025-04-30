@@ -12,7 +12,7 @@ import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 
 @Repository
-public class ReservationDAO {
+public class ReservationDAO implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;

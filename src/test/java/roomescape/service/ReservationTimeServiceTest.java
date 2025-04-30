@@ -4,8 +4,7 @@ import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.dao.ReservationTimeDAO;
+import roomescape.dao.ReservationTimeRepository;
 import roomescape.dto.ReservationTimeReqDto;
 import roomescape.dto.ReservationTimeResDto;
 import roomescape.fixture.FakeReservationTimeDAO;
@@ -14,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class ReservationTimeServiceTest {
 
-    private final ReservationTimeDAO reservationTimeDAO = new FakeReservationTimeDAO(new JdbcTemplate());
+    private final ReservationTimeRepository reservationTimeDAO = new FakeReservationTimeDAO();
     private final ReservationTimeService reservationTimeService = new ReservationTimeService(reservationTimeDAO);
 
     @Test

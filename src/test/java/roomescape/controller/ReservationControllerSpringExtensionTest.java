@@ -8,20 +8,23 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import roomescape.config.SpringExtensionTestConfig;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.entity.Reservation;
@@ -32,34 +35,28 @@ import roomescape.repository.ReservationTimeJDBCDao;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
 
-public class ReservationControllerTest {
 
-    private static NamedParameterJdbcTemplate namedJdbcTemplate;
-    private static ReservationController controller;
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = SpringExtensionTestConfig.class)
+@ActiveProfiles("spring-extension-test")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+public class ReservationControllerSpringExtensionTest {
 
-    @BeforeAll
-    public static void setUpClass() {
-        EmbeddedDatabase dataSource = new EmbeddedDatabaseBuilder()
-                .setType(EmbeddedDatabaseType.H2)
-                .addScript("schema.sql")
-                .build();
-        namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+    @Autowired
+    private NamedParameterJdbcTemplate namedJdbcTemplate;
 
+    private ReservationController controller;
+
+    @BeforeEach
+    public void setup() {
         String timeSql = "insert into reservation_time (start_at) values (:startAt)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         MapSqlParameterSource params = new MapSqlParameterSource("startAt", "15:00");
 
         namedJdbcTemplate.update(timeSql, params, keyHolder, new String[]{"id"});
-
         ReservationTimeService timeService = new ReservationTimeService(new ReservationTimeJDBCDao(namedJdbcTemplate));
         ReservationService service = new ReservationService(new ReservationJDBCDao(namedJdbcTemplate), timeService);
         controller = new ReservationController(service);
-    }
-
-    @BeforeEach
-    public void setup() {
-        namedJdbcTemplate.update("delete from reservation", new MapSqlParameterSource());
-        namedJdbcTemplate.update("alter table reservation alter column id restart with 1", new MapSqlParameterSource());
     }
 
     @Test
@@ -74,7 +71,7 @@ public class ReservationControllerTest {
         String sql = "insert into reservation (name, date, time_id) values (:name, :date, :timeId)";
 
         SqlParameterSource[] batch = reservations.stream()
-                .map(ReservationControllerTest::getMapSqlParameterSource)
+                .map(ReservationControllerSpringExtensionTest::getMapSqlParameterSource)
                 .toArray(SqlParameterSource[]::new);
 
         namedJdbcTemplate.batchUpdate(sql, batch);
@@ -123,7 +120,7 @@ public class ReservationControllerTest {
         String insertSql = "insert into reservation (name, date, time_id) values (:name, :date, :timeId)";
 
         SqlParameterSource[] batch = reservations.stream()
-                .map(ReservationControllerTest::getMapSqlParameterSource)
+                .map(ReservationControllerSpringExtensionTest::getMapSqlParameterSource)
                 .toArray(SqlParameterSource[]::new);
 
         namedJdbcTemplate.batchUpdate(insertSql, batch);

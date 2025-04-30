@@ -1,15 +1,14 @@
 package roomescape.entity;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
-public record Reservation(Long id, String name, LocalDate date, LocalTime time) {
+public record Reservation(Long id, String name, LocalDate date, ReservationTime time) {
 
     public Reservation {
         validate(name, date, time);
     }
 
-    private void validate(String name, LocalDate date, LocalTime time) {
+    private void validate(String name, LocalDate date, ReservationTime time) {
         validateName(name);
         validateDate(date);
         validateTime(time);
@@ -27,7 +26,7 @@ public record Reservation(Long id, String name, LocalDate date, LocalTime time) 
         }
     }
 
-    private void validateTime(LocalTime time) {
+    private void validateTime(ReservationTime time) {
         if (time == null) {
             throw new IllegalArgumentException("[ERROR] 유효하지 않은 시간입니다.");
         }

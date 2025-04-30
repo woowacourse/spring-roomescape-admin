@@ -8,36 +8,32 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.ReservationRequestDto;
-import roomescape.dto.ReservationResponseDto;
-import roomescape.entity.Reservation;
-import roomescape.repository.ReservationRepository;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
+import roomescape.service.ReservationService;
 
 @RestController
 public class ReservationController {
 
-    private final ReservationRepository repository;
+    private final ReservationService service;
 
-    public ReservationController(ReservationRepository repository) {
-        this.repository = repository;
+    public ReservationController(ReservationService service) {
+        this.service = service;
     }
 
     @GetMapping("/reservations")
-    public List<ReservationResponseDto> readReservation() {
-        return repository.findAll().stream()
-                .map(ReservationResponseDto::toDto)
-                .toList();
+    public List<ReservationResponse> readReservation() {
+        return service.readReservation();
     }
 
     @PostMapping("/reservations")
-    public ReservationResponseDto postReservation(@RequestBody ReservationRequestDto requestDto) {
-        Reservation newReservation = repository.save(requestDto.toEntity(null));
-        return ReservationResponseDto.toDto(newReservation);
+    public ReservationResponse postReservation(@RequestBody ReservationRequest request) {
+        return service.postReservation(request);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        repository.deleteById(id);
-        return ResponseEntity.ok().build();
+        service.deleteReservation(id);
+        return ResponseEntity.noContent().build();
     }
 }

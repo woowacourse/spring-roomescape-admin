@@ -19,7 +19,7 @@ public class ReservationTest {
     void error_validationName(String name) {
         // given
         var date = LocalDate.now();
-        var time = LocalTime.now();
+        var time = new ReservationTime(1L, LocalTime.of(15, 0));
 
         // when & then
         assertThatThrownBy(() -> new Reservation(1L, name, date, time))
@@ -33,7 +33,7 @@ public class ReservationTest {
         //given
         LocalDate date = null;
         var name = "브라운";
-        var time = LocalTime.now();
+        var time = new ReservationTime(1L, LocalTime.of(15, 0));
         //when & then
         assertThatThrownBy(() -> new Reservation(1L, name, date, time))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -41,10 +41,10 @@ public class ReservationTest {
     }
 
     @Test
-    @DisplayName("null이나 공백을 입력할 경우, 예외가 발생한다.")
+    @DisplayName("time 값이 null이나 공백을 입력할 경우, 예외가 발생한다.")
     void error_validationTime() {
         //given
-        LocalTime time = null;
+        ReservationTime time = null;
         var name = "브라운";
         var date = LocalDate.now();
         //when & then

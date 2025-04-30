@@ -8,6 +8,8 @@ public interface ReservationTimeRepository {
 
     List<ReservationTime> findAll();
 
+    ReservationTime findById(long id);
+
     ReservationTime addAndGet(LocalTime startAt);
 
     int deleteById(Long id);

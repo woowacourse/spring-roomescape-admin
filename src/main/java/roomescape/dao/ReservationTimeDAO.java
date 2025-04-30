@@ -31,6 +31,10 @@ public class ReservationTimeDAO implements ReservationTimeRepository {
         return jdbcTemplate.query("SELECT * FROM reservation_time", reservationTimeRowMapper);
     }
 
+    public ReservationTime findById(long id) {
+        return jdbcTemplate.queryForObject("SELECT * FROM reservation_time WHERE id = ?", reservationTimeRowMapper, id);
+    }
+
     public ReservationTime addAndGet(LocalTime startAt) {
         Map<String, Object> parameters = Map.of("start_at", startAt);
 

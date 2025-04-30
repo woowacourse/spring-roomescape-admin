@@ -1,6 +1,5 @@
 package roomescape.dao;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +51,7 @@ public class ReservationDAO implements ReservationRepository {
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
-    public Reservation addAndGet(String name, LocalDate date, long timeId) {
+    public long addAndGet(String name, LocalDate date, long timeId) {
         Map<String, Object> parameters = Map.of(
                 "name", name,
                 "date", date,
@@ -60,10 +59,7 @@ public class ReservationDAO implements ReservationRepository {
         );
 
         Number id = simpleJdbcInsert.executeAndReturnKey(parameters);
-        Time startAt = jdbcTemplate.queryForObject("SELECT start_at FROM reservation_time WHERE id = ?", Time.class, timeId);
-
-        ReservationTime timeRes = new ReservationTime(timeId, startAt.toLocalTime());
-        return new Reservation(id.longValue(), name, date, timeRes);
+        return id.longValue();
     }
 
     public int deleteById(Long id) {

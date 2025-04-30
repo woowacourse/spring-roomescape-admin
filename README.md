@@ -19,18 +19,41 @@
 
 ## 5 단계
 
-- [x] bd 에서 데이터를 조회하는 기능을 구현한다.
+- [x] reservation 테이블에서 예약조회기능을 구현한다.
 
 ## 6 단계
 
-- [x] bd에 데이터를 추가하는 기능을 구현한다.
-- [x] bd에서 데이터를 삭제하는 기능을 구현한다.
+- [x] reservation 테이블에서 예약추가 기능을 구현한다.
+- [x] reservation 테이블에서 예약삭제 기능을 구현한다.
+
+## 7 단계
+
+- [x] reservation_time 테이블에서 예약시간조회 기능을 구현한다.
+- [x] reservation_time 테이블에서 예약시간추가 기능을 구현한다.
+- [x] reservation_time 테이블에서 예약시간삭제 기능을 구현한다.
+
+## 8 단계
+
+- [x] 예약 요청 시, 시간 대신 시간id로 예약할 수 있게 변경한다.
+- [x] 예약 시에 정해진 시간만 고를 수 있도록 변경한다.
+
+## 9 단계
+
+- [x] ReservationController 에서 JdbcTemplate 필드를 삭제한다.
+- [x] 계층화 리팩터링을 시도한다.
 
 ## Database Schema
 
-### Reservation
+### RESERVATION
 
-| id(pk) | name | date | time |
-|--------|------|------|------|
+| id(pk) | name | date | time_id(fk) |
+|--------|------|------|-------------|
+
+time_id는 RESERVATION_TIME의 id의 외래키임
+
+### RESERVATION_TIME
+
+| id(pk) | start_at |
+|--------|----------|
 			
 			

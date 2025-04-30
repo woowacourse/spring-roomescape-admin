@@ -1,7 +1,8 @@
 package roomescape.dao;
 
+import static roomescape.dao.ReservationTimeDao.NOT_EFFECTED_ROW_COUNT;
+
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationDao {
+
     private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert insertReservation;
 
@@ -26,39 +28,49 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAll() {
-        String sql = "select id, name, date, time from reservation";
+        String sql = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                inner join reservation_time as t
+                on r.time_id = t.id
+                """;
         List<Reservation> foundReservations = jdbcTemplate.query(
                 sql, (rs, rowNum) -> {
                     long id = rs.getLong("id");
                     String name = rs.getString("name");
                     String date = rs.getString("date");
-                    String time = rs.getString("time");
-                    return new Reservation(id, toPerson(name), toReservationTime(date, time));
+                    String startAt = rs.getString("start_at");
+                    return new Reservation(id, new Person(name), LocalDate.parse(date), toReservationTime(startAt));
                 }
         );
         return foundReservations;
     }
 
-    private ReservationTime toReservationTime(String date, String time) {
-        return new ReservationTime(LocalDateTime.of(LocalDate.parse(date), LocalTime.parse(time)));
+    private ReservationTime toReservationTime(String time) {
+        return new ReservationTime(LocalTime.parse(time));
     }
 
-    private Person toPerson(String name) {
-        return new Person(name);
-    }
-
-    public Reservation insert(Reservation reservation) {
+    public Reservation insert(Reservation reservation, ReservationTime reservationTime) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", reservation.getPersonName());
         parameters.put("date", reservation.getDate());
-        parameters.put("time", reservation.getTime());
+        parameters.put("time_id", reservationTime.getId());
         long newId = insertReservation.executeAndReturnKey(parameters).longValue();
 
-        return new Reservation(newId, reservation);
+        return new Reservation(newId, reservation, reservationTime);
     }
 
     public int deleteById(long id) {
         String sql = "delete from reservation where id = ?";
-        return jdbcTemplate.update(sql, id);
+        int effectedRowCount = jdbcTemplate.update(sql, id);
+        if (effectedRowCount == NOT_EFFECTED_ROW_COUNT) {
+            throw new IllegalArgumentException("id가 존재하지 않습니다.");
+        }
+        return effectedRowCount;
     }
 }

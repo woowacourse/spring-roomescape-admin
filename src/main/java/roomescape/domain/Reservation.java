@@ -1,29 +1,48 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 public class Reservation {
     private long id;
     private Person person;
+    private LocalDate date;
     private ReservationTime reservationTime;
 
-    public Reservation(final long id, final Person person, final ReservationTime reservationTime) {
+    public Reservation(final long id,
+                       final Person person,
+                       final LocalDate date,
+                       final ReservationTime reservationTime) {
+        validateNullDate(date);
         this.id = id;
         this.person = person;
+        this.date = date;
         this.reservationTime = reservationTime;
     }
 
-    public Reservation(final Person person, final ReservationTime reservationTime) {
-        this.id = 0L;
-        this.person = person;
-        this.reservationTime = reservationTime;
-    }
-
-    public Reservation(final long id, final Reservation reservation) {
+    public Reservation(final long id, final Reservation reservation, final ReservationTime reservationTime) {
         this.id = id;
         this.person = reservation.getPerson();
-        this.reservationTime = reservation.getReservationTime();
+        this.date = reservation.getDate();
+        this.reservationTime = reservationTime;
+    }
+
+    public Reservation(final Person person, final LocalDate date) {
+        validateNullDate(date);
+        this.id = 0L;
+        this.person = person;
+        this.date = date;
+    }
+
+    private void validateNullDate(LocalDate date) {
+        if (date == null) {
+            throw new IllegalArgumentException("예약 날짜는 비어있을 수 없습니다.");
+        }
+    }
+
+    public boolean isBefore(LocalDateTime today) {
+        LocalDateTime reservationDateAndTime = LocalDateTime.of(date, reservationTime.getStartAt());
+        return reservationDateAndTime.isBefore(today);
     }
 
     public String getPersonName() {
@@ -39,11 +58,7 @@ public class Reservation {
     }
 
     public LocalDate getDate() {
-        return reservationTime.getDate();
-    }
-
-    public LocalTime getTime() {
-        return reservationTime.getTime();
+        return this.date;
     }
 
     public long getId() {

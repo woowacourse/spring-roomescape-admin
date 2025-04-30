@@ -1,16 +1,16 @@
-package roomescape.controller.response;
+package roomescape.service.reservation.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import roomescape.Reservation;
+import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 public record ReservationResponse(
         Long id,
         String name,
         LocalDate date,
         @JsonFormat(pattern = "HH:mm")
-        LocalTime time) {
+        ReservationTime time) {
 
     public static ReservationResponse of(final Reservation reservation) {
         return new ReservationResponse(
@@ -21,4 +21,12 @@ public record ReservationResponse(
         );
     }
 
+    public static ReservationResponse from(final long generatedId, final Reservation reservationRequest) {
+        return new ReservationResponse(
+                generatedId,
+                reservationRequest.getName(),
+                reservationRequest.getDate(),
+                reservationRequest.getTime()
+        );
+    }
 }

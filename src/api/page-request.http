@@ -15,3 +15,7 @@ GET http://localhost:8080/admin
 GET http://localhost:8080/admin/reservation
 
 ###
+
+### 시간 관리 페이지
+
+GET http://localhost:8080/admin/time

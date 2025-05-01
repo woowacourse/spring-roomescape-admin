@@ -1,11 +1,11 @@
 package roomescape.dao;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
 import roomescape.entity.ReservationTimeEntity;
 
 import java.time.LocalTime;
@@ -13,13 +13,16 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@JdbcTest
 class JdbcReservationTimeDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
     private ReservationTimeDao timeDao;
+
+    @BeforeEach
+    void setup() {
+        timeDao = new JdbcReservationTimeDao(jdbcTemplate);
+    }
 
     @DisplayName("생성 테스트")
     @Test
@@ -38,7 +41,7 @@ class JdbcReservationTimeDaoTest {
     @Test
     void deleteTest() {
         // given
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+        jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)", 1, "10:00");
 
         // when
         timeDao.deleteById(1L);
@@ -51,7 +54,7 @@ class JdbcReservationTimeDaoTest {
     @Test
     void findByIdTest() {
         // given
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+        jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)", 1, "10:00");
 
         // when
         Optional<ReservationTimeEntity> entity = timeDao.findById(1L);

@@ -1,11 +1,11 @@
 package roomescape.dao;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
 import roomescape.entity.ReservationEntity;
 import roomescape.entity.ReservationTimeEntity;
 
@@ -14,19 +14,22 @@ import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@JdbcTest
 class JdbcReservationDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
     private ReservationDao reservationDao;
+
+    @BeforeEach
+    void setup() {
+        reservationDao = new JdbcReservationDao(jdbcTemplate);
+    }
 
     @DisplayName("생성 테스트")
     @Test
     void createTest() {
         // given
-        jdbcTemplate.update("INSERT INTO reservation_time(start_at) VALUES (?)", "10:00");
+        jdbcTemplate.update("INSERT INTO reservation_time(id, start_at) VALUES (?, ?)", 1, "10:00");
 
         ReservationTimeEntity time = new ReservationTimeEntity(1L, LocalTime.of(10, 0));
         ReservationEntity reservation = new ReservationEntity(1L, "test", LocalDate.of(2025, 1, 2), time);
@@ -42,8 +45,8 @@ class JdbcReservationDaoTest {
     @Test
     void deleteTest() {
         // given
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "test", "2025-01-01", 1);
+        jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)", 1, "10:00");
+        jdbcTemplate.update("INSERT INTO reservation (id, name, date, time_id) VALUES (?, ?, ?, ?)", 1, "test", "2025-01-01", 1);
 
         // when
         reservationDao.deleteById(1L);

@@ -26,8 +26,8 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public boolean deleteTimeById(long id) {
-        return reservationTimes.removeIf(reservationTime -> reservationTime.getId() == id);
+    public void deleteTimeById(long id) {
+        reservationTimes.removeIf(reservationTime -> reservationTime.getId() == id);
     }
 
     @Override

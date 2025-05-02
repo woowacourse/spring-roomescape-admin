@@ -1,6 +1,7 @@
 package roomescape.reservation.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
@@ -61,7 +62,7 @@ class JdbcReservationRepositoryTest {
         assertThat(reservation.getDate()).isEqualTo(LocalDate.of(2024, 12, 1));
     }
 
-    @DisplayName("id가 일치하는 예약을 삭제하면 true를 반환한다.")
+    @DisplayName("id가 일치하는 예약을 삭제한다")
     @Test
     void deleteReservationById_existId() {
         // given
@@ -70,23 +71,8 @@ class JdbcReservationRepositoryTest {
                 reservationTime);
         Reservation reservation = jdbcReservationRepository.insertReservation(reservationWithoutId);
 
-        // when
-        boolean isDeleted = jdbcReservationRepository.deleteReservationById(reservation.getId());
-
-        // then
-        assertThat(isDeleted).isTrue();
-    }
-
-    @DisplayName("id가 존재하지 않는 예약을 삭제 요청하면 false를 반환한다.")
-    @Test
-    void deleteReservationById_notExistId() {
-        // given
-        long id = 1L;
-
-        // when
-        boolean isDeleted = jdbcReservationRepository.deleteReservationById(id);
-
-        // then
-        assertThat(isDeleted).isFalse();
+        // when, then
+        assertThatCode(() -> jdbcReservationRepository.deleteReservationById(reservation.getId()))
+                .doesNotThrowAnyException();
     }
 }

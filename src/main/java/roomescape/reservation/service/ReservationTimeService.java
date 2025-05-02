@@ -37,9 +37,9 @@ public class ReservationTimeService {
                 .toList();
     }
 
-    public boolean deleteTimeById(long id) {
+    public void deleteTimeById(long id) {
         validateTimeExistenceById(id);
-        return reservationTimeRepository.deleteTimeById(id);
+        reservationTimeRepository.deleteTimeById(id);
     }
 
     public ReservationTime findTimeById(long id) {

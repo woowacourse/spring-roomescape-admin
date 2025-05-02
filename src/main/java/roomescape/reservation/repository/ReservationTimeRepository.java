@@ -10,7 +10,7 @@ public interface ReservationTimeRepository {
 
     List<ReservationTime> findAll();
 
-    boolean deleteTimeById(long id);
+    void deleteTimeById(long id);
 
     Optional<ReservationTime> findById(long id);
 

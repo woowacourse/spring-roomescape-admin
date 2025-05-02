@@ -1,6 +1,7 @@
 package roomescape.reservation.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalTime;
@@ -51,11 +52,9 @@ class ReservationTimeServiceTest {
         // given
         long id = reservationTimeService.addTime(new ReservationTimeRequest(LocalTime.of(12, 1))).id();
 
-        // when
-        boolean isDeleted = reservationTimeService.deleteTimeById(id);
-
-        // then
-        assertThat(isDeleted).isTrue();
+        // when & then
+        assertThatCode(() -> reservationTimeService.deleteTimeById(id))
+                .doesNotThrowAnyException();
     }
 
     @DisplayName("id에 해당하는 예약 시간을 찾는다.")

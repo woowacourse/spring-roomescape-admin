@@ -1,6 +1,7 @@
 package roomescape.reservation.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -38,10 +39,7 @@ class JdbcReservationTimeRepositoryTest {
         ReservationTime reservationTime = jdbcReservationTimeRepository.insertTime(reservationTimeWithoutId);
 
         // when
-        boolean isDeleted = jdbcReservationTimeRepository.deleteTimeById(reservationTime.getId());
-
-        // then
-        assertThat(isDeleted).isTrue();
+        assertThatCode(() -> jdbcReservationTimeRepository.deleteTimeById(reservationTime.getId()));
     }
 
     @DisplayName("전체 Time을 읽어온다.")

@@ -5,16 +5,16 @@ import java.util.Objects;
 
 public final class ReservationTime {
 
-    private final long id;
+    private final Long id;
     private final LocalTime startAt;
 
-    public ReservationTime(long id, LocalTime startAt) {
+    public ReservationTime(Long id, LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
     }
 
     public static ReservationTime createWithoutId(LocalTime startAt) {
-        return new ReservationTime(0L, startAt);
+        return new ReservationTime(null, startAt);
     }
 
     @Override
@@ -26,7 +26,7 @@ public final class ReservationTime {
             return false;
         }
         ReservationTime that = (ReservationTime) o;
-        return id == that.id;
+        return Objects.equals(id, that.id);
     }
 
     @Override

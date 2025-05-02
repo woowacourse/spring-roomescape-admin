@@ -5,12 +5,12 @@ import java.util.Objects;
 
 public final class Reservation {
 
-    private final long id;
+    private final Long id;
     private final String name;
     private final LocalDate date;
     private final ReservationTime time;
 
-    public Reservation(long id, String name, LocalDate date, ReservationTime time) {
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -18,7 +18,7 @@ public final class Reservation {
     }
 
     public static Reservation createWithoutId(String name, LocalDate date, ReservationTime time) {
-        return new Reservation(0L, name, date, time);
+        return new Reservation(null, name, date, time);
     }
 
     @Override
@@ -30,7 +30,7 @@ public final class Reservation {
             return false;
         }
         Reservation that = (Reservation) o;
-        return id == that.id;
+        return Objects.equals(id, that.id);
     }
 
     @Override

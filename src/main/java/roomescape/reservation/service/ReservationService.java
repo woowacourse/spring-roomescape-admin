@@ -33,7 +33,7 @@ public class ReservationService {
         return ReservationResponse.from(reservationRepository.insertReservation(reservation));
     }
 
-    public boolean deleteReservationById(long id) {
-        return reservationRepository.deleteReservationById(id);
+    public void deleteReservationById(long id) {
+        reservationRepository.deleteReservationById(id);
     }
 }

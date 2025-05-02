@@ -1,6 +1,7 @@
 package roomescape.reservation.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -63,9 +64,7 @@ class ReservationServiceTest {
                 new ReservationRequest("test", LocalDate.of(2024, 12, 1), timeId)).id();
 
         // when
-        boolean isDeleted = reservationService.deleteReservationById(id);
-
-        // then
-        assertThat(isDeleted).isTrue();
+        assertThatCode(() -> reservationService.deleteReservationById(id))
+                .doesNotThrowAnyException();
     }
 }

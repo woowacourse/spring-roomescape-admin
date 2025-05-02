@@ -10,14 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import roomescape.reservation.model.ReservationTime;
-import roomescape.reservation.repository.h2.H2ReservationTimeRepository;
+import roomescape.reservation.repository.jdbc.JdbcReservationTimeRepository;
 
 @JdbcTest(properties = "application-test.properties")
-@Import(H2ReservationTimeRepository.class)
-class H2ReservationTimeRepositoryTest {
+@Import(JdbcReservationTimeRepository.class)
+class JdbcReservationTimeRepositoryTest {
 
     @Autowired
-    H2ReservationTimeRepository h2ReservationTimeRepository;
+    JdbcReservationTimeRepository jdbcReservationTimeRepository;
 
     ReservationTime reservationTimeWithoutId = ReservationTime.createWithoutId(LocalTime.of(12, 0));
 
@@ -25,7 +25,7 @@ class H2ReservationTimeRepositoryTest {
     @Test
     void insertTime() {
         // when
-        ReservationTime reservationTime = h2ReservationTimeRepository.insertTime(reservationTimeWithoutId);
+        ReservationTime reservationTime = jdbcReservationTimeRepository.insertTime(reservationTimeWithoutId);
 
         // then
         assertThat(reservationTime.getStartAt()).isEqualTo(LocalTime.of(12, 0));
@@ -35,10 +35,10 @@ class H2ReservationTimeRepositoryTest {
     @Test
     void deleteById() {
         // given
-        ReservationTime reservationTime = h2ReservationTimeRepository.insertTime(reservationTimeWithoutId);
+        ReservationTime reservationTime = jdbcReservationTimeRepository.insertTime(reservationTimeWithoutId);
 
         // when
-        boolean isDeleted = h2ReservationTimeRepository.deleteTimeById(reservationTime.getId());
+        boolean isDeleted = jdbcReservationTimeRepository.deleteTimeById(reservationTime.getId());
 
         // then
         assertThat(isDeleted).isTrue();
@@ -48,10 +48,10 @@ class H2ReservationTimeRepositoryTest {
     @Test
     void findAll() {
         // given
-        h2ReservationTimeRepository.insertTime(reservationTimeWithoutId);
+        jdbcReservationTimeRepository.insertTime(reservationTimeWithoutId);
 
         // when
-        List<ReservationTime> reservationTimes = h2ReservationTimeRepository.findAll();
+        List<ReservationTime> reservationTimes = jdbcReservationTimeRepository.findAll();
 
         // then
         assertThat(reservationTimes).hasSize(1);

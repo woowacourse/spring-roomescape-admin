@@ -1,4 +1,4 @@
-package roomescape.reservation.repository.h2;
+package roomescape.reservation.repository.jdbc;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,10 +15,7 @@ import roomescape.reservation.model.ReservationTime;
 import roomescape.reservation.repository.ReservationRepository;
 
 @Repository
-public class H2ReservationRepository implements ReservationRepository {
-
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
+public class JdbcReservationRepository implements ReservationRepository {
 
     private static final RowMapper<Reservation> RESERVATION_ROW_MAPPER = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("reservation_id"),
@@ -27,8 +24,10 @@ public class H2ReservationRepository implements ReservationRepository {
             new ReservationTime(resultSet.getLong("time_id"),
                     resultSet.getObject("start_at", LocalTime.class))
     );
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public H2ReservationRepository(DataSource dataSource) {
+    public JdbcReservationRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")

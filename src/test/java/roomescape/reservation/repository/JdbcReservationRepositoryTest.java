@@ -13,30 +13,30 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import roomescape.reservation.model.Reservation;
 import roomescape.reservation.model.ReservationTime;
-import roomescape.reservation.repository.h2.H2ReservationRepository;
-import roomescape.reservation.repository.h2.H2ReservationTimeRepository;
+import roomescape.reservation.repository.jdbc.JdbcReservationRepository;
+import roomescape.reservation.repository.jdbc.JdbcReservationTimeRepository;
 
 @JdbcTest(properties = "application-test.properties")
-@Import({H2ReservationRepository.class, H2ReservationTimeRepository.class})
-class H2ReservationRepositoryTest {
+@Import({JdbcReservationRepository.class, JdbcReservationTimeRepository.class})
+class JdbcReservationRepositoryTest {
 
     ReservationTime time = ReservationTime.createWithoutId(LocalTime.of(12, 0));
     @Autowired
-    private H2ReservationRepository h2ReservationRepository;
+    private JdbcReservationRepository jdbcReservationRepository;
     @Autowired
-    private H2ReservationTimeRepository h2ReservationTimeRepository;
+    private JdbcReservationTimeRepository jdbcReservationTimeRepository;
 
     @DisplayName("전체 예약 리스트 불러온다.")
     @Test
     void findAll() {
         // given
-        ReservationTime reservationTime = h2ReservationTimeRepository.insertTime(time);
+        ReservationTime reservationTime = jdbcReservationTimeRepository.insertTime(time);
         Reservation reservationWithoutId = Reservation.createWithoutId("test", LocalDate.of(2024, 12, 1),
                 reservationTime);
-        h2ReservationRepository.insertReservation(reservationWithoutId);
+        jdbcReservationRepository.insertReservation(reservationWithoutId);
 
         // when
-        List<Reservation> reservations = h2ReservationRepository.findAll();
+        List<Reservation> reservations = jdbcReservationRepository.findAll();
 
         // then
         Reservation reservation = reservations.getFirst();
@@ -51,10 +51,10 @@ class H2ReservationRepositoryTest {
     @Test
     void insertReservation() {
         // when
-        ReservationTime reservationTime = h2ReservationTimeRepository.insertTime(time);
+        ReservationTime reservationTime = jdbcReservationTimeRepository.insertTime(time);
         Reservation reservationWithoutId = Reservation.createWithoutId("test", LocalDate.of(2024, 12, 1),
                 reservationTime);
-        Reservation reservation = h2ReservationRepository.insertReservation(reservationWithoutId);
+        Reservation reservation = jdbcReservationRepository.insertReservation(reservationWithoutId);
 
         // then
         assertThat(reservation.getName()).isEqualTo("test");
@@ -65,13 +65,13 @@ class H2ReservationRepositoryTest {
     @Test
     void deleteReservationById_existId() {
         // given
-        ReservationTime reservationTime = h2ReservationTimeRepository.insertTime(time);
+        ReservationTime reservationTime = jdbcReservationTimeRepository.insertTime(time);
         Reservation reservationWithoutId = Reservation.createWithoutId("test", LocalDate.of(2024, 12, 1),
                 reservationTime);
-        Reservation reservation = h2ReservationRepository.insertReservation(reservationWithoutId);
+        Reservation reservation = jdbcReservationRepository.insertReservation(reservationWithoutId);
 
         // when
-        boolean isDeleted = h2ReservationRepository.deleteReservationById(reservation.getId());
+        boolean isDeleted = jdbcReservationRepository.deleteReservationById(reservation.getId());
 
         // then
         assertThat(isDeleted).isTrue();
@@ -84,7 +84,7 @@ class H2ReservationRepositoryTest {
         long id = 1L;
 
         // when
-        boolean isDeleted = h2ReservationRepository.deleteReservationById(id);
+        boolean isDeleted = jdbcReservationRepository.deleteReservationById(id);
 
         // then
         assertThat(isDeleted).isFalse();

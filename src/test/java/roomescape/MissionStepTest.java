@@ -25,7 +25,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservation.controller.ReservationController;
 import roomescape.reservation.model.Reservation;
 import roomescape.reservation.model.ReservationTime;
-import roomescape.reservation.repository.h2.H2ReservationTimeRepository;
+import roomescape.reservation.repository.jdbc.JdbcReservationTimeRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -34,7 +34,7 @@ public class MissionStepTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private H2ReservationTimeRepository h2ReservationTimeRepository;
+    private JdbcReservationTimeRepository jdbcReservationTimeRepository;
     @Autowired
     private ReservationController reservationController;
 
@@ -196,7 +196,7 @@ public class MissionStepTest {
 
     @Test
     void 팔단계() {
-        h2ReservationTimeRepository.insertTime(ReservationTime.createWithoutId(LocalTime.of(12, 0)));
+        jdbcReservationTimeRepository.insertTime(ReservationTime.createWithoutId(LocalTime.of(12, 0)));
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");

@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -33,14 +34,14 @@ public class ReservationTimeController {
     public ResponseEntity<ReservationTimeResponse> save(
             @RequestBody final ReservationTimeRegister reservationTimeRegister
     ) {
-        return ResponseEntity.ok(reservationService.saveReservationTime(reservationTimeRegister));
+        return ResponseEntity.status(HttpStatus.CREATED).body(reservationService.saveReservationTime(reservationTimeRegister));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(final @PathVariable(name = "id") Long id) {
         try {
             reservationService.deleteReservationTimeById(id);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.noContent().build();
         } catch (final IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }

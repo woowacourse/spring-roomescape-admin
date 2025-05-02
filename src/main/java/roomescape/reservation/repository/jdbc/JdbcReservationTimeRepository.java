@@ -59,4 +59,16 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
                 resultSet.getObject("start_at", LocalTime.class)
         ), id).stream().findFirst();
     }
+
+    @Override
+    public boolean existsTimeById(long id) {
+        String sql = """
+                SELECT EXISTS (
+                  SELECT 1
+                  FROM reservation_time
+                  WHERE id = ?
+                );
+                """;
+        return jdbcTemplate.queryForObject(sql, Boolean.class, id);
+    }
 }

@@ -36,4 +36,10 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
                 .filter(reservationTime -> reservationTime.getId() == id)
                 .findFirst();
     }
+
+    @Override
+    public boolean existsTimeById(long id) {
+        return reservationTimes.stream()
+                .anyMatch((reservationTime) -> reservationTime.getId() == id);
+    }
 }

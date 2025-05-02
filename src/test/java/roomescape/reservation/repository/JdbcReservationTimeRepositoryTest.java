@@ -57,4 +57,31 @@ class JdbcReservationTimeRepositoryTest {
         assertThat(reservationTimes).hasSize(1);
         assertThat(reservationTimes.getFirst().getStartAt()).isEqualTo(LocalTime.of(12, 0));
     }
+
+    @DisplayName("id에 해당하는 Time이 존재하면 true를 반환한다.")
+    @Test
+    void existById() {
+        // given
+        ReservationTime reservationTime = jdbcReservationTimeRepository.insertTime(reservationTimeWithoutId);
+
+        // when
+        boolean isExist = jdbcReservationTimeRepository.existsTimeById(reservationTime.getId());
+
+        // then
+        assertThat(isExist).isTrue();
+    }
+
+    @DisplayName("id에 해당하는 Time이 존재하지 않으면 false를 반환한다.")
+    @Test
+    void existByIdFalse() {
+        // given
+        ReservationTime reservationTime = jdbcReservationTimeRepository.insertTime(reservationTimeWithoutId);
+        jdbcReservationTimeRepository.deleteTimeById(reservationTime.getId());
+
+        // when
+        boolean isExist = jdbcReservationTimeRepository.existsTimeById(reservationTime.getId());
+
+        // then
+        assertThat(isExist).isFalse();
+    }
 }

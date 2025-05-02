@@ -10,30 +10,37 @@ import roomescape.reservation.repository.ReservationTimeRepository;
 @Service
 public class ReservationTimeService {
 
-    private final ReservationTimeRepository ReservationTimeRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
     public ReservationTimeService(ReservationTimeRepository ReservationTimeRepository) {
-        this.ReservationTimeRepository = ReservationTimeRepository;
+        this.reservationTimeRepository = ReservationTimeRepository;
     }
 
     public ReservationTimeResponse addTime(ReservationTimeRequest reservationTimeRequest) {
         ReservationTime reservationTime = ReservationTime.createWithoutId(reservationTimeRequest.startAt());
-        return ReservationTimeResponse.from(ReservationTimeRepository.insertTime(reservationTime));
+        return ReservationTimeResponse.from(reservationTimeRepository.insertTime(reservationTime));
     }
 
     public List<ReservationTimeResponse> getTimes() {
-        List<ReservationTime> reservationTimes = ReservationTimeRepository.findAll();
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
         return reservationTimes.stream()
                 .map(ReservationTimeResponse::from)
                 .toList();
     }
 
     public boolean deleteTimeById(long id) {
-        return ReservationTimeRepository.deleteTimeById(id);
+        validateTimeExistenceById(id);
+        return reservationTimeRepository.deleteTimeById(id);
     }
 
     public ReservationTime findTimeById(long id) {
-        return ReservationTimeRepository.findById(id)
+        return reservationTimeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다."));
+    }
+
+    private void validateTimeExistenceById(long id) {
+        if(!reservationTimeRepository.existsTimeById(id)) {
+            throw new IllegalArgumentException("존재하지 않는 시간입니다.");
+        }
     }
 }

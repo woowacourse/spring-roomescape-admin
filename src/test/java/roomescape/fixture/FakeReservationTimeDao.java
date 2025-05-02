@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import roomescape.dao.ReservationTimeRepository;
 import roomescape.model.ReservationTime;
 
-public class FakeReservationTimeDAO implements ReservationTimeRepository {
+public class FakeReservationTimeDao implements ReservationTimeRepository {
 
     private final List<ReservationTime> data = new ArrayList<>();
     private final AtomicLong atomicLong = new AtomicLong(1);

@@ -7,13 +7,13 @@ import org.junit.jupiter.api.Test;
 import roomescape.dao.ReservationTimeRepository;
 import roomescape.dto.ReservationTimeReqDto;
 import roomescape.dto.ReservationTimeResDto;
-import roomescape.fixture.FakeReservationTimeDAO;
+import roomescape.fixture.FakeReservationTimeDao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ReservationTimeServiceTest {
 
-    private final ReservationTimeRepository reservationTimeDAO = new FakeReservationTimeDAO();
+    private final ReservationTimeRepository reservationTimeDAO = new FakeReservationTimeDao();
     private final ReservationTimeService reservationTimeService = new ReservationTimeService(reservationTimeDAO);
 
     @Test

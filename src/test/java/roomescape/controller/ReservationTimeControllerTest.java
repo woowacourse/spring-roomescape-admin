@@ -17,7 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import roomescape.dao.ReservationTimeRepository;
 import roomescape.dto.ReservationTimeReqDto;
 import roomescape.dto.ReservationTimeResDto;
-import roomescape.fixture.FakeReservationTimeDAO;
+import roomescape.fixture.FakeReservationTimeDao;
 import roomescape.model.ReservationTime;
 import roomescape.service.ReservationTimeService;
 
@@ -29,7 +29,7 @@ import static org.hamcrest.Matchers.is;
 @Sql("/test-data.sql")
 class ReservationTimeControllerTest {
 
-    private final ReservationTimeRepository reservationTimeDAO = new FakeReservationTimeDAO();
+    private final ReservationTimeRepository reservationTimeDAO = new FakeReservationTimeDao();
     private final ReservationTimeService reservationTimeService = new ReservationTimeService(reservationTimeDAO);
     private final ReservationTimeController reservationTimeController = new ReservationTimeController(reservationTimeService);
 

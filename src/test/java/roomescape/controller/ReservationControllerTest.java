@@ -20,8 +20,8 @@ import roomescape.dao.ReservationTimeRepository;
 import roomescape.dto.ReservationReqDto;
 import roomescape.dto.ReservationResDto;
 import roomescape.dto.ReservationTimeResDto;
-import roomescape.fixture.FakeReservationDAO;
-import roomescape.fixture.FakeReservationTimeDAO;
+import roomescape.fixture.FakeReservationDao;
+import roomescape.fixture.FakeReservationTimeDao;
 import roomescape.service.ReservationService;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,8 +32,8 @@ import static org.hamcrest.Matchers.is;
 @Sql("/test-data.sql")
 class ReservationControllerTest {
 
-    private final ReservationRepository reservationDAO = new FakeReservationDAO();
-    private final ReservationTimeRepository reservationTimeDAO = new FakeReservationTimeDAO();
+    private final ReservationRepository reservationDAO = new FakeReservationDao();
+    private final ReservationTimeRepository reservationTimeDAO = new FakeReservationTimeDao();
     private final ReservationService reservationService = new ReservationService(reservationDAO, reservationTimeDAO);
     private final ReservationController reservationController = new ReservationController(reservationService);
 

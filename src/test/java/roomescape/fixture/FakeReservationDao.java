@@ -9,7 +9,7 @@ import roomescape.dao.ReservationRepository;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 
-public class FakeReservationDAO implements ReservationRepository {
+public class FakeReservationDao implements ReservationRepository {
 
     private final List<Reservation> data = new ArrayList<>();
     private final AtomicLong atomicLong = new AtomicLong(1);

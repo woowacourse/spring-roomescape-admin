@@ -16,8 +16,7 @@ public class ReservationInMemoryRepository implements ReservationRepository {
     @Override
     public long save(final Reservation reservation) {
         long id = this.id.getAndIncrement();
-        reservation.setId(id);
-        sources.put(id, reservation);
+        sources.put(id, reservation.createReservationWithId(id));
 
         return this.id.get();
     }
@@ -28,10 +27,10 @@ public class ReservationInMemoryRepository implements ReservationRepository {
     }
 
     @Override
-    public void deleteById(final long id) {
+    public int deleteById(final long id) {
         if (!sources.containsKey(id)) {
             throw new IllegalArgumentException("id에 해당하는 예약 내역이 없습니다.");
         }
-        sources.remove(id);
+        return (int) sources.remove(id).getId();
     }
 }

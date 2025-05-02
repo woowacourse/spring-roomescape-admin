@@ -24,11 +24,6 @@ public class ReservationTimeController {
         this.reservationService = reservationService;
     }
 
-    @GetMapping(produces = MediaType.TEXT_HTML_VALUE)
-    public String time() {
-        return "/admin/time";
-    }
-
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ReservationTimeResponse>> getAllTimes() {
         return ResponseEntity.ok(reservationService.getAllReservationTime());

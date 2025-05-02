@@ -1,11 +1,13 @@
 package roomescape.reservation.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.exception.ReservationTimeDuplicateException;
 import roomescape.reservation.dto.ReservationTimeRequest;
 import roomescape.reservation.dto.ReservationTimeResponse;
 import roomescape.reservation.model.ReservationTime;
@@ -67,5 +69,19 @@ class ReservationTimeServiceTest {
 
         // then
         assertThat(reservationTime.getStartAt()).isEqualTo(LocalTime.of(12, 1));
+    }
+
+    @DisplayName("시간 생성 시 이미 존재하는 시간인 경우 예외가 발생한다.")
+    @Test
+    void addTimeThrowReservationTimeDuplicateException() {
+        // given
+        LocalTime startAt = LocalTime.of(12, 1);
+        long id = reservationTimeService.addTime(new ReservationTimeRequest(startAt)).id();
+
+        // when, then
+        assertThatThrownBy(() -> reservationTimeService.addTime(new ReservationTimeRequest(startAt)))
+                .isInstanceOf(ReservationTimeDuplicateException.class)
+                .hasMessage("이미 같은 시간이 존재합니다.");
+
     }
 }

@@ -56,8 +56,6 @@ public class ReservationControllerTest {
         final ReservationTime reservationTime = ReservationTime.of(LocalTime.MAX);
         final Reservation 윌슨 = new Reservation(1L, "윌슨", LocalDate.now().plusDays(1), reservationTime);
         final Reservation 히로 = new Reservation(2L, "히로", LocalDate.now().plusDays(1), reservationTime);
-        윌슨.setId(1L);
-        히로.setId(2L);
         List<Reservation> reservations = List.of(
                 윌슨, 히로
         );

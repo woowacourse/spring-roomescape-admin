@@ -31,8 +31,7 @@ public class ReservationService {
                 .orElseThrow(() -> new IllegalArgumentException("예약 시간이 존재하지 않습니다."));
         final Reservation reservation = Reservation.of(reservationRegister.name(), reservationRegister.date(),
                 reservationTime);
-        reservation.setId(reservationRepository.save(reservation));
-        return ReservationResponse.toDto(reservation);
+        return ReservationResponse.toDto(reservation.createReservationWithId(reservationRepository.save(reservation)));
     }
 
     public List<ReservationResponse> getAllReservation() {
@@ -65,7 +64,7 @@ public class ReservationService {
 
     private void validateDelete(final int result) {
         if (result == 0) {
-            throw new IllegalArgumentException("삭제 실패");
+            throw new IllegalArgumentException("삭제할 데이터가 존재하지 않습니다.");
         }
     }
 }

@@ -14,10 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
+import roomescape.dao.FakeReservationTimeDao;
 import roomescape.dao.ReservationTimeRepository;
 import roomescape.dto.ReservationTimeReqDto;
 import roomescape.dto.ReservationTimeResDto;
-import roomescape.fixture.FakeReservationTimeDao;
 import roomescape.model.ReservationTime;
 import roomescape.service.ReservationTimeService;
 

@@ -4,10 +4,10 @@ import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.dao.FakeReservationTimeDao;
 import roomescape.dao.ReservationTimeRepository;
 import roomescape.dto.ReservationTimeReqDto;
 import roomescape.dto.ReservationTimeResDto;
-import roomescape.fixture.FakeReservationTimeDao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

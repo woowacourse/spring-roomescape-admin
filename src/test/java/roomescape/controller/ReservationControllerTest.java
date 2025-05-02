@@ -15,13 +15,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.util.UriComponentsBuilder;
+import roomescape.dao.FakeReservationDao;
+import roomescape.dao.FakeReservationTimeDao;
 import roomescape.dao.ReservationRepository;
 import roomescape.dao.ReservationTimeRepository;
 import roomescape.dto.ReservationReqDto;
 import roomescape.dto.ReservationResDto;
 import roomescape.dto.ReservationTimeResDto;
-import roomescape.fixture.FakeReservationDao;
-import roomescape.fixture.FakeReservationTimeDao;
 import roomescape.service.ReservationService;
 
 import static org.assertj.core.api.Assertions.assertThat;

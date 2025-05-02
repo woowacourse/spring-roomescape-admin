@@ -30,13 +30,12 @@ public final class Reservation {
             return false;
         }
         Reservation that = (Reservation) o;
-        return id == that.id && Objects.equals(name, that.name) && Objects.equals(date, that.date)
-                && Objects.equals(time, that.time);
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, date, time);
+        return Objects.hashCode(id);
     }
 
     public long getId() {

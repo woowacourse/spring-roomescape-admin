@@ -26,12 +26,12 @@ public final class ReservationTime {
             return false;
         }
         ReservationTime that = (ReservationTime) o;
-        return id == that.id && Objects.equals(startAt, that.startAt);
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, startAt);
+        return Objects.hashCode(id);
     }
 
     public long getId() {

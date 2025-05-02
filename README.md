@@ -12,7 +12,12 @@
 ### 예약 관리 페이지
 
 - [x] /admin/reservation 요청 시 예약 관리 페이지가 응답한다.
-  - [x] templates/admin/reservation-legacy.html 파일을 이용한다.
+  - [x] templates/admin/reservation.html 파일을 이용한다.
+
+### 시간 관리 페이지
+
+- [x] /admin/time 요청 시 시간 관리 페이지가 응답한다.
+  - [x] templates/admin/time.html 파일을 이용한다.
 
 ### 예약 조회
 
@@ -26,18 +31,15 @@
     HTTP/1.1 200 
     Content-Type: application/json
     [
-         {
-             "id": 1,
-             "name": "브라운",
-             "date": "2023-01-01",
-             "time": "10:00"
-         },
-         {
-             "id": 2,
-             "name": "브라운",
-             "date": "2023-01-02",
-             "time": "11:00"
-         }
+        {
+            "id": 1,
+            "name": "브라운",
+            "date": "2023-08-05",
+            "time": {
+                "id": 1,
+                "startAt": "10:00"
+            }
+        }
     ]
     ```
 
@@ -52,7 +54,7 @@
       {
         "date": "2023-08-05",
         "name": "브라운",
-        "time": "15:40"
+        "timeId": 1
       }
     ```
   - Response
@@ -64,7 +66,10 @@
       "id": 1,
       "name": "브라운",
       "date": "2023-08-05",
-      "time": "15:40"
+      "time" : {
+        "id": 1,
+        "startAt" : "10:00"
+      }
     }
     ```
 
@@ -74,8 +79,106 @@
   - Request
     ``` 
     DELETE /reservations/1 HTTP/1.1
+    ``` 
+  - Response
+    ```
+    HTTP/1.1 200
+    ```
+
+### 시간 추가
+
+- [x] 시간 추가 API를 구현한다.
+  - Request
+    ```
+    POST /times HTTP/1.1
+    content-type: application/json
+    
+    {
+      "startAt": "10:00"
+    }
+    ```
+  - Response
+    ```
+    HTTP/1.1 200
+    Content-Type: application/json
+    
+    {
+      "id": 1,
+      "startAt": "10:00"
+    }
+    ```
+
+### 시간 조회
+
+- [x] 시간 조회 API를 구현한다.
+  - Request
+    ```
+    GET /times HTTP/1.1
+    ```
+  - Response
+    ```
+    HTTP/1.1 200
+    Content-Type: application/json
+    
+    [
+      {
+          "id": 1,
+          "startAt": "10:00"
+      }
+    ]
+    ```
+
+### 시간 삭제
+
+- [x] 시간 삭제 API를 구현한다.
+  - Request
+    ```
+    DELETE /times/1 HTTP/1.1
     ```
   - Response
     ```
     HTTP/1.1 200
     ```
+
+### 데이터베이스
+
+- [x] h2 데이터베이스를 사용해 데이터를 저장한다.
+  - 데이터베이스 스키마
+    - 예약
+      ```
+      CREATE TABLE reservation
+      (
+          id      BIGINT       NOT NULL AUTO_INCREMENT,
+          name    VARCHAR(255) NOT NULL,
+          date    VARCHAR(255) NOT NULL,
+          time    VARCHAR(255) NOT NULL,
+          time_id BIGINT,
+          PRIMARY KEY (id)
+          FOREIGN KEY (time_id) REFERENCES reservation_time (id)
+      );
+      ```
+    - 예약 시간
+      ```
+      CREATE TABLE reservation_time
+      (
+          id   BIGINT       NOT NULL AUTO_INCREMENT,
+          start_at VARCHAR(255) NOT NULL,
+          PRIMARY KEY (id)
+      );
+      ``` 
+- [x] API 처리 로직에서 데이터베이스를 활용한다.
+  - 예약
+    - [x] 예약 조회
+    - [x] 예약 추가
+    - [x] 예약 취소
+  - 시간
+    - [x] 시간 조회
+    - [x] 시간 추가
+    - [x] 시간 삭제
+
+### 레이어드 아키텍처
+
+- [x] 컨트롤러는 웹 요청/응답 책임만 가진다.
+- [x] 데이터베이스 접근 책임은 DAO(Data Access Object)가 가진다.
+- [x] 비즈니스 플로우 책임은 서비스가 가진다.
+- [x] 비즈니스 규칙 책임은 도메인이 가진다.

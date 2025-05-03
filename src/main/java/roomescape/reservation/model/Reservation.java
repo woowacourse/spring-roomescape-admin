@@ -1,24 +1,45 @@
 package roomescape.reservation.model;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.Objects;
 
 public final class Reservation {
 
-    private final ReservationId id;
+    private final Long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
-    public Reservation(ReservationId id, String name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
+    public static Reservation createWithoutId(String name, LocalDate date, ReservationTime time) {
+        return new Reservation(null, name, date, time);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Reservation that = (Reservation) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
     public long getId() {
-        return id.getId();
+        return id;
     }
 
     public String getName() {
@@ -29,7 +50,7 @@ public final class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 }

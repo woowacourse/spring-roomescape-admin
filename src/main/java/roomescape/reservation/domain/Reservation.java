@@ -1,37 +1,38 @@
 package roomescape.reservation.domain;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
+import roomescape.common.domain.Id;
+import roomescape.reservationtime.domain.ReservationTime;
 
 public class Reservation {
-    private final Long id;
+    private final Id id;
     private final String name;
-    @JsonFormat(pattern = "yyyy-MM-dd")
     private final LocalDate date;
-    @JsonFormat(pattern = "HH:mm")
-    private final LocalTime time;
+    private final ReservationTime time;
 
-    @JsonCreator
-    public Reservation(
-            @JsonProperty("id") final Long id,
-            @JsonProperty("name") final String name,
-            @JsonProperty("date") final LocalDate date,
-            @JsonProperty("time") final LocalTime time) {
+    private Reservation(final Id id, final String name, final LocalDate date, final ReservationTime time) {
+        validateDateTime(date, time.getStartAt());
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public static Reservation toEntity(Reservation reservation, Long id) {
-        return new Reservation(id, reservation.name, reservation.date, reservation.time);
+    public static Reservation of(final Long id, final String name, final LocalDate date, final ReservationTime time) {
+        return new Reservation(Id.from(id), name, date, time);
     }
 
-    public Long getId() {
-        return id;
+    public static Reservation withUnassignedId(final String name, final LocalDate date, final ReservationTime time) {
+        return new Reservation(Id.unassigned(), name, date, time);
+    }
+
+    private void validateDateTime(LocalDate date, LocalTime time) {
+        if (LocalDateTime.of(date, time).isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("예약 시간이 현재 시간보다 이전일 수 없습니다.");
+        }
     }
 
     public String getName() {
@@ -42,7 +43,31 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
+    }
+
+    public Long getId() {
+        return id.getValue();
+    }
+
+    public void setId(Long value) {
+        id.setValue(value);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Reservation that = (Reservation) o;
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getName(), that.getName())
+                && Objects.equals(getDate(), that.getDate()) && Objects.equals(getTime(),
+                that.getTime());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getDate(), getTime());
     }
 }

@@ -9,40 +9,36 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.repository.ReservationRepository;
+import roomescape.reservation.service.ReservationService;
+import roomescape.reservation.dto.request.ReservationCreateRequest;
+import roomescape.reservation.dto.response.ReservationResponse;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final ReservationRepository reservationRepository;
+    private final ReservationService reservationService;
 
-    public ReservationController(final ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
+    public ReservationController(final ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
-    public List<Reservation> getReservations() {
-        return reservationRepository.getAll();
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        return ResponseEntity.ok(reservationService.getReservations());
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservation(
-            @RequestBody Reservation reservation
+    public ResponseEntity<ReservationResponse> createReservation(
+            @RequestBody ReservationCreateRequest request
     ) {
-        Reservation newReservation = reservationRepository.put(reservation);
-        return ResponseEntity.ok(newReservation);
+        return ResponseEntity.ok(reservationService.create(request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservations(
             @PathVariable("id") Long id
     ) {
-        try {
-            reservationRepository.deleteById(id);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+        reservationService.delete(id);
+        return ResponseEntity.ok().build();
     }
 }

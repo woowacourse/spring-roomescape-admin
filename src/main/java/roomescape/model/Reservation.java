@@ -1,19 +1,17 @@
 package roomescape.model;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class Reservation {
 
     private final Long id;
     private final String name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         validateName(name);
         validateDate(date);
-        validateTime(time);
         this.id = id;
         this.name = name;
         this.date = date;
@@ -32,7 +30,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 
@@ -45,12 +43,6 @@ public class Reservation {
     private void validateDate(LocalDate date) {
         if (date == null) {
             throw new IllegalArgumentException("[ERROR] 날짜를 입력해주세요.");
-        }
-    }
-
-    private void validateTime(LocalTime time) {
-        if (time == null) {
-            throw new IllegalArgumentException("[ERROR] 시간을 입력해주세요.");
         }
     }
 }

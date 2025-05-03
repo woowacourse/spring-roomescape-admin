@@ -13,29 +13,33 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 import roomescape.dto.ReservationReqDto;
 import roomescape.dto.ReservationResDto;
-import roomescape.model.Reservations;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final Reservations reservations = new Reservations();
+    private final ReservationService reservationService;
+
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     @GetMapping
     public ResponseEntity<List<ReservationResDto>> readAll() {
-        return ResponseEntity.ok(reservations.getAllReservations());
+        return ResponseEntity.ok(reservationService.findAll());
     }
 
     @PostMapping
     public ResponseEntity<ReservationResDto> create(@RequestBody ReservationReqDto dto, UriComponentsBuilder ucb) {
-        ReservationResDto newReservation = reservations.addAndGet(dto);
+        ReservationResDto newReservation = reservationService.addAndGet(dto);
         URI uri = ucb.path("reservations/{id}").buildAndExpand(newReservation.id()).toUri();
         return ResponseEntity.created(uri).body(newReservation);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        reservations.deleteById(id);
+        reservationService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }

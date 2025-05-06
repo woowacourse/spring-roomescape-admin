@@ -1,6 +1,7 @@
 package roomescape.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -56,5 +57,24 @@ class TimeDAOImplTest {
 
         // then
         assertThat(deletedCount).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("reservation 이 존재하는지 확인한다")
+    void existsById() {
+        // given
+        TimeDAOImpl timeDAOImpl = new TimeDAOImpl(jdbcTemplate);
+        Time time = new Time("10:00");
+        Long id = timeDAOImpl.insertTime(time);
+
+        // when
+        boolean existsId = timeDAOImpl.existsById(id);
+        boolean notExistsId = timeDAOImpl.existsById(100L);
+
+        // then
+        assertAll(
+                () -> assertThat(existsId).isTrue(),
+                () -> assertThat(notExistsId).isFalse()
+        );
     }
 }

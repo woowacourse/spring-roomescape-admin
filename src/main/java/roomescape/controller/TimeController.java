@@ -33,11 +33,11 @@ public class TimeController {
 
     @DeleteMapping("/times/{id}")
     public ResponseEntity<Void> deleteTime(@PathVariable("id") final Long id) {
-        int count = timeService.deleteTimeById(id);
-        if (count == 0) {
+        if (!timeService.existsById(id)) {
             return ResponseEntity.badRequest()
                     .build();
         }
+        timeService.deleteTimeById(id);
         return ResponseEntity.ok()
                 .build();
     }

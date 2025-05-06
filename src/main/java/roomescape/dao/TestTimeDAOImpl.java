@@ -27,4 +27,10 @@ public class TestTimeDAOImpl implements TimeDAO {
                 .count();
         return (int) idMatchedCount;
     }
+
+    @Override
+    public boolean existsById(final Long id) {
+        return times.stream()
+                .anyMatch(time -> time.getId().equals(id));
+    }
 }

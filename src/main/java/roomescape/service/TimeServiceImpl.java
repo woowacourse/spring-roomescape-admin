@@ -36,4 +36,9 @@ public class TimeServiceImpl implements TimeService {
     public int deleteTimeById(final Long id) {
         return timeDAO.deleteTimeById(id);
     }
+
+    @Override
+    public boolean existsById(final Long id) {
+        return timeDAO.existsById(id);
+    }
 }

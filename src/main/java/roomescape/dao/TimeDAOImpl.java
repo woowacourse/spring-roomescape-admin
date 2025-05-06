@@ -45,4 +45,11 @@ public class TimeDAOImpl implements TimeDAO {
         final String sql = "delete from reservation_time where id = ?";
         return jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public boolean existsById(final Long id) {
+        final String sql = "select count(*) from reservation_time where id = ?";
+        final int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+        return count > 0;
+    }
 }

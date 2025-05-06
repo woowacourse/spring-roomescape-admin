@@ -10,4 +10,6 @@ public interface TimeDAO {
     Long insertTime(Time time);
 
     int deleteTimeById(Long id);
+
+    boolean existsById(Long id);
 }

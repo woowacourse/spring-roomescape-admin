@@ -11,4 +11,6 @@ public interface TimeService {
     TimeResponse createTime(TimeRequest timeRequest);
 
     int deleteTimeById(Long id);
+
+    boolean existsById(Long id);
 }

@@ -35,4 +35,10 @@ public class TestTimeServiceImpl implements TimeService {
         int afterSize = times.size();
         return beforeSize - afterSize;
     }
+
+    @Override
+    public boolean existsById(final Long id) {
+        return times.stream()
+                .anyMatch(time -> time.getId().equals(id));
+    }
 }

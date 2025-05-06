@@ -8,8 +8,8 @@ import roomescape.domain.Reservation;
 
 public class FakeReservationDAOImpl implements ReservationDAO {
 
-    final List<Reservation> reservations = new ArrayList<>();
-    final AtomicLong atomicLong = new AtomicLong(1L);
+    private final List<Reservation> reservations = new ArrayList<>();
+    private final AtomicLong atomicLong = new AtomicLong(1L);
 
     @Override
     public List<Reservation> findAllReservation() {

@@ -8,8 +8,8 @@ import roomescape.domain.Time;
 
 public class FakeTimeDAOImpl implements TimeDAO {
 
-    final List<Time> times = new ArrayList<>();
-    final AtomicLong atomicLong = new AtomicLong(1L);
+    private final List<Time> times = new ArrayList<>();
+    private final AtomicLong atomicLong = new AtomicLong(1L);
 
     @Override
     public List<Time> findAllTime() {

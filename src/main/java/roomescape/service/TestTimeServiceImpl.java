@@ -2,6 +2,7 @@ package roomescape.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.Time;
 import roomescape.dto.TimeRequest;
 import roomescape.dto.TimeResponse;
@@ -9,6 +10,7 @@ import roomescape.dto.TimeResponse;
 public class TestTimeServiceImpl implements TimeService {
 
     private final List<Time> times = new ArrayList<>();
+    private final AtomicLong atomicLong = new AtomicLong(1L);
 
     @Override
     public List<TimeResponse> findAllTime() {
@@ -20,15 +22,17 @@ public class TestTimeServiceImpl implements TimeService {
     @Override
     public TimeResponse createTime(final TimeRequest timeRequest) {
         Time time = timeRequest.toEntity();
+        time.setId(atomicLong.getAndIncrement());
         times.add(time);
-        time.setId(times.size() + 1L);
         return TimeResponse.from(time);
     }
 
     @Override
     public int deleteTimeById(final Long id) {
-        return (int) times.stream()
-                .filter(time -> time.getId().equals(id))
-                .count();
+        int beforeSize = times.size();
+        times.removeIf(time -> time.getId()
+                .equals(id));
+        int afterSize = times.size();
+        return beforeSize - afterSize;
     }
 }

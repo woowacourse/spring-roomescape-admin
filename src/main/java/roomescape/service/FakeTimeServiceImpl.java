@@ -7,7 +7,7 @@ import roomescape.domain.Time;
 import roomescape.dto.TimeRequest;
 import roomescape.dto.TimeResponse;
 
-public class TestTimeServiceImpl implements TimeService {
+public class FakeTimeServiceImpl implements TimeService {
 
     private final List<Time> times = new ArrayList<>();
     private final AtomicLong atomicLong = new AtomicLong(1L);

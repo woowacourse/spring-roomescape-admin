@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.dao.TestTimeDAOImpl;
+import roomescape.dao.FakeTimeDAOImpl;
 import roomescape.dto.TimeRequest;
 import roomescape.dto.TimeResponse;
 
@@ -16,7 +16,7 @@ class TimeServiceImplTest {
     @DisplayName("db의 모든 Time 목록을 조회한다")
     void findAllTime() {
         // given
-        TimeServiceImpl timeService = new TimeServiceImpl(new TestTimeDAOImpl());
+        TimeServiceImpl timeService = new TimeServiceImpl(new FakeTimeDAOImpl());
         timeService.createTime(new TimeRequest("10:00"));
 
         // when
@@ -30,7 +30,7 @@ class TimeServiceImplTest {
     @DisplayName("db의 Time 을 추가한다")
     void createTime() {
         // given
-        TimeServiceImpl timeService = new TimeServiceImpl(new TestTimeDAOImpl());
+        TimeServiceImpl timeService = new TimeServiceImpl(new FakeTimeDAOImpl());
         String startAt = "10:00";
         TimeRequest timeRequest = new TimeRequest(startAt);
 
@@ -45,7 +45,7 @@ class TimeServiceImplTest {
     @DisplayName("db의 Time 을 삭제한다")
     void deleteTimeById() {
         // given
-        TimeServiceImpl timeService = new TimeServiceImpl(new TestTimeDAOImpl());
+        TimeServiceImpl timeService = new TimeServiceImpl(new FakeTimeDAOImpl());
         TimeRequest timeRequest = new TimeRequest("10:00");
         TimeResponse timeResponse = timeService.createTime(timeRequest);
         Long id = timeResponse.id();
@@ -61,7 +61,7 @@ class TimeServiceImplTest {
     @DisplayName("db의 Time 이 존재하는지 확인한다")
     void existsById() {
         // given
-        TimeServiceImpl timeService = new TimeServiceImpl(new TestTimeDAOImpl());
+        TimeServiceImpl timeService = new TimeServiceImpl(new FakeTimeDAOImpl());
         TimeRequest timeRequest = new TimeRequest("10:00");
         TimeResponse timeResponse = timeService.createTime(timeRequest);
         Long id = timeResponse.id();

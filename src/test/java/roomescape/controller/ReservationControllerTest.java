@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.service.TestReservationServiceImpl;
+import roomescape.service.FakeReservationServiceImpl;
 
 class ReservationControllerTest {
 
@@ -17,7 +17,7 @@ class ReservationControllerTest {
     @DisplayName("모든 예약 목록을 조회한다")
     void read_all_reservations() {
         // given
-        ReservationController reservationController = new ReservationController(new TestReservationServiceImpl());
+        ReservationController reservationController = new ReservationController(new FakeReservationServiceImpl());
 
         // when
         ResponseEntity<List<ReservationResponse>> response = reservationController.readReservations();
@@ -38,7 +38,7 @@ class ReservationControllerTest {
         // given
         String date = "2025-04-21";
         ReservationRequest reservationRequest = new ReservationRequest("kim", date, 1L);
-        ReservationController reservationController = new ReservationController(new TestReservationServiceImpl());
+        ReservationController reservationController = new ReservationController(new FakeReservationServiceImpl());
 
         // when
         ResponseEntity<ReservationResponse> response = reservationController.createReservation(reservationRequest);
@@ -55,7 +55,7 @@ class ReservationControllerTest {
         // given
         String date = "2025-04-21";
         ReservationRequest reservationRequest = new ReservationRequest("kim", date, 1L);
-        ReservationController reservationController = new ReservationController(new TestReservationServiceImpl());
+        ReservationController reservationController = new ReservationController(new FakeReservationServiceImpl());
         ResponseEntity<ReservationResponse> createdResponse = reservationController.createReservation(
                 reservationRequest);
         Long createdId = createdResponse.getBody()
@@ -74,7 +74,7 @@ class ReservationControllerTest {
     @DisplayName("존재하지 않는 예약 삭제 시 400 반환")
     void delete_reservation_when_not_exist_id() {
         // given
-        ReservationController reservationController = new ReservationController(new TestReservationServiceImpl());
+        ReservationController reservationController = new ReservationController(new FakeReservationServiceImpl());
 
         // when
         ResponseEntity<Void> response = reservationController.deleteReservation(2L);

@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.dao.TestReservationDAOImpl;
+import roomescape.dao.FakeReservationDAOImpl;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
@@ -16,7 +16,7 @@ class ReservationServiceImplTest {
     @DisplayName("db의 모든 Reservation 목록을 조회한다")
     void find_all_reservation() {
         // given
-        ReservationService reservationService = new ReservationServiceImpl(new TestReservationDAOImpl());
+        ReservationService reservationService = new ReservationServiceImpl(new FakeReservationDAOImpl());
         reservationService.createReservation(new ReservationRequest("kim", "2025-04-28", 1L));
 
         // when
@@ -30,7 +30,7 @@ class ReservationServiceImplTest {
     @DisplayName("db에 Reservation 을 추가한다")
     void create_reservation() {
         // given
-        ReservationService reservationService = new ReservationServiceImpl(new TestReservationDAOImpl());
+        ReservationService reservationService = new ReservationServiceImpl(new FakeReservationDAOImpl());
         String name = "kim";
         ReservationRequest reservationRequest = new ReservationRequest(name, "2025-04-28", 1L);
 
@@ -45,7 +45,7 @@ class ReservationServiceImplTest {
     @DisplayName("db에 Reservation 을 삭제한다")
     void delete_reservation_by_id() {
         // given
-        ReservationService reservationService = new ReservationServiceImpl(new TestReservationDAOImpl());
+        ReservationService reservationService = new ReservationServiceImpl(new FakeReservationDAOImpl());
         ReservationResponse reservationResponse = reservationService.createReservation(
                 new ReservationRequest("kim", "2025-04-28", 1L));
         Long id = reservationResponse.id();
@@ -61,7 +61,7 @@ class ReservationServiceImplTest {
     @DisplayName("db에 Reservation 이 존재하는지 확인한다")
     void exists_by_id() {
         // given
-        ReservationService reservationService = new ReservationServiceImpl(new TestReservationDAOImpl());
+        ReservationService reservationService = new ReservationServiceImpl(new FakeReservationDAOImpl());
         ReservationResponse reservationResponse = reservationService.createReservation(
                 new ReservationRequest("kim", "2025-04-28", 1L));
         Long id = reservationResponse.id();

@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import roomescape.domain.Reservation;
 
-public class TestReservationDAOImpl implements ReservationDAO {
+public class FakeReservationDAOImpl implements ReservationDAO {
 
     final List<Reservation> reservations = new ArrayList<>();
 

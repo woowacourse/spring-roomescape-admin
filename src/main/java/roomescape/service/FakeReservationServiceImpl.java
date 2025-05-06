@@ -7,7 +7,7 @@ import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
-public class TestReservationServiceImpl implements ReservationService {
+public class FakeReservationServiceImpl implements ReservationService {
 
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong atomicLong = new AtomicLong(1L);

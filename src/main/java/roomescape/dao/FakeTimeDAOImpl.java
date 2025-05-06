@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import roomescape.domain.Time;
 
-public class TestTimeDAOImpl implements TimeDAO {
+public class FakeTimeDAOImpl implements TimeDAO {
 
     final List<Time> times = new ArrayList<>();
 

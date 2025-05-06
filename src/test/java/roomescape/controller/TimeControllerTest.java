@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import roomescape.dto.TimeRequest;
 import roomescape.dto.TimeResponse;
-import roomescape.service.TestTimeServiceImpl;
+import roomescape.service.FakeTimeServiceImpl;
 
 class TimeControllerTest {
 
@@ -17,7 +17,7 @@ class TimeControllerTest {
     @DisplayName("모든 시간 목록을 조회한다")
     void read_all_times() {
         // given
-        TimeController timeController = new TimeController(new TestTimeServiceImpl());
+        TimeController timeController = new TimeController(new FakeTimeServiceImpl());
 
         // when
         ResponseEntity<List<TimeResponse>> response = timeController.readTimes();
@@ -38,7 +38,7 @@ class TimeControllerTest {
         // given
         String startAt = "10:00";
         TimeRequest timeRequest = new TimeRequest(startAt);
-        TimeController timeController = new TimeController(new TestTimeServiceImpl());
+        TimeController timeController = new TimeController(new FakeTimeServiceImpl());
 
         // when
         ResponseEntity<TimeResponse> response = timeController.createTime(timeRequest);
@@ -55,7 +55,7 @@ class TimeControllerTest {
         // given
         String startAt = "10:00";
         TimeRequest timeRequest = new TimeRequest(startAt);
-        TimeController timeController = new TimeController(new TestTimeServiceImpl());
+        TimeController timeController = new TimeController(new FakeTimeServiceImpl());
         ResponseEntity<TimeResponse> createdResponse = timeController.createTime(timeRequest);
         Long id = createdResponse.getBody()
                 .id();
@@ -73,7 +73,7 @@ class TimeControllerTest {
     @DisplayName("존재하지 않는 예약 삭제시 400 반환")
     void delete_time_when_not_exist_id() {
         // given
-        TimeController timeController = new TimeController(new TestTimeServiceImpl());
+        TimeController timeController = new TimeController(new FakeTimeServiceImpl());
 
         // when
         ResponseEntity<Void> response = timeController.deleteTime(2L);

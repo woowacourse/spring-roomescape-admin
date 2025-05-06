@@ -12,10 +12,7 @@ public class Time {
     public Time(final String startAt) {
         this.startAt = startAt;
     }
-
-    public Time() {
-    }
-
+    
     public Long getId() {
         return id;
     }

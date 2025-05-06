@@ -31,7 +31,7 @@ class TimeDAOImplTest {
     }
 
     @Test
-    @DisplayName("reservation 을 추가한다")
+    @DisplayName("time 을 추가한다")
     void insertTime() {
         // given
         TimeDAOImpl timeDAOImpl = new TimeDAOImpl(jdbcTemplate);
@@ -45,7 +45,7 @@ class TimeDAOImplTest {
     }
 
     @Test
-    @DisplayName("reservation 을 삭제한다")
+    @DisplayName("time 을 삭제한다")
     void deleteTimeById() {
         // given
         TimeDAOImpl timeDAOImpl = new TimeDAOImpl(jdbcTemplate);
@@ -60,7 +60,7 @@ class TimeDAOImplTest {
     }
 
     @Test
-    @DisplayName("reservation 이 존재하는지 확인한다")
+    @DisplayName("time 이 존재하는지 확인한다")
     void existsById() {
         // given
         TimeDAOImpl timeDAOImpl = new TimeDAOImpl(jdbcTemplate);

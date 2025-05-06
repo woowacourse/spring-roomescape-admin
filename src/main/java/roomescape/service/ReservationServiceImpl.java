@@ -18,7 +18,8 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public List<ReservationResponse> findAllReservations() {
-        return reservationDAO.findAllReservation().stream()
+        return reservationDAO.findAllReservation()
+                .stream()
                 .map(ReservationResponse::from)
                 .toList();
     }
@@ -34,5 +35,10 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public int deleteReservationById(final Long id) {
         return reservationDAO.deleteReservationById(id);
+    }
+
+    @Override
+    public boolean existsById(final Long id) {
+        return reservationDAO.existsById(id);
     }
 }

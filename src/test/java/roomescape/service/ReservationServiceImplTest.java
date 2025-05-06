@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -54,5 +55,25 @@ class ReservationServiceImplTest {
 
         // then
         assertThat(count).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("db에 Reservation 이 존재하는지 확인한다")
+    void exists_by_id() {
+        // given
+        ReservationService reservationService = new ReservationServiceImpl(new TestReservationDAOImpl());
+        ReservationResponse reservationResponse = reservationService.createReservation(
+                new ReservationRequest("kim", "2025-04-28", 1L));
+        Long id = reservationResponse.id();
+
+        // when
+        boolean existsId = reservationService.existsById(id);
+        boolean netExistsId = reservationService.existsById(100L);
+
+        // then
+        assertAll(
+                () -> assertThat(existsId).isTrue(),
+                () -> assertThat(netExistsId).isFalse()
+        );
     }
 }

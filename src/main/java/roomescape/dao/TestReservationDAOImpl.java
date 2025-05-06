@@ -27,4 +27,10 @@ public class TestReservationDAOImpl implements ReservationDAO {
                 .count();
         return (int) idMatchedCount;
     }
+
+    @Override
+    public boolean existsById(final Long id) {
+        return reservations.stream()
+                .anyMatch(reservation -> reservation.getId().equals(id));
+    }
 }

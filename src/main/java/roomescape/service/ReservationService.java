@@ -11,4 +11,6 @@ public interface ReservationService {
     ReservationResponse createReservation(ReservationRequest reservationRequest);
 
     int deleteReservationById(Long id);
+
+    boolean existsById(Long id);
 }

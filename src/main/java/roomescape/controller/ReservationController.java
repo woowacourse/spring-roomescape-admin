@@ -34,11 +34,11 @@ public class ReservationController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") final Long id) {
-        int count = reservationService.deleteReservationById(id);
-        if (count == 0) {
+        if (!reservationService.existsById(id)) {
             return ResponseEntity.badRequest()
                     .build();
         }
+        reservationService.deleteReservationById(id);
         return ResponseEntity.ok()
                 .build();
     }

@@ -35,4 +35,11 @@ public class TestReservationServiceImpl implements ReservationService {
         int afterSize = reservations.size();
         return beforeSize - afterSize;
     }
+
+    @Override
+    public boolean existsById(final Long id) {
+        return reservations.stream()
+                .anyMatch(reservation -> reservation.getId()
+                        .equals(id));
+    }
 }

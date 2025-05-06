@@ -62,4 +62,10 @@ public class ReservationDAOImpl implements ReservationDAO {
         final String sql = "delete from reservation where id = ?";
         return jdbcTemplate.update(sql, id);
     }
+
+    public boolean existsById(final Long id) {
+        final String sql = "select count(*) from reservation where id = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+        return count > 0;
+    }
 }

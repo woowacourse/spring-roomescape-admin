@@ -10,4 +10,6 @@ public interface ReservationDAO {
     Long insertReservation(Reservation reservation);
 
     int deleteReservationById(Long id);
+
+    boolean existsById(Long id);
 }

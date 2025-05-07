@@ -1,0 +1,81 @@
+package roomescape.dao;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+import java.util.List;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.domain.Reservation;
+import roomescape.domain.Time;
+
+@JdbcTest
+class ReservationDAOImplTest {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Test
+    @DisplayName("모든 reservation 을 조회한다")
+    void findAllReservation() {
+        // given
+        ReservationDAOImpl reservationDAOImpl = new ReservationDAOImpl(jdbcTemplate);
+
+        // when
+        List<Reservation> reservations = reservationDAOImpl.findAllReservation();
+
+        // then
+        assertThat(reservations).isEmpty();
+    }
+
+    @Test
+    @DisplayName("reservation 을 추가한다")
+    void insertReservation() {
+        // given
+        ReservationDAOImpl reservationDAOImpl = new ReservationDAOImpl(jdbcTemplate);
+        Reservation reservation = new Reservation("kim", "2025-04-28", new Time(1L, "10:00"));
+
+        // when
+        Long id = reservationDAOImpl.insertReservation(reservation);
+
+        // then
+        assertThat(id).isNotEqualTo(-1);
+    }
+
+    @Test
+    @DisplayName("reservation 을 삭제한다")
+    void deleteReservationById() {
+        // given
+        ReservationDAOImpl reservationDAOImpl = new ReservationDAOImpl(jdbcTemplate);
+        Reservation reservation = new Reservation("kim", "2025-04-28", new Time(1L, "10:00"));
+        Long id = reservationDAOImpl.insertReservation(reservation);
+
+        // when
+        int deletedCount = reservationDAOImpl.deleteReservationById(id);
+
+        // then
+        assertThat(deletedCount).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("reservation 이 존재하는지 확인한다")
+    void existsById() {
+        // given
+        ReservationDAOImpl reservationDAOImpl = new ReservationDAOImpl(jdbcTemplate);
+        Reservation reservation = new Reservation("kim", "2025-04-28", new Time(1L, "10:00"));
+        Long id = reservationDAOImpl.insertReservation(reservation);
+
+        // when
+        boolean existsId = reservationDAOImpl.existsById(id);
+        boolean notExistsId = reservationDAOImpl.existsById(100L);
+
+        // then
+        assertAll(
+                () -> assertThat(existsId).isTrue(),
+                () -> assertThat(notExistsId).isFalse()
+        );
+    }
+}

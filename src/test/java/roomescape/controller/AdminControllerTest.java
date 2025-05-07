@@ -31,7 +31,21 @@ class AdminControllerTest {
         String result = adminController.reservation();
 
         // then
-        String expected = "admin/reservation-legacy";
+        String expected = "admin/reservation";
+        assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    @DisplayName("time 뷰 경로를 반환한다")
+    void should_return_time_view_path() {
+        // given
+        AdminController adminController = new AdminController();
+
+        // when
+        String result = adminController.time();
+
+        // then
+        String expected = "admin/time";
         assertThat(result).isEqualTo(expected);
     }
 }

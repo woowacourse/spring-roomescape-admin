@@ -15,7 +15,6 @@ public record ReservationResponse(
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
         LocalTime time) {
-
     public static ReservationResponse from(Reservation reservation) {
         return new ReservationResponse(
                 reservation.id(),

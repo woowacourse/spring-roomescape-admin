@@ -73,10 +73,10 @@
 
 > 정해진 시간 슬롯을 관리하고, 예약과 시간을 연결한다.
 
-- [ ] **시간 관리 API**
+- [x] **시간 관리 API**
     - [x] 시간 추가 (`POST /times`): `startAt`을 입력받아 시간 슬롯을 생성한다.
-    - [ ] 시간 조회 (`GET /times`): 전체 시간 슬롯 목록을 반환한다.
-    - [ ] 시간 삭제 (`DELETE /times/{id}`): id에 해당하는 시간 슬롯을 삭제한다.
+    - [x] 시간 조회 (`GET /times`): 전체 시간 슬롯 목록을 반환한다.
+    - [x] 시간 삭제 (`DELETE /times/{id}`): id에 해당하는 시간 슬롯을 삭제한다.
 - [x] **스키마 추가** (`resources/schema.sql`)
     - [x] `reservation_time` 테이블을 추가한다.
 - [ ] **예약과 시간 연결**
@@ -84,7 +84,7 @@
     - [ ] `Reservation` 클래스의 `time` 필드를 `String → ReservationTime` 객체로 변경한다.
     - [ ] 예약 추가 요청 본문을 `time → timeId`로 변경한다.
     - [ ] 예약 조회 응답의 `time` 필드를 객체(`{id, startAt}`)로 변경한다.
-    - [ ] 예약 조회 쿼리에 INNER JOIN을 적용한다.
+    - [x] 예약 조회 쿼리에 INNER JOIN을 적용한다.
 
 ### ✅ 4단계: 계층 분리
 

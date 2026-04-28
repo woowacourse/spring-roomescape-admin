@@ -1,4 +1,4 @@
-package roomescape.time;
+package roomescape.reservationTime;
 
 import java.util.List;
 import java.util.Map;
@@ -11,20 +11,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.time.dto.TimeRequest;
-import roomescape.time.dto.TimeResponse;
+import roomescape.reservationTime.dto.ReservationTimeRequest;
+import roomescape.reservationTime.dto.ReservationTimeResponse;
 
 @RestController
-public class TimeController {
+public class ReservationTimeController {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private final RowMapper<TimeResponse> timeRowMapper = (rs, rowNum) -> new TimeResponse(
+    private final RowMapper<ReservationTimeResponse> timeRowMapper = (rs, rowNum) -> new ReservationTimeResponse(
             rs.getLong("id"),
             rs.getTime("start_at").toLocalTime()
     );
 
-    public TimeController(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeController(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")
@@ -32,15 +32,15 @@ public class TimeController {
     }
 
     @GetMapping("/times")
-    public List<TimeResponse> getTimes() {
+    public List<ReservationTimeResponse> getTimes() {
         return jdbcTemplate.query("SELECT id, start_at FROM reservation_time", timeRowMapper);
     }
 
     @PostMapping("/times")
-    public TimeResponse createTime(@RequestBody TimeRequest timeRequest) {
-        Map<String, Object> params = Map.of("start_at", timeRequest.startAt());
+    public ReservationTimeResponse createTime(@RequestBody ReservationTimeRequest reservationTimeRequest) {
+        Map<String, Object> params = Map.of("start_at", reservationTimeRequest.startAt());
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
-        return TimeResponse.from(timeRequest.toDomain(id));
+        return ReservationTimeResponse.from(reservationTimeRequest.toDomain(id));
     }
 
     @DeleteMapping("/times/{id}")

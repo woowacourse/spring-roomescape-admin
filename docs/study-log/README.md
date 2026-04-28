@@ -5,6 +5,7 @@
 | log    | link                               |
 |--------|------------------------------------|
 | log-01 | [log-01](docs/study-log/log-01.md) |
+| log-02 | [log-02](docs/study-log/log-02.md) |
 
 ## Learning Method Evolution
 

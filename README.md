@@ -66,10 +66,10 @@ Content-Type: application/json
 
 #### 1단계 메모리 저장은 서버 재시작 시 예약 데이터가 모두 사라지는 상황이다. 이를 해결하기 위해 예약 CRUD를 H2 데이터베이스로 전환한다.
 
-- [ ] 레벨1에서 학습했던 JUnit만 활용한 단위 테스트에 집중한다.
-    - [ ] 새로운 테스트 도구나 기법(Spring Boot Test, Mock, RestAssured 추가 활용 등)을 도입하지 않는다.
-    - [ ] 요구사항에서 RestAssured가 주어진 경우 그대로 사용하되, 그 위에 새 테스트 기법을 쌓지 않는다.
+- [x] 레벨1에서 학습했던 JUnit만 활용한 단위 테스트에 집중한다.
+    - [x] 새로운 테스트 도구나 기법(Spring Boot Test, Mock, RestAssured 추가 활용 등)을 도입하지 않는다.
+    - [x] 요구사항에서 RestAssured가 주어진 경우 그대로 사용하되, 그 위에 새 테스트 기법을 쌓지 않는다.
 
-- [ ] 1단계에서 만든 조회·추가·삭제 API를 모두 JdbcTemplate기반으로 전환한다
-    - [ ] 기존의 List<Reservation>, AtomicLong은 제거한다
-    - [ ] 예약 추가 시 DB가 생성한 id를 응답에 담는다
+- [x] 1단계에서 만든 조회·추가·삭제 API를 모두 JdbcTemplate기반으로 전환한다
+    - [x] 기존의 List<Reservation>, AtomicLong은 제거한다
+    - [x] 예약 추가 시 DB가 생성한 id를 응답에 담는다

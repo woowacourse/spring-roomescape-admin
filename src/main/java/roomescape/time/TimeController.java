@@ -5,7 +5,9 @@ import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,4 +42,10 @@ public class TimeController {
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
         return TimeResponse.from(timeRequest.toDomain(id));
     }
+
+    @DeleteMapping("/times/{id}")
+    public void deleteTime(@PathVariable Long id) {
+        jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
+    }
+
 }

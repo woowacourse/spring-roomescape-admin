@@ -7,7 +7,7 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class reservationTest {
+public class ReservationTest {
 
     @Test
     @DisplayName("날짜를 String에서 LocalDate로 변환하는 기능")

@@ -3,13 +3,13 @@ package roomescape.domain.reservations.entity;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class reservation {
+public class Reservation {
 
     private String name;
     private LocalDate date;
     private LocalTime time;
 
-    public reservation(String name, String date, String time) {
+    public Reservation(String name, String date, String time) {
         this.name = name;
         this.date = parseLocalDate(date);
         this.time = parseTime(time);

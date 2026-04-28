@@ -1,0 +1,71 @@
+package roomescape.reservation.domain;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+class ReservationTest {
+    Reservation reservation;
+
+    @BeforeEach
+    void setup() {
+        reservation = new Reservation(1L, "한다", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40));
+    }
+
+    @Test
+    @DisplayName("예약 id를 가져온다.")
+    void getId() {
+        //given
+        Long expected = 1L;
+
+        //when
+        Long actual = reservation.getId();
+
+        //then
+        assertThat(expected).isEqualTo(actual);
+    }
+
+    @Test
+    @DisplayName("예약자명을 가져온다.")
+    void getName() {
+        //given
+        String expected = "한다";
+
+        //when
+        String actual = reservation.getName();
+
+        //then
+        assertThat(expected).isEqualTo(actual);
+    }
+
+    @Test
+    @DisplayName("예약날짜를 가져온다.")
+    void getDate() {
+        //given
+        LocalDate expected = LocalDate.of(2023, 8, 5);
+
+        //when
+        LocalDate actual = reservation.getDate();
+
+        //then
+        assertThat(expected).isEqualTo(actual);
+    }
+
+    @Test
+    @DisplayName("예약시간을 가져온다.")
+    void getTime() {
+        //given
+        LocalTime expected = LocalTime.of(15, 40);
+
+        //when
+        LocalTime actual = reservation.getTime();
+
+        //then
+        assertThat(expected).isEqualTo(actual);
+    }
+
+}

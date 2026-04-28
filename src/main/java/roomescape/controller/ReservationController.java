@@ -25,9 +25,9 @@ public class ReservationController {
 
         ReservationResponse reservationResponse = new ReservationResponse(
                 reservations.add(reservation),
-                reservation.getName(),
-                DateAndTimeConverter.formatDate(reservation.getDate()),
-                DateAndTimeConverter.formatTime(reservation.getTime())
+                reservation.name(),
+                DateAndTimeConverter.formatDate(reservation.date()),
+                DateAndTimeConverter.formatTime(reservation.time())
         );
 
         return ResponseEntity.ok(reservationResponse);
@@ -39,9 +39,9 @@ public class ReservationController {
                 .stream()
                 .map(reservation -> new ReservationResponse(
                        reservations.getReservationId(reservation),
-                        reservation.getName(),
-                        DateAndTimeConverter.formatDate(reservation.getDate()),
-                        DateAndTimeConverter.formatTime(reservation.getTime())
+                        reservation.name(),
+                        DateAndTimeConverter.formatDate(reservation.date()),
+                        DateAndTimeConverter.formatTime(reservation.time())
                 ))
                 .toList();
 

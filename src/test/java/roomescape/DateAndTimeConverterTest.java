@@ -10,6 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class DateAndTimeConverterTest {
+
     @Test
     void 문자열을_LocalDate_객체로_파싱한다() {
         assertThat(DateAndTimeConverter.parseToDate("2026-04-28"))
@@ -47,5 +48,4 @@ class DateAndTimeConverterTest {
         assertThat(DateAndTimeConverter.formatTime(time))
                 .isEqualTo("16:00");
     }
-
 }

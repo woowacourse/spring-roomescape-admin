@@ -1,5 +1,7 @@
 package roomescape.service;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -54,5 +56,24 @@ class ReservationServiceTest {
         Assertions.assertDoesNotThrow(
                 () -> reservationService.find()
         );
+    }
+
+    @Test
+    @DisplayName("삭제를 레포지토리 계층에 전달하고, 오류가 발생하지 않으면 오류를 일으키지 않는다")
+    void delete_success() {
+        Reservation saved = reservationService.add(TESTER_NAME, TEST_DATE, TEST_TIME);
+        Assertions.assertDoesNotThrow(
+                () -> reservationService.delete(saved.id())
+        );
+    }
+
+    @Test
+    @DisplayName("없는 대상 관련한 오류가 레포지토리에서 발생하면 오류가 전파된다")
+    void delete_exception_propagation() {
+        long notExistReservationId = 100000L;
+        assertThatThrownBy(
+                () -> reservationService.delete(notExistReservationId)
+        ).isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("삭제 대상이 존재하지 않습니다");
     }
 }

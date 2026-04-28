@@ -23,4 +23,8 @@ public class ReservationService {
     public List<Reservation> find() {
         return reservationRepository.findAll();
     }
+
+    public void delete(Long targetId) {
+        reservationRepository.delete(targetId);
+    }
 }

@@ -21,7 +21,6 @@ public class ReservationController {
 
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
-
     }
 
     @PostMapping

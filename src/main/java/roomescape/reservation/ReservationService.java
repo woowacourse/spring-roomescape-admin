@@ -1,8 +1,6 @@
 package roomescape.reservation;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Service;
 import roomescape.reservation.dto.ReservationRequest;
@@ -10,31 +8,30 @@ import roomescape.reservation.dto.ReservationResponse;
 
 @Service
 public class ReservationService {
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+
+    private final ReservationRepository reservationRepository;
+
+    public ReservationService(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
 
     public ReservationResponse create(ReservationRequest reservationRequest) {
         Reservation reservation = new Reservation(
-                index.getAndIncrement(),
                 reservationRequest.name(),
                 reservationRequest.date(),
                 reservationRequest.time()
         );
-        reservations.add(reservation);
-        return ReservationResponse.from(reservation);
+        Reservation saved = reservationRepository.save(reservation);
+        return ReservationResponse.from(saved);
     }
 
     public List<ReservationResponse> read() {
-        return reservations.stream()
+        return reservationRepository.findAll().stream()
                 .map(ReservationResponse::from)
                 .toList();
     }
 
     public void delete(Long id) {
-        Reservation reservation = reservations.stream()
-                .filter(r -> r.getId().equals(id))
-                .findFirst()
-                .orElseThrow(RuntimeException::new);
-        reservations.remove(reservation);
+        reservationRepository.deleteById(id);
     }
 }

@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.reservation;
 
 import jakarta.validation.Valid;
 import java.util.ArrayList;

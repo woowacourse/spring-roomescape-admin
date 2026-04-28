@@ -27,14 +27,19 @@ public class ReservationRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(createSql, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, reservation.name());
-            statement.setObject(2, reservation.date());
-            statement.setObject(3, reservation.time());
+            statement.setString(1, reservation.getName());
+            statement.setObject(2, reservation.getDate());
+            statement.setObject(3, reservation.getTime());
 
             return statement;
         }, keyHolder);
 
-        return reservation.identify(keyHolder.getKey().longValue());
+        return Reservation.retrieve(
+                keyHolder.getKey().longValue(),
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
+        );
     }
 
     public List<Reservation> findAll() {
@@ -50,7 +55,7 @@ public class ReservationRepository {
     }
 
     private RowMapper<Reservation> reservationRowMapper() {
-        return (resultSet, rowNum) -> new Reservation(
+        return (resultSet, rowNum) -> Reservation.retrieve(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getObject("date", LocalDate.class),

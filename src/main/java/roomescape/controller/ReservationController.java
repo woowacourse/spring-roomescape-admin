@@ -1,9 +1,6 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +34,7 @@ public class ReservationController {
     public ResponseEntity<Reservation> create(
             @RequestBody ReservationCreateRequest createRequest
     ) {
-        Reservation createdReservation = reservationRepository.create(Reservation.withoutId(
+        Reservation createdReservation = reservationRepository.create(Reservation.create(
                 createRequest.name(),
                 createRequest.date(),
                 createRequest.time()

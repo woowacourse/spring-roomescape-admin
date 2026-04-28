@@ -8,6 +8,7 @@ import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.repository.ReservationRepository;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
@@ -41,8 +42,9 @@ public class ReservationController {
     }
 
     @GetMapping
-    public void getReservations() {
-
+    public ResponseEntity<List<Reservation>> getReservations() {
+        List<Reservation> allReservation = reservationRepository.findAll();
+        return ResponseEntity.ok(allReservation);
     }
 
     @DeleteMapping("/{id}")

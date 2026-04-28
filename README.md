@@ -79,11 +79,11 @@
     - [x] 시간 삭제 (`DELETE /times/{id}`): id에 해당하는 시간 슬롯을 삭제한다.
 - [x] **스키마 추가** (`resources/schema.sql`)
     - [x] `reservation_time` 테이블을 추가한다.
-- [ ] **예약과 시간 연결**
-    - [ ] `reservation` 테이블의 `time` 컬럼을 `time_id (FK → reservation_time.id)`로 변경한다.
-    - [ ] `Reservation` 클래스의 `time` 필드를 `String → ReservationTime` 객체로 변경한다.
-    - [ ] 예약 추가 요청 본문을 `time → timeId`로 변경한다.
-    - [ ] 예약 조회 응답의 `time` 필드를 객체(`{id, startAt}`)로 변경한다.
+- [x] **예약과 시간 연결**
+    - [x] `reservation` 테이블의 `time` 컬럼을 `time_id (FK → reservation_time.id)`로 변경한다.
+    - [x] `Reservation` 클래스의 `time` 필드를 `String → ReservationTime` 객체로 변경한다.
+    - [x] 예약 추가 요청 본문을 `time → timeId`로 변경한다.
+    - [x] 예약 조회 응답의 `time` 필드를 객체(`{id, startAt}`)로 변경한다.
     - [x] 예약 조회 쿼리에 INNER JOIN을 적용한다.
 
 ### ✅ 4단계: 계층 분리

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.reservations.entity.Reservation;
 import roomescape.domain.reservations.presentation.dto.ReservationCreateRequest;
+import roomescape.domain.reservations.presentation.dto.ReservationCreateResponse;
 
 @RestController
 public class ReservationController {
@@ -19,7 +20,7 @@ public class ReservationController {
     private AtomicLong index = new AtomicLong(1);
 
     @PostMapping("/reservations")
-    public Reservation addReservation(
+    public ReservationCreateResponse addReservation(
             @RequestBody ReservationCreateRequest request
     ) {
         Reservation reservation = new Reservation(
@@ -29,7 +30,7 @@ public class ReservationController {
                 request.time()
         );
         reservations.add(reservation);
-        return reservation;
+        return ReservationCreateResponse.from(reservation);
     }
 
     @GetMapping("/reservations")

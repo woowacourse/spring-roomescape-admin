@@ -21,4 +21,9 @@ public class ReservationController {
         reservers.add(newReserver);
         return ResponseEntity.created(URI.create("/reservations/" + newReserver.getId())).build();
     }
+
+    @GetMapping("/reservations")
+    public ResponseEntity<List<Reserver>> read() {
+        return ResponseEntity.ok().body(reservers);
+    }
 }

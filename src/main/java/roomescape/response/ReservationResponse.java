@@ -15,8 +15,8 @@ public record ReservationResponse(long id, String name, LocalDate date, LocalTim
         return new ReservationResponse(
                 reservation.id(),
                 reservation.name(),
-                reservation.dateTime().toLocalDate(),
-                reservation.dateTime().toLocalTime()
+                reservation.date(),
+                reservation.time()
         );
     }
 }

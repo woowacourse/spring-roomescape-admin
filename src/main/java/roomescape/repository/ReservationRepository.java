@@ -7,8 +7,9 @@ import roomescape.response.ReservationResponse;
 
 import java.util.List;
 
+@Repository
 public interface ReservationRepository {
-    List<Reservation> findAll();
+    List<Reservation> findAllReservations();
 
     ReservationResponse insert(ReservationRequest request);
 

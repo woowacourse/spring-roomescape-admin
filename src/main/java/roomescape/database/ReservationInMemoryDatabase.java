@@ -17,14 +17,14 @@ public class ReservationInMemoryDatabase {
     private final List<Reservation> reservations = new CopyOnWriteArrayList<>();
     private final AtomicLong autoIncrement = new AtomicLong(0);
 
-    public List<Reservation> selectAll() {
-        return Collections.unmodifiableList(reservations);
-    }
-
     public Optional<Reservation> select(Long id) {
         return reservations.stream()
                 .filter(reservation -> reservation.isSameId(id))
                 .findFirst();
+    }
+
+    public List<Reservation> selectAll() {
+        return Collections.unmodifiableList(reservations);
     }
 
     public Reservation insert(String name, LocalDate date, LocalTime time) {

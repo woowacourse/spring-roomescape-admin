@@ -17,13 +17,8 @@ public class Reservation {
         this.time = time;
     }
 
-    public static Reservation toEntity(Long index, ReservationRequest request) {
-        return new Reservation(
-                index,
-                request.name(),
-                request.date(),
-                request.time()
-        );
+    public static Reservation of(Long id, String name, LocalDate date, LocalTime time) {
+        return new Reservation(id, name, date, time);
     }
 
     public Long getId() {

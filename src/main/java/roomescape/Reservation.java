@@ -51,4 +51,8 @@ public class Reservation {
     public LocalTime getTime() {
         return time;
     }
+
+    public String getName(){
+        return name;
+    }
 }

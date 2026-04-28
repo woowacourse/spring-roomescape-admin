@@ -10,7 +10,7 @@ public class Reservations {
     private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
     private final AtomicLong nextKey = new AtomicLong(1L);
 
-    public void add(Reservation reservation) {
+    public Long add(Reservation reservation) {
         for (Reservation value : reservations.values()) {
             if (reservation.isSameDateTime(value)) {
                 throw new IllegalArgumentException("[ERROR] 중복된 예약입니다.");
@@ -19,6 +19,7 @@ public class Reservations {
 
         Long key = nextKey.getAndIncrement();
         reservations.put(key, reservation);
+        return key;
     }
 
     public int size() {

@@ -1,6 +1,5 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,28 +14,32 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationInfoDto;
 import roomescape.dto.ReservationInfosDto;
 import roomescape.dto.SaveReservationDto;
+import roomescape.service.RoomReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
+    private final RoomReservationService roomReservationService;
+
+    public ReservationController(RoomReservationService roomReservationService) {
+        this.roomReservationService = roomReservationService;
+    }
+
     @GetMapping()
     public ResponseEntity<ReservationInfosDto> getReservations() {
-        /* 가져오기 */
-        ReservationInfosDto data = new ReservationInfosDto(new ArrayList<>());
+        ReservationInfosDto data = roomReservationService.getAllReservation();
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
     @PostMapping()
     public ResponseEntity<ReservationInfoDto> addReservation(@RequestBody SaveReservationDto saveReservationDto) {
-        /* 등록하기 */
-        ReservationInfoDto data = new ReservationInfoDto(-1, "test", "test", "test");
+        ReservationInfoDto data = roomReservationService.addReservation(saveReservationDto);
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") long id) {
-        /* 삭제하기 */
-        System.out.println("delete");
+        roomReservationService.deleteReservation(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

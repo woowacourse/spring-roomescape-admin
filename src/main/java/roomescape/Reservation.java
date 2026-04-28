@@ -2,6 +2,7 @@ package roomescape; // THINK domain? entity?
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Reservation {
 
@@ -15,6 +16,10 @@ public class Reservation {
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public boolean isSameId(Long id) {
+        return Objects.equals(this.id, id);
     }
 
     public Long getId() {

@@ -16,4 +16,8 @@ public class Reservations {
     public Map<Long, Reservation> findAll() {
         return Map.copyOf(reservations);
     }
+
+    public void deleteById(long id) {
+        reservations.remove(id);
+    }
 }

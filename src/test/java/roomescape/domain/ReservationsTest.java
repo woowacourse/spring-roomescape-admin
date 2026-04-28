@@ -30,4 +30,16 @@ public class ReservationsTest {
         Map<Long, Reservation> foundReservations = reservations.findAll();
         assertThat(foundReservations).containsKey(1L);
     }
+
+    @DisplayName("방 탈출 예약 삭제")
+    @Test
+    void reservation_delete_test() {
+        Reservations reservations = new Reservations();
+        reservations.save(NAME, DATE, TIME);
+
+        assertDoesNotThrow(() -> reservations.deleteById(1L));
+
+        Map<Long, Reservation> foundReservations = reservations.findAll();
+        assertThat(foundReservations).isEmpty();
+    }
 }

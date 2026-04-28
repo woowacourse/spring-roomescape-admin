@@ -14,16 +14,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationCreateRequest;
+import roomescape.repository.ReservationRepository;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+    private final ReservationRepository reservationRepository;
+
+    public ReservationController(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
 
     @GetMapping
     public ResponseEntity<List<Reservation>> findAll() {
+        List<Reservation> reservations = reservationRepository.findAll();
+
         return ResponseEntity.ok(reservations);
     }
 
@@ -31,13 +37,7 @@ public class ReservationController {
     public ResponseEntity<Reservation> create(
             @RequestBody ReservationCreateRequest createRequest
     ) {
-        Reservation createdReservation = new Reservation(
-                index.getAndIncrement(),
-                createRequest.name(),
-                createRequest.date(),
-                createRequest.time()
-        );
-        reservations.add(createdReservation);
+        Reservation createdReservation = reservationRepository.create(createRequest);
 
         return ResponseEntity.ok(createdReservation);
     }
@@ -46,11 +46,7 @@ public class ReservationController {
     public ResponseEntity<Void> delete(
             @PathVariable long id
     ) {
-        Reservation deleteReservation = reservations.stream()
-                .filter(reservation -> Objects.equals(reservation.id(), id))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 예약이 존재하지 않습니다."));
-        reservations.remove(deleteReservation);
+        reservationRepository.delete(id);
 
         return ResponseEntity.ok().build();
     }

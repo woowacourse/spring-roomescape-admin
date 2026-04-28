@@ -1,10 +1,7 @@
 package roomescape.reservation;
 
 import jakarta.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,32 +13,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Controller
 public class ReservationController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(0);
+    private final ReservationRepository reservationRepository;
+
+    public ReservationController(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
 
     @PostMapping("/reservations")
     public ResponseEntity<?> postReservation(@Valid @RequestBody ReservationRequest request) {
-        Reservation reservation = Reservation.toEntity(index.incrementAndGet(), request);
-        reservations.add(reservation);
-
-        ReservationResponse response = ReservationResponse.from(reservation);
-        return ResponseEntity.ok().body(response);
+        Reservation reservation = reservationRepository.save(request);
+        return ResponseEntity.ok().body(reservation);
     }
 
     @GetMapping("/reservations")
     public ResponseEntity<?> getAllReservations() {
+        List<Reservation> reservations = reservationRepository.findAll();
         return ResponseEntity.ok().body(reservations);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<?> deleteReservation(@PathVariable Long id) {
-        Reservation reservation = reservations.stream()
-                .filter(it -> Objects.equals(it.getId(), id))
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
-
-        reservations.remove(reservation);
-
+        reservationRepository.deleteById(id);
         return ResponseEntity.ok().build(); // 요구사항에 맞춰서 noContent대신 ok를 return한다.
     }
 

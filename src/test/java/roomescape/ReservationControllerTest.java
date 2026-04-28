@@ -40,6 +40,20 @@ public class ReservationControllerTest {
         assertThat(reservers).isNotNull();
         assertThat(reservers).hasSize(1);
         assertThat(reservers.getFirst().getName()).isEqualTo("user1");
+    }
 
+    @Test
+    @DisplayName("예약자를 삭제하면 200 코드를 반환한다.")
+    void return200OK_When_DeleteReserver() {
+        ResponseEntity<List<Reserver>> readResponse = controller.read();
+        List<Reserver> reservers = readResponse.getBody();
+        Long id = reservers.getFirst().getId();
+        int beforeSize = reservers.size();
+
+        ResponseEntity<List<Reserver>> deleteResponse = controller.delete(id);
+        int afterSize = reservers.size();
+
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(beforeSize).isEqualTo(afterSize + 1);
     }
 }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -68,5 +69,17 @@ public class ReservationRepositoryTest {
 
         // then
         assertThat(reservationRepository.findAll()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 id로 삭제 시 예외를 발생시킨다.")
+    void delete_reservation_by_id_fail_when_reservation_not_found() {
+        // given
+        ReservationRepository reservationRepository = new ReservationRepository();
+
+        // when & then
+        assertThatThrownBy(() -> reservationRepository.deleteById(999L))
+                .isInstanceOf(NoSuchElementException.class)
+                .hasMessage("[ERROR] 해당 id의 Reservation이 존재하지 않습니다.");
     }
 }

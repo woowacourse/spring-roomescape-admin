@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ReservationRepository {
@@ -33,5 +34,6 @@ public class ReservationRepository {
                 return;
             }
         }
+        throw new NoSuchElementException("[ERROR] 해당 id의 Reservation이 존재하지 않습니다.");
     }
 }

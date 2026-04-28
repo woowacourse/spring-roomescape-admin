@@ -1,6 +1,7 @@
 package roomescape;
 
 import org.junit.jupiter.api.Test;
+import roomescape.util.DateAndTimeConverter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

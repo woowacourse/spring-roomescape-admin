@@ -3,14 +3,14 @@ package roomescape.dto;
 import java.time.format.DateTimeFormatter;
 import roomescape.domain.Reservation;
 
-public record ReservationDto(Long id, String name, String date, String time) {
+public record ReservationDto(Long id, String name, String date, ReservationTimeDto time) {
 
     public static ReservationDto from(Reservation reservation) {
         return new ReservationDto(
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm"))
+                ReservationTimeDto.from(reservation.getTime())
         );
     }
 }

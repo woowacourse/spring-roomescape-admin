@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -15,9 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationCreateDto;
 import roomescape.dto.ReservationDto;
 
@@ -31,13 +32,20 @@ public class ReservationController {
     @GetMapping
     public ResponseEntity<List<ReservationDto>> findAllReservations() {
         List<ReservationDto> result = jdbcTemplate.query(
-                "SELECT id, name, date, time FROM reservation",
+                """
+                        SELECT r.id, r.name, r.date, t.id AS time_id, t.start_at as time_value
+                        FROM reservation r
+                        JOIN reservation_time t ON r.time_id = t.id
+                        """,
                 (rs, rowNum) -> ReservationDto.from(
                         Reservation.builder()
                                 .id(rs.getLong("id"))
                                 .name(rs.getString("name"))
                                 .date(LocalDate.parse(rs.getString("date")))
-                                .time(LocalTime.parse(rs.getString("time")))
+                                .time(ReservationTime.builder()
+                                        .id(rs.getLong("time_id"))
+                                        .startAt(LocalTime.parse(rs.getString("time_value")))
+                                        .build())
                                 .build()
                 )
         );
@@ -48,20 +56,30 @@ public class ReservationController {
     public ResponseEntity<ReservationDto> createReservation(
             @RequestBody ReservationCreateDto request
     ) {
-        Reservation reservation = request.toEntity();
+        Long reservationTimeId = request.timeId();
+
+        ReservationTime reservationTime = jdbcTemplate.queryForObject(
+                "SELECT id, start_at FROM reservation_time WHERE id = ?",
+                (rs, rowNum) -> ReservationTime.builder()
+                        .id(rs.getLong("id"))
+                        .startAt(LocalTime.parse(rs.getString("start_at")))
+                        .build(),
+                reservationTimeId
+        );
+
+        Reservation reservation = request.toEntity(reservationTime);
 
         String formattedDate = reservation.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        String formattedTime = reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm"));
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
+                    "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
                     new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setString(2, formattedDate);
-            ps.setString(3, formattedTime);
+            ps.setLong(3, reservation.getTimeId());
             return ps;
         }, keyHolder);
 
@@ -70,7 +88,7 @@ public class ReservationController {
                 .id(saveId)
                 .name(reservation.getName())
                 .date(reservation.getDate())
-                .time(reservation.getTime())
+                .time(reservationTime)
                 .build();
 
         return ResponseEntity.ok(ReservationDto.from(saved));

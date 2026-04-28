@@ -1,12 +1,12 @@
 package roomescape.dto;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
-public record ReservationCreateDto(String name, LocalDate date, LocalTime time) {
+public record ReservationCreateDto(String name, LocalDate date, Long timeId) {
 
-    public Reservation toEntity() {
+    public Reservation toEntity(ReservationTime time) {
         return Reservation.builder()
                 .name(name)
                 .date(date)

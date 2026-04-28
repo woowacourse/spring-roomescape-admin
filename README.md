@@ -9,7 +9,6 @@
 ## Controller
 
 - API가 호출될 때 비즈니스 로직 실행
--
 
 ## 예약 CRUD API
 

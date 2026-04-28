@@ -11,7 +11,7 @@ public class Reservation {
     private final String name;
     private final LocalDate date;
     private final LocalTime time;
-    private boolean isDeleted;
+    private boolean deleted;
 
     private Reservation(Long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
@@ -39,6 +39,6 @@ public class Reservation {
     }
 
     public void delete() {
-        isDeleted = true;
+        deleted = true;
     }
 }

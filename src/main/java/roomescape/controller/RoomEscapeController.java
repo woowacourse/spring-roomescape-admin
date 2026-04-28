@@ -39,4 +39,12 @@ public class RoomEscapeController {
 
         return ResponseEntity.ok(ResponseDto.ReservationDto.of(saveId, reservation));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReservation(
+            @PathVariable Long id
+    ) {
+        reservations.deleteById(id);
+        return new ResponseEntity<>(OK);
+    }
 }

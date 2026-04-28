@@ -3,6 +3,7 @@ package roomescape.domain.reservations.presentation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +21,7 @@ public class ReservationController {
     private AtomicLong index = new AtomicLong(1);
 
     @PostMapping("/reservations")
-    public ReservationResponse addReservation(
+    public ResponseEntity<ReservationResponse> addReservation(
             @RequestBody ReservationRequest request
     ) {
         Reservation reservation = new Reservation(
@@ -30,20 +31,26 @@ public class ReservationController {
                 request.time()
         );
         reservations.add(reservation);
-        return ReservationResponse.from(reservation);
+        return ResponseEntity.ok(ReservationResponse.from(reservation));
     }
 
     @GetMapping("/reservations")
     public List<ReservationResponse> getReservations() {
-        return reservations.stream()
+        List<ReservationResponse> response =  reservations.stream()
                 .map(ReservationResponse::from)
                 .toList();
+        return ResponseEntity.ok(response).getBody();
     }
 
     @DeleteMapping("/reservations/{id}")
-    public void deleteReservation(
+    public ResponseEntity<Void> deleteReservation(
             @PathVariable Long id
     ) {
-        reservations.removeIf(reservation -> reservation.getId().equals(id));
+        boolean isRemove = reservations.removeIf(reservation -> reservation.getId().equals(id));
+
+        if (!isRemove) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().build();
     }
 }

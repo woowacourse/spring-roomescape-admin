@@ -7,20 +7,26 @@ import roomescape.domain.Reservation;
 
 public record ReservationResponse(
         Long id,
-
         String name,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
         LocalDate date,
 
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
-        LocalTime time) {
+        ReservationTime time) {
     public static ReservationResponse from(Reservation reservation) {
         return new ReservationResponse(
                 reservation.id(),
                 reservation.username(),
                 reservation.date(),
-                reservation.time()
+                new ReservationTime(reservation.time().id(), reservation.time().startAt())
         );
+    }
+
+    private record ReservationTime(
+            Long id,
+
+            @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
+            LocalTime startAt) {
+
     }
 }

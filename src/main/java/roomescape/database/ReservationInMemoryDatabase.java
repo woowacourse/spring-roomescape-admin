@@ -33,4 +33,8 @@ public class ReservationInMemoryDatabase {
         return reservation;
     }
 
+    public void delete(Reservation reservation) {
+        reservations.remove(reservation);
+    }
+
 }

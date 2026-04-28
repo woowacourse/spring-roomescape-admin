@@ -1,9 +1,6 @@
 package roomescape.dto;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import roomescape.domain.Reservation;
 
 public class ResponseDto {
@@ -26,24 +23,13 @@ public class ResponseDto {
         public String getDate() { return date; }
         public String getTime() { return time; }
 
-        public static ReservationDto of(Long id, Reservation reservation) {
-            String formattedDate = reservation.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            String formattedTime = reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm"));
-
-            return new ReservationDto(id, reservation.getName(), formattedDate, formattedTime);
-        }
-
-        public static List<ReservationDto> getReservationDtos(Map<Long, Reservation> reservations) {
-            List<ReservationDto> reservationDtos = new ArrayList<>();
-
-            reservations.forEach((id, reservation) -> {
-                String formattedDate = reservation.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                String formattedTime = reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm"));
-
-                reservationDtos.add(new ReservationDto(id, reservation.getName(), formattedDate, formattedTime));
-            });
-
-            return reservationDtos;
+        public static ReservationDto of(Reservation reservation) {
+            return new ReservationDto(
+                    reservation.getId(),
+                    reservation.getName(),
+                    reservation.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm"))
+            );
         }
     }
 }

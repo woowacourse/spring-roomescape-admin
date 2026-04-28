@@ -1,35 +1,30 @@
 package roomescape.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
 
 public class Reservation {
 
+    private final Long id;
     private final String name;
     private final LocalDate date;
     private final LocalTime time;
 
-    public Reservation(String name, String date, String time) {
+    public Reservation(String name, LocalDate date, LocalTime time) {
+        this(null, name, date, time);
+    }
+
+    @JsonCreator
+    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+        this.id = id;
         this.name = name;
-        this.date = parseDate(date);
-        this.time = parseTime(time);
+        this.date = date;
+        this.time = time;
     }
 
-    private LocalTime parseTime(String time) {
-        try {
-            return LocalTime.parse(time);
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    private LocalDate parseDate(String date) {
-        try {
-            return LocalDate.parse(date);
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException();
-        }
+    public Long getId() {
+        return id;
     }
 
     public String getName() {

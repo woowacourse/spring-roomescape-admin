@@ -25,4 +25,13 @@ public class ReservationRepository {
         reservations.add(reservation);
         return reservation;
     }
+
+    public void deleteById(Long id) {
+        for (Reservation reservation : reservations) {
+            if (reservation.getId().equals(id)) {
+                reservations.remove(reservation);
+                return;
+            }
+        }
+    }
 }

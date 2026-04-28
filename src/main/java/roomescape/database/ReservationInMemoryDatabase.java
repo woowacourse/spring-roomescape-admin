@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -18,6 +19,12 @@ public class ReservationInMemoryDatabase {
 
     public List<Reservation> selectAll() {
         return Collections.unmodifiableList(reservations);
+    }
+
+    public Optional<Reservation> select(Long id) {
+        return reservations.stream()
+                .filter(reservation -> reservation.isSameId(id))
+                .findFirst();
     }
 
     public Reservation insert(String name, LocalDate date, LocalTime time) {

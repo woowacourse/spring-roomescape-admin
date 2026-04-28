@@ -14,6 +14,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
 
     public CreateReservationResponse createReservation(CreateReservationRequest request) {
+        request.validate();
         Reservation savedReservation = reservationRepository.save(request.toEntity());
         return CreateReservationResponse.from(savedReservation);
     }

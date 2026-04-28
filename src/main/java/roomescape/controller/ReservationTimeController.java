@@ -9,33 +9,40 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.controller.mapper.ReservationTimeMapper;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeCreateRequest;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.ReservationTimeService;
+import roomescape.service.command.ReservationTimeCreateCommand;
 
 @RestController
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
+    private final ReservationTimeMapper reservationTimeMapper;
 
-    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationTimeController(
+            ReservationTimeService reservationTimeService,
+            ReservationTimeMapper reservationTimeMapper
+    ) {
+        this.reservationTimeService = reservationTimeService;
+        this.reservationTimeMapper = reservationTimeMapper;
     }
 
     @PostMapping
     public ResponseEntity<ReservationTime> create(
             @RequestBody ReservationTimeCreateRequest createRequest
     ) {
-        ReservationTime createdReservationTime = reservationTimeRepository.create(
-                ReservationTime.create(createRequest.startAt()));
+        ReservationTimeCreateCommand createCommand = reservationTimeMapper.mapCreate(createRequest);
+        ReservationTime createdReservationTime = reservationTimeService.create(createCommand);
 
         return ResponseEntity.ok(createdReservationTime);
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTime>> findAll() {
-        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+        List<ReservationTime> reservationTimes = reservationTimeService.findAll();
 
         return ResponseEntity.ok(reservationTimes);
     }
@@ -44,7 +51,7 @@ public class ReservationTimeController {
     public ResponseEntity<Void> delete(
             @PathVariable long id
     ) {
-        reservationTimeRepository.delete(id);
+        reservationTimeService.delete(id);
 
         return ResponseEntity.ok().build();
     }

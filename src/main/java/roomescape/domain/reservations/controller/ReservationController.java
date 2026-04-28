@@ -13,6 +13,7 @@ import roomescape.domain.reservations.entity.Reservation;
 
 @RestController
 public class ReservationController {
+
     private List<Reservation> reservations = new ArrayList<>();
     private AtomicLong index = new AtomicLong(1);
 

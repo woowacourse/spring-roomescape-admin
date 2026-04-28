@@ -43,6 +43,15 @@ public class ReservationTimeRepository {
         return jdbcTemplate.query(findSql, reservationTimeRowMapper());
     }
 
+    public void delete(long id) {
+        String deleteSql = "DELETE FROM reservation_time WHERE id = ?";
+
+        int deletedRows = jdbcTemplate.update(deleteSql, id);
+        if (deletedRows < 1) {
+            throw new IllegalArgumentException("존재하지 않는 시간 id입니다.");
+        }
+    }
+
     private RowMapper<ReservationTime> reservationTimeRowMapper() {
         return (resultSet, rowNum) -> {
             long id = resultSet.getLong("id");

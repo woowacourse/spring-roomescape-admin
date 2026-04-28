@@ -20,5 +20,16 @@ public class ReservationTest {
             Assertions.assertThatThrownBy(() -> new Reservation(name, date, time))
                     .isInstanceOf(IllegalArgumentException.class);
         }
+
+        @DisplayName("시간 형식 안 맞으면 방 탈출 예약 실패")
+        @Test
+        void reservation_fail_by_time_format() {
+            String name = "브라운";
+            String date = "2023-08-05";
+            String time = "1540";
+
+            Assertions.assertThatThrownBy(() -> new Reservation(name, date, time))
+                    .isInstanceOf(IllegalArgumentException.class);
+        }
     }
 }

@@ -11,16 +11,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final Reservations reservations;
+    private final ReservationsDao reservationsDao;
 
     @Autowired
-    public ReservationController(Reservations reservations) {
-        this.reservations = reservations;
+    public ReservationController(InMemoryReservationsDao reservationsDao) {
+        this.reservationsDao = reservationsDao;
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationInfo>> getReservations() {
-        List<ReservationInfo> reservationsInfo = reservations.getReservationsInfo();
+    public ResponseEntity<List<ReservationInfo>> getReservationsDao() {
+        List<Reservation> reservations = reservationsDao.getReservationsInfo();
+
+        List<ReservationInfo> reservationsInfo = reservations.stream()
+                .map(ReservationInfo::from)
+                .toList();
+
         return ResponseEntity.ok(reservationsInfo);
     }
 }

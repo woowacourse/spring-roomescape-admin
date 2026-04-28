@@ -6,8 +6,6 @@ import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationResponse;
-import roomescape.dto.AddReservationRequest;
 
 @Service
 public class RoomReservationService {
@@ -16,16 +14,14 @@ public class RoomReservationService {
     private List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(0);
 
-    public List<ReservationResponse> getAllReservation() {
-        return reservations.stream()
-                .map(ReservationResponse::from)
-                .toList();
+    public List<Reservation> getAllReservation() {
+        return List.copyOf(reservations);
     }
 
-    public ReservationResponse addReservation(AddReservationRequest addReservationRequest) {
-        Reservation reservation = new Reservation(index.incrementAndGet(), addReservationRequest.name(), addReservationRequest.date(), addReservationRequest.time());
+    public Reservation addReservation(String name, String date, String time) {
+        Reservation reservation = new Reservation(index.incrementAndGet(), name, date, time);
         reservations.add(reservation);
-        return ReservationResponse.from(reservation);
+        return reservation;
     }
 
     public void deleteReservation(long id) {

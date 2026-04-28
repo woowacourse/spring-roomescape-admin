@@ -1,6 +1,7 @@
 package roomescape;
 
 import java.sql.PreparedStatement;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -24,5 +25,14 @@ public class ReservationTimeDao {
             return ps;
         }, keyHolder);
         return ReservationTime.withId(keyHolder.getKey().longValue(), reservationTime);
+    }
+
+    public List<ReservationTime> select() {
+        final String sql = "select id, start_at from reservation_time;";
+        return jdbcTemplate.query(sql,
+                (resultSet, rowNum) -> new ReservationTime(
+                        resultSet.getLong("id"),
+                        resultSet.getString("start_at")
+                ));
     }
 }

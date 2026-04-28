@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.repository.ReservationRepository;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -15,5 +17,9 @@ public class ReservationService {
 
     public List<Reservation> getReservations() {
         return reservationRepository.findAll();
+    }
+
+    public Reservation createReservation(String name, LocalDate date, LocalTime time) {
+        return reservationRepository.save(name, date, time);
     }
 }

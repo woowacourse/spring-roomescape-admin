@@ -36,7 +36,7 @@ public class Reservation {
         return time;
     }
 
-    public Reservation toEntity(long id) {
+    public Reservation toEntity(Long id) {
         return new Reservation(
                 id,
                 name,

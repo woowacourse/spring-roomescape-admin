@@ -22,7 +22,7 @@ public class ReservationTime {
         return startAt;
     }
 
-    public ReservationTime toEntity(long id) {
+    public ReservationTime toEntity(Long id) {
         return new ReservationTime(id, startAt);
     }
 

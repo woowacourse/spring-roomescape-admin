@@ -24,7 +24,8 @@ public class RoomescapeController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getAllReservations() {
-        return null;
+        List<ReservationResponse> reservationResponses = reservations.stream().map(ReservationResponse::from).toList();
+        return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping

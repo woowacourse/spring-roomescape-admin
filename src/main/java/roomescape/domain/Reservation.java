@@ -1,0 +1,25 @@
+package roomescape.domain;
+
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+public class Reservation {
+    private Long id;
+    private String name;
+    private LocalDate reservationDate;
+    private LocalTime reservationTime;
+
+    public Reservation(Long id, String name, LocalDate reservationDate, LocalTime reservationTime) {
+        this.id = id;
+        this.name = name;
+        this.reservationDate = reservationDate;
+        this.reservationTime = reservationTime;
+    }
+
+    public Reservation(String name, LocalDate reservationDate, LocalTime reservationTime) {
+        this.name = name;
+        this.reservationDate = reservationDate;
+        this.reservationTime = reservationTime;
+    }
+}

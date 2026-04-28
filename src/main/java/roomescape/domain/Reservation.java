@@ -5,9 +5,15 @@ import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 
 public class Reservation {
+
+    private final String name;
+    private final LocalDate date;
+    private final LocalTime time;
+
     public Reservation(String name, String date, String time) {
-        parseDate(date);
-        parseTime(time);
+        this.name = name;
+        this.date = parseDate(date);
+        this.time = parseTime(time);
     }
 
     private LocalTime parseTime(String time) {
@@ -24,5 +30,13 @@ public class Reservation {
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException();
         }
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public LocalTime getTime() {
+        return time;
     }
 }

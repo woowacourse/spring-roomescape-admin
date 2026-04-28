@@ -1,11 +1,14 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,39 +21,54 @@ import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/reservations")
 public class RoomescapeController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(0L);
+    private final JdbcTemplate jdbcTemplate;
+
+    public RoomescapeController(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) ->
+            Reservation.create(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getObject("date", LocalDate.class),
+                    rs.getObject("time", LocalTime.class)
+    );
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getAllReservations() {
-        List<ReservationResponse> reservationResponses = reservations.stream().map(ReservationResponse::from).toList();
+        String sql = "SELECT id, name, date, time FROM reservation";
 
-        return ResponseEntity.ok(reservationResponses);
+        List<Reservation> reservations = jdbcTemplate.query(sql, reservationRowMapper);
+
+        List<ReservationResponse> responses = reservations.stream()
+                .map(ReservationResponse::from)
+                .toList();
+
+        return ResponseEntity.ok(responses);
     }
 
-    @PostMapping
-    public ResponseEntity<ReservationResponse> createReservation(
-            @RequestBody ReservationRequest request) {
-        Reservation reservation = Reservation.create(
-                index.incrementAndGet(),
-                request.name(),
-                request.date(),
-                request.time());
-
-        reservations.add(reservation);
-        ReservationResponse savedReservation = ReservationResponse.from(reservation);
-
-        return ResponseEntity.ok(savedReservation);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable String id) {
-        reservations.removeIf(reservation -> reservation.id() == Long.parseLong(id));
-
-        return ResponseEntity.status(HttpStatus.OK).build();
-    }
+//    @PostMapping
+//    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest request) {
+//        Reservation reservation = Reservation.create(
+//                index.incrementAndGet(),
+//                request.name(),
+//                request.date(),
+//                request.time());
+//
+//        reservations.add(reservation);
+//        ReservationResponse savedReservation = ReservationResponse.from(reservation);
+//
+//        return ResponseEntity.ok(savedReservation);
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> deleteReservation(@PathVariable String id) {
+//        reservations.removeIf(reservation -> reservation.id() == Long.parseLong(id));
+//
+//        return ResponseEntity.status(HttpStatus.OK).build();
+//    }
 }

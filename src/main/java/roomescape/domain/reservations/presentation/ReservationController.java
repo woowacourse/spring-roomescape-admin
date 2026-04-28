@@ -1,4 +1,4 @@
-package roomescape.domain.reservations.controller;
+package roomescape.domain.reservations.presentation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +24,8 @@ public class ReservationController {
         Reservation reservation = new Reservation(
                 index.getAndIncrement(),
                 request.getName(),
-                request.getDate().toString(),
-                request.getTime().toString()
+                request.getDate(),
+                request.getTime()
         );
         reservations.add(reservation);
         return reservation;

@@ -46,13 +46,13 @@
 
 > 별도의 데이터베이스 없이 메모리(List + AtomicLong)로 예약 상태를 관리한다.
 
-- [ ] **예약 조회 API** (`GET /reservations`)
-    - [ ] 전체 예약 목록을 반환한다.
-- [ ] **예약 추가 API** (`POST /reservations`)
-    - [ ] 이름, 날짜, 시간을 입력받아 예약을 생성한다.
-    - [ ] 생성된 예약의 id(AtomicLong 자동 증가)를 응답에 포함한다.
-- [ ] **예약 삭제 API** (`DELETE /reservations/{id}`)
-    - [ ] id에 해당하는 예약을 삭제한다.
+- [x] **예약 조회 API** (`GET /reservations`)
+    - [x] 전체 예약 목록을 반환한다.
+- [x] **예약 추가 API** (`POST /reservations`)
+    - [x] 이름, 날짜, 시간을 입력받아 예약을 생성한다.
+    - [x] 생성된 예약의 id(AtomicLong 자동 증가)를 응답에 포함한다.
+- [x] **예약 삭제 API** (`DELETE /reservations/{id}`)
+    - [x] id에 해당하는 예약을 삭제한다.
 
 ### ✅ 2단계: 데이터베이스 연동
 

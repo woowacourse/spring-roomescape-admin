@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.Test;
 import roomescape.reservation.Reservation;
-import roomescape.reservation.dto.response.ReservationResponse;
 import roomescape.reservationTime.ReservationTime;
 
 class ReservationResponseTest {

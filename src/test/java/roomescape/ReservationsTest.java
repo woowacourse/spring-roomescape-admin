@@ -55,9 +55,10 @@ class ReservationsTest {
                 LocalDate.of(2026, 4, 28),
                 LocalTime.of(17, 0));
 
-        reservations.add(newReservation);
+        Long id = reservations.add(newReservation);
 
         assertThat(reservations.size()).isEqualTo(2);
+        assertThat(id).isEqualTo(2);
     }
 
     @Test
@@ -69,6 +70,17 @@ class ReservationsTest {
 
         assertThatThrownBy(() -> reservations.add(newReservation))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void 특정_예약의_고유_번호를_반환한다() {
+        Reservation newReservation = new Reservation(
+                "브라운",
+                LocalDate.of(2026, 4, 28),
+                LocalTime.of(18, 0));
+
+        reservations.add(newReservation);
+        assertThat(reservations.getReservationId(newReservation)).isEqualTo(2);
     }
 
     @Test

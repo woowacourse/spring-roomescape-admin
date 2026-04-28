@@ -56,3 +56,82 @@
     - 개별 개념은 정리가 되고있지만 전체 흐름은 정리되고 있지 않기 때문에 학습한 것과 관련된 흐름 요약 1줄을 추가해보는 전략 추가
     - "개념은 연결될 때만 재사용된다"
     - 솔직히 정확하게 어떤 의미인지 모르겠지만, 이거 한 줄 추가하는게 힘든 것은 아니라서 해보려고 합니다.
+
+---
+
+# 학습법 적용 산출물
+
+## 1단계: 웹 요청-응답
+
+### 0. 목표/기대 설정
+- **메모리(`List` + `AtomicLong`)** 로 예약 상태를 관리한다.
+- API 동작 확인 방법(테스트, HTTP 클라이언트 등)은 스스로 찾는다.
+- 요구사항 테스트 통과
+
+### 1. 즉시 적용
+
+### 2. 막힘 해결
+1. 예약 추가 및 삭제 테스트에서 문제 발생.
+  - create()에서 reservation에 add()하고있지 않아 저장이 안되고 있었음
+  - @DeleteMapping에 URL입력이 안되어 있었음
+
+### 3. Output 생성
+```java
+@Controller  
+public class ReservationController {  
+    private List<Reservation> reservations = new ArrayList<>();  
+    private AtomicLong index = new AtomicLong(1);  
+  
+    @GetMapping("/reservations")  
+    public ResponseEntity<List<Reservation>> read() {  
+        return ResponseEntity.ok().body(reservations);  
+    }  
+  
+    @PostMapping("/reservations")  
+    public ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {  
+        Reservation newReservation = Reservation.toEntity(reservation, index.getAndIncrement());  
+        reservations.add(newReservation);  
+        return ResponseEntity.ok().body(newReservation);  
+    }  
+  
+    @DeleteMapping("/reservations/{id}")  
+    public ResponseEntity<Void> delete(@PathVariable Long id) {  
+        Reservation reservation = reservations.stream()  
+                .filter(it -> it.getId().equals(id))  
+                .findFirst()  
+                .orElseThrow(RuntimeException::new);  
+  
+        reservations.remove(reservation);  
+  
+        return ResponseEntity.ok().build();  
+    }  
+}
+```
+- `ReservationController`
+  - `@Controller` 어노테이션 적용
+    - 컨트롤러니까 컨트롤러 어노테이션 적용.
+    - `@RestController` 어노테이션 적용 시, 메서드에 `@ResponseBody` 어노테이션 생략 가능
+      - 현재는 사용되지 않아서 사용하지 않았음
+- `@XxxMapping` 어노테이션
+  - 요청받을 URL을 매개변수?인자?로 작성 필요
+  - Get - 조회, Post - 생성, Put - 전체 리소스 대체(수정), Patch - ==부분 수정?==, Delete - 삭제
+- `read()`
+  - 반환값을 `ResponseEntity`로 적용. ==왜? 궁금하지만 다음 기회에==
+  - `ResponseEntity.ok().body(reservations)`
+    - `ok()`: 상태 코드 결정 부분인 것 같다.
+    - `body()`: HTTP응답 Body에 담을 객체를 전달하는 것 같다. ==JSON으로 무조건 변환되는건가?==
+  - ==`ResponseEntity` 클래스에 대해 학습 필요==
+- `create()`
+  - 예제 코드를 따라 `Reservation`객체 생성 시, 정적 팩토리 메서드 사용
+    - 요청받은 정보로 생성하는 과정으로 의미를 명확하게 하기 위해서 사용했다고 생각함. ==확인 필요==
+  - ==`@RequestBody` 어노테이션==
+    - 요청으로 들어오는 JSON 데이터를 객체로 변환해서 파라미터로 입력해줌
+- `delete()`
+  - ==`@PathVariable`==: 요청 URL에서 변수를 추출함
+  - `ResponseEntity.ok().build();`: ==그냥 `build()`하면 어떻게 되는거지?==
+  - 지금은 `RuntimeException` 날리고 있지만, 예외 처리는 어떻게 하는지 확인 필요
+
+### 4. 검증 & 회고
+- 스프링에 대한 깊은 이해가 없어도 테스트만 통과시키면 되는 미션이어서 문제 해결에 초점을 맞춰 빠르게 진행할 수 있었습니다.
+  관련 자료 코드를 활용하여 진행하였지만 직접 코드를 쳐보며 기본적인 사용법에 익숙해졌다는 느낌이 듭니다.
+  아직 궁금한 내용, 깊이있는 내용들에 대한 학습이 필요하지만, 우선 미션을 모두 완료시킨 뒤 추가 학습 해보려고 합니다.

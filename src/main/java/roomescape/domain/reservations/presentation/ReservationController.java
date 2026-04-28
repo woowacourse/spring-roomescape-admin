@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.reservations.entity.Reservation;
-import roomescape.domain.reservations.presentation.dto.ReservationCreateRequest;
-import roomescape.domain.reservations.presentation.dto.ReservationCreateResponse;
+import roomescape.domain.reservations.presentation.dto.ReservationRequest;
+import roomescape.domain.reservations.presentation.dto.ReservationResponse;
 
 @RestController
 public class ReservationController {
@@ -20,8 +20,8 @@ public class ReservationController {
     private AtomicLong index = new AtomicLong(1);
 
     @PostMapping("/reservations")
-    public ReservationCreateResponse addReservation(
-            @RequestBody ReservationCreateRequest request
+    public ReservationResponse addReservation(
+            @RequestBody ReservationRequest request
     ) {
         Reservation reservation = new Reservation(
                 index.getAndIncrement(),
@@ -30,12 +30,14 @@ public class ReservationController {
                 request.time()
         );
         reservations.add(reservation);
-        return ReservationCreateResponse.from(reservation);
+        return ReservationResponse.from(reservation);
     }
 
     @GetMapping("/reservations")
-    public List<Reservation> getReservations() {
-        return reservations;
+    public List<ReservationResponse> getReservations() {
+        return reservations.stream()
+                .map(ReservationResponse::from)
+                .toList();
     }
 
     @DeleteMapping("/reservations/{id}")

@@ -30,4 +30,9 @@ public class ReservationController {
     public List<Reservation> getReservations() {
         return reservations;
     }
+
+    @DeleteMapping("/{reservation-id}")
+    public void addReservation(@PathVariable("reservation-id") Long reservationId) {
+        reservations.removeIf(reservation -> Objects.equals(reservation.getId(), reservationId));
+    }
 }

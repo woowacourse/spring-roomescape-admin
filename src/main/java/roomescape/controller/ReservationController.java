@@ -24,11 +24,11 @@ import roomescape.dto.ReservationDto;
 @RequiredArgsConstructor
 @RequestMapping("/reservations")
 @RestController()
-public class RoomEscapeController {
+public class ReservationController {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<ReservationDto>> findAllReservations() {
         List<ReservationDto> result = jdbcTemplate.query(
                 "SELECT id, name, date, time FROM reservation",
@@ -44,7 +44,7 @@ public class RoomEscapeController {
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<ReservationDto> createReservation(
             @RequestBody ReservationCreateDto request
     ) {

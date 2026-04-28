@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
 public class ReservationController {
 
     private final ReservationRepository reservationRepository;

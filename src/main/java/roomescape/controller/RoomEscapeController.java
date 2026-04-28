@@ -1,7 +1,5 @@
 package roomescape.controller;
 
-import static org.springframework.http.HttpStatus.OK;
-
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
-import roomescape.dto.RequestDto.ReservationCreateDto;
-import roomescape.dto.ResponseDto;
+import roomescape.dto.ReservationCreateDto;
+import roomescape.dto.ReservationDto;
 
 @RequiredArgsConstructor
 @RequestMapping("/reservations")
@@ -31,10 +29,10 @@ public class RoomEscapeController {
     private final JdbcTemplate jdbcTemplate;
 
     @GetMapping()
-    public ResponseEntity<List<ResponseDto.ReservationDto>> findAllReservations() {
-        List<ResponseDto.ReservationDto> result = jdbcTemplate.query(
+    public ResponseEntity<List<ReservationDto>> findAllReservations() {
+        List<ReservationDto> result = jdbcTemplate.query(
                 "SELECT id, name, date, time FROM reservation",
-                (rs, rowNum) -> ResponseDto.ReservationDto.of(
+                (rs, rowNum) -> ReservationDto.from(
                         Reservation.builder()
                                 .id(rs.getLong("id"))
                                 .name(rs.getString("name"))
@@ -47,14 +45,10 @@ public class RoomEscapeController {
     }
 
     @PostMapping()
-    public ResponseEntity<ResponseDto.ReservationDto> createReservation(
+    public ResponseEntity<ReservationDto> createReservation(
             @RequestBody ReservationCreateDto request
     ) {
-        Reservation reservation = Reservation.builder()
-                .name(request.getName())
-                .date(request.getDate())
-                .time(request.getTime())
-                .build();
+        Reservation reservation = request.toEntity();
 
         String formattedDate = reservation.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String formattedTime = reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm"));
@@ -79,7 +73,7 @@ public class RoomEscapeController {
                 .time(reservation.getTime())
                 .build();
 
-        return ResponseEntity.ok(ResponseDto.ReservationDto.of(saved));
+        return ResponseEntity.ok(ReservationDto.from(saved));
     }
 
     @DeleteMapping("/{id}")

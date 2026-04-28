@@ -1,8 +1,7 @@
 package roomescape.dto;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import roomescape.entity.Reservation;
 
 public record ReservationResponseDto(
     long id,
@@ -11,10 +10,15 @@ public record ReservationResponseDto(
     String time
 ) {
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(
+        "yyyy-MM-dd");
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
-    public static ReservationResponseDto from(long id, String name, LocalDate date, LocalTime time) {
-        return new ReservationResponseDto(id, name, date.format(DATE_FORMATTER), time.format(TIME_FORMATTER));
+    public static ReservationResponseDto from(final Reservation reservation) {
+        return new ReservationResponseDto(
+            reservation.getId(),
+            reservation.getName(),
+            DATE_FORMATTER.format(reservation.getDate()),
+            TIME_FORMATTER.format(reservation.getTime()));
     }
 }

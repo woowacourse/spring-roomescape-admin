@@ -18,7 +18,8 @@ public class ReservationsTest {
     void reservation_save_test() {
         Reservations reservations = new Reservations();
 
-        assertDoesNotThrow(() -> reservations.save(NAME, DATE, TIME));
+        Long saveId = reservations.save(NAME, DATE, TIME);
+        assertThat(saveId).isEqualTo(1L);
     }
 
     @DisplayName("모든 방 탈출 예약 조회")

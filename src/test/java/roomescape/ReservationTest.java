@@ -3,7 +3,6 @@ package roomescape;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.naming.spi.ResolveResult;
 import java.time.LocalDate;
 import java.time.LocalTime;
 

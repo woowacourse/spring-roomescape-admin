@@ -6,13 +6,13 @@ import java.time.LocalTime;
 public class Reservation {
 
     private final long id;
-    private final String reservationUsername;
+    private final String name;
     private final LocalDate reservationDate;
     private final LocalTime reservationTime;
 
-    private Reservation(long id, String reservationUsername, LocalDate date, LocalTime time) {
+    private Reservation(long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
-        this.reservationUsername = reservationUsername;
+        this.name = name;
         this.reservationDate = date;
         this.reservationTime = time;
     }
@@ -22,7 +22,7 @@ public class Reservation {
     }
 
     public String username() {
-        return reservationUsername;
+        return name;
     }
 
     public LocalDate date() {

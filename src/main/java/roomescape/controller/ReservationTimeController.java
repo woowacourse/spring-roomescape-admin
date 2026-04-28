@@ -2,11 +2,13 @@ package roomescape.controller;
 
 import java.sql.PreparedStatement;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,20 @@ import roomescape.dto.ReservationTimeDto;
 public class ReservationTimeController {
 
     private final JdbcTemplate jdbcTemplate;
+
+    @GetMapping
+    public ResponseEntity<List<ReservationTimeDto>> findAllReservationTimes() {
+        List<ReservationTimeDto> result = jdbcTemplate.query(
+                "SELECT id, start_at FROM reservation_time",
+                (rs, rowNum) -> ReservationTimeDto.from(
+                        ReservationTime.builder()
+                                .id(rs.getLong("id"))
+                                .startAt(rs.getTime("start_at").toLocalTime())
+                                .build()
+                )
+        );
+        return ResponseEntity.ok(result);
+    }
 
     @PostMapping
     public ResponseEntity<ReservationTimeDto> createReservationTime(@RequestBody ReservationTimeCreateDto request) {

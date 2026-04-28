@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import roomescape.domain.Reservation;
-import roomescape.domain.dto.ReservationSaveRequestDto;
+import roomescape.controller.dto.ReservationSaveRequestDto;
 import roomescape.service.RoomescapeService;
 
 @RestController
@@ -28,7 +28,7 @@ public class RoomescapeController {
 
     @PostMapping("/reservations")
     public Reservation saveReservation(@RequestBody ReservationSaveRequestDto reservationRequest) {
-        return roomescapeService.save(reservationRequest);
+        return roomescapeService.save(reservationRequest.toServiceDto());
     }
 
     @DeleteMapping("/reservations/{id}")

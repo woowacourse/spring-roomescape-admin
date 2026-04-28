@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
-import roomescape.domain.dto.ReservationSaveRequestDto;
 import roomescape.repository.RoomescapeRepository;
+import roomescape.service.dto.ReservationSaveServiceDto;
 
 @Service
 public class RoomescapeServiceImpl implements RoomescapeService {
@@ -22,7 +22,7 @@ public class RoomescapeServiceImpl implements RoomescapeService {
     }
 
     @Override
-    public Reservation save(ReservationSaveRequestDto reservation) {
+    public Reservation save(ReservationSaveServiceDto reservation) {
         Reservation newReservation = new Reservation(
                 reservation.getName(),
                 reservation.getDate(),

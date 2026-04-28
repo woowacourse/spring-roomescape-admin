@@ -9,9 +9,9 @@ public class Reservation {
     private final LocalDate date;
     private final LocalTime time;
 
-    public Reservation(Long id, Name name, LocalDate date, LocalTime time) {
-        this.id = id;
-        this.name = name;
+    public Reservation(String name, LocalDate date, LocalTime time) {
+        this.id = null;
+        this.name = new Name(name);
         this.date = date;
         this.time = time;
     }
@@ -27,8 +27,8 @@ public class Reservation {
         return id;
     }
 
-    public Name getName() {
-        return name;
+    public String getName() {
+        return name.getValue();
     }
 
     public LocalDate getDate() {

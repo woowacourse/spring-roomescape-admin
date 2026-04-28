@@ -3,6 +3,7 @@ package roomescape.controller;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +27,12 @@ public class ReservationController {
     private final AtomicLong index = new AtomicLong(0);
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> getReservations() {
-        return new ResponseEntity<>(Collections.unmodifiableList(reservations), HttpStatus.OK);
+    public ResponseEntity<List<ReservationResponseDto>> getReservations() {
+        final List<ReservationResponseDto> reservationResponseDtos =
+            reservations.stream()
+                .map(ReservationResponseDto::from)
+                .toList();
+        return new ResponseEntity<>(reservationResponseDtos, HttpStatus.OK);
     }
 
     @PostMapping

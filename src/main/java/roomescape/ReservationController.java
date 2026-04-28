@@ -1,7 +1,6 @@
 package roomescape;
 
 import java.util.List;
-import jdk.jfr.Registered;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,13 +19,13 @@ public class ReservationController {
     }
 
     @GetMapping
-    public List<Reservation> getReservations(){
+    public List<ReservationDto> getReservations(){
         return reservationService.findAll();
     }
 
     @PostMapping
-    public Reservation saveReservation(@RequestBody Reservation reservation){
-        return reservationService.save(reservation);
+    public ReservationDto saveReservation(@RequestBody ReservationDto reservation){
+        return reservationService.save(reservation.toReservation());
     }
 
     @DeleteMapping("/{id}")

@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class InMemoryReservationRepository implements ReservationRepository {
     private final Map<Long, Reservation> reservations = new HashMap<>();
     private final AtomicLong index = new AtomicLong(1);

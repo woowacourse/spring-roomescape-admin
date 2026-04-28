@@ -16,7 +16,7 @@ public class ReservationController {
     private static final String RESERVATION_NOT_FOUND = "해당 예약이 존재하지 않습니다.";
 
     private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(0);
+    private AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> readAll() {
@@ -25,7 +25,7 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
-        Reservation newReservation = new Reservation(index.incrementAndGet(), reservation.getName(),
+        Reservation newReservation = new Reservation(index.getAndIncrement(), reservation.getName(),
                 reservation.getDate(), reservation.getTime());
         reservations.add(newReservation);
         return ResponseEntity.ok(newReservation);

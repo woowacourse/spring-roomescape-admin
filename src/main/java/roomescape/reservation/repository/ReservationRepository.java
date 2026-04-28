@@ -24,4 +24,8 @@ public class ReservationRepository {
         reservations.add(reservation);
         return reservation;
     }
+
+    public void deleteById(Long id) {
+        reservations.removeIf(reservation -> reservation.getId().equals(id));
+    }
 }

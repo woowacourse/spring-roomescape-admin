@@ -1,10 +1,12 @@
 package roomescape.reservation.domain;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@Getter
 @RequiredArgsConstructor
 public class Reservation {
 

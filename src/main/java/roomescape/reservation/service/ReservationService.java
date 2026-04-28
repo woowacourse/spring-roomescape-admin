@@ -22,4 +22,8 @@ public class ReservationService {
     public Reservation createReservation(String name, LocalDate date, LocalTime time) {
         return reservationRepository.save(name, date, time);
     }
+
+    public void deleteReservation(Long id) {
+        reservationRepository.deleteById(id);
+    }
 }

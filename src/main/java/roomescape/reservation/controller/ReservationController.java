@@ -28,4 +28,9 @@ public class ReservationController {
                 request.getTime()
         );
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteReservation(@PathVariable Long id) {
+        reservationService.deleteReservation(id);
+    }
 }

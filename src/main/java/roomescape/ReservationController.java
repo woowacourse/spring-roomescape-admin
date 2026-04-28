@@ -4,36 +4,31 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class ReservationController {
-    private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(1);
+
+    private ReservationDao reservationDao;
+
+    public ReservationController(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> read() {
-        return ResponseEntity.ok().body(reservations);
+        return ResponseEntity.ok().body(reservationDao.findAll());
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
-        Reservation newReservation = Reservation.toEntity(reservation, index.getAndIncrement());
-        reservations.add(newReservation);
-        return ResponseEntity.ok().body(newReservation);
+        Long id = reservationDao.insert(reservation);
+        return ResponseEntity.ok().body(reservationDao.findBy(id));
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Reservation reservation = reservations.stream()
-                .filter(it -> it.getId().equals(id))
-                .findFirst()
-                .orElseThrow(RuntimeException::new);
-
-        reservations.remove(reservation);
-
+        reservationDao.delete(id);
         return ResponseEntity.ok().build();
     }
 }

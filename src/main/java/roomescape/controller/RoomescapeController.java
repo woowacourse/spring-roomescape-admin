@@ -3,8 +3,6 @@ package roomescape.controller;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import javax.sql.DataSource;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -73,11 +71,12 @@ public class RoomescapeController {
 
         return ResponseEntity.ok(ReservationResponse.from(reservation));
     }
-//
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> deleteReservation(@PathVariable String id) {
-//        reservations.removeIf(reservation -> reservation.id() == Long.parseLong(id));
-//
-//        return ResponseEntity.status(HttpStatus.OK).build();
-//    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }

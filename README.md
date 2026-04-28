@@ -58,11 +58,11 @@
 
 > H2 인메모리 데이터베이스로 전환하여 서버 재시작 전까지 데이터를 유지한다.
 
-- [ ] **환경 설정**
-    - [ ] `spring-boot-starter-jdbc`, `h2` 의존성을 추가한다.
-    - [ ] `application.properties`에 H2 콘솔 및 datasource URL을 설정한다.
-- [ ] **스키마 정의** (`resources/schema.sql`)
-    - [ ] `reservation` 테이블을 정의한다.
+- [x] **환경 설정**
+    - [x] `spring-boot-starter-jdbc`, `h2` 의존성을 추가한다.
+    - [x] `application.properties`에 H2 콘솔 및 datasource URL을 설정한다.
+- [x] **스키마 정의** (`resources/schema.sql`)
+    - [x] `reservation` 테이블을 정의한다.
 - [ ] **API 전환**
     - [ ] 예약 조회를 JdbcTemplate 기반으로 전환한다.
     - [ ] 예약 추가를 JdbcTemplate 기반으로 전환하고, DB가 생성한 id를 응답에 담는다.

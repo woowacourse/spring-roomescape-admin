@@ -31,11 +31,11 @@ public class Reservation {
         return name;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public String getDate() {
+        return date.toString();
     }
 
-    public LocalTime getTime() {
-        return time;
+    public String getTime() {
+        return time.toString();
     }
 }

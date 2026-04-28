@@ -23,12 +23,12 @@ import roomescape.dto.response.ReservationResponse;
 
 @RestController
 @RequestMapping("/reservations")
-public class RoomescapeController {
+public class ReservationController {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertExecutor;
 
-    public RoomescapeController(JdbcTemplate jdbcTemplate) {
+    public ReservationController(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.insertExecutor = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")

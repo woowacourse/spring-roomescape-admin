@@ -10,4 +10,13 @@ public record ReservationEntity(
     public static ReservationEntity constructWithNoId() {
         return null;
     }
+
+    public ReservationEntity initializeId(Long dataId) {
+        return new ReservationEntity(
+                dataId,
+                this.name,
+                this.date,
+                this.time
+        );
+    }
 }

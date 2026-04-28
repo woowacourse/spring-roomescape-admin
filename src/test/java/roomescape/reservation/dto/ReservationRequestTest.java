@@ -7,27 +7,30 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.Test;
 import roomescape.reservation.Reservation;
 import roomescape.reservation.dto.request.ReservationRequest;
+import roomescape.reservationTime.ReservationTime;
 
 class ReservationRequestTest {
 
     @Test
     void toDomain_변환() {
-        ReservationRequest request = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40));
+        ReservationRequest request = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), 1L);
+        ReservationTime time = new ReservationTime(1L, LocalTime.of(15, 40));
 
-        Reservation reservation = request.toDomain(1L);
+        Reservation reservation = request.toDomain(1L, time);
 
         assertThat(reservation.getId()).isEqualTo(1L);
         assertThat(reservation.getName()).isEqualTo("브라운");
         assertThat(reservation.getDate()).isEqualTo(LocalDate.of(2023, 8, 5));
-        assertThat(reservation.getTime()).isEqualTo(LocalTime.of(15, 40));
+        assertThat(reservation.getTime()).isEqualTo(time);
     }
 
     @Test
     void toDomain_id가_주입된다() {
-        ReservationRequest request = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40));
+        ReservationRequest request = new ReservationRequest("브라운", LocalDate.of(2023, 8, 5), 1L);
+        ReservationTime time = new ReservationTime(1L, LocalTime.of(15, 40));
 
-        Reservation first = request.toDomain(1L);
-        Reservation second = request.toDomain(2L);
+        Reservation first = request.toDomain(1L, time);
+        Reservation second = request.toDomain(2L, time);
 
         assertThat(first.getId()).isEqualTo(1L);
         assertThat(second.getId()).isEqualTo(2L);

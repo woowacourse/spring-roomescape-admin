@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dto.ReservationInfoDto;
-import roomescape.dto.SaveReservationDto;
+import roomescape.dto.ReservationResponse;
+import roomescape.dto.AddReservationRequest;
 import roomescape.service.RoomReservationService;
 
 @RestController
@@ -26,14 +26,14 @@ public class ReservationController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<ReservationInfoDto>> getReservations() {
-        List<ReservationInfoDto> data = roomReservationService.getAllReservation();
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        List<ReservationResponse> data = roomReservationService.getAllReservation();
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
     @PostMapping()
-    public ResponseEntity<ReservationInfoDto> addReservation(@RequestBody SaveReservationDto saveReservationDto) {
-        ReservationInfoDto data = roomReservationService.addReservation(saveReservationDto);
+    public ResponseEntity<ReservationResponse> addReservation(@RequestBody AddReservationRequest addReservationRequest) {
+        ReservationResponse data = roomReservationService.addReservation(addReservationRequest);
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
 

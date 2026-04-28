@@ -29,5 +29,9 @@ public class ReservationDao {
     public Reservation insert(String name, LocalDate date, LocalTime time) {
         return inMemoryDatabase.insert(name, date, time);
     }
-    
+
+    public void delete(Long id) {
+        inMemoryDatabase.delete(select(id));
+    }
+
 }

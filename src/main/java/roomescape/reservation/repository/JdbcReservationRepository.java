@@ -25,6 +25,7 @@ public class JdbcReservationRepository implements ReservationRepository {
                 reservationTime
         );
     };
+
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
@@ -71,4 +72,5 @@ public class JdbcReservationRepository implements ReservationRepository {
 
         jdbcTemplate.update(sql, id);
     }
+
 }

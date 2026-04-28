@@ -18,6 +18,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
                     resultSet.getLong("id"),
                     resultSet.getString("start_at")
             );
+
     private final JdbcTemplate jdbcTemplate;
 
     public JdbcReservationTimeRepository(JdbcTemplate jdbcTemplate) {

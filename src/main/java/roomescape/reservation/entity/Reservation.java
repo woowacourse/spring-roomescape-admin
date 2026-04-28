@@ -4,10 +4,10 @@ import roomescape.time.entity.ReservationTime;
 
 public class Reservation {
 
+    private Long id;
     private final String name;
     private final String date;
     private final ReservationTime time;
-    private final Long id;
 
     public Reservation(Long id, String name, String date, ReservationTime time) {
         this.id = id;

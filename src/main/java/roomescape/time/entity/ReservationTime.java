@@ -2,8 +2,8 @@ package roomescape.time.entity;
 
 public class ReservationTime {
 
+    private Long id;
     private final String startAt;
-    private final Long id;
 
     public ReservationTime(Long id, String startAt) {
         this.id = id;
@@ -25,4 +25,5 @@ public class ReservationTime {
     public ReservationTime toEntity(long id) {
         return new ReservationTime(id, startAt);
     }
+
 }

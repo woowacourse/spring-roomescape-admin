@@ -64,7 +64,7 @@
 - [x] **스키마 정의** (`resources/schema.sql`)
     - [x] `reservation` 테이블을 정의한다.
 - [ ] **API 전환**
-    - [ ] 예약 조회를 JdbcTemplate 기반으로 전환한다.
+    - [x] 예약 조회를 JdbcTemplate 기반으로 전환한다.
     - [ ] 예약 추가를 JdbcTemplate 기반으로 전환하고, DB가 생성한 id를 응답에 담는다.
     - [ ] 예약 삭제를 JdbcTemplate 기반으로 전환한다.
     - [ ] 기존의 `List<Reservation>`, `AtomicLong`을 제거한다.

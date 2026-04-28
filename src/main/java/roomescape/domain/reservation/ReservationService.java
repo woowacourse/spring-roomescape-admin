@@ -25,8 +25,9 @@ public class ReservationService {
     }
 
     public void deleteReservation(Long id) {
-        Reservation reservation = reservationRepository.findReservation(id)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
-        reservation.delete();
+        int deletedCount = reservationRepository.deleteById(id);
+        if (deletedCount == 0) {
+            throw new IllegalArgumentException("존재하지 않는 예약입니다.");
+        }
     }
 }

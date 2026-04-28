@@ -5,12 +5,10 @@ import java.time.LocalTime;
 import roomescape.domain.reservation.Reservation;
 
 public record CreateReservationRequest(
-    Long id,
     String name,
     LocalDate date,
     LocalTime time
 ) {
-
 
     public Reservation toEntity() {
         return Reservation.createWithoutId(

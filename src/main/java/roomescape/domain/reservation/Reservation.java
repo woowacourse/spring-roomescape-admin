@@ -11,7 +11,6 @@ public class Reservation {
     private final String name;
     private final LocalDate date;
     private final LocalTime time;
-    private boolean deleted;
 
     private Reservation(Long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
@@ -38,7 +37,12 @@ public class Reservation {
         );
     }
 
-    public void delete() {
-        deleted = true;
+    public static Reservation of(
+        long id,
+        String name,
+        LocalDate date,
+        LocalTime time
+    ) {
+        return new Reservation(id, name, date, time);
     }
 }

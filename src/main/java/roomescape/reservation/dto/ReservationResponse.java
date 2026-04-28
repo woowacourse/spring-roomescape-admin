@@ -1,6 +1,6 @@
-package roomescape.dto;
+package roomescape.reservation.dto;
 
-import roomescape.domain.Reservation;
+import roomescape.reservation.Reservation;
 
 public record ReservationResponse(Long id, String name, String date, String time) {
 

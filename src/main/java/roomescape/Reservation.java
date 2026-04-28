@@ -5,12 +5,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Reservation {
-    private Long id;
-    private String name;
+    private final Long id;
+    private final String name;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate date;
+    private final LocalDate date;
     @JsonFormat(pattern = "HH:mm")
-    private LocalTime time;
+    private final LocalTime time;
 
     public Reservation(Long id, String name, LocalDate date, LocalTime time) {
         this.id = id;

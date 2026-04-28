@@ -5,6 +5,7 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -34,8 +35,11 @@ public class ReservationRepository {
             return statement;
         }, keyHolder);
 
+        Number id = keyHolder.getKey();
+        validateNotNull(id);
+
         return Reservation.retrieve(
-                keyHolder.getKey().longValue(),
+                id.longValue(),
                 reservation.getName(),
                 reservation.getDate(),
                 reservation.getTime()
@@ -51,7 +55,10 @@ public class ReservationRepository {
     public void delete(long id) {
         String deleteSql = "DELETE FROM reservation WHERE id = ?";
 
-        jdbcTemplate.update(deleteSql, id);
+        int updatedRows = jdbcTemplate.update(deleteSql, id);
+        if (updatedRows < 1) {
+            throw new IllegalArgumentException("존재하지 않는 예약 id입니다.");
+        }
     }
 
     private RowMapper<Reservation> reservationRowMapper() {
@@ -61,5 +68,11 @@ public class ReservationRepository {
                 resultSet.getObject("date", LocalDate.class),
                 resultSet.getObject("time", LocalTime.class)
         );
+    }
+
+    private void validateNotNull(Number id) {
+        if (id == null) {
+            throw new InvalidDataAccessApiUsageException("ID 조회에 실패했습니다.");
+        }
     }
 }

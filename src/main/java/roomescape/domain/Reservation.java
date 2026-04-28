@@ -1,12 +1,13 @@
 package roomescape.domain;
 
-import java.util.concurrent.atomic.AtomicLong;
-
 public class Reservation {
-    private final long id;
-    private final String name;
-    private final String date;
-    private final String time;
+    private long id;
+    private String name;
+    private String date;
+    private String time;
+
+    public Reservation() {
+    }
 
     public Reservation(long id, String name, String date, String time) {
         this.id = id;

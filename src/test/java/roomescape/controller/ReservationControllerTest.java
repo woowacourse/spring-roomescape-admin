@@ -3,22 +3,22 @@ package roomescape.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
+import roomescape.repository.ReservationRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ReservationControllerTest {
     ReservationController controller;
+    ReservationRepository repository;
 
     @BeforeEach
     void beforeEach() {
-        List<Reservation> reservations = new ArrayList<>();
-        reservations.add(new Reservation(1L, "브라운", "2023-08-05", "15:40"));
-
-        controller = new ReservationController(reservations);
+        repository = new ReservationRepository(new JdbcTemplate());
+        controller = new ReservationController(repository);
     }
 
     @Test

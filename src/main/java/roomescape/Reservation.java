@@ -18,6 +18,10 @@ public class Reservation {
         this.time = time;
     }
 
+    public boolean isSameDateTime(Reservation reservation) {
+        return date.equals(reservation.getDate()) && time.equals(reservation.getTime());
+    }
+
     private static void validateName(String name) {
         if (name == null) {
             throw new IllegalArgumentException("[ERROR] 이름은 필수 값입니다.");
@@ -38,5 +42,13 @@ public class Reservation {
         if (time == null) {
             throw new IllegalArgumentException("[ERROR] 시간은 필수 값입니다.");
         }
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public LocalTime getTime() {
+        return time;
     }
 }

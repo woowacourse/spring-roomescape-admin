@@ -35,4 +35,9 @@ public class ReservationTimeDao {
                         resultSet.getString("start_at")
                 ));
     }
+
+    public void delete(long id) {
+        final String sql = "delete from reservation_time where id = ?;";
+        jdbcTemplate.update(sql, id);
+    }
 }

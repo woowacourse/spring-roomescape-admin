@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.dto.ReservationInfo;
 import roomescape.controller.dto.ReservationRequest;
-import roomescape.dao.InMemoryReservationsDao;
 import roomescape.dao.ReservationsDao;
 import roomescape.domain.Reservation;
 
@@ -23,7 +22,7 @@ public class ReservationController {
     private final ReservationsDao reservationsDao;
 
     @Autowired
-    public ReservationController(InMemoryReservationsDao reservationsDao) {
+    public ReservationController(ReservationsDao reservationsDao) {
         this.reservationsDao = reservationsDao;
     }
 

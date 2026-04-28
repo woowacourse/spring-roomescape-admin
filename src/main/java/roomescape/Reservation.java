@@ -19,8 +19,13 @@ public class Reservation {
         this.time = time;
     }
 
-    public static Reservation toEntity(Reservation reservation, Long id) {
-        return new Reservation(id, reservation.name, reservation.date, reservation.time);
+    public static Reservation withId(Long id, Reservation reservation){
+        return new Reservation(
+                id,
+                reservation.name,
+                reservation.date,
+                reservation.time
+        );
     }
 
     public Long getId() {
@@ -29,5 +34,13 @@ public class Reservation {
 
     public String getName() {
         return name;
+    }
+
+    public LocalTime getTime() {
+        return time;
+    }
+
+    public LocalDate getDate() {
+        return date;
     }
 }

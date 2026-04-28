@@ -21,13 +21,13 @@
   - 메서드/URL: `GET /reservations`
   - 요청 본문: x
   - 응답: `[{id, name, date, time}, ...]`
-- [ ] 예약 추가
+- [x] 예약 추가
   - 메서드/URL: `POST /reservations`
   - 요청 본문: `{name, date, time}`
   - 응답: `{id, name, date, time}`
-- [ ] 예약 삭제
+- [x] 예약 삭제
   - 메서드/URL: `DELETE /reservations/{id}`
   - 요청 본문: x
   - 응답: `200 OK`
 - [x] 예약_조회 테스트를 통과했는가?
-- [ ] 예약_추가_및_삭제 테스트를 통과했는가?
+- [x] 예약_추가_및_삭제 테스트를 통과했는가?

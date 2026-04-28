@@ -36,7 +36,4 @@ public class Reservation {
         return time;
     }
 
-    public static Reservation toEntity(long id, Reservation reservation){
-        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
-    }
 }

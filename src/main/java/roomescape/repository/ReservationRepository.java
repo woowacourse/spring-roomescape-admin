@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Component;
 import roomescape.domain.Reservation;
@@ -30,5 +31,17 @@ public class ReservationRepository {
 
         reservations.add(withIdEntity);
         return mapper.toDomain(withIdEntity);
+    }
+
+    public void delete(Long targetId) {
+        Optional<ReservationEntity> deleteTarget = reservations.stream()
+                .filter(reservation -> reservation.id().equals(targetId))
+                .findFirst();
+
+        if (deleteTarget.isEmpty()) {
+            throw new IllegalArgumentException("삭제 대상이 존재하지 않습니다");
+        }
+
+        reservations.remove(deleteTarget.get());
     }
 }

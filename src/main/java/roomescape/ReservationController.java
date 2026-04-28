@@ -16,7 +16,7 @@ public class ReservationController {
     private static final String RESERVATION_NOT_FOUND = "해당 예약이 존재하지 않습니다.";
 
     private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(1);
+    private AtomicLong index = new AtomicLong(0);
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> readAll() {
@@ -24,11 +24,11 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> create(@RequestBody String name, @RequestBody String date,
-                                              @RequestBody String time) {
-        Reservation reservation = new Reservation(index.incrementAndGet(), name, date, time);
-        reservations.add(reservation);
-        return ResponseEntity.ok(reservation);
+    public ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
+        Reservation newReservation = new Reservation(index.incrementAndGet(), reservation.getName(),
+                reservation.getDate(), reservation.getTime());
+        reservations.add(newReservation);
+        return ResponseEntity.ok(newReservation);
     }
 
     @DeleteMapping("/reservations/{id}")
@@ -39,6 +39,6 @@ public class ReservationController {
                 .orElseThrow(() -> new IllegalArgumentException(RESERVATION_NOT_FOUND));
 
         reservations.remove(reservation);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }

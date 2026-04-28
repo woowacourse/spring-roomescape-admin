@@ -32,4 +32,16 @@ public class Reservation {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getTime() {
+        return time;
+    }
 }

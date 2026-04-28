@@ -17,6 +17,11 @@ public class ReservationDao {
         this.inMemoryDatabase = inMemoryDatabase;
     }
 
+    public Reservation select(Long id) {
+        return inMemoryDatabase.select(id)
+                .orElseThrow(IllegalArgumentException::new);
+    }
+
     public List<Reservation> selectAll() {
         return inMemoryDatabase.selectAll();
     }
@@ -24,5 +29,5 @@ public class ReservationDao {
     public Reservation insert(String name, LocalDate date, LocalTime time) {
         return inMemoryDatabase.insert(name, date, time);
     }
-
+    
 }

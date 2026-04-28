@@ -1,11 +1,12 @@
 package roomescape;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ReservationTest {
 
@@ -22,6 +23,17 @@ public class ReservationTest {
         Reservation reservation = new Reservation(id, name, reservationDate, reservationTime);
 
         // then
-        Assertions.assertThat(reservation).isNotNull();
+        assertThat(reservation).isNotNull();
+    }
+
+    @Test
+    @DisplayName("같은 id를 가진 Reservation은 같은 객체이다.")
+    void reservations_with_same_id_are_equal() {
+        // given
+        Reservation reservation1 = new Reservation(1L, "홍길동", LocalDate.of(2024, 1, 1), LocalTime.of(10, 0));
+        Reservation reservation2 = new Reservation(1L, "김철수", LocalDate.of(2024, 1, 2), LocalTime.of(11, 0));
+
+        // when & then
+        assertThat(reservation1).isEqualTo(reservation2);
     }
 }

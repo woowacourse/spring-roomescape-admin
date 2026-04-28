@@ -11,7 +11,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationCreateRequest;
 
 @Repository
 public class ReservationRepository {
@@ -22,25 +21,20 @@ public class ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Reservation create(ReservationCreateRequest createRequest) {
+    public Reservation create(Reservation reservation) {
         String createSql = "INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(createSql, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, createRequest.name());
-            statement.setObject(2, createRequest.date());
-            statement.setObject(3, createRequest.time());
+            statement.setString(1, reservation.name());
+            statement.setObject(2, reservation.date());
+            statement.setObject(3, reservation.time());
 
             return statement;
         }, keyHolder);
 
-        return new Reservation(
-                keyHolder.getKey().longValue(),
-                createRequest.name(),
-                createRequest.date(),
-                createRequest.time()
-        );
+        return reservation.identify(keyHolder.getKey().longValue());
     }
 
     public List<Reservation> findAll() {

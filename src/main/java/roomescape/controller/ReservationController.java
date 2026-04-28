@@ -37,7 +37,11 @@ public class ReservationController {
     public ResponseEntity<Reservation> create(
             @RequestBody ReservationCreateRequest createRequest
     ) {
-        Reservation createdReservation = reservationRepository.create(createRequest);
+        Reservation createdReservation = reservationRepository.create(Reservation.withoutId(
+                createRequest.name(),
+                createRequest.date(),
+                createRequest.time()
+        ));
 
         return ResponseEntity.ok(createdReservation);
     }

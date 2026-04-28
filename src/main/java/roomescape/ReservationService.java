@@ -11,20 +11,17 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public List<ReservationDto> findAll() {
-        return reservationRepository.findAll()
-                .stream()
-                .map(ReservationDto::from)
-                .toList();
+    public List<Reservation> findAll() {
+        return reservationRepository.findAll();
     }
 
-    public ReservationDto findById(long id) {
-        return ReservationDto.from(reservationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 resrvation이 없습니다. id: " + id)));
+    public Reservation findById(long id) {
+        return reservationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 reservation이 없습니다. id: " + id));
     }
 
-    public ReservationDto save(Reservation reservation) {
-        return ReservationDto.from(reservationRepository.save(reservation));
+    public Reservation save(Reservation reservation) {
+        return reservationRepository.save(reservation);
     }
 
     public void delete(long id) {

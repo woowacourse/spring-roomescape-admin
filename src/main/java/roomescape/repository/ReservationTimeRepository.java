@@ -2,8 +2,10 @@ package roomescape.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -33,6 +35,21 @@ public class ReservationTimeRepository {
         validateNotNull(id);
 
         return reservationTime.with(id.longValue());
+    }
+
+    public List<ReservationTime> findAll() {
+        String findSql = "SELECT * FROM reservation_time";
+
+        return jdbcTemplate.query(findSql, reservationTimeRowMapper());
+    }
+
+    private RowMapper<ReservationTime> reservationTimeRowMapper() {
+        return (resultSet, rowNum) -> {
+            long id = resultSet.getLong("id");
+            String startAt = resultSet.getString("start_at");
+
+            return ReservationTime.retrieve(id, startAt);
+        };
     }
 
     private void validateNotNull(Number id) {

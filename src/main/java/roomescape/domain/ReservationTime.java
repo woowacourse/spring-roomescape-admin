@@ -30,6 +30,16 @@ public class ReservationTime {
         );
     }
 
+    public static ReservationTime retrieve(
+            long id,
+            String startAt
+    ) {
+        return new ReservationTime(
+                id,
+                startAt
+        );
+    }
+
     public ReservationTime with(long id) {
         return new ReservationTime(
                 id,

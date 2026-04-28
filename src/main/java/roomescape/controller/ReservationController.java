@@ -11,10 +11,10 @@ import roomescape.domain.Reservations;
 @RequestMapping("/reservations")
 @RestController
 public class ReservationController {
-    Reservations reservations = new Reservations();
+    private final Reservations reservations = new Reservations();
 
     @PostMapping
-    public ResponseEntity<CreateReservationResponse> createReservation(@RequestBody CreateReservationRequest createReservationRequest){
+    public ResponseEntity<CreateReservationResponse> createReservation(@RequestBody CreateReservationRequest createReservationRequest) {
         Reservation reservation = new Reservation(
                 createReservationRequest.name(),
                 DateAndTimeConverter.parseToDate(createReservationRequest.date()),
@@ -29,5 +29,12 @@ public class ReservationController {
         );
 
         return ResponseEntity.ok(createReservationResponse);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        reservations.deleteById(id);
+
+        return ResponseEntity.ok().build();
     }
 }

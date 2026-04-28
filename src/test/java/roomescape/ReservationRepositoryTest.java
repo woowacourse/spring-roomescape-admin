@@ -12,7 +12,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class ReservationRepositoryTest {
 
     @Test
-    void 예약_조회_시_불변_리스트를_반환한다() {
+    @DisplayName("예약 조회 시 불변 리스트를 반환한다.")
+    void findAll_then_return_unmodifiableList() {
         ReservationRepository reservationRepository = new ReservationRepository();
         List<Reservation> result = reservationRepository.findAll();
 

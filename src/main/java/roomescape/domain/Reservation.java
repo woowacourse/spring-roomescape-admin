@@ -2,6 +2,7 @@ package roomescape.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import roomescape.dto.ReservationRequest;
 
 public class Reservation {
     private Long id;
@@ -23,10 +24,6 @@ public class Reservation {
         this.name = name;
         this.date = date;
         this.time = reservationTime;
-    }
-
-    public static Reservation toEntity(Long id, Reservation reservation) {
-        return new Reservation(id, reservation.name, reservation.date, reservation.time);
     }
 
     public Long getId() {

@@ -38,12 +38,7 @@ public class ReservationRepository {
         Number id = keyHolder.getKey();
         validateNotNull(id);
 
-        return Reservation.retrieve(
-                id.longValue(),
-                reservation.getName(),
-                reservation.getDate(),
-                reservation.getTime()
-        );
+        return reservation.with(id.longValue());
     }
 
     public List<Reservation> findAll() {

@@ -1,5 +1,8 @@
 package roomescape.repository;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,5 +29,28 @@ class ReservationRepositoryTest {
 
         //then
         Assertions.assertNotNull(result.id());
+    }
+
+    @Test
+    @DisplayName("찾기를 하면 모든 결과물을 반환한다")
+    void findAll_success() {
+        Reservation reservation1 = Reservation.constructWithNoId(TESTER_NAME, TEST_DATE, TEST_TIME);
+        Reservation reservation2 = Reservation.constructWithNoId(TESTER_NAME, TEST_DATE, TEST_TIME);
+        Reservation reservation3 = Reservation.constructWithNoId(TESTER_NAME, TEST_DATE, TEST_TIME);
+        reservationRepository.save(reservation1);
+        reservationRepository.save(reservation2);
+        reservationRepository.save(reservation3);
+
+        List<Reservation> result = reservationRepository.findAll();
+
+        Assertions.assertEquals(3, result.size());
+    }
+
+    @Test
+    @DisplayName("찾기는 비어 있어도 오류가 발생시키지 않고, 빈 리스트를 반환한다.")
+    void findAll_success_when_repository_is_empty() {
+        List<Reservation> result = reservationRepository.findAll();
+
+        assertTrue(result.isEmpty());
     }
 }

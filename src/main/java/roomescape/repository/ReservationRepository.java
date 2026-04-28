@@ -18,6 +18,12 @@ public class ReservationRepository {
         this.mapper = mapper;
     }
 
+    public List<Reservation> findAll() {
+        return reservations.stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
     public Reservation save(Reservation reservation) {
         ReservationEntity noIdEntity = mapper.toEntity(reservation);
         ReservationEntity withIdEntity = noIdEntity.initializeId(id.getAndAdd(1));

@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.step1;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -17,7 +17,7 @@ public class MissionStepTest {
     @Test
     void 예약_조회() {
         RestAssured.given().log().all()
-                .when().get("/reservations")
+                .when().get("/step1/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0)); // 아직 생성 요청이 없으니 0개
@@ -33,24 +33,24 @@ public class MissionStepTest {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
-                .when().post("/reservations")
+                .when().post("/step1/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("id", is(1));
 
         RestAssured.given().log().all()
-                .when().get("/reservations")
+                .when().get("/step1/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
 
         RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+                .when().delete("/step1/reservations/1")
                 .then().log().all()
                 .statusCode(200);
 
         RestAssured.given().log().all()
-                .when().get("/reservations")
+                .when().get("/step1/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0));

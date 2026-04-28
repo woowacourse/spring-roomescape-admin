@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.step1;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

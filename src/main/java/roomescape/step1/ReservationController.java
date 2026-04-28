@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.step1;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
+@RequestMapping("/step1")
 public class ReservationController {
 
     private List<Reservation> reservations = new ArrayList<>();

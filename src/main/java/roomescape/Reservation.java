@@ -1,11 +1,14 @@
 package roomescape;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class Reservation {
     private final String name;
-    private final String date;
-    private final String time;
+    private final LocalDate date;
+    private final LocalTime time;
 
-    public Reservation(String name, String date, String time) {
+    public Reservation(String name, LocalDate date, LocalTime time) {
         validateName(name);
         validateDate(date);
         validateTime(time);
@@ -25,23 +28,15 @@ public class Reservation {
         }
     }
 
-    private static void validateDate(String date) {
+    private static void validateDate(LocalDate date) {
         if (date == null) {
             throw new IllegalArgumentException("[ERROR] 날짜는 필수 값입니다.");
         }
-
-        if (date.isBlank() || !date.matches("^\\d{4}-\\d{2}-\\d{2}$")) {
-            throw new IllegalArgumentException("[ERROR] 날짜 형식이 올바르지 않습니다.");
-        }
     }
 
-    private static void validateTime(String time) {
+    private static void validateTime(LocalTime time) {
         if (time == null) {
             throw new IllegalArgumentException("[ERROR] 시간은 필수 값입니다.");
-        }
-
-        if (time.isBlank() || !time.matches("^\\d{2}:\\d{2}$")) {
-            throw new IllegalArgumentException("[ERROR] 시간 형식이 올바르지 않습니다.");
         }
     }
 }

@@ -43,6 +43,16 @@ public class ReservationTimeRepository {
         return jdbcTemplate.query(findSql, reservationTimeRowMapper());
     }
 
+    public ReservationTime findById(long id) {
+        String findSql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+
+        return jdbcTemplate.queryForObject(
+                findSql,
+                reservationTimeRowMapper(),
+                id
+        );
+    }
+
     public void delete(long id) {
         String deleteSql = "DELETE FROM reservation_time WHERE id = ?";
 

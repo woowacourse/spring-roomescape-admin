@@ -29,9 +29,8 @@ public class ReservationController {
     ) {
         Reservation createdReservation = reservationRepository.create(Reservation.create(
                 createRequest.name(),
-                createRequest.date(),
-                createRequest.time()
-        ));
+                createRequest.date()
+        ), createRequest.timeId());
 
         return ResponseEntity.ok(createdReservation);
     }

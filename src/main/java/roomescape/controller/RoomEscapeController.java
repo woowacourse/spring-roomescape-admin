@@ -12,7 +12,6 @@ import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.service.ReservationService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -26,18 +25,10 @@ public class RoomEscapeController {
 
     @GetMapping
     public List<ReservationResponse> findAll(){
-        List<Reservation> reservationList = reservationService.findAll();
-
-        List<ReservationResponse> returnDtos = new ArrayList<>();
-        for(Reservation reservation : reservationList){
-            long id = reservation.getId();
-            String name = reservation.getName();
-            String date = reservation.getDate();
-            String time = reservation.getTime();
-
-            returnDtos.add(new ReservationResponse(id, name, date, time));
-        }
-        return returnDtos;
+        return reservationService.findAll()
+                .stream()
+                .map(ReservationResponse::from)
+                .toList();
     }
 
     @PostMapping
@@ -47,12 +38,7 @@ public class RoomEscapeController {
                 reservationCreateRequest.date(),
                 reservationCreateRequest.time()
         );
-        return new ReservationResponse(
-                reservation.getId(),
-                reservation.getName(),
-                reservation.getDate(),
-                reservation.getTime()
-        );
+        return ReservationResponse.from(reservation);
     }
 
     @DeleteMapping("/{id}")

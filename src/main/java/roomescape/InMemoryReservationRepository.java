@@ -24,8 +24,9 @@ public class InMemoryReservationRepository implements ReservationRepository {
     @Override
     public Reservation save(Reservation reservation) {
         long id = index.getAndIncrement();
-        reservations.put(id, reservation);
-        return reservation;
+        Reservation savedReservation = new Reservation(id, reservation);
+        reservations.put(id, savedReservation);
+        return savedReservation;
     }
 
     @Override

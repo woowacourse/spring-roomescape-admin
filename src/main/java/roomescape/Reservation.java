@@ -4,13 +4,38 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Reservation {
+    private final Long id;
     private final Name name;
     private final LocalDate date;
     private final LocalTime time;
 
-    public Reservation(Name name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, Name name, LocalDate date, LocalTime time) {
+        this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public Reservation(Long id, Reservation reservation) {
+        this.id = id;
+        this.name = reservation.name;
+        this.date = reservation.date;
+        this.time = reservation.time;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Name getName() {
+        return name;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public LocalTime getTime() {
+        return time;
     }
 }

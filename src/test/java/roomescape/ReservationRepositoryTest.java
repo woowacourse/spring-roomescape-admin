@@ -39,4 +39,20 @@ public class ReservationRepositoryTest {
         assertThat(reservationRepository.findAll()).hasSize(1);
         assertThat(savedReservation.getId()).isEqualTo(1L);
     }
+
+    @Test
+    @DisplayName("에약 추가 시 id는 1씩 증가한다.")
+    void save_then_id_is_incremented_by_1() {
+        // given
+        ReservationRepository reservationRepository = new ReservationRepository();
+
+        // when
+        reservationRepository.save("홍길동", LocalDate.of(2024, 1, 1), LocalTime.of(10, 0));
+        reservationRepository.save("김철수", LocalDate.of(2024, 1, 2), LocalTime.of(11, 0));
+        List<Reservation> result = reservationRepository.findAll();
+
+        // then
+        assertThat(result.get(0).getId()).isEqualTo(1L);
+        assertThat(result.get(1).getId()).isEqualTo(2L);
+    }
 }

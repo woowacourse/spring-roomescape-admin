@@ -15,7 +15,7 @@ public class RoomEscapeController {
     private final Reservations reservations = new Reservations();
 
     @GetMapping()
-    public ResponseEntity<List<ResponseDto.Reservation>> findAllReservations() {
-        return ResponseEntity.ok(ResponseDto.Reservation.getReservationDtos(reservations.findAll()));
+    public ResponseEntity<List<ResponseDto.ReservationDto>> findAllReservations() {
+        return ResponseEntity.ok(ResponseDto.ReservationDto.getReservationDtos(reservations.findAll()));
     }
 }

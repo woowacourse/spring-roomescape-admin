@@ -97,14 +97,14 @@
 | DAO (Repository) | DB 접근 |
 | Domain | 비즈니스 규칙 |
 
-- [ ] **레이어 분리**
-    - [ ] `ReservationController`에서 비즈니스 로직과 DB 접근 코드를 분리한다.
-    - [ ] DB 접근 책임을 DAO에 위임한다.
-    - [ ] 비즈니스 플로우 책임을 Service에 위임한다.
-    - [ ] 비즈니스 규칙 책임을 Domain에 위임한다.
-    - [ ] `ReservationController`에 `JdbcTemplate` 필드가 남아있지 않아야 한다.
-- [ ] **Spring Bean 등록**
-    - [ ] 분리한 클래스를 `@Component` · `@Service` · `@Repository` 등으로 등록한다.
+- [x] **레이어 분리**
+    - [x] `ReservationController`에서 비즈니스 로직과 DB 접근 코드를 분리한다.
+    - [x] DB 접근 책임을 DAO(repository)에 위임한다.
+    - [x] 비즈니스 플로우 책임을 Service에 위임한다.
+    - [x] 비즈니스 규칙 책임을 Domain에 위임한다.
+    - [x] `ReservationController`에 `JdbcTemplate` 필드가 남아있지 않아야 한다.
+- [x] **Spring Bean 등록**
+    - [x] 분리한 클래스를 `@Component` · `@Service` · `@Repository` 등으로 등록한다.
 
 ---
 

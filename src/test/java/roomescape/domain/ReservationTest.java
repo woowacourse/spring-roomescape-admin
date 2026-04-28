@@ -1,8 +1,7 @@
-package roomescape;
+package roomescape.domain;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-import javax.swing.text.Position;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

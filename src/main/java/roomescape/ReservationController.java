@@ -1,5 +1,6 @@
 package roomescape;
 
+import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -21,7 +22,7 @@ public class ReservationController {
     private final AtomicLong index = new AtomicLong(0);
 
     @PostMapping("/reservations")
-    public ResponseEntity<?> postReservation(@RequestBody ReservationRequest request) {
+    public ResponseEntity<?> postReservation(@Valid @RequestBody ReservationRequest request) {
         Reservation reservation = Reservation.toEntity(index.incrementAndGet(), request);
         reservations.add(reservation);
 

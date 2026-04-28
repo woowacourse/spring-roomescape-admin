@@ -42,6 +42,15 @@ public class Reservations {
         reservations.remove(id);
     }
 
+    public Long getReservationId(Reservation reservation) {
+        for (Long id : reservations.keySet()) {
+            if (reservations.get(id).equals(reservation)) {
+                return id;
+            }
+        }
+        throw new NoSuchElementException("[ERROR] 존재하지 않는 예약입니다.");
+    }
+
     private void validatePresent(Long id) {
         if (!reservations.containsKey(id)) {
             throw new NoSuchElementException("[ERROR] 존재하지 않는 예약입니다.");

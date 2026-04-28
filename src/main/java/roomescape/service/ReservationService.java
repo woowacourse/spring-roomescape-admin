@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import java.util.List;
 import org.springframework.stereotype.Component;
 import roomescape.domain.Reservation;
 import roomescape.repository.ReservationRepository;
@@ -17,5 +18,9 @@ public class ReservationService {
         return reservationRepository.save(
                 Reservation.constructWithNoId(name, date, time)
         );
+    }
+
+    public List<Reservation> find() {
+        return reservationRepository.findAll();
     }
 }

@@ -36,6 +36,23 @@ class ReservationServiceTest {
         Assertions.assertNotNull(
                 result.id()
         );
+    }
 
+    @Test
+    @DisplayName("찾기 기능을 수행할 때에 오류가 발생하지 않는다")
+    void find_success() {
+        reservationService.add(TESTER_NAME, TEST_DATE, TEST_TIME);
+
+        Assertions.assertDoesNotThrow(
+                () -> reservationService.find()
+        );
+    }
+
+    @Test
+    @DisplayName("찾기 기능을 수행할 때에 저장소가 비어 있어도 오류가 발생하지 않는다")
+    void find_success_when_empty() {
+        Assertions.assertDoesNotThrow(
+                () -> reservationService.find()
+        );
     }
 }

@@ -24,7 +24,7 @@ public class ReservationController {
     public ResponseEntity<ReservationResponse> addReservation(
             @RequestBody ReservationRequest request
     ) {
-        Reservation reservation = new Reservation(
+        Reservation reservation = Reservation.of(
                 index.getAndIncrement(),
                 request.name(),
                 request.date(),

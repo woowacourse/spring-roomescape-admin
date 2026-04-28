@@ -22,7 +22,7 @@ public class ReservationController {
     @PostMapping("/reservations")
     public ResponseEntity<?> postReservation(@Valid @RequestBody ReservationRequest request) {
         Reservation reservation = reservationRepository.save(request);
-        return ResponseEntity.ok().body(reservation);
+        return ResponseEntity.ok().body(ReservationResponse.from(reservation));
     }
 
     @GetMapping("/reservations")

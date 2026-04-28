@@ -17,32 +17,30 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.RequestDto.ReservationCreateDto;
 import roomescape.dto.ResponseDto;
 
+@RequiredArgsConstructor
 @RequestMapping("/reservations")
 @RestController()
 public class RoomEscapeController {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public RoomEscapeController(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     @GetMapping()
     public ResponseEntity<List<ResponseDto.ReservationDto>> findAllReservations() {
         List<ResponseDto.ReservationDto> result = jdbcTemplate.query(
                 "SELECT id, name, date, time FROM reservation",
                 (rs, rowNum) -> ResponseDto.ReservationDto.of(
-                        new Reservation(
-                                rs.getLong("id"),
-                                rs.getString("name"),
-                                LocalDate.parse(rs.getString("date")),
-                                LocalTime.parse(rs.getString("time"))
-                        )
+                        Reservation.builder()
+                                .id(rs.getLong("id"))
+                                .name(rs.getString("name"))
+                                .date(LocalDate.parse(rs.getString("date")))
+                                .time(LocalTime.parse(rs.getString("time")))
+                                .build()
                 )
         );
         return ResponseEntity.ok(result);
@@ -52,7 +50,11 @@ public class RoomEscapeController {
     public ResponseEntity<ResponseDto.ReservationDto> createReservation(
             @RequestBody ReservationCreateDto request
     ) {
-        Reservation reservation = new Reservation(request.getName(), request.getDate(), request.getTime());
+        Reservation reservation = Reservation.builder()
+                .name(request.getName())
+                .date(request.getDate())
+                .time(request.getTime())
+                .build();
 
         String formattedDate = reservation.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String formattedTime = reservation.getTime().format(DateTimeFormatter.ofPattern("HH:mm"));
@@ -70,7 +72,12 @@ public class RoomEscapeController {
         }, keyHolder);
 
         Long saveId = keyHolder.getKey().longValue();
-        Reservation saved = new Reservation(saveId, reservation.getName(), reservation.getDate(), reservation.getTime());
+        Reservation saved = Reservation.builder()
+                .id(saveId)
+                .name(reservation.getName())
+                .date(reservation.getDate())
+                .time(reservation.getTime())
+                .build();
 
         return ResponseEntity.ok(ResponseDto.ReservationDto.of(saved));
     }
@@ -80,6 +87,6 @@ public class RoomEscapeController {
             @PathVariable Long id
     ) {
         jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
-        return new ResponseEntity<>(OK);
+        return ResponseEntity.ok().build();
     }
 }

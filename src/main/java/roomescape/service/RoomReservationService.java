@@ -18,16 +18,13 @@ public class RoomReservationService {
 
     public List<RoomReservationResultDto> findAllRoomReservations() {
         return roomReservationRepository.findAll().stream()
-                .map(entity ->
-                        new RoomReservationResultDto(entity.getId(), entity.getName(), entity.getDate(),
-                                entity.getTime())
-                )
+                .map(RoomReservationMapper::toRoomReservationResultDto)
                 .toList();
     }
 
     public RoomReservationResultDto reserve(RoomReservation roomReservation) {
-        Long roomReservationId = roomReservationRepository.save(roomReservation);
-        return RoomReservationMapper.toRoomReservationResultDto(roomReservationId, roomReservation);
+        RoomReservation saved = roomReservationRepository.save(roomReservation);
+        return RoomReservationMapper.toRoomReservationResultDto(saved);
     }
 
     public void cancelReservation(Long id) {

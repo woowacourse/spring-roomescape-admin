@@ -1,44 +1,36 @@
 package roomescape.repository;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.RoomReservation;
 import roomescape.mapper.RoomReservationMapper;
-import roomescape.repository.entity.RoomReservationEntity;
+import roomescape.repository.dao.RoomReservationDao;
 
 @Repository
 public class RoomReservationRepository {
 
-    private static final int ID_INCREMENT_UNIT = 1;
+    private final RoomReservationDao roomReservationDao;
 
-    private final Map<Long, RoomReservationEntity> reservationStorage;
-    private final AtomicLong idSequence;
-
-    public RoomReservationRepository() {
-        this.reservationStorage = new HashMap<>();
-        this.idSequence = new AtomicLong();
+    public RoomReservationRepository(RoomReservationDao roomReservationDao) {
+        this.roomReservationDao = roomReservationDao;
     }
 
-    public List<RoomReservationEntity> findAll() {
-        return reservationStorage.values().stream()
+    public List<RoomReservation> findAll() {
+        return roomReservationDao.selectAll().stream()
+                .map(RoomReservationMapper::toRoomReservation)
                 .toList();
     }
 
-    public Long save(RoomReservation roomReservation) {
-        Long id = idSequence.addAndGet(ID_INCREMENT_UNIT);
-        RoomReservationMapper.toRoomReservationEntity(id, roomReservation);
-        reservationStorage.put(id, RoomReservationMapper.toRoomReservationEntity(id, roomReservation));
-        return id;
+    public RoomReservation save(RoomReservation roomReservation) {
+        Long id = roomReservationDao.insert(roomReservation);
+        return new RoomReservation(id, roomReservation.getName(), roomReservation.getDate(), roomReservation.getTime());
     }
 
     public void delete(Long id) {
-        if(reservationStorage.containsKey(id)) {
-            reservationStorage.remove(id);
-            return;
+        int deletedCount = roomReservationDao.deleteById(id);
+
+        if (deletedCount == 0) {
+            throw new IllegalArgumentException("존재하지 않는 예약 번호입니다.");
         }
-        throw new IllegalArgumentException("존재하지 않는 예약 번호입니다.");
     }
 }

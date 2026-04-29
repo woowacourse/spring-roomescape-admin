@@ -1,9 +1,11 @@
 package roomescape;
 
-import java.util.ArrayList;
+import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,32 +15,50 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ReservationController {
-    private static final String RESERVATION_NOT_FOUND = "해당 예약이 존재하지 않습니다.";
+    private final JdbcTemplate jdbcTemplate;
 
-    private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(1);
+    public ReservationController(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> readAll() {
+        String sql = "SELECT * FROM `reservation`";
+        List<Reservation> reservations = jdbcTemplate.query(sql, (rs, rowNum) -> {
+            long id = rs.getInt("id");
+            String name = rs.getString("name");
+            String date = rs.getString("date");
+            String time = rs.getString("time");
+            return new Reservation(id, name, date, time);
+        });
+
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
-        Reservation newReservation = new Reservation(index.getAndIncrement(), reservation.getName(),
-                reservation.getDate(), reservation.getTime());
-        reservations.add(newReservation);
+    public ResponseEntity<Reservation> create(@RequestBody ReservationRequestDto requestDto) {
+        String sql = "INSERT INTO `reservation`(`name`, `date`, `time`) VALUES (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        long id = jdbcTemplate.update(con -> {
+            PreparedStatement preparedStatement = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, requestDto.name());
+            preparedStatement.setString(2, requestDto.date());
+            preparedStatement.setString(3, requestDto.time());
+
+            return preparedStatement;
+        }, keyHolder);
+
+        Reservation newReservation = new Reservation(id, requestDto.name(), requestDto.date(),
+                requestDto.time());
+
         return ResponseEntity.ok(newReservation);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        Reservation reservation = reservations.stream()
-                .filter(r -> r.getId() == id)
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException(RESERVATION_NOT_FOUND));
+        String sql = "DELETE FROM `reservation` WHERE `id` = ?";
+        jdbcTemplate.update(sql, id);
 
-        reservations.remove(reservation);
         return ResponseEntity.ok().build();
     }
 }

@@ -13,20 +13,24 @@ import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequestDto;
 import roomescape.reservation.dto.ReservationResponseDto;
 import roomescape.reservation.repository.ReservationJdbcDao;
+import roomescape.time.domain.ReservationTime;
+import roomescape.time.repository.ReservationTimeJdbcDao;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationJdbcDao jdbcDao;
+    private final ReservationJdbcDao reservationJdbcDao;
+    private final ReservationTimeJdbcDao reservationTimeJdbcDao;
 
-    public ReservationController(ReservationJdbcDao jdbcDao) {
-        this.jdbcDao = jdbcDao;
+    public ReservationController(ReservationJdbcDao reservationJdbcDao, ReservationTimeJdbcDao reservationTimeJdbcDao) {
+        this.reservationJdbcDao = reservationJdbcDao;
+        this.reservationTimeJdbcDao = reservationTimeJdbcDao;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponseDto>> getAll() {
-        List<ReservationResponseDto> responseReservations = jdbcDao.findAll().stream()
+        List<ReservationResponseDto> responseReservations = reservationJdbcDao.findAll().stream()
                 .map(ReservationResponseDto::from)
                 .toList();
 
@@ -34,19 +38,22 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponseDto> create(
-            @RequestBody ReservationRequestDto dto) {
-        Reservation reservation = Reservation.create(dto);
-        Long savedReservationId = jdbcDao.save(reservation);
+    public ResponseEntity<ReservationResponseDto> create(@RequestBody ReservationRequestDto dto) {
+        ReservationTime reservationTime = reservationTimeJdbcDao.findById(dto.timeId());
+        Reservation reservation = Reservation.create(dto, reservationTime);
+
+        Long savedReservationId = reservationJdbcDao.save(reservation);
+
         Reservation savedReservation = Reservation.create(savedReservationId,
                 reservation.getName(),
                 reservation.getDate(),
-                reservation.getTime());
+                reservation.getReservationTime());
+
         return ResponseEntity.ok(ReservationResponseDto.from(savedReservation));
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        jdbcDao.deleteById(id);
+        reservationJdbcDao.deleteById(id);
     }
 }

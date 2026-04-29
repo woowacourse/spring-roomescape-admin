@@ -18,7 +18,7 @@ public class ReservationTimeJdbcDao {
     }
 
     public Long save(ReservationTime reservationTime) {
-        String sql = "insert into reservation_time (time) values (?)";
+        String sql = "insert into reservation_time (start_at) values (?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -26,7 +26,7 @@ public class ReservationTimeJdbcDao {
             PreparedStatement ps = connection.prepareStatement(
                     sql,
                     new String[]{"id"});
-            ps.setString(1, reservationTime.getTime().toString());
+            ps.setString(1, reservationTime.getStartAt().toString());
             return ps;
         }, keyHolder);
 
@@ -34,18 +34,33 @@ public class ReservationTimeJdbcDao {
     }
 
     public List<ReservationTime> findAll() {
-        String sql = "select id, time from reservation_time";
+        String sql = "select id, start_at from reservation_time";
 
         return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> {
                     ReservationTime reservationTime = ReservationTime.create(
                             resultSet.getLong("id"),
-                            resultSet.getTime("time").toLocalTime()
+                            resultSet.getTime("start_at").toLocalTime()
                     );
 
                     return reservationTime;
                 });
+    }
+
+    public ReservationTime findById(Long id) {
+        String sql = "select id, start_at from reservation_time where id = ?";
+
+        return jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) -> {
+                    ReservationTime reservationTime = ReservationTime.create(
+                            resultSet.getLong("id"),
+                            resultSet.getTime("start_at").toLocalTime()
+                    );
+
+                    return reservationTime;
+                }, id);
     }
 
     public int deleteById(Long id) {

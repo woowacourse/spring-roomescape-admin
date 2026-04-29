@@ -37,7 +37,7 @@ public class ReservationTimeController {
     public ResponseEntity<ReservationTimeResponseDto> create(@RequestBody ReservationTimeRequestDto dto) {
         ReservationTime reservationTime = ReservationTime.create(dto);
         Long savedId = jdbcDao.save(reservationTime);
-        ReservationTime savedReservationTime = ReservationTime.create(savedId, reservationTime.getTime());
+        ReservationTime savedReservationTime = ReservationTime.create(savedId, reservationTime.getStartAt());
 
         return ResponseEntity.ok(ReservationTimeResponseDto.from(savedReservationTime));
     }

@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
+import roomescape.time.domain.ReservationTime;
 
 @Repository
 public class ReservationJdbcDao {
@@ -18,7 +19,7 @@ public class ReservationJdbcDao {
     }
 
     public Long save(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -28,7 +29,7 @@ public class ReservationJdbcDao {
                     new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setString(2, reservation.getDate().toString());
-            ps.setString(3, reservation.getTime().toString());
+            ps.setLong(3, reservation.getReservationTime().getId());
             return ps;
         }, keyHolder);
 
@@ -36,7 +37,15 @@ public class ReservationJdbcDao {
     }
 
     public List<Reservation> findAll() {
-        String sql = "select id, name, date, time from reservation";
+        String sql = "SELECT\n"
+                + "    r.id as reservation_id,\n"
+                + "    r.name,\n"
+                + "    r.date,\n"
+                + "    t.id as time_id,\n"
+                + "    t.start_at as time_value\n"
+                + "FROM reservation as r\n"
+                + "INNER JOIN reservation_time as t\n"
+                + "  ON r.time_id = t.id";
 
         return jdbcTemplate.query(
                 sql,
@@ -45,7 +54,10 @@ public class ReservationJdbcDao {
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
                             resultSet.getDate("date").toLocalDate(),
-                            resultSet.getTime("time").toLocalTime()
+                            ReservationTime.create(
+                                    resultSet.getLong("id"),
+                                    resultSet.getTime("start_at").toLocalTime()
+                            )
                     );
 
                     return reservation;

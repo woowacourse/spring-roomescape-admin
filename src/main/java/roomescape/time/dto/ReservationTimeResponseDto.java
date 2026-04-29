@@ -5,13 +5,13 @@ import roomescape.time.domain.ReservationTime;
 
 public record ReservationTimeResponseDto(
         Long id,
-        LocalTime time
+        LocalTime startAt
 ) {
 
     public static ReservationTimeResponseDto from(ReservationTime reservationTime) {
         return new ReservationTimeResponseDto(
                 reservationTime.getId(),
-                reservationTime.getTime()
+                reservationTime.getStartAt()
         );
     }
 }

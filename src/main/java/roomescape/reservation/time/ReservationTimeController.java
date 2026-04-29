@@ -1,4 +1,4 @@
-package roomescape.time;
+package roomescape.reservation.time;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,34 +11,34 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.time.dto.TimeRequestDto;
-import roomescape.time.dto.TimeResponseDto;
+import roomescape.reservation.time.dto.TimeRequestDto;
+import roomescape.reservation.time.dto.TimeResponseDto;
 
 import java.sql.PreparedStatement;
 import java.util.List;
 
 @RestController
 @RequestMapping("/times")
-public class TimeController {
+public class ReservationTimeController {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public TimeController(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeController(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @GetMapping
-    public ResponseEntity<List<Time>> getTimes() {
+    public ResponseEntity<List<ReservationTime>> getTimes() {
         String sql = "select * from reservation_time";
 
-        List<Time> times = jdbcTemplate.query(sql,
-                (resultSet, rowNum) -> new Time(
+        List<ReservationTime> reservationTimes = jdbcTemplate.query(sql,
+                (resultSet, rowNum) -> new ReservationTime(
                         resultSet.getLong("id"),
                         resultSet.getString("start_at")
                 )
         );
 
-        return ResponseEntity.ok(times);
+        return ResponseEntity.ok(reservationTimes);
     }
 
     @PostMapping
@@ -53,9 +53,9 @@ public class TimeController {
         }, keyHolder);
 
         Long id = keyHolder.getKey().longValue();
-        Time newTime = new Time(id, request.startAt());
+        ReservationTime newReservationTime = new ReservationTime(id, request.startAt());
 
-        return ResponseEntity.ok(TimeResponseDto.from(newTime));
+        return ResponseEntity.ok(TimeResponseDto.from(newReservationTime));
     }
 
     @DeleteMapping("/{id}")

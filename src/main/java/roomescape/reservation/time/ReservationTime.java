@@ -1,10 +1,10 @@
-package roomescape.time;
+package roomescape.reservation.time;
 
-public class Time {
+public class ReservationTime {
     private final Long id;
     private final String startAt;
 
-    public Time(Long id, String startAt) {
+    public ReservationTime(Long id, String startAt) {
         this.id = id;
         this.startAt = startAt;
     }

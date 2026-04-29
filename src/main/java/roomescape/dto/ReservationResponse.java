@@ -16,11 +16,21 @@ public class ReservationResponse {
         this.time = time;
     }
 
-    public static ReservationResponse of(Reservation reservation) {
-        return new ReservationResponse(reservation.getId(),
+    public static ReservationResponse from(Reservation reservation) {
+        return new ReservationResponse(
+                reservation.getId(),
                 reservation.getName(),
                 reservation.getDate().toString(),
-                reservation.getTime().toString());
+                reservation.getTime().toString()
+        );
+    }
+
+    public static ReservationResponse of(Long id, ReservationRequest request) {
+        return new ReservationResponse(
+                id,
+                request.getName(),
+                request.getDate().toString(),
+                request.getTime().toString());
     }
 
     public long getId() {

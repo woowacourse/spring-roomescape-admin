@@ -17,7 +17,6 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     private final RowMapper<ReservationTime> rowMapper = (resultSet, rowNum) -> new ReservationTime(
             resultSet.getLong("id"), resultSet.getObject("start_at", LocalTime.class));
 
-
     public JdbcReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -45,5 +44,11 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     public void deleteById(Long id) {
         String sql = "delete from reservation_time where id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public ReservationTime findById(Long id) {
+        String sql = "select * from reservation_time";
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 }

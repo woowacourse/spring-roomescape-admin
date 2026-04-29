@@ -1,5 +1,7 @@
 package roomescape.domain;
 
+import org.springframework.util.StringUtils;
+
 public class Reservation {
     private final Long id;
     private final String name;
@@ -20,13 +22,18 @@ public class Reservation {
 
     public static Reservation create(
             String name,
-            String date
+            String date,
+            ReservationTime time
     ) {
+        validateName(name);
+        validateDate(date);
+        validateTime(time);
+
         return new Reservation(
                 null,
                 name,
                 date,
-                null
+                time
         );
     }
 
@@ -53,15 +60,6 @@ public class Reservation {
         );
     }
 
-    public Reservation withTime(ReservationTime time) {
-        return new Reservation(
-                this.id,
-                this.name,
-                this.date,
-                time
-        );
-    }
-
     public Long getId() {
         return id;
     }
@@ -76,5 +74,27 @@ public class Reservation {
 
     public ReservationTime getTime() {
         return time;
+    }
+
+    public long getTimeId() {
+        return time.getId();
+    }
+
+    private static void validateName(String name) {
+        if (!StringUtils.hasText(name)) {
+            throw new IllegalArgumentException("예약엔 이름이 존재해야 합니다.");
+        }
+    }
+
+    private static void validateDate(String date) {
+        if (date == null) {
+            throw new IllegalArgumentException("예약엔 날짜가 존재해야 합니다.");
+        }
+    }
+
+    private static void validateTime(ReservationTime time) {
+        if (time == null) {
+            throw new IllegalArgumentException("예약엔 시간이 존재해야 합니다.");
+        }
     }
 }

@@ -2,7 +2,6 @@ package roomescape.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.List;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,17 +16,14 @@ import roomescape.domain.ReservationTime;
 public class ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final ReservationTimeRepository reservationTimeRepository;
 
     public ReservationRepository(
-            JdbcTemplate jdbcTemplate,
-            ReservationTimeRepository reservationTimeRepository
+            JdbcTemplate jdbcTemplate
     ) {
         this.jdbcTemplate = jdbcTemplate;
-        this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public Reservation create(Reservation reservation, long timeId) {
+    public Reservation create(Reservation reservation) {
         String createSql = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -35,7 +31,7 @@ public class ReservationRepository {
             PreparedStatement statement = connection.prepareStatement(createSql, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, reservation.getName());
             statement.setObject(2, reservation.getDate());
-            statement.setLong(3, timeId);
+            statement.setLong(3, reservation.getTimeId());
 
             return statement;
         }, keyHolder);
@@ -43,8 +39,7 @@ public class ReservationRepository {
         Number id = keyHolder.getKey();
         validateNotNull(id);
 
-        return reservation.withId(id.longValue())
-                .withTime(reservationTimeRepository.findById(timeId));
+        return reservation.withId(id.longValue());
     }
 
     public List<Reservation> findAll() {

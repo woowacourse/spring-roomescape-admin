@@ -22,7 +22,7 @@ public class ReservationTimeService {
 
     public ReservationTimeResponse create(ReservationTimeRequest request) {
         ReservationTime reservationTime = new ReservationTime(request.startAt());
-        return timeDAO.save(reservationTime);
+        return timeDAO.create(reservationTime);
     }
 
     public int delete(Long id) {

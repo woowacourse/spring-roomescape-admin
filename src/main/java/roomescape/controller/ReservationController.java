@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.dto.ReservationDto;
+import roomescape.controller.dto.ReservationRequestDto;
 import roomescape.service.ReservationService;
 
 @RestController
@@ -22,7 +22,7 @@ public class ReservationController {
     }
 
     @GetMapping
-    public List<ReservationDto> getReservations(){
+    public List<ReservationDto> getReservations() {
         return reservationService.findAll()
                 .stream()
                 .map(ReservationDto::from)
@@ -30,17 +30,17 @@ public class ReservationController {
     }
 
     @GetMapping("/{id}")
-    public ReservationDto getReservationById(@RequestParam long id){
+    public ReservationDto getReservationById(@PathVariable long id) {
         return ReservationDto.from(reservationService.findById(id));
     }
 
     @PostMapping
-    public ReservationDto saveReservation(@RequestBody ReservationDto reservation){
-        return ReservationDto.from(reservationService.save(reservation.toReservation()));
+    public ReservationDto saveReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
+        return ReservationDto.from(reservationService.save(reservationRequestDto));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteReservation(@PathVariable long id){
+    public void deleteReservation(@PathVariable long id) {
         reservationService.delete(id);
     }
 

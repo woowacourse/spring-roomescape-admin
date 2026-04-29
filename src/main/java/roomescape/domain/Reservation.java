@@ -1,13 +1,12 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class Reservation {
     private final Long id;
     private final Name name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
     public Reservation(){
         this.id = null;
@@ -16,14 +15,14 @@ public class Reservation {
         this.time = null;
     }
 
-    public Reservation(Long id, Name name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, Name name, LocalDate date, ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;
         this.name = new Name(name);
         this.date = date;
@@ -34,7 +33,7 @@ public class Reservation {
         this.id = id;
         this.name = new Name(name);
         this.date = LocalDate.parse(date);
-        this.time = LocalTime.parse(time);
+        this.time = new ReservationTime(time);
     }
 
     public Long getId() {
@@ -49,7 +48,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 }

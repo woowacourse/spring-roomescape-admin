@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.repository.h2;
 
 import java.util.HashMap;
 import java.util.List;
@@ -8,9 +8,11 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.repository.ReservationRepository;
 
 @Repository
 public class H2ReservationRepository implements ReservationRepository {
+    private final NamedParameterJdbcTemplate jdbcTemplate;
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) ->
             new Reservation(
                     resultSet.getLong("id"),
@@ -18,7 +20,6 @@ public class H2ReservationRepository implements ReservationRepository {
                     resultSet.getString("date"),
                     resultSet.getString("time")
             );
-    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public H2ReservationRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

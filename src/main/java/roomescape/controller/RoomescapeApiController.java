@@ -1,7 +1,9 @@
 package roomescape.controller;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,5 +35,14 @@ public class RoomescapeApiController {
         Reservation savedReservation = reservationRepository.save(reservation);
 
         return ResponseEntity.ok(ReservationResponse.from(savedReservation));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ReservationResponse>> getAllReservations() {
+        List<ReservationResponse> response = reservationRepository.findAll()
+                .stream()
+                .map(ReservationResponse::from)
+                .toList();
+        return ResponseEntity.ok(response);
     }
 }

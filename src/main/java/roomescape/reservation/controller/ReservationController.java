@@ -11,30 +11,30 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.reservation.controller.dto.ReservationResponseDto;
 import roomescape.reservation.controller.dto.ReservationSaveRequestDto;
-import roomescape.reservation.service.RoomescapeService;
+import roomescape.reservation.service.ReservationService;
 
 @RestController
 public class ReservationController {
-    private final RoomescapeService roomescapeService;
+    private final ReservationService reservationService;
 
-    public ReservationController(RoomescapeService roomescapeService) {
-        this.roomescapeService = roomescapeService;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping("/reservations")
     public List<ReservationResponseDto> getReservations() {
-        return roomescapeService.getReservations().stream()
+        return reservationService.getReservations().stream()
                 .map(ReservationResponseDto::from)
                 .collect(Collectors.toList());
     }
 
     @PostMapping("/reservations")
     public ReservationResponseDto saveReservation(@RequestBody ReservationSaveRequestDto reservationRequest) {
-        return ReservationResponseDto.from(roomescapeService.save(reservationRequest.toServiceDto()));
+        return ReservationResponseDto.from(reservationService.save(reservationRequest.toServiceDto()));
     }
 
     @DeleteMapping("/reservations/{id}")
     public boolean deleteReservation(@PathVariable long id) {
-        return roomescapeService.deleteById(id);
+        return reservationService.deleteById(id);
     }
 }

@@ -4,7 +4,7 @@ import java.util.List;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.service.dto.ReservationSaveServiceDto;
 
-public interface RoomescapeService {
+public interface ReservationService {
     List<Reservation> getReservations();
     Reservation save(ReservationSaveServiceDto reservation);
     boolean deleteById(long id);

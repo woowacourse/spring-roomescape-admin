@@ -9,11 +9,11 @@ import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.service.dto.ReservationSaveServiceDto;
 
 @Service
-public class RoomescapeServiceImpl implements RoomescapeService {
+public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
 
-    public RoomescapeServiceImpl(ReservationRepository reservationRepository) {
+    public ReservationServiceImpl(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
 

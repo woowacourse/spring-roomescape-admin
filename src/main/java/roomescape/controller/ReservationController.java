@@ -1,9 +1,7 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,11 +17,6 @@ import roomescape.domain.Reservation;
 @Controller
 public class ReservationController {
 
-    private static final int INITIAL_VALUE = 1;
-
-    private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(INITIAL_VALUE);
-
     @Autowired
     private ReservationDAO reservationDAO;
 
@@ -37,18 +30,13 @@ public class ReservationController {
     @ResponseBody
     @GetMapping("/reservations")
     public List<Reservation> findAll() {
+        List<Reservation> reservations = reservationDAO.findAll();
         return reservations;
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Reservation reservation = reservations.stream()
-                .filter(it -> Objects.equals(it.getId(), id))
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
-
-        reservations.remove(reservation);
-
+        reservationDAO.delete(id);
         return ResponseEntity.ok().build();
     }
 }

@@ -6,22 +6,20 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dao.ReservationDAO;
 
-@JdbcTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class ReservationTestStep2 {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+public class ReservationTest {
 
     private ReservationDAO reservationDAO;
 
@@ -31,16 +29,6 @@ public class ReservationTestStep2 {
     @BeforeEach
     void setup() {
         reservationDAO = new ReservationDAO(jdbcTemplate);
-
-//        jdbcTemplate.execute("DROP TABLE reservation IF EXISTS");
-//        jdbcTemplate.execute("CREATE TABLE reservation("
-//                + "id SERIAL, name VARCHAR(255), date VARCHAR(255), time VARCHAR(255))");
-//
-//        List<Object[]> splitUpValues = Arrays.asList("John 2026-04-29 18:29", "Jeff 2026-04-28 18:39").stream()
-//                .map(it -> it.split(" "))
-//                .collect(Collectors.toList());
-//
-//        jdbcTemplate.batchUpdate("INSERT INTO reservation(name, date, time) VALUES (?,?,?)", splitUpValues);
     }
 
     @Test

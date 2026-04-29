@@ -6,28 +6,27 @@
     import roomescape.domain.Reservation;
     import roomescape.domain.ReservationTime;
     import roomescape.repository.ReservationRepository;
-    import roomescape.repository.ReservationTimeRepository;
     import roomescape.service.command.ReservationCreateCommand;
 
     @Service
     public class ReservationService {
 
         private final ReservationRepository reservationRepository;
-        private final ReservationTimeRepository timeRepository;
+        private final ReservationTimeService timeService;
 
         public ReservationService(
                 ReservationRepository reservationRepository,
-                ReservationTimeRepository timeRepository
+                ReservationTimeService timeService
         ) {
             this.reservationRepository = reservationRepository;
-            this.timeRepository = timeRepository;
+            this.timeService = timeService;
         }
 
         @Transactional
         public Reservation create(
                 ReservationCreateCommand createCommand
         ) {
-            ReservationTime time = timeRepository.findById(createCommand.timeId());
+            ReservationTime time = timeService.findById(createCommand.timeId());
             Reservation reservation = Reservation.create(
                     createCommand.name(),
                     createCommand.date(),

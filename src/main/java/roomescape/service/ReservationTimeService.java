@@ -33,6 +33,11 @@ public class ReservationTimeService {
     }
 
     @Transactional
+    public ReservationTime findById(long id) {
+        return reservationTimeRepository.findById(id);
+    }
+
+    @Transactional
     public void delete(long id) {
         reservationTimeRepository.delete(id);
     }

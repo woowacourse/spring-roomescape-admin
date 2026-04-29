@@ -13,6 +13,8 @@ import roomescape.domain.Reservation;
 
 @Repository
 public class ReservationDao {
+    private static final String FAILED_ID_GENERATE = "ID 생성에 실패하였습니다.";
+
     private static final RowMapper<Reservation> MAPPER = (rs, rowNumber) -> new Reservation(
             rs.getLong("id"),
             rs.getString("name"),
@@ -52,9 +54,8 @@ public class ReservationDao {
         Number key = keyHolder.getKey();
 
         if(key == null) {
-            throw new RuntimeException("ID 생성에 실패하였습니다.");
+            throw new RuntimeException(FAILED_ID_GENERATE);
         }
-
         return reservation.update(key.longValue());
     }
 

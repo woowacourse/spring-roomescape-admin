@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.controller.dto.ReservationResponse;
+import roomescape.controller.mapper.ReservationMapper;
 import roomescape.domain.Reservation;
 import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.service.ReservationService;
@@ -19,28 +21,33 @@ import roomescape.service.command.ReservationCreateCommand;
 public class ReservationController {
 
     private final ReservationService reservationService;
+    private final ReservationMapper reservationMapper;
 
-    public ReservationController(ReservationService reservationService) {
+    public ReservationController(
+            ReservationService reservationService,
+            ReservationMapper reservationMapper
+    ) {
         this.reservationService = reservationService;
+        this.reservationMapper = reservationMapper;
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> create(
+    public ResponseEntity<ReservationResponse> create(
             @RequestBody ReservationCreateRequest createRequest
     ) {
-        ReservationCreateCommand createCommand = new ReservationCreateCommand(
-                createRequest.name(),
-                createRequest.date(),
-                createRequest.timeId()
-        );
+        ReservationCreateCommand createCommand = reservationMapper.mapCreateToCommand(createRequest);
         Reservation createdReservation = reservationService.create(createCommand);
+        ReservationResponse reservationResponse = reservationMapper.mapToResponse(createdReservation);
 
-        return ResponseEntity.ok(createdReservation);
+        return ResponseEntity.ok(reservationResponse);
     }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> findAll() {
-        List<Reservation> reservations = reservationService.findAll();
+    public ResponseEntity<List<ReservationResponse>> findAll() {
+        List<ReservationResponse> reservations = reservationService.findAll()
+                .stream()
+                .map(reservationMapper::mapToResponse)
+                .toList();
 
         return ResponseEntity.ok(reservations);
     }

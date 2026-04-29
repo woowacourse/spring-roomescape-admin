@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +18,10 @@ import roomescape.reservation.presentation.dto.request.ReservationSaveRequest;
 import roomescape.reservation.presentation.dto.response.ReservationFindResponse;
 import roomescape.reservation.presentation.dto.response.ReservationSaveResponse;
 
+/**
+ * TODO: 예외 처리 핸들러 추가
+ * TODO: 예외 코드 테스트 수정
+ */
 @RestController
 @RequestMapping("/reservations")
 @Validated
@@ -35,5 +41,11 @@ public class ReservationController {
     public ResponseEntity<List<ReservationFindResponse>> findAllReservations() {
         List<ReservationFindResponse> responses = reservationService.findAllReservations();
         return ResponseEntity.status(HttpStatus.OK).body(responses);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id){
+        reservationService.deleteReservation(id);
+        return ResponseEntity.ok().build();
     }
 }

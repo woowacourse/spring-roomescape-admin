@@ -26,16 +26,14 @@ public class ReservationTimeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTimeResponseDto>> readAll() {
-        List<ReservationTimeResponseDto> result = reservationTimeService.findAll();
-        return ResponseEntity.ok(result);
+    public List<ReservationTimeResponseDto> readAll() {
+        return reservationTimeService.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTimeResponseDto> add(
+    public ReservationTimeResponseDto add(
             @Valid @RequestBody ReservationTimeRequestDto reservationTimeRequestDto) {
-        ReservationTimeResponseDto result = reservationTimeService.save(reservationTimeRequestDto);
-        return ResponseEntity.ok(result);
+        return reservationTimeService.save(reservationTimeRequestDto);
     }
 
     @DeleteMapping("/{id}")

@@ -25,16 +25,14 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponseDto>> readAll() {
-        List<ReservationResponseDto> result = reservationService.findAll();
-        return ResponseEntity.ok(result);
+    public List<ReservationResponseDto> readAll() {
+        return reservationService.findAll();
     }
 
 
     @PostMapping
-    public ResponseEntity<ReservationResponseDto> add(@Valid @RequestBody ReservationRequestDto reservationRequestDto) {
-        ReservationResponseDto result = reservationService.save(reservationRequestDto);
-        return ResponseEntity.ok(result);
+    public ReservationResponseDto add(@Valid @RequestBody ReservationRequestDto reservationRequestDto) {
+        return reservationService.save(reservationRequestDto);
     }
 
     @DeleteMapping("/{id}")

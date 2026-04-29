@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.reservation.domain.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.domain.Reservation;
+import roomescape.reservation.domain.Reservation;
 
 class InMemoryReservationsDaoTest {
 
@@ -25,16 +25,16 @@ class InMemoryReservationsDaoTest {
 
     @DisplayName("새로운 예약을 추가한다.")
     @Test
-    void addReservation() {
+    void saveReservation() {
         //given
         Reservation reservation1 = new Reservation("name1", LocalDateTime.now());
         Reservation reservation2 = new Reservation("name2", LocalDateTime.now());
         Reservation reservation3 = new Reservation("name3", LocalDateTime.now());
 
         //when
-        Long index1 = reservationsDao.addReservation(reservation1);
-        Long index2 = reservationsDao.addReservation(reservation2);
-        Long index3 = reservationsDao.addReservation(reservation3);
+        Long index1 = reservationsDao.saveReservation(reservation1);
+        Long index2 = reservationsDao.saveReservation(reservation2);
+        Long index3 = reservationsDao.saveReservation(reservation3);
 
         //then
         assertThat(reservationsDao.getReservations().size()).isEqualTo(3);
@@ -48,7 +48,7 @@ class InMemoryReservationsDaoTest {
     void deleteReservationById_success() {
         //given
         Reservation reservation = new Reservation("name1", LocalDateTime.now());
-        Long id = reservationsDao.addReservation(reservation);
+        Long id = reservationsDao.saveReservation(reservation);
 
         //when
         reservationsDao.deleteReservationById(id);

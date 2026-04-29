@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.reservation.presentation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,7 +12,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.controller.dto.ReservationInfo;
+import roomescape.reservation.presentation.dto.ReservationInfo;
 
 @IsolatedAnnotationTest
 class MissionStepWithDBTest {

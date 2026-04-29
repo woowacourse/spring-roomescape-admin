@@ -1,10 +1,10 @@
-package roomescape.dao;
+package roomescape.reservation.domain.dao;
 
 import java.util.List;
-import roomescape.domain.Reservation;
+import roomescape.reservation.domain.Reservation;
 
 public interface ReservationsDao {
     List<Reservation> getReservations();
-    Long addReservation(Reservation reservation);
+    Long saveReservation(Reservation reservation);
     void deleteReservationById(Long id);
 }

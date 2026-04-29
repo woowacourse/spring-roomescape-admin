@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.reservation.presentation;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.controller.dto.ReservationInfo;
-import roomescape.controller.dto.ReservationRequest;
-import roomescape.dao.ReservationsDao;
-import roomescape.domain.Reservation;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.domain.dao.ReservationsDao;
+import roomescape.reservation.presentation.dto.ReservationInfo;
+import roomescape.reservation.presentation.dto.ReservationRequest;
 
 @RestController
 @RequestMapping("/reservations")
@@ -42,7 +42,7 @@ public class ReservationController {
             @RequestBody ReservationRequest request
     ) {
         Reservation reservation = request.to();
-        Long id = reservationsDao.addReservation(reservation);
+        Long id = reservationsDao.saveReservation(reservation);
 
         ReservationInfo reservationInfo = new ReservationInfo(
                 id,

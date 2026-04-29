@@ -1,10 +1,10 @@
-package roomescape.dao;
+package roomescape.reservation.domain.dao;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.domain.Reservation;
+import roomescape.reservation.domain.Reservation;
 
 public class InMemoryReservationsDao implements ReservationsDao {
 
@@ -23,7 +23,7 @@ public class InMemoryReservationsDao implements ReservationsDao {
     }
 
     @Override
-    public Long addReservation(Reservation reservation) {
+    public Long saveReservation(Reservation reservation) {
         long now = index.incrementAndGet();
         reservations.put(now, reservation);
         return now;

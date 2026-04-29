@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.reservation.domain.dao;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -12,10 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.Reservation;
+import roomescape.reservation.domain.Reservation;
 
 @Repository
-public class H2ReservationDao implements ReservationsDao{
+public class JdbcTemplateReservationDao implements ReservationsDao{
 
     private final static String NAME_COLUMN = "name";
     private final static String DATE_COLUMN = "date";
@@ -24,7 +24,7 @@ public class H2ReservationDao implements ReservationsDao{
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public H2ReservationDao(JdbcTemplate jdbcTemplate) {
+    public JdbcTemplateReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -45,7 +45,7 @@ public class H2ReservationDao implements ReservationsDao{
     }
 
     @Override
-    public Long addReservation(Reservation reservation) {
+    public Long saveReservation(Reservation reservation) {
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)";
 

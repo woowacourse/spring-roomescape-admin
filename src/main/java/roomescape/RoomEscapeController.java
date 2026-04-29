@@ -11,16 +11,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class RoomEscapeController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(0);
+    private final QueryingDAO queryingDAO;
 
+    RoomEscapeController(QueryingDAO queryingDAO) {
+        this.queryingDAO = queryingDAO;
+    }
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> read() {
-        return ResponseEntity.ok().body(reservations);
+    @ResponseBody
+    public List<Reservation> read() {
+        return queryingDAO.findAllReservation();
     }
 
     @PostMapping("/reservations")

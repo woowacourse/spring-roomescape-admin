@@ -1,17 +1,30 @@
 package roomescape.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Builder;
+import lombok.Getter;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public record Reservation(String name, LocalDate date, LocalTime time) {
-    public Reservation {
+@Builder
+@Getter
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Reservation {
+    private String name;
+    private LocalDate date;
+    private LocalTime time;
+
+    public static Reservation create(String name, LocalDate date, LocalTime time) {
         validateName(name);
         validateDate(date);
         validateTime(time);
-    }
 
-    public boolean isSameDateTime(Reservation reservation) {
-        return date.equals(reservation.date()) && time.equals(reservation.time());
+        return Reservation.builder()
+                .name(name)
+                .date(date)
+                .time(time)
+                .build();
     }
 
     private static void validateName(String name) {
@@ -35,5 +48,4 @@ public record Reservation(String name, LocalDate date, LocalTime time) {
             throw new IllegalArgumentException("[ERROR] 시간은 필수 값입니다.");
         }
     }
-
 }

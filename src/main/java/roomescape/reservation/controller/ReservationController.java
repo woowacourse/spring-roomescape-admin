@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.reservation.dto.CreateReservationDto;
-import roomescape.reservation.dto.ReservationResultDto;
+import roomescape.reservation.dto.CreateReservationRequest;
+import roomescape.reservation.dto.ReservationResultResponse;
 import roomescape.reservation.mapper.ReservationMapper;
 import roomescape.reservation.service.ReservationService;
 
@@ -26,15 +26,15 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResultDto>> getReservations() {
-        List<ReservationResultDto> reservations = reservationService.findAllReservations();
+    public ResponseEntity<List<ReservationResultResponse>> getReservations() {
+        List<ReservationResultResponse> reservations = reservationService.findAllReservations();
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResultDto> createReservations(@RequestBody CreateReservationDto createReservationDto) {
-        ReservationResultDto reservedRoomId = reservationService.reserve(
-                ReservationMapper.toReservation(createReservationDto));
+    public ResponseEntity<ReservationResultResponse> createReservations(@RequestBody CreateReservationRequest createReservationRequest) {
+        ReservationResultResponse reservedRoomId = reservationService.reserve(
+                ReservationMapper.toReservation(createReservationRequest));
         return ResponseEntity.of(Optional.of(reservedRoomId));
     }
 

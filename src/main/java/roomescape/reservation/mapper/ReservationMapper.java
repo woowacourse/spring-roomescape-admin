@@ -1,8 +1,8 @@
 package roomescape.reservation.mapper;
 
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.dto.CreateReservationDto;
-import roomescape.reservation.dto.ReservationResultDto;
+import roomescape.reservation.dto.CreateReservationRequest;
+import roomescape.reservation.dto.ReservationResultResponse;
 import roomescape.reservation.repository.entity.ReservationEntity;
 
 public class ReservationMapper {
@@ -10,7 +10,7 @@ public class ReservationMapper {
     private ReservationMapper() {
     }
 
-    public static Reservation toReservation(CreateReservationDto base) {
+    public static Reservation toReservation(CreateReservationRequest base) {
         return new Reservation(base.getName(), base.getDate(), base.getTime());
     }
 
@@ -18,7 +18,7 @@ public class ReservationMapper {
         return new Reservation(entity.getId(), entity.getName(), entity.getDate(), entity.getTime());
     }
 
-    public static ReservationResultDto toReservationResultDto(Reservation reservation) {
-        return new ReservationResultDto(reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime());
+    public static ReservationResultResponse toReservationResultDto(Reservation reservation) {
+        return new ReservationResultResponse(reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 }

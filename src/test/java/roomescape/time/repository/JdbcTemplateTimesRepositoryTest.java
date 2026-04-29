@@ -3,6 +3,7 @@ package roomescape.time.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalTime;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,4 +36,18 @@ class JdbcTemplateTimesRepositoryTest {
     }
 
 
+    @DisplayName("현재 존재하는 모든 시간을 조회한다.")
+    @Test
+    void getTimes() {
+        //given
+        jdbcTemplateTimesRepository.saveTime(TimeEntity.of(LocalTime.of(10, 0)));
+        jdbcTemplateTimesRepository.saveTime(TimeEntity.of(LocalTime.of(11, 0)));
+        jdbcTemplateTimesRepository.saveTime(TimeEntity.of(LocalTime.of(12, 0)));
+
+        //when
+        List<TimeEntity> times = jdbcTemplateTimesRepository.getTimes();
+
+        //then
+        assertThat(times.size()).isEqualTo(3);
+    }
 }

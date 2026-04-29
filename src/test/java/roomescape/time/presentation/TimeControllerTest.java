@@ -1,5 +1,7 @@
 package roomescape.time.presentation;
 
+import static org.hamcrest.core.Is.is;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
@@ -21,5 +23,11 @@ class TimeControllerTest {
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 }

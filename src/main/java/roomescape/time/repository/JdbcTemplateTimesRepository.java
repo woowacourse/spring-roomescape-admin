@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -45,5 +46,18 @@ public class JdbcTemplateTimesRepository implements TimesRepository {
 
         preparedStatement.setTime(1, entity.startAt());
         return preparedStatement;
+    }
+
+    @Override
+    public List<TimeEntity> getTimes() {
+        String sql = "SELECT * from reservation_time";
+        return jdbcTemplate.query(
+                sql,
+                (rs, rowNum) ->
+                        new TimeEntity(
+                                rs.getLong("id"),
+                                rs.getTime("start_at")
+                        )
+        );
     }
 }

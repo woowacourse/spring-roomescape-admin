@@ -1,7 +1,9 @@
 package roomescape.time.presentation;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,4 +36,14 @@ public class TimeController {
     }
 
 
+    @GetMapping
+    public ResponseEntity<List<TimeInfo>> getTimes() {
+        List<TimeEntity> timeEntities = timesRepository.getTimes();
+
+        List<TimeInfo> timeInfos = timeEntities.stream()
+                .map(TimeInfo::from)
+                .toList();
+
+        return ResponseEntity.ok(timeInfos);
+    }
 }

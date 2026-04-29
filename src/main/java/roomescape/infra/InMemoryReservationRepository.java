@@ -8,14 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Repository
 public class InMemoryReservationRepository implements ReservationRepository {
 
     private final List<Reservation> reservations = new ArrayList<>();
 
     @Override
-    public void save(Reservation reservation) {
+    public Long save(Reservation reservation) {
         reservations.add(reservation);
+        return 1L;
     }
 
     @Override

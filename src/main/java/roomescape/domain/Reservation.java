@@ -6,13 +6,20 @@ import java.time.LocalTime;
 public class Reservation {
 
     private final Long id;
-    private final Member member;
+    private final String name;
     private final LocalDate date;
     private final LocalTime time;
 
-    public Reservation(Long id, Member member, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
-        this.member = member;
+        this.name = name;
+        this.date = date;
+        this.time = time;
+    }
+
+    public Reservation(String name, LocalDate date, LocalTime time) {
+        this.id = null;
+        this.name = name;
         this.date = date;
         this.time = time;
     }
@@ -22,7 +29,7 @@ public class Reservation {
     }
 
     public String getMemberName() {
-        return member.getName();
+        return name;
     }
 
     public LocalDate getDate() {

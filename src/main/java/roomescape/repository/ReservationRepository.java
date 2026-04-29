@@ -7,7 +7,7 @@ import java.util.List;
 public interface ReservationRepository {
 
     // 저장
-    void save(Reservation reservation);
+    Long save(Reservation reservation);
 
     // 전체 조회
     List<Reservation> findAll();

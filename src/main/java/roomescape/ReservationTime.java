@@ -1,9 +1,11 @@
 package roomescape;
 
+import lombok.Getter;
 import roomescape.dto.TimeData;
 
 import java.time.LocalTime;
 
+@Getter
 public class ReservationTime {
 
     private final Long id;

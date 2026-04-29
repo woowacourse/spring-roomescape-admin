@@ -11,7 +11,6 @@ docs/
     log-01.md         ← 각 로그는 개별 파일
     log-02.md
     log-03.md
-    log-04.md
 ```
 
 ## 학습법

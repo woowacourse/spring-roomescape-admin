@@ -1,32 +1,31 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class Reservation {
     private Long id;
     private Name name;
     private LocalDate date;
-    private LocalTime time;
+    private Long timeId;
 
     public Reservation() {
     }
 
-    public Reservation(Long id, Name name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, Name name, LocalDate date, Long timeId) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.time = time;
+        this.timeId = timeId;
     }
 
-    public Reservation(Name name, LocalDate date, LocalTime time) {
+    public Reservation(Name name, LocalDate date, Long timeId) {
         this.name = name;
         this.date = date;
-        this.time = time;
+        this.timeId = timeId;
     }
 
     public static Reservation toEntity(Reservation reservation, Long id) {
-        return new Reservation(id, reservation.name, reservation.date, reservation.time);
+        return new Reservation(id, reservation.name, reservation.date, reservation.timeId);
     }
 
     public Long getId() {
@@ -41,7 +40,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
-        return time;
+    public Long getTimeId() {
+        return timeId;
     }
 }

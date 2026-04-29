@@ -21,7 +21,7 @@ import roomescape.domain.Reservation;
 
 @Controller
 public class ReservationController {
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public ReservationController(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -32,14 +32,14 @@ public class ReservationController {
                 resultSet.getLong("id"),
                 Name.parse(resultSet.getString("name")),
                 LocalDate.parse(resultSet.getString("date")),
-                LocalTime.parse(resultSet.getString("time"))
+                resultSet.getLong("time_id")
         );
         return reservation;
     };
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> read() {
-        String sql = "select id, name, date, time from reservations";
+        String sql = "select id, name, date, time_id from reservations";
         List<Reservation> reservations = jdbcTemplate.query(sql, actorRowMapper);
 
         return ResponseEntity.ok().body(reservations);
@@ -47,14 +47,14 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
-        String sql = "insert into reservations (name, date, time) values (?, ?, ?)";
+        String sql = "insert into reservations (name, date, time_id) values (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.getName().toString());
             ps.setString(2, reservation.getDate().toString());
-            ps.setString(3, reservation.getTime().toString());
+            ps.setLong(3, reservation.getTimeId());
             return ps;
         }, keyHolder);
 
@@ -63,7 +63,7 @@ public class ReservationController {
                 generatedId,
                 reservation.getName(),
                 reservation.getDate(),
-                reservation.getTime()
+                reservation.getTimeId()
         );
         return ResponseEntity.ok().body(newReservation);
     }

@@ -9,14 +9,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ReservationControllerTest {
     private ReservationController controller;
-    private Reservation reservation;
+    private ReservationRequestDTO requestDTO;
     private ResponseEntity<Reservation> createResponse;
 
     @BeforeEach
@@ -30,13 +29,28 @@ public class ReservationControllerTest {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
         jdbcTemplate.execute("DROP TABLE reservation IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE reservation(id BIGINT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), date VARCHAR(255), time VARCHAR(255))");
+        jdbcTemplate.execute("DROP TABLE reservation_time IF EXISTS");
 
-        controller = new ReservationController(new ReservationDAO(jdbcTemplate));
+        jdbcTemplate.execute("CREATE TABLE reservation_time(" +
+                "id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, start_at VARCHAR(255) NOT NULL)");
 
-        reservation = new Reservation("user1", LocalDate.of(2026, 4, 28),
-                LocalTime.of(15, 0, 0));
-        createResponse = controller.create(reservation);
+        jdbcTemplate.execute("CREATE TABLE reservation(" +
+                "id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
+                "name VARCHAR(255) NOT NULL, " +
+                "date VARCHAR(255) NOT NULL, " +
+                "time_id BIGINT, " +
+                "FOREIGN KEY (time_id) REFERENCES reservation_time (id))");
+
+        ReservationDAO reservationDAO = new ReservationDAO(jdbcTemplate);
+        ReservationTimeDAO reservationTimeDAO = new ReservationTimeDAO(jdbcTemplate);
+
+        controller = new ReservationController(reservationDAO, reservationTimeDAO);
+
+        jdbcTemplate.update("INSERT INTO reservation_time(start_at) VALUES (?)", "15:00");
+
+        requestDTO = new ReservationRequestDTO("user1", LocalDate.of(2026, 4, 29), 1L);
+
+        createResponse = controller.create(requestDTO);
     }
 
     @Test

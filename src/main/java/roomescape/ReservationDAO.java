@@ -6,9 +6,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -23,13 +21,16 @@ public class ReservationDAO {
     }
 
     private final RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> {
-        Reservation reservation = new Reservation(
-                resultSet.getLong("id"),
+        ReservationTime time = new ReservationTime(
+                resultSet.getLong("time_id"),
+                LocalTime.parse(resultSet.getString("time_value"))
+        );
+        return new Reservation(
+                resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
                 LocalDate.parse(resultSet.getString("date")),
-                LocalTime.parse(resultSet.getString("time"))
+                time
         );
-        return reservation;
     };
 
     public int count() {
@@ -38,22 +39,24 @@ public class ReservationDAO {
     }
 
     public Reservation findReservationById(Long id) {
-        String sql = "SELECT id, name, date, time FROM reservation WHERE id=?";
+        String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value " +
+                "FROM reservation as r INNER JOIN reservation_time as t ON r.time_id = t.id WHERE r.id=?";
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     public List<Reservation> findAllReservation() {
-        String sql = "SELECT id, name, date, time FROM reservation";
+        String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as time_value " +
+                "FROM reservation as r INNER JOIN reservation_time as t ON r.time_id = t.id";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     public void insert(Reservation reservation) {
-        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, reservation.getName(), reservation.getDate(), reservation.getTime());
+        String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, reservation.getName(), reservation.getDate(), reservation.getTime().getId());
     }
 
     public Long insertWithKeyHolder(Reservation reservation) {
-        String sql = "INSERT INTO reservation (name, date, time) VALUES(?, ?, ?)";
+        String sql = "INSERT INTO reservation (name, date, time_id) VALUES(?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -61,7 +64,7 @@ public class ReservationDAO {
                     sql, new String[]{"id"});
             preparedStatement.setString(1, reservation.getName());
             preparedStatement.setString(2, reservation.getDate().toString());
-            preparedStatement.setString(3, reservation.getTime().toString());
+            preparedStatement.setLong(3, reservation.getTime().getId());
             return preparedStatement;
         }, keyHolder);
 

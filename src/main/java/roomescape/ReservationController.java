@@ -9,16 +9,22 @@ import java.util.List;
 @Controller
 public class ReservationController {
     private final ReservationDAO reservationDAO;
+    private final ReservationTimeDAO reservationTimeDAO;
 
-    public ReservationController(ReservationDAO reservationDAO) {
+    public ReservationController(ReservationDAO reservationDAO, ReservationTimeDAO reservationTimeDAO) {
         this.reservationDAO = reservationDAO;
+        this.reservationTimeDAO=reservationTimeDAO;
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
+    public ResponseEntity<Reservation> create(@RequestBody ReservationRequestDTO requestDTO) {
+        ReservationTime time = reservationTimeDAO.findReservationTimeById(requestDTO.getTimeId());
+
+        Reservation reservation = new Reservation(requestDTO.getName(), requestDTO.getDate(), time);
+
         Long generatedId = reservationDAO.insertWithKeyHolder(reservation);
 
-        Reservation newReservation = Reservation.toEntity(reservation, generatedId);
+        Reservation newReservation = new Reservation(generatedId, reservation.getName(), reservation.getDate(), time);
 
         return ResponseEntity.ok().body(newReservation);
     }

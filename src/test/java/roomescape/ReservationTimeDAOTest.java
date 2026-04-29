@@ -21,6 +21,7 @@ public class ReservationTimeDAOTest {
     @BeforeEach
     void setup() {
         reservationTimeDAO = new ReservationTimeDAO(jdbcTemplate);
+        jdbcTemplate.execute("DROP TABLE reservation IF EXISTS");
         jdbcTemplate.execute("DROP TABLE reservation_time IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE reservation_time(" +
                 "id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, start_at VARCHAR(255))");
@@ -54,13 +55,13 @@ public class ReservationTimeDAOTest {
 
     @Test
     void insert() {
-        ReservationTime reservationTime = new ReservationTime(LocalTime.of(15,0));
+        ReservationTime reservationTime = new ReservationTime(LocalTime.of(15, 0));
         reservationTimeDAO.insert(reservationTime);
     }
 
     @Test
     void keyHolder() {
-        ReservationTime reservationTime = new ReservationTime(LocalTime.of(15,0));
+        ReservationTime reservationTime = new ReservationTime(LocalTime.of(15, 0));
         Long id = reservationTimeDAO.insertWithKeyHolder(reservationTime);
 
         assertThat(id).isNotNull();

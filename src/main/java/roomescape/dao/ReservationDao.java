@@ -2,7 +2,6 @@ package roomescape.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -26,12 +25,6 @@ public class ReservationDao {
 
     public ReservationDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
-
-    public Optional<Reservation> getReservation(long id) {
-        String sql = "SELECT id, name, date, time FROM reservation WHERE id = ?";
-        return jdbcTemplate.query(sql, MAPPER, id).stream()
-                .findFirst();
     }
 
     public List<Reservation> getAllReservation() {
@@ -59,8 +52,8 @@ public class ReservationDao {
         return reservation.update(key.longValue());
     }
 
-    public void deleteReservation(long id) {
+    public int deleteReservation(long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        return jdbcTemplate.update(sql, id);
     }
 }

@@ -14,10 +14,6 @@ public class ReservationRepository {
         this.reservationDao = reservationDao;
     }
 
-    public Optional<Reservation> getReservation(long id) {
-        return reservationDao.getReservation(id);
-    }
-
     public List<Reservation> getAllReservation() {
         return List.copyOf(reservationDao.getAllReservation());
     }
@@ -26,7 +22,7 @@ public class ReservationRepository {
         return reservationDao.insertReservation(reservation);
     }
 
-    public void deleteReservation(long id) {
-        reservationDao.deleteReservation(id);
+    public int deleteReservation(long id) {
+        return reservationDao.deleteReservation(id);
     }
 }

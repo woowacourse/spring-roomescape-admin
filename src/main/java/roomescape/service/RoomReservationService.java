@@ -25,13 +25,7 @@ public class RoomReservationService {
         return reservationRepository.addReservation(reservation);
     }
 
-    public void deleteReservation(long id) {
-       Optional<Reservation> reservation = reservationRepository.getReservation(id);
-
-       if(reservation.isEmpty()) {
-           throw new NoSuchElementException(INVALID_RESERVATION_ID);
-       }
-
-        reservationRepository.deleteReservation(id);
+    public int deleteReservation(long id) {
+        return reservationRepository.deleteReservation(id);
     }
 }

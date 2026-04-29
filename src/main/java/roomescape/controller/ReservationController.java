@@ -3,7 +3,9 @@ package roomescape.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,10 +19,12 @@ import roomescape.dto.ReservationResponseDto;
 
 @RestController
 @RequestMapping("/reservations")
+@RequiredArgsConstructor
 public class ReservationController {
 
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong index = new AtomicLong(0);
+    private final JdbcTemplate jdbcTemplate;
 
     @GetMapping
     public ResponseEntity<List<ReservationResponseDto>> getAllReservation() {
@@ -32,8 +36,10 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
-        Reservation newReservation = reservationRequestDto.toEntity(index.incrementAndGet());
-        reservations.add(newReservation);
+        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, reservationRequestDto.name(), reservationRequestDto.date(), reservationRequestDto.time());
+
+        Reservation newReservation = reservationRequestDto.toEntity();
         return ResponseEntity.ok(ReservationResponseDto.from(newReservation));
     }
 

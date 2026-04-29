@@ -12,9 +12,8 @@ public record ReservationRequestDto(
         @JsonFormat(pattern = "HH:mm")
         LocalTime time
 ) {
-    public Reservation toEntity(Long generatedId) {
+    public Reservation toEntity() {
         return Reservation.builder()
-                .id(generatedId)
                 .name(this.name)
                 .date(this.date)
                 .time(this.time)

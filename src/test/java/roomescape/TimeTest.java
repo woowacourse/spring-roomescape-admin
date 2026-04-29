@@ -40,6 +40,16 @@ public class TimeTest {
   }
 
   @Test
+  void 없는_시간_삭제시_404_에러_응답() {
+    RestAssured.given().log().all()
+        .when().delete("/times/999")
+        .then().log().all()
+        .statusCode(404)
+        .body("code", is("TIME_NOT_FOUND"))
+        .body("message", is("예약 시간이 존재하지 않습니다. id=999"));
+  }
+
+  @Test
   void 예약과_시간_연결() {
     Map<String, String> time = new HashMap<>();
     time.put("startAt", "10:00");

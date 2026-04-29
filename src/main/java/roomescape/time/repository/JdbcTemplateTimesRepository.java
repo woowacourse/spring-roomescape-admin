@@ -60,4 +60,14 @@ public class JdbcTemplateTimesRepository implements TimesRepository {
                         )
         );
     }
+
+    @Override
+    public void deleteTimeById(Long id) {
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
+        int affectedRows = jdbcTemplate.update(sql, id);
+
+        if (affectedRows == 0) {
+            throw new IllegalArgumentException("해당 시간은 존재하지 않습니다.");
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package roomescape.time.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -49,5 +50,28 @@ class JdbcTemplateTimesRepositoryTest {
 
         //then
         assertThat(times.size()).isEqualTo(3);
+    }
+
+    @DisplayName("시간을 삭제한다.")
+    @Test
+    void deleteTimeById_success() {
+        //given
+        TimeEntity entity = jdbcTemplateTimesRepository.saveTime(TimeEntity.of(LocalTime.of(10, 0)));
+
+        //when
+        jdbcTemplateTimesRepository.deleteTimeById(entity.id());
+
+        //then
+        List<TimeEntity> times = jdbcTemplateTimesRepository.getTimes();
+        assertThat(times.size()).isEqualTo(0);
+    }
+
+    @DisplayName("시간 삭제 시, id가 없으면 예외가 발생한다.")
+    @Test
+    void deleteTimeById_fail() {
+        assertThatThrownBy(() ->
+                jdbcTemplateTimesRepository.deleteTimeById(1L)
+        ).isInstanceOf(IllegalArgumentException.class)
+                        .hasMessage("해당 시간은 존재하지 않습니다.");
     }
 }

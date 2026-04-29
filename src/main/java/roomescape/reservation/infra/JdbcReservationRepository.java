@@ -2,9 +2,9 @@ package roomescape.reservation.infra;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -16,12 +16,16 @@ import roomescape.reservation.domain.Reservation;
 @RequiredArgsConstructor
 public class JdbcReservationRepository implements ReservationRepository {
     private final NamedParameterJdbcTemplate template;
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) ->
+            new Reservation(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                    LocalDate.parse(resultSet.getString("date")),
+                    LocalTime.parse(resultSet.getString("time")));
 
     @Override
     public Reservation save(String name, LocalDate date, LocalTime time) {
-        String sql = """
-                INSERT INTO reservation(name, date, time) VALUES (:name, :date, :time)
-                """;
+        String sql = "INSERT INTO reservation(name, date, time) VALUES (:name, :date, :time)";
 
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", name)
@@ -36,7 +40,9 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        return new ArrayList<>();
+        String sql = "SELECT id, name, date, time FROM reservation";
+
+        return template.query(sql, reservationRowMapper);
     }
 
     @Override

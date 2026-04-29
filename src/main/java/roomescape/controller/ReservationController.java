@@ -11,15 +11,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dao.ReservationDao;
-import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
 @RestController
 public class ReservationController {
 
+    private final ReservationDao reservationDao;
+
     @Autowired
-    private ReservationDao reservationDao;
+    public ReservationController(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
 
     @GetMapping("/reservations")
     public List<ReservationResponse> readAllReservations() {

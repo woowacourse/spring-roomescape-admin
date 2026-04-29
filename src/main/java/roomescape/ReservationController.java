@@ -1,7 +1,6 @@
 package roomescape;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -19,17 +18,34 @@ import java.util.List;
 @RestController
 @RequestMapping("/reservations")
 @RequiredArgsConstructor
-public class RoomescapeController {
+public class ReservationController {
 
-    private static final String FIND_RESERVATION_BY_ID = """
-            SELECT id, name, date, time
-            FROM reservation
+    private static final String FIND_TIME_BY_ID = """
+            SELECT id, start_at
+            FROM reservation_time
             WHERE id = ?
             """;
+    private static final String FIND_RESERVATION_BY_ID = """
+            SELECT
+            r.id AS reservation_id,
+            r.name AS reservation_name,
+            r.date AS reservation_date,
+            t.id AS time_id,
+            t.start_at AS time_start_at
+            FROM reservation r
+            JOIN reservation_time t ON r.time_id = t.id
+            WHERE r.id = ?
+            """;
     private static final String FIND_ALL_RESERVATION = """
-                SELECT id, name, date, time
-                FROM reservation
-                ORDER BY id
+            SELECT
+                r.id AS reservation_id,
+                r.name AS reservation_name,
+                r.date AS reservation_date,
+                t.id AS time_id,
+                t.start_at AS time_start_at
+            FROM reservation r
+            JOIN reservation_time t ON r.time_id = t.id
+            ORDER BY r.id
             """;
     private static final String INSERT_RESERVATION = """
             INSERT INTO reservation (name, date, time)
@@ -53,7 +69,8 @@ public class RoomescapeController {
     public ResponseEntity<ReservationResponse> create(
             @RequestBody ReservationCreateRequest request
     ) {
-        final Reservation reservationData = Reservation.create(request.toData());
+        final ReservationTime time = findTimeBy(request.timeId());
+        final Reservation reservationData = Reservation.create(request.toData(time));
 
         final long reservationId = insertReservation(reservationData);
         final Reservation newReservation = findReservationBy(reservationId);
@@ -105,13 +122,31 @@ public class RoomescapeController {
         );
     }
 
+    private ReservationTime findTimeBy(final long timeId) {
+        return jdbcTemplate.queryForObject(
+                FIND_TIME_BY_ID,
+                this::mapToTime,
+                timeId
+        );
+    }
+
 
     private Reservation mapToReservation(ResultSet resultSet, int rowNum) throws SQLException {
         return Reservation.restore(
+                resultSet.getLong("reservation_id"),
+                resultSet.getString("reservation_name"),
+                resultSet.getDate("reservation_date").toLocalDate(),
+                ReservationTime.restore(
+                        resultSet.getLong("time_id"),
+                        resultSet.getTime("time_start_at").toLocalTime()
+                )
+        );
+    }
+
+    private ReservationTime mapToTime(ResultSet resultSet, int rowNum) throws SQLException {
+        return ReservationTime.restore(
                 resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getDate("date").toLocalDate(),
-                resultSet.getTime("time").toLocalTime()
+                resultSet.getTime("start_at").toLocalTime()
         );
     }
 }

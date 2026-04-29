@@ -35,8 +35,10 @@ public class ReservationController {
 
     @PostMapping()
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody AddReservationRequest addReservationRequest) {
-        Reservation reservation = roomReservationService.addReservation(addReservationRequest.name(), addReservationRequest.date(), addReservationRequest.time());
-        ReservationResponse response = ReservationResponse.from(reservation);
+        Reservation reservation = new Reservation(-1, addReservationRequest.name(), addReservationRequest.date(),
+                addReservationRequest.time());
+        Reservation addedReservation = roomReservationService.addReservation(reservation);
+        ReservationResponse response = ReservationResponse.from(addedReservation);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

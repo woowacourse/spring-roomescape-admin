@@ -1,37 +1,37 @@
 package roomescape.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
+import roomescape.repository.ReservationRepository;
 
 @Service
 public class RoomReservationService {
     private static final String INVALID_RESERVATION_ID = "해당 예약은 존재하지 않습니다.";
 
-    private List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(0);
+    private final ReservationRepository reservationRepository;
 
-    public List<Reservation> getAllReservation() {
-        return List.copyOf(reservations);
+    public RoomReservationService(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
     }
 
-    public Reservation addReservation(String name, String date, String time) {
-        Reservation reservation = new Reservation(index.incrementAndGet(), name, date, time);
-        reservations.add(reservation);
-        return reservation;
+    public List<Reservation> getAllReservation() {
+        return List.copyOf(reservationRepository.getAllReservation());
+    }
+
+    public Reservation addReservation(Reservation reservation) {
+        return reservationRepository.addReservation(reservation);
     }
 
     public void deleteReservation(long id) {
-       Reservation reservation = reservations.stream()
-               .filter(r -> r.id() == id)
-               .findFirst()
-               .orElseThrow(() -> new NoSuchElementException(INVALID_RESERVATION_ID));
+       Optional<Reservation> reservation = reservationRepository.getReservation(id);
 
-        reservations = reservations.stream()
-                .filter(r -> !r.equals(reservation))
-                .toList();
+       if(reservation.isEmpty()) {
+           throw new NoSuchElementException(INVALID_RESERVATION_ID);
+       }
+
+        reservationRepository.deleteReservation(id);
     }
 }

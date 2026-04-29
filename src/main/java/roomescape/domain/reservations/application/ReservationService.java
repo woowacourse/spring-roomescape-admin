@@ -2,6 +2,7 @@ package roomescape.domain.reservations.application;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.reservations.entity.Reservation;
 import roomescape.domain.reservations.entity.ReservationTime;
 import roomescape.domain.reservations.infrastructure.ReservationJdbcTemplateRepository;
@@ -23,6 +24,7 @@ public class ReservationService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
+    @Transactional
     public ReservationResponse saveReservation(ReservationRequest request) {
         ReservationTime time = reservationTimeRepository.findById(request.timeId())
                 .orElseThrow(IllegalArgumentException::new);

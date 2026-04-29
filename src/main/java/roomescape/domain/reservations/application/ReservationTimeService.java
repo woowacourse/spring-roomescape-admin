@@ -2,6 +2,7 @@ package roomescape.domain.reservations.application;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.reservations.entity.ReservationTime;
 import roomescape.domain.reservations.infrastructure.ReservationTimeJdbcTemplateRepository;
 import roomescape.domain.reservations.presentation.dto.ReservationTimeRequest;
@@ -16,6 +17,7 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
+    @Transactional
     public ReservationTimeResponse saveTime(ReservationTimeRequest request) {
         ReservationTime reservationTime = ReservationTime.of(
                 null,

@@ -1,42 +1,36 @@
 package roomescape.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.repository.ReservationRepository;
 
 @Service
 public class ReservationService {
 
-    private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(1);
+    private final ReservationRepository reservationRepository;
+
+    public ReservationService(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
 
     public ReservationResponse createReservation(ReservationRequest request) {
-        Reservation reservation = new Reservation(
-            index.getAndIncrement(),
+        Reservation reservation = Reservation.of(
             request.name(),
             request.date(),
             request.time()
         );
-        reservations.add(reservation);
-        return ReservationResponse.from(reservation);
+        Reservation saved = reservationRepository.save(reservation);
+        return ReservationResponse.from(saved);
     }
 
     public List<ReservationResponse> getReservations() {
-        List<ReservationResponse> responses = new ArrayList<>();
-        for (Reservation reservation : reservations) {
-            ReservationResponse response = ReservationResponse.from(reservation);
-            responses.add(response);
-        }
-        return responses;
+        return reservationRepository.findAll();
     }
 
     public void deleteReservation(Long id) {
-        reservations.removeIf(
-            reservation -> reservation.getId().equals(id)
-        );
+        reservationRepository.deleteById(id);
     }
 }

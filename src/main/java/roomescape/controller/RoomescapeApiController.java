@@ -1,9 +1,11 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
+import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,21 +21,45 @@ import roomescape.dto.ReservationResponse;
 @RequestMapping("/reservations")
 public class RoomescapeApiController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+    private final JdbcTemplate jdbcTemplate;
+
+    public RoomescapeApiController(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> reserve(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = new Reservation(index.getAndIncrement(),
+        Reservation reservation = new Reservation(
                 reservationRequest.name(),
                 reservationRequest.date(),
                 reservationRequest.time());
-        reservations.add(reservation);
-        return ResponseEntity.ok(ReservationResponse.from(reservation));
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    "insert into reservation (name, date, time) values (?, ?, ?)",
+                    new String[]{"id"});
+            ps.setString(1, reservation.getName());
+            ps.setString(2, reservation.getDate().toString());
+            ps.setString(3, reservation.getTime().toString());
+            return ps;
+        }, keyHolder);
+
+        Long id = keyHolder.getKey().longValue();
+        Reservation saved = new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+        return ResponseEntity.ok(ReservationResponse.from(saved));
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getAllReservations() {
+        List<Reservation> reservations = jdbcTemplate.query(
+                "select * from reservation",
+                (resultSet, rowNum) -> new Reservation(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getDate("date").toLocalDate(),
+                        resultSet.getTime("time").toLocalTime()
+                ));
         List<ReservationResponse> response = reservations.stream()
                 .map(ReservationResponse::from)
                 .toList();
@@ -42,10 +68,7 @@ public class RoomescapeApiController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> cancelReservation(@PathVariable Long id) {
-        reservations.stream()
-                .filter(reservation -> reservation.getId().equals(id))
-                .findFirst()
-                .ifPresent(reservations::remove);
+        jdbcTemplate.update("delete from reservation where id = ?", id);
         return ResponseEntity.ok().build();
     }
 }

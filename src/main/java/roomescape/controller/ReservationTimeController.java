@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -6,8 +6,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.*;
-import roomescape.dto.request.TimeCreateRequest;
-import roomescape.dto.response.TimeResponse;
+import roomescape.domain.ReservationTime;
+import roomescape.controller.dto.request.ReservationTimeCreateRequest;
+import roomescape.controller.dto.response.ReservationTimeResponse;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/times")
 @RequiredArgsConstructor
-public class TimeController {
+public class ReservationTimeController {
 
     private static final String FIND_TIME_BY_ID = """
             SELECT id, start_at
@@ -43,20 +44,20 @@ public class TimeController {
 
 
     @GetMapping
-    public ResponseEntity<List<TimeResponse>> getTimes() {
+    public ResponseEntity<List<ReservationTimeResponse>> getTimes() {
         final List<ReservationTime> times = jdbcTemplate.query(FIND_ALL_TIME, this::mapToTime);
-        return ResponseEntity.ok(TimeResponse.from(times));
+        return ResponseEntity.ok(ReservationTimeResponse.from(times));
     }
 
     @PostMapping
-    public ResponseEntity<TimeResponse> create(
-            @RequestBody TimeCreateRequest request
+    public ResponseEntity<ReservationTimeResponse> create(
+            @RequestBody ReservationTimeCreateRequest request
     ) {
         final ReservationTime timeData = ReservationTime.create(request.toData());
         final long newTimeId = insertTime(timeData);
         final ReservationTime newTime = findTimeBy(newTimeId);
 
-        return ResponseEntity.ok(TimeResponse.from(newTime));
+        return ResponseEntity.ok(ReservationTimeResponse.from(newTime));
     }
 
     @DeleteMapping("/{time-id}")

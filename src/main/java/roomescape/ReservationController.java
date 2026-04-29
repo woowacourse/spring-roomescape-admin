@@ -21,15 +21,15 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> addReservation(@RequestBody Reservation reservation) {
-        Reservation newReservation = reservationDao.insert(reservation);
-        return new ResponseEntity<>(newReservation, HttpStatus.OK);
+    public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest request) {
+        ReservationResponse response = reservationDao.insert(request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> getReservations() {
-        List<Reservation> reservations = reservationDao.findAllReservations();
-        return new ResponseEntity<>(reservations, HttpStatus.OK);
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        List<ReservationResponse> responses = reservationDao.findAllReservations();
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
     @DeleteMapping("/{reservation-id}")

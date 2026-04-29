@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -16,11 +17,16 @@ import org.springframework.stereotype.Repository;
 public class ReservationDao {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> {
+        ReservationTime reservationTime = new ReservationTime(
+                resultSet.getLong("time_id"),
+                resultSet.getString("start_at")
+        );
+
         Reservation reservation = new Reservation(
-                resultSet.getLong("id"),
+                resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
                 resultSet.getString("date"),
-                resultSet.getString("time")
+                reservationTime
         );
         return reservation;
     };
@@ -29,8 +35,8 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Reservation insert(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
+    public ReservationResponse insert(ReservationRequest request) {
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(new PreparedStatementCreator() {
@@ -39,23 +45,26 @@ public class ReservationDao {
                 PreparedStatement statement = connection.prepareStatement(
                         sql, new String[]{"id"}
                 );
-                statement.setString(1, reservation.getName());
-                statement.setString(2, reservation.getDate());
-                statement.setString(3, reservation.getTime());
+                statement.setString(1, request.name());
+                statement.setString(2, request.date());
+                statement.setLong(3, request.timeId());
 
                 return statement;
             }
         }, keyHolder);
-        long generatedId = keyHolder.getKey().longValue();
-        reservation.setId(generatedId);
 
-        return reservation;
+        long generatedId = keyHolder.getKey().longValue();
+        return ReservationResponse.from(new Reservation(generatedId, request.name(), request.date(), new ReservationTime(request.timeId(), null)));
     }
 
-    public List<Reservation> findAllReservations() {
-        String sql = "select id, name, date, time from reservation";
+    public List<ReservationResponse> findAllReservations() {
+        String sql = "select r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as start_at from reservation as r "
+                + "inner join reservation_time as t on r.time_id = t.id";
         try {
-            return jdbcTemplate.query(sql, rowMapper);
+            List<Reservation> reservations = jdbcTemplate.query(sql, rowMapper);
+            return reservations.stream()
+                    .map(ReservationResponse::from)
+                    .collect(Collectors.toList());
         } catch (EmptyResultDataAccessException exception) {
             return null;
         }

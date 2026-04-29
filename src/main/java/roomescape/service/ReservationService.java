@@ -4,14 +4,13 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.repository.ReservationDao;
-import roomescape.repository.ReservationRepository;
 
 @Service
 public class ReservationService {
 
     private final ReservationDao reservationDao;
 
-    public ReservationService(ReservationRepository reservationDao) {
+    public ReservationService(ReservationDao reservationDao) {
         this.reservationDao = reservationDao;
     }
 

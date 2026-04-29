@@ -64,7 +64,7 @@ public class JdbcReservationRepositoryTest {
     }
 
     @Test
-    @DisplayName("예약 전체")
+    @DisplayName("예약 전체 조회")
     void reservation_findAll_test() {
         //given & when
         List<Reservation> reservations = jdbcReservationRepository.findAll();

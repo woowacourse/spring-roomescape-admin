@@ -45,6 +45,17 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
+    public boolean existsById(long id) {
+        final String sql = "SELECT EXISTS (SELECT 1 FROM reservation_time WHERE id = ?)";
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(
+                sql,
+                Boolean.class,
+                id
+        ));
+    }
+
+    @Override
     public ReservationTime save(ReservationTime reservationTime) {
         final String sql = "INSERT INTO reservation_time(start_at) VALUES (?)";
 

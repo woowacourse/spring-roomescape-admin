@@ -58,4 +58,13 @@ public class ReservationTimeServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("찾는 예약 시간이 없습니다.");
     }
+
+    @Test
+    @DisplayName("예약 시간 삭제 시 없는 예약 시간 삭제 예외")
+    void delete_non_exists_test() {
+        // given & when & then
+        assertThatThrownBy(() -> reservationTimeService.deleteById(99L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("삭제할 예약 시간이 존재하지 않습니다.");
+    }
 }

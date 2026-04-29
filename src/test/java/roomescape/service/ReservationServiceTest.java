@@ -71,6 +71,15 @@ public class ReservationServiceTest {
     }
 
     @Test
+    @DisplayName("예약 단일 조회 id 없음 예외")
+    void reservation_findById_null_search_test() {
+        //given & when & then
+        assertThatThrownBy(() -> reservationService.getById(99L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("예약을 찾을 수 없습니다.");
+    }
+
+    @Test
     @DisplayName("예약 삭제 시 없는 예약 삭제 예외")
     void reservation_delete_non_exists_test() {
         // given & when & then

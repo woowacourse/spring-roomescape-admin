@@ -11,12 +11,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ReservationTest {
 
+    private ReservationTime reservationTime = new ReservationTime(1L, LocalTime.of(15, 40));
     @Test
     @DisplayName("Reservation의 id가 비어있는 경우 id를 할당한다.")
     public void bindId_success() throws Exception {
         // given
         Reservation reservation = new Reservation(
-                "name", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40));
+                "name", LocalDate.of(2023, 8, 5), reservationTime);
 
         long id = 1;
         // when
@@ -32,7 +33,7 @@ class ReservationTest {
         // given
         Reservation reservation = new Reservation(
                 1L, "name",
-                LocalDate.of(2023, 8, 5), LocalTime.of(15, 40));
+                LocalDate.of(2023, 8, 5), reservationTime);
 
         long id = 2;
 

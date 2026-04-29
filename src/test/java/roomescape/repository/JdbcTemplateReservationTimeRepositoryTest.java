@@ -8,13 +8,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,12 +45,25 @@ class JdbcTemplateReservationTimeRepositoryTest {
     }
 
     @Test
+    @DisplayName("특정 id의 ReservationTime 데이터를 조회한다.")
+    public void findById() {
+        // given
+        ReservationTime reservationTime = createReservationTime(LocalTime.of(15, 40));
+
+        // when
+        Optional<ReservationTime> timeOptional = repository.findById(reservationTime.getId());
+
+        // then
+        assertThat(timeOptional).isPresent();
+    }
+
+    @Test
     @DisplayName("저장된 모든 ReservationTime 데이터를 조회한다.")
     public void findAll() {
         // given
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "15:40");
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "16:10");
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "17:30");
+        createReservationTime(LocalTime.of(15, 40));
+        createReservationTime(LocalTime.of(16, 10));
+        createReservationTime(LocalTime.of(17, 30));
 
         // when
         List<ReservationTime> reservationTimes = repository.findAll();
@@ -86,5 +98,15 @@ class JdbcTemplateReservationTimeRepositoryTest {
         assertThat(count).isZero();
     }
 
+    private ReservationTime createReservationTime(LocalTime startAt) {
+        String sql = "insert into reservation_time(start_at) values(?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, startAt.toString());
+            return ps;
+        }, keyHolder);
 
+        return new ReservationTime(keyHolder.getKey().longValue(), startAt);
+    }
 }

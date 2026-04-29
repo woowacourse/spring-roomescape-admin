@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
@@ -35,8 +36,10 @@ class JdbcTemplateReservationRepositoryTest {
     @DisplayName("Reservation 데이터를 데이터베이스에 저장한다.")
     public void save() {
         // given
+        LocalTime startAt = LocalTime.of(15, 40);
+        ReservationTime reservationTime = createReservationTime(startAt);
         Reservation reservation = new Reservation(
-                "name", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40));
+                "name", LocalDate.of(2023, 8, 5), reservationTime);
 
         // when
         Reservation saved = repository.save(reservation);
@@ -53,18 +56,21 @@ class JdbcTemplateReservationRepositoryTest {
     @Test
     @DisplayName("저장된 모든 Reservation 데이터를 조회한다.")
     public void findAll() {
+        ReservationTime reservationTime1 = createReservationTime(LocalTime.of(15, 40));
+        ReservationTime reservationTime2 = createReservationTime(LocalTime.of(16, 10));
+        ReservationTime reservationTime3 = createReservationTime(LocalTime.of(17, 30));
         // given
         jdbcTemplate.update(
-                "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
-                "kim", "2023-08-05", "15:40"
+                "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                "kim", "2023-08-05", reservationTime1.getId()
         );
         jdbcTemplate.update(
-                "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
-                "lee", "2023-08-06", "16:10"
+                "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                "lee", "2023-08-06", reservationTime2.getId()
         );
         jdbcTemplate.update(
-                "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
-                "park", "2023-08-07", "17:30"
+                "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                "park", "2023-08-07", reservationTime3.getId()
         );
 
         // when
@@ -78,13 +84,14 @@ class JdbcTemplateReservationRepositoryTest {
     @DisplayName("특정 id의 Reservation을 삭제한다.")
     public void delete() {
         // given
+        ReservationTime reservationTime = createReservationTime(LocalTime.of(15, 40));
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
-            String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, "kim");
             ps.setString(2, "2023-08-05");
-            ps.setString(3, "15:40");
+            ps.setLong(3, reservationTime.getId());
             return ps;
         }, keyHolder);
 
@@ -100,5 +107,17 @@ class JdbcTemplateReservationRepositoryTest {
         );
 
         assertThat(count).isZero();
+    }
+
+    private ReservationTime createReservationTime(LocalTime startAt) {
+        String sql = "insert into reservation_time(start_at) values(?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, startAt.toString());
+            return ps;
+        }, keyHolder);
+
+        return new ReservationTime(keyHolder.getKey().longValue(), startAt);
     }
 }

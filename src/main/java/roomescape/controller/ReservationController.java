@@ -29,7 +29,7 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationDetailDto> createReservation(@RequestBody ReservationSaveDto dto) {
-        Reservation savedReservation = reservationDao.insert(dto.name(), dto.date(), dto.time());
+        Reservation savedReservation = reservationDao.insert(new Reservation(dto.name(), dto.date(), dto.time()));
         ReservationDetailDto responseData = ReservationDetailDto.from(savedReservation);
         return ResponseEntity.ok(responseData);
     }

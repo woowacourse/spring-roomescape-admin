@@ -6,10 +6,16 @@ import java.util.Objects;
 
 public class Reservation {
 
-    private final Long id;
+    private Long id;
     private final String name;
     private final LocalDate date; // THINK change LocalDateTime??
     private final LocalTime time;
+
+    public Reservation(String name, LocalDate date, LocalTime time) {
+        this.name = name;
+        this.date = date;
+        this.time = time;
+    }
 
     public Reservation(Long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
@@ -36,6 +42,15 @@ public class Reservation {
 
     public LocalTime getTime() {
         return time;
+    }
+
+    public Reservation toEntity(Long id) {
+        return new Reservation(
+                id,
+                this.getName(),
+                this.date,
+                this.time
+        );
     }
 
 }

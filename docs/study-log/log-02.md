@@ -22,7 +22,7 @@
 - KeyHolder, SimpleJdbcInsert
 - SQL — SELECT, INSERT, DELETE
 
-(학습 테스트 - JdbcTemplate)[https://github.com/cho-log/spring-learning-test/tree/main/spring-jdbc-1] 를 통해 JdbcTemplate을 사용을 먼저 경험해봄.
+[학습 테스트 - JdbcTemplate](https://github.com/cho-log/spring-learning-test/tree/main/spring-jdbc-1) 를 통해 JdbcTemplate을 사용을 먼저 경험해봄.
 
 학습 테스트를 통해 배우지 못했던 것들을 AI에게 물어보며 학습했다.
 ```

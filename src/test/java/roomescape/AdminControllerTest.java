@@ -12,19 +12,10 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class MissionStepTest {
+class AdminControllerTest {
 
     @Test
-    void 예약_조회() {
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0)); // 아직 생성 요청이 없으니 0개
-    }
-
-    @Test
-    void 예약_추가_및_삭제() {
+    void 예약_추가() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
@@ -37,12 +28,46 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("id", is(1));
+    }
+
+    @Test
+    void 예약_개별_조회() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "15:40");
 
         RestAssured.given().log().all()
-                .when().get("/reservations")
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations/1")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("id", is(1))
+                .body("name", is("브라운"))
+                .body("date", is("2023-08-05"))
+                .body("time", is("15:40:00"));
+    }
+
+    @Test
+    void 예약_삭제() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "15:40");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", is(1));
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")

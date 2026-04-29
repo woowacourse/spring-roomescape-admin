@@ -10,38 +10,40 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.reservation.domain.Reservation;
 
-class ReservationRepositoryTest {
-    ReservationRepository reservationRepository;
+class InMemoryReservationRepositoryTest {
+    private InMemoryReservationRepository inMemoryReservationRepository;
 
     @BeforeEach
     void setup() {
-        reservationRepository = new ReservationRepository();
-        reservationRepository.save(new Reservation(reservationRepository.generateId(), "한다", LocalDate.of(2023, 8, 5),
+        inMemoryReservationRepository = new InMemoryReservationRepository();
+        inMemoryReservationRepository.save(new Reservation(
+                inMemoryReservationRepository.generateId(), "한다", LocalDate.of(2023, 8, 5),
                 LocalTime.of(15, 40)));
-        reservationRepository.save(new Reservation(reservationRepository.generateId(), "판다", LocalDate.of(2023, 10, 5),
+        inMemoryReservationRepository.save(new Reservation(
+                inMemoryReservationRepository.generateId(), "판다", LocalDate.of(2023, 10, 5),
                 LocalTime.of(15, 40)));
     }
 
     @Test
     @DisplayName("모든 예약 정보를 조회한다.")
     void findAll() {
-        assertThat(reservationRepository.findAll().size()).isEqualTo(2);
+        assertThat(inMemoryReservationRepository.findAll().size()).isEqualTo(2);
     }
 
     @Test
     @DisplayName("예약을 추가한다.")
     void save() {
         //given & when
-        reservationRepository.save(new Reservation(3L, "새로운사람", LocalDate.of(2023, 6, 5), LocalTime.of(12, 0)));
+        inMemoryReservationRepository.save(new Reservation(3L, "새로운사람", LocalDate.of(2023, 6, 5), LocalTime.of(12, 0)));
 
         //then
-        assertThat(reservationRepository.findAll().size()).isEqualTo(3);
+        assertThat(inMemoryReservationRepository.findAll().size()).isEqualTo(3);
     }
 
     @Test
     @DisplayName("예약 추가시 중복되는 아이디가 존재하면 예외가 발생한다.")
     void save_id_already_exists() {
-        assertThatThrownBy(() -> reservationRepository.save(
+        assertThatThrownBy(() -> inMemoryReservationRepository.save(
                 new Reservation(1L, "새로운사람", LocalDate.of(2023, 6, 5), LocalTime.of(12, 0))))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("중복된 예약 id가 존재합니다.");
@@ -51,16 +53,16 @@ class ReservationRepositoryTest {
     @DisplayName("예약을 삭제한다.")
     void delete() {
         //given & when
-        reservationRepository.delete(2L);
+        inMemoryReservationRepository.delete(2L);
 
         //then
-        assertThat(reservationRepository.findAll().size()).isEqualTo(1);
+        assertThat(inMemoryReservationRepository.findAll().size()).isEqualTo(1);
     }
 
     @Test
     @DisplayName("존재하지 않는 예약을 삭제하면 예외가 발생한다. ")
     void delete_does_not_exists() {
-        assertThatThrownBy(() -> reservationRepository.delete(3L))
+        assertThatThrownBy(() -> inMemoryReservationRepository.delete(3L))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("존재하지 않는 예약입니다.");
     }
@@ -72,7 +74,7 @@ class ReservationRepositoryTest {
         Long expected = 3L;
 
         //when
-        Long actual = reservationRepository.generateId();
+        Long actual = inMemoryReservationRepository.generateId();
 
         //then
         assertThat(expected).isEqualTo(actual);

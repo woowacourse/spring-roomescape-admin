@@ -23,16 +23,17 @@ public class ReservationService {
     }
 
     public ReservationResponse create(CreateReservationRequest createReservationRequest) {
-        Long id = reservationRepository.generateId();
-        Reservation reservation = reservationRepository.save(
-                new Reservation(id, createReservationRequest.name(), createReservationRequest.date(),
+        Long id = reservationRepository.save(
+                new Reservation(null, createReservationRequest.name(), createReservationRequest.date(),
                         createReservationRequest.time()));
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("예약 생성에 실패했습니다."));
         return ReservationResponse.from(reservation);
     }
 
     public ReservationResponse delete(Long id) {
         Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 예외입니다."));
+                .orElseThrow(() -> new IllegalStateException("존재하지 않는 예약입니다."));
         reservationRepository.delete(id);
         return ReservationResponse.from(reservation);
     }

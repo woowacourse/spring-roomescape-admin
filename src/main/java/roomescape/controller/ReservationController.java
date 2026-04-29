@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
+import roomescape.persistence.dao.ReservationDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,30 +21,27 @@ import java.util.concurrent.atomic.AtomicLong;
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(1);
+    private ReservationDao reservationDao;
+
+    public ReservationController(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
 
     @GetMapping
     public ResponseEntity<List<Reservation>> getReservations() {
-        return ResponseEntity.ok(reservations);
+        return ResponseEntity.ok(reservationDao.findAll());
     }
 
     @PostMapping
     public ResponseEntity<Reservation> createReservations(@RequestBody Reservation reservation) {
-        Reservation newReservation = Reservation.toEntity(reservation, index.getAndIncrement());
-        reservations.add(newReservation);
-        return ResponseEntity.ok(newReservation);
+        Long id = reservationDao.insert(reservation);
+        Reservation reservationById = reservationDao.findById(id);
+        return ResponseEntity.ok(reservationById);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id){
-        Reservation reservation = reservations.stream()
-                .filter(r -> Objects.equals(r.getId(), id))
-                .findFirst()
-                .orElseThrow(RuntimeException::new);
-
-        reservations.remove(reservation);
-
+        int delete = reservationDao.delete(id);
         return ResponseEntity.ok().build();
     }
 }

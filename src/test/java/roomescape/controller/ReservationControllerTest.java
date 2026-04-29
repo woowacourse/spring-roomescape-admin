@@ -45,11 +45,8 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약이 생성된 상태에서 예약을 조회한다.")
     void findAllReservations_After_Create() {
-        ReservationRequest request1 = new ReservationRequest("브라운", "2026-04-29", "10:30");
-        ReservationRequest request2 = new ReservationRequest("리사", "2026-04-30", "10:40");
-
-        reservationController.create(request1);
-        reservationController.create(request2);
+        reservationController.create(new ReservationRequest("브라운", "2026-04-29", "10:30"));
+        reservationController.create(new ReservationRequest("리사", "2026-04-30", "10:40"));
 
         List<ReservationResponse> reservations = reservationController.findAll();
 
@@ -63,5 +60,20 @@ class ReservationControllerTest {
         assertThat(reservations.get(1).name()).isEqualTo("리사");
         assertThat(reservations.get(1).date()).isEqualTo("2026-04-30");
         assertThat(reservations.get(1).time()).isEqualTo("10:40");
+    }
+
+    @Test
+    @DisplayName("예약이 존재하는 상황에서 예약을 삭제한다.")
+    void deleteReservation_After_Create() {
+        reservationController.create(new ReservationRequest("브라운", "2026-04-29", "10:30"));
+        reservationController.create(new ReservationRequest("리사", "2026-04-30", "10:40"));
+
+        reservationController.delete(1L);
+
+        List<ReservationResponse> reservations = reservationController.findAll();
+
+        assertThat(reservations).hasSize(1);
+        assertThat(reservations.get(0).id()).isEqualTo(2L);
+        assertThat(reservations.get(0).name()).isEqualTo("리사");
     }
 }

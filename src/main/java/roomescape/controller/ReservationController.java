@@ -5,38 +5,31 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.entity.Reservation;
+import roomescape.service.ReservationService;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class ReservationController {
-    private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(1);
+    private final ReservationService reservationService;
+
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> readAllReservation() {
-        return ResponseEntity.ok(ReservationResponse.from(List.copyOf(reservations)));
+        return ResponseEntity.ok(reservationService.readAllReservation());
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationCreateRequest request) {
-        Reservation newReservation = Reservation.from(index.getAndIncrement(), request);
-        reservations.add(newReservation);
-        return ResponseEntity.ok(ReservationResponse.from(newReservation));
+        return ResponseEntity.ok(reservationService.createReservation(request));
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        Reservation reservation = reservations.stream()
-                .filter(it -> Objects.equals(it.id(), id))
-                .findFirst()
-                .orElseThrow(RuntimeException::new);
-
-        reservations.remove(reservation);
+        reservationService.deleteReservation(id);
         return ResponseEntity.ok()
                 .build();
     }

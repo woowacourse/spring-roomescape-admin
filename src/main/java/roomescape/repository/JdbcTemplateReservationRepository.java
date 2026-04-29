@@ -5,10 +5,13 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.request.ReservationRequest;
 import roomescape.response.ReservationResponse;
+import roomescape.response.ReservationTimeResponse;
 
 import java.sql.PreparedStatement;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,41 +19,52 @@ import java.util.Objects;
 public class JdbcTemplateReservationRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public JdbcTemplateReservationRepository(JdbcTemplate jdbcTemplate) {
+    public JdbcTemplateReservationRepository(JdbcTemplate jdbcTemplate, ReservationTimeRepository reservationTimeRepository) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public List<Reservation> findAllReservations() {
-        return jdbcTemplate.query("SELECT id, name, date, time FROM reservation",
+        return jdbcTemplate.query(
+                "SELECT r.id, r.name, r.date, t.id AS time_id, t.start_at " +
+                        "FROM reservation r JOIN reservation_time t ON r.time_id = t.id",
                 (rs, rowNum) ->
-                        new Reservation(
-                                rs.getLong("id"),
-                                rs.getString("name"),
-                                rs.getDate("date").toLocalDate(),
-                                rs.getTime("time").toLocalTime())
+                {
+                    long timeId = rs.getLong("time_id");
+                    LocalTime time = rs.getTime("start_at").toLocalTime();
+                    ReservationTime reservationTime = new ReservationTime(timeId, time);
+                    return new Reservation(
+                            rs.getLong("id"),
+                            rs.getString("name"),
+                            rs.getDate("date").toLocalDate(),
+                            reservationTime);
+                }
         );
     }
 
     @Override
-    public ReservationResponse insert(ReservationRequest request) {
+    public ReservationResponse addReservation(ReservationRequest request) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
                 conn -> {
                     PreparedStatement preparedStatement = conn.prepareStatement(
-                            "INSERT INTO reservation(name, date, time) " +
+                            "INSERT INTO reservation(name, date, time_id) " +
                                     "VALUES (?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
                     preparedStatement.setString(1, request.name());
                     preparedStatement.setDate(2, java.sql.Date.valueOf(request.date()));
-                    preparedStatement.setTime(3, java.sql.Time.valueOf(request.time()));
+                    preparedStatement.setLong(3, request.timeId());
                     return preparedStatement;
                 },
                 keyHolder);
+        ReservationTimeResponse reservationTimeResponse = jdbcTemplate.queryForObject(
+                "SELECT id, start_at FROM reservation_time WHERE id = ?",
+                (rs, row) -> new ReservationTimeResponse(rs.getLong("id"), rs.getTime("start_at").toLocalTime()),
+                request.timeId());
         return new ReservationResponse(
                 Objects.requireNonNull(keyHolder.getKey()).longValue(),
                 request.name(),
                 request.date(),
-                request.time());
+                reservationTimeResponse);
     }
 
     @Override

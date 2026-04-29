@@ -11,7 +11,7 @@ import java.util.List;
 public interface ReservationRepository {
     List<Reservation> findAllReservations();
 
-    ReservationResponse insert(ReservationRequest request);
+    ReservationResponse addReservation(ReservationRequest request);
 
     void deleteById(Long id);
 }

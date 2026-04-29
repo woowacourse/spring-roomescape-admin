@@ -29,7 +29,7 @@ public class RoomEscapeController {
 
     @PostMapping
     public ReservationResponse registerReservation(@RequestBody ReservationRequest request) {
-        return reservationRepository.insert(request);
+        return reservationRepository.addReservation(request);
     }
 
     @DeleteMapping("/{id}")

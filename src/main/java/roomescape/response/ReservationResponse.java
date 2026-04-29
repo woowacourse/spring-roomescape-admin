@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-public record ReservationResponse(long id, String name, LocalDate date, LocalTime time) {
+public record ReservationResponse(long id, String name, LocalDate date, ReservationTimeResponse time) {
     public static List<ReservationResponse> from(List<Reservation> reservations) {
         return reservations.stream().map(ReservationResponse::from).toList();
     }
@@ -16,7 +16,7 @@ public record ReservationResponse(long id, String name, LocalDate date, LocalTim
                 reservation.id(),
                 reservation.name(),
                 reservation.date(),
-                reservation.time()
+                ReservationTimeResponse.from(reservation.time())
         );
     }
 }

@@ -9,7 +9,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.service.stub.StubReservationTimeRepository;
 import roomescape.time.controller.dto.ReservationTimeRequest;
-import roomescape.time.controller.dto.ReservationTimeResponse;
 import roomescape.time.entity.ReservationTime;
 import roomescape.time.service.ReservationTimeService;
 
@@ -31,15 +30,15 @@ class ReservationTimeServiceTest {
         ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(time);
 
         //when
-        ReservationTimeResponse result = reservationTimeService.save(reservationTimeRequest);
-        ReservationTime saved = reservationTimeService.getById(result.id());
+        ReservationTime result = reservationTimeService.save(reservationTimeRequest.startAt());
+        ReservationTime saved = reservationTimeService.getById(result.getId());
 
         //then
-        assertThat(result.id()).isNotNull();
-        assertThat(result.startAt()).isEqualTo(time);
+        assertThat(result.getId()).isNotNull();
+        assertThat(result.getStartAt()).isEqualTo(time);
 
-        assertThat(result.id()).isEqualTo(saved.getId());
-        assertThat(result.startAt()).isEqualTo(saved.getStartAt());
+        assertThat(result.getId()).isEqualTo(saved.getId());
+        assertThat(result.getStartAt()).isEqualTo(saved.getStartAt());
     }
 
     @Test

@@ -9,12 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.reservation.controller.dto.ReservationRequest;
-import roomescape.reservation.controller.dto.ReservationResponse;
+import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.service.ReservationService;
 import roomescape.service.stub.StubReservationRepository;
 import roomescape.service.stub.StubReservationTimeRepository;
 import roomescape.time.controller.dto.ReservationTimeRequest;
-import roomescape.time.controller.dto.ReservationTimeResponse;
+import roomescape.time.entity.ReservationTime;
 import roomescape.time.service.ReservationTimeService;
 
 class ReservationServiceTest {
@@ -33,23 +33,24 @@ class ReservationServiceTest {
     void save_test() {
         // given
         ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(LocalTime.parse("10:00"));
-        ReservationTimeResponse reservationTimeResponse = reservationTimeService.save(reservationTimeRequest);
+        ReservationTime reservationTime = reservationTimeService.save(reservationTimeRequest.startAt());
         ReservationRequest reservationRequest = new ReservationRequest("쿠다", LocalDate.parse("2023-08-06"),
-                reservationTimeResponse.id());
+                reservationTime.getId());
 
         // when
-        ReservationResponse result = reservationService.save(reservationRequest);
-        ReservationResponse saved = reservationService.getById(result.id());
+        Reservation result = reservationService.save(reservationRequest.name(), reservationRequest.date(),
+                reservationRequest.timeId());
+        Reservation saved = reservationService.getById(result.getId());
 
         // then
-        assertThat(result.id()).isNotNull();
-        assertThat(result.name()).isEqualTo(reservationRequest.name());
-        assertThat(result.date()).isEqualTo(reservationRequest.date());
-        assertThat(result.reservationTime().getId()).isEqualTo(reservationRequest.timeId());
+        assertThat(result.getId()).isNotNull();
+        assertThat(result.getName()).isEqualTo(reservationRequest.name());
+        assertThat(result.getDate()).isEqualTo(reservationRequest.date());
+        assertThat(result.getTime().getId()).isEqualTo(reservationRequest.timeId());
 
-        assertThat(saved.name()).isEqualTo(result.name());
-        assertThat(saved.date()).isEqualTo(result.date());
-        assertThat(saved.reservationTime().getId()).isEqualTo(result.reservationTime().getId());
+        assertThat(saved.getName()).isEqualTo(result.getName());
+        assertThat(saved.getDate()).isEqualTo(result.getDate());
+        assertThat(saved.getTime().getId()).isEqualTo(result.getTime().getId());
     }
 
     @Test
@@ -59,16 +60,17 @@ class ReservationServiceTest {
         LocalDate date = LocalDate.parse("2026-08-06");
 
         ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(LocalTime.parse("10:00"));
-        ReservationTimeResponse reservationTimeResponse = reservationTimeService.save(reservationTimeRequest);
+        ReservationTime reservationTime = reservationTimeService.save(reservationTimeRequest.startAt());
 
-        ReservationRequest reservationRequest = new ReservationRequest("쿠다", date, reservationTimeResponse.id());
-        ReservationRequest newReservationRequest = new ReservationRequest("아루", date, reservationTimeResponse.id());
+        ReservationRequest reservationRequest = new ReservationRequest("쿠다", date, reservationTime.getId());
+        ReservationRequest newReservationRequest = new ReservationRequest("아루", date, reservationTime.getId());
 
         // when
-        reservationService.save(reservationRequest);
+        reservationService.save(reservationRequest.name(), reservationRequest.date(), reservationRequest.timeId());
 
         // then
-        assertThatThrownBy(() -> reservationService.save(newReservationRequest))
+        assertThatThrownBy(() -> reservationService.save(newReservationRequest.name(), newReservationRequest.date(),
+                newReservationRequest.timeId()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("중복으로 예약을 생성할 수 없습니다.");
     }

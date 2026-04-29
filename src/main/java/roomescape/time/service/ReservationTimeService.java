@@ -17,10 +17,9 @@ public class ReservationTimeService {
     private final ReservationTimeRepository reservationTimeRepository;
 
     @Transactional
-    public ReservationTimeResponse save(ReservationTimeRequest reservationTimeRequest) {
-        LocalTime startAt = reservationTimeRequest.startAt();
+    public ReservationTime save(LocalTime startAt) {
         ReservationTime reservationTime = ReservationTime.createNew(startAt);
-        return ReservationTimeResponse.from(reservationTimeRepository.save(reservationTime));
+        return reservationTimeRepository.save(reservationTime);
     }
 
     public ReservationTime getById(long id) {
@@ -28,10 +27,8 @@ public class ReservationTimeService {
                 .orElseThrow(() -> new IllegalArgumentException("찾는 예약 시간이 없습니다."));
     }
 
-    public List<ReservationTimeResponse> findAll() {
-        return reservationTimeRepository.findAll().stream()
-                .map(ReservationTimeResponse::from)
-                .toList();
+    public List<ReservationTime> findAll() {
+        return reservationTimeRepository.findAll();
     }
 
     @Transactional

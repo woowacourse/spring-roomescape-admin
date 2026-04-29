@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.time.controller.dto.ReservationTimeRequest;
 import roomescape.time.controller.dto.ReservationTimeResponse;
+import roomescape.time.entity.ReservationTime;
 import roomescape.time.service.ReservationTimeService;
 
 @RestController
@@ -26,13 +27,16 @@ public class ReservationTimeController {
 
     @GetMapping
     public List<ReservationTimeResponse> readAll() {
-        return reservationTimeService.findAll();
+        return reservationTimeService.findAll().stream()
+                .map(ReservationTimeResponse::from)
+                .toList();
     }
 
     @PostMapping
     public ReservationTimeResponse add(
             @Valid @RequestBody ReservationTimeRequest reservationTimeRequest) {
-        return reservationTimeService.save(reservationTimeRequest);
+        ReservationTime reservationTime = reservationTimeService.save(reservationTimeRequest.startAt());
+        return ReservationTimeResponse.from(reservationTime);
     }
 
     @DeleteMapping("/{id}")

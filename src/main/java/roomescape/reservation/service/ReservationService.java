@@ -6,8 +6,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.reservation.controller.dto.ReservationRequest;
-import roomescape.reservation.controller.dto.ReservationResponse;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.time.entity.ReservationTime;
@@ -21,27 +19,20 @@ public class ReservationService {
     private final ReservationTimeService reservationTimeService;
 
     @Transactional
-    public ReservationResponse save(ReservationRequest reservationRequest) {
-        ReservationTime reservationTime = reservationTimeService.getById(reservationRequest.timeId());
+    public Reservation save(String name, LocalDate date, long timeId) {
+        ReservationTime reservationTime = reservationTimeService.getById(timeId);
 
-        LocalDate date = reservationRequest.date();
         LocalTime time = reservationTime.getStartAt();
         if (reservationRepository.existsByDateAndTime(date, time)) {
             throw new IllegalArgumentException("중복으로 예약을 생성할 수 없습니다.");
         }
+        Reservation nonIdReservation = Reservation.createNew(name, date, reservationTime);
 
-        Reservation reservation = Reservation.createNew(
-                reservationRequest.name(),
-                reservationRequest.date(),
-                reservationTime
-        );
-        return ReservationResponse.from(reservationRepository.save(reservation));
+        return reservationRepository.save(nonIdReservation);
     }
 
-    public List<ReservationResponse> findAll() {
-        return reservationRepository.findAll().stream()
-                .map(ReservationResponse::from)
-                .toList();
+    public List<Reservation> findAll() {
+        return reservationRepository.findAll();
     }
 
     @Transactional
@@ -53,10 +44,9 @@ public class ReservationService {
         reservationRepository.deleteById(id);
     }
 
-    public ReservationResponse getById(long id) {
-        Reservation reservation = reservationRepository.findById(id)
+    public Reservation getById(long id) {
+        return reservationRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
-        return ReservationResponse.from(reservation);
     }
 
 }

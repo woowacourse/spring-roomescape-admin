@@ -14,8 +14,6 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class ReservationTimeDaoJdbcImplementation implements ReservationTimeDao {
 
-    private static final String TEST_TIME = "20:00";
-
     private static final String INSERT_RESERVATION_TIME_QUERY = "INSERT INTO reservation_time(start_at) VALUES (?)";
     private static final String SELECT_ALL_RESERVATION_TIME_QUERY = "SELECT id, start_at FROM reservation_time;";
     private static final String SELECT_SPECIFIC_RESERVATION_TIME_QUERY = "SELECT id, start_at FROM reservation_time WHERE id = ?;";
@@ -31,10 +29,9 @@ public class ReservationTimeDaoJdbcImplementation implements ReservationTimeDao 
 
 
     @Override
-    public ReservationTime save(ReservationTime time) {
+    public ReservationTime save(ReservationTime reservationTime) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        ReservationTime reservationTime = ReservationTime.constructWithoutId(TEST_TIME);
         ReservationTimeEntity entity = mapper.toReservationTimeEntity(reservationTime);
 
         jdbcTemplate.update(

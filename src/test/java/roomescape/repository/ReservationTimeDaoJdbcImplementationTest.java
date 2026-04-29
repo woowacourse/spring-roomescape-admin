@@ -56,14 +56,13 @@ class ReservationTimeDaoJdbcImplementationTest {
     @Test
     @DisplayName("id 기반으로 1개를 잘 찾는다.")
     void findById_success() {
-        ReservationTime testTime = new ReservationTime(1L, TEST_TIME);
+        ReservationTime testTime = ReservationTime.constructWithoutId(TEST_TIME);
         ReservationTime savedReservationTime = reservationTimeDao.save(testTime);
 
         Long targetId = savedReservationTime.id();
 
         ReservationTime result = reservationTimeDao.findById(targetId);
 
-        Assertions.assertEquals(1L, result.id());
         Assertions.assertEquals(TEST_TIME, result.startAt());
     }
 

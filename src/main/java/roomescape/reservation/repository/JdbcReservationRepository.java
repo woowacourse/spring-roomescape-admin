@@ -66,13 +66,11 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Boolean existsByDateAndTime(LocalDate date, Long timeId) {
-        String formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
+    public Boolean existsByDateAndTime(String date, Long timeId) {
         return jdbcTemplate.queryForObject(
                 "SELECT EXISTS(SELECT 1 FROM reservation WHERE date = ? AND time_id = ?)",
                 Boolean.class,
-                formattedDate,
+                date,
                 timeId);
     }
 }

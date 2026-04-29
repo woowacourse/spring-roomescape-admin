@@ -1,15 +1,12 @@
 package roomescape.repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -51,6 +48,7 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
 
     @Override
     public void delete(Long id) {
-
+        String sql = "delete from reservation_time where id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

@@ -6,8 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import roomescape.domain.Reservation;
 
+import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -39,6 +42,7 @@ class JdbcTemplateReservationRepositoryTest {
         Reservation saved = repository.save(reservation);
 
         // then
+        assertThat(saved.getId()).isNotNull();
         assertThat(saved).extracting(
                 Reservation::getName,
                 Reservation::getDate,
@@ -74,17 +78,25 @@ class JdbcTemplateReservationRepositoryTest {
     @DisplayName("특정 id의 Reservation을 삭제한다.")
     public void delete() {
         // given
-        Reservation saved = repository.save(new Reservation(
-                "name", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40)));
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, "kim");
+            ps.setString(2, "2023-08-05");
+            ps.setString(3, "15:40");
+            return ps;
+        }, keyHolder);
 
         // when
-        repository.delete(saved.getId());
+        long id = keyHolder.getKey().longValue();
+        repository.delete(id);
 
         // then
         Integer count = jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM reservation WHERE id = ?",
                 Integer.class,
-                saved.getId()
+                id
         );
 
         assertThat(count).isZero();

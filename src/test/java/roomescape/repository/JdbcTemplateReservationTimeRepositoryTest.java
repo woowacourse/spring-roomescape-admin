@@ -6,9 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
+import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -54,6 +58,32 @@ class JdbcTemplateReservationTimeRepositoryTest {
 
         // then
         assertThat(reservationTimes).hasSize(3);
+    }
+
+    @Test
+    @DisplayName("특정 id의 ReservationTime을 삭제한다.")
+    public void delete() {
+        // given
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, "15:40");
+            return ps;
+        }, keyHolder);
+
+        // when
+        long id = keyHolder.getKey().longValue();
+        repository.delete(id);
+
+        // then
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM reservation_time WHERE id = ?",
+                Integer.class,
+                id
+        );
+
+        assertThat(count).isZero();
     }
 
 

@@ -23,4 +23,8 @@ public class ReservationTimeService {
     public List<ReservationTime> getReservationTimes() {
         return repository.findAll();
     }
+
+    public void deleteReservation(Long id) {
+        repository.delete(id);
+    }
 }

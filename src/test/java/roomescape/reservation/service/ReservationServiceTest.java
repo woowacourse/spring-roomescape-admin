@@ -4,12 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.CreateReservationRequest;
-import roomescape.reservation.dto.ReservationsResponse;
+import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.repository.ReservationRepository;
 
 class ReservationServiceTest {
@@ -30,10 +31,10 @@ class ReservationServiceTest {
     @DisplayName("전체 예약 정보를 가져온다.")
     void findAll() {
         //given & when
-        ReservationsResponse reservationsResponse = reservationService.findAll();
+        List<ReservationResponse> reservationsResponse = reservationService.findAll();
 
         //then
-        assertThat(reservationsResponse.reservationResponse().size()).isEqualTo(2);
+        assertThat(reservationsResponse.size()).isEqualTo(2);
     }
 
     @Test
@@ -43,7 +44,7 @@ class ReservationServiceTest {
         reservationService.create(new CreateReservationRequest("브라운", LocalDate.of(2023, 1, 1), LocalTime.of(10, 0)));
 
         //then
-        assertThat(reservationService.findAll().reservationResponse().size()).isEqualTo(3);
+        assertThat(reservationService.findAll().size()).isEqualTo(3);
     }
 
     @Test
@@ -56,6 +57,6 @@ class ReservationServiceTest {
         reservationService.delete(id);
 
         //then
-        assertThat(reservationService.findAll().reservationResponse().size()).isEqualTo(1);
+        assertThat(reservationService.findAll().size()).isEqualTo(1);
     }
 }

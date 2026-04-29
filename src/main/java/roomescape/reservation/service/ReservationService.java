@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.CreateReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
-import roomescape.reservation.dto.ReservationsResponse;
 import roomescape.reservation.repository.ReservationRepository;
 
 @Service
@@ -17,9 +16,10 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    public ReservationsResponse findAll() {
-        List<Reservation> reservations = reservationRepository.findAll();
-        return ReservationsResponse.from(reservations);
+    public List<ReservationResponse> findAll() {
+        return reservationRepository.findAll().stream()
+                .map(ReservationResponse::from)
+                .toList();
     }
 
     public ReservationResponse create(CreateReservationRequest createReservationRequest) {

@@ -3,6 +3,8 @@ package roomescape.reservation.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -27,9 +29,9 @@ class InMemoryReservationsRepositoryTest {
     @Test
     void saveReservation() {
         //given
-        ReservationEntity entity1 = ReservationEntity.of("name1", LocalDate.now(), LocalTime.now());
-        ReservationEntity entity2 = ReservationEntity.of("name2", LocalDate.now(), LocalTime.now());
-        ReservationEntity entity3 = ReservationEntity.of("name3", LocalDate.now(), LocalTime.now());
+        ReservationEntity entity1 = ReservationEntity.of("name1", Date.valueOf(LocalDate.now()), Time.valueOf(LocalTime.now()));
+        ReservationEntity entity2 = ReservationEntity.of("name2",Date.valueOf(LocalDate.now()), Time.valueOf(LocalTime.now()));
+        ReservationEntity entity3 = ReservationEntity.of("name3", Date.valueOf(LocalDate.now()), Time.valueOf(LocalTime.now()));
 
         //when
         ReservationEntity entity1WithId = reservationsRepository.saveReservation(entity1);
@@ -47,7 +49,7 @@ class InMemoryReservationsRepositoryTest {
     @Test
     void deleteReservationById_success() {
         //given
-        ReservationEntity entity = ReservationEntity.of("name1", LocalDate.now(), LocalTime.now());
+        ReservationEntity entity = ReservationEntity.of("name1", Date.valueOf(LocalDate.now()), Time.valueOf(LocalTime.now()));
         ReservationEntity entityWithId = reservationsRepository.saveReservation(entity);
 
         //when

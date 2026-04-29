@@ -1,18 +1,18 @@
 package roomescape.reservation.repository;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.sql.Date;
+import java.sql.Time;
 
 public record ReservationEntity(
         Long id,
         String name,
-        LocalDate date,
-        LocalTime time
+        Date date,
+        Time time
 ) {
     public static ReservationEntity of(
             String name,
-            LocalDate date,
-            LocalTime time
+            Date date,
+            Time time
     ) {
         return new ReservationEntity(
                 null,

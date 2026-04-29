@@ -14,8 +14,8 @@ public record Reservation(
         return new Reservation(
                 reservationEntity.id(),
                 reservationEntity.name(),
-                reservationEntity.date(),
-                reservationEntity.time()
+                reservationEntity.date().toLocalDate(),
+                reservationEntity.time().toLocalTime()
         );
     }
 }

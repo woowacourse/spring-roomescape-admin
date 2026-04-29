@@ -1,11 +1,9 @@
 package roomescape.reservation.repository;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Time;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -36,8 +34,8 @@ public class JdbcTemplateReservationsRepository implements ReservationsRepositor
                 (rs, rowNum) -> new ReservationEntity(
                         rs.getLong(ID_COLUMN),
                         rs.getString(NAME_COLUMN),
-                        rs.getDate(DATE_COLUMN).toLocalDate(),
-                        rs.getTime(TIME_COLUMN).toLocalTime()
+                        rs.getDate(DATE_COLUMN),
+                        rs.getTime(TIME_COLUMN)
                 )
         );
     }
@@ -67,8 +65,8 @@ public class JdbcTemplateReservationsRepository implements ReservationsRepositor
         );
 
         preparedStatement.setString(1, reservationEntity.name());
-        preparedStatement.setDate(2, Date.valueOf(reservationEntity.date()));
-        preparedStatement.setTime(3, Time.valueOf(reservationEntity.time()));
+        preparedStatement.setDate(2, reservationEntity.date());
+        preparedStatement.setTime(3, reservationEntity.time());
 
         return preparedStatement;
     }

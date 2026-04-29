@@ -3,10 +3,7 @@ package roomescape;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -23,16 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReservationController {
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> {
-        Reservation reservation = new Reservation(
-                resultSet.getLong("id"),
-                resultSet.getString("name"),
-                resultSet.getObject("date", LocalDate.class),
-                resultSet.getObject("time", LocalTime.class)
-        );
-
-        return reservation;
-    };
+    private final RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> new Reservation(
+            resultSet.getLong("id"),
+            resultSet.getString("name"),
+            resultSet.getObject("date", LocalDate.class),
+            resultSet.getObject("time", LocalTime.class)
+    );
 
     public ReservationController(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

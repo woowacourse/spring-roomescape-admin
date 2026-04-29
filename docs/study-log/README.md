@@ -51,3 +51,8 @@
 
 - 요청: X
 - 응답: `200 OK`
+
+# 몰랐던 것 혹은 궁금한 것
+
+- AtomicLong vs Long의 차이
+- Reservation에서 AtomicLong을 써야하나?? Long을 써야하나?

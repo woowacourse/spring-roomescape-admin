@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,7 +23,7 @@ public class ReservationTimeDAO {
     private final RowMapper<ReservationTime> rowMapper = (resultSet, rowNum) -> {
         ReservationTime reservationTime = new ReservationTime(
                 resultSet.getLong("id"),
-                resultSet.getTime("start_at").toLocalTime()
+                LocalTime.parse(resultSet.getString("start_at"))
         );
         return reservationTime;
     };
@@ -54,7 +55,7 @@ public class ReservationTimeDAO {
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     sql, new String[]{"id"});
-            preparedStatement.setTime(1, Time.valueOf(reservationTime.getStartAt()));
+            preparedStatement.setString(1, reservationTime.getStartAt().toString());
             return preparedStatement;
         }, keyHolder);
 

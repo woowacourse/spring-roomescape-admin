@@ -23,7 +23,7 @@ public class ReservationTimeDAOTest {
         reservationTimeDAO = new ReservationTimeDAO(jdbcTemplate);
         jdbcTemplate.execute("DROP TABLE reservation_time IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE reservation_time(" +
-                "id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, start_at TIME)");
+                "id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, start_at VARCHAR(255))");
 
         jdbcTemplate.update("INSERT INTO reservation_time(start_at) VALUES (?)", "15:00");
         jdbcTemplate.update("INSERT INTO reservation_time(start_at) VALUES (?)", "16:00");

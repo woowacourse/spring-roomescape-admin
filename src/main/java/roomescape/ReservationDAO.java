@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,8 +26,8 @@ public class ReservationDAO {
         Reservation reservation = new Reservation(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
-                resultSet.getDate("date").toLocalDate(),
-                resultSet.getTime("time").toLocalTime()
+                LocalDate.parse(resultSet.getString("date")),
+                LocalTime.parse(resultSet.getString("time"))
         );
         return reservation;
     };
@@ -58,8 +60,8 @@ public class ReservationDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     sql, new String[]{"id"});
             preparedStatement.setString(1, reservation.getName());
-            preparedStatement.setDate(2, Date.valueOf(reservation.getDate()));
-            preparedStatement.setTime(3, Time.valueOf(reservation.getTime()));
+            preparedStatement.setString(2, reservation.getDate().toString());
+            preparedStatement.setString(3, reservation.getTime().toString());
             return preparedStatement;
         }, keyHolder);
 

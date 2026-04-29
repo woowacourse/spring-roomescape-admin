@@ -29,7 +29,7 @@ public class ReservationTimeControllerTest {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
         jdbcTemplate.execute("DROP TABLE IF EXISTS reservation_time");
-        jdbcTemplate.execute("CREATE TABLE reservation_time(id BIGINT AUTO_INCREMENT PRIMARY KEY, start_at TIME)");
+        jdbcTemplate.execute("CREATE TABLE reservation_time(id BIGINT AUTO_INCREMENT PRIMARY KEY, start_at VARCHAR(255))");
 
         controller = new ReservationTimeController(new ReservationTimeDAO(jdbcTemplate));
 

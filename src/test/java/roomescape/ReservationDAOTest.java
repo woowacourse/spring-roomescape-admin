@@ -25,7 +25,7 @@ public class ReservationDAOTest {
 
         jdbcTemplate.execute("DROP TABLE reservation IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE reservation(" +
-                "id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), date DATE, time TIME)");
+                "id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), date VARCHAR(255), time VARCHAR(255))");
 
         jdbcTemplate.update("INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)", "user1", "2026-04-28", "15:00");
         jdbcTemplate.update("INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)", "user2", "2026-04-29", "16:00");

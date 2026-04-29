@@ -35,14 +35,17 @@ public class ReservationController {
     public ResponseEntity<ReservationResponse> addReservation(
             @RequestBody ReservationRequest request
     ) {
+        ReservationTime time = reservationTimeRepository.findById(request.timeId())
+                .orElseThrow(IllegalArgumentException::new);
+
         Reservation reservation = Reservation.of(
                 null,
                 request.name(),
                 request.date(),
-                request.time()
+                time
         );
         Reservation savedReservation = reservationRepository.save(reservation);
-        return ResponseEntity.ok(ReservationResponse.from(savedReservation));
+        return ResponseEntity.ok(ReservationResponse.from(savedReservation, time));
     }
 
     @GetMapping("/reservations")

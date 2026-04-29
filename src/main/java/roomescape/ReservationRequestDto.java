@@ -1,4 +1,4 @@
 package roomescape;
 
-public record ReservationRequestDto(String name, String date, String time) {
+public record ReservationRequestDto(String name, String date, Long timeId) {
 }

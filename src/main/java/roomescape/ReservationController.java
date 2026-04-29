@@ -23,13 +23,16 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> readAll() {
-        String sql = "SELECT * FROM `reservation`";
+        String sql = "SELECT r.id, r.name, r.date, t.id as time_id, t.start_at as time_value FROM `reservation` r INNER JOIN `reservation_time` t ON r.time_id = t.id";
         List<Reservation> reservations = jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long id = rs.getLong("id");
             String name = rs.getString("name");
             String date = rs.getString("date");
-            String time = rs.getString("time");
-            return new Reservation(id, name, date, time);
+            Long timeId = rs.getLong("time_id");
+            String timeValue = rs.getString("time_value");
+
+            ReservationTime reservationTime = new ReservationTime(timeId, timeValue);
+            return new Reservation(id, name, date, reservationTime);
         });
 
         return ResponseEntity.ok(reservations);
@@ -37,21 +40,23 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> create(@RequestBody ReservationRequestDto requestDto) {
-        String sql = "INSERT INTO `reservation`(`name`, `date`, `time`) VALUES (?, ?, ?)";
+        String reservationSql = "INSERT INTO `reservation`(`name`, `date`, `time_id`) VALUES (?, ?, ?)";
+        String reservationTimeSql = "SELECT * from `reservation_time` WHERE `id` = ?";
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
+            PreparedStatement preparedStatement = con.prepareStatement(reservationSql, new String[]{"id"});
             preparedStatement.setString(1, requestDto.name());
             preparedStatement.setString(2, requestDto.date());
-            preparedStatement.setString(3, requestDto.time());
+            preparedStatement.setLong(3, requestDto.timeId());
 
             return preparedStatement;
         }, keyHolder);
 
         Long id = keyHolder.getKey().longValue();
-
-        Reservation newReservation = new Reservation(id, requestDto.name(), requestDto.date(),
-                requestDto.time());
+        ReservationTime reservationTime = jdbcTemplate.queryForObject(reservationTimeSql,
+                (rs, rowNum) -> new ReservationTime(rs.getLong("id"), rs.getString("start_at")), requestDto.timeId());
+        Reservation newReservation = new Reservation(id, requestDto.name(), requestDto.date(), reservationTime);
 
         return ResponseEntity.ok(newReservation);
     }

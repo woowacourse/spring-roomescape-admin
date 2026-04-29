@@ -16,17 +16,17 @@ public class ReservationTimeService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public ReservationTime add(String startAt) {
+    public ReservationTime enrollReservationTimes(String startAt) {
         return reservationTimeDao.save(
                 ReservationTime.constructWithoutId(startAt)
         );
     }
 
-    public List<ReservationTime> find() {
+    public List<ReservationTime> findAllReservationTimes() {
         return reservationTimeDao.findAll();
     }
 
-    public void delete(Long targetId) {
+    public void deleteSpecificReservationTime(Long targetId) {
         reservationTimeDao.delete(targetId);
     }
 }

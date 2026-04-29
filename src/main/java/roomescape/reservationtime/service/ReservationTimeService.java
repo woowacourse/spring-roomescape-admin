@@ -17,7 +17,7 @@ public class ReservationTimeService {
 
     public ReservationTime findById(Long reservationTimeId) {
         return reservationTimeRepository.findById(reservationTimeId)
-                .orElseThrow(() -> new ReservationTimeException("[ERROR] 존재하지 않는 timeId 입니다."));
+                .orElseThrow(() -> new ReservationTimeException("[ERROR] 존재하지 않는 시간 입니다."));
     }
 
     public List<ReservationTimeDto> findAllReservationTimes() {

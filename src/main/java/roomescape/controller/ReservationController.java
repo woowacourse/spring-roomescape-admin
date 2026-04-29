@@ -34,7 +34,15 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> getAllReservations() {
-        String sql = "SELECT id, name, date, time_id FROM reservation";
+        String sql = "SELECT"
+                + "    r.id as reservation_id,"
+                + "    r.name,"
+                + "    r.date,"
+                + "    t.id as time_id,"
+                + "    t.start_at as time_value"
+                + " FROM reservation as r"
+                + " INNER JOIN reservation_time as t"
+                + "  ON r.time_id = t.id";
 
         List<Reservation> reservations = jdbcTemplate.query(sql, reservationRowMapper);
 
@@ -54,20 +62,22 @@ public class ReservationController {
 
         Number reservationId = reservationInsertExecutor.executeAndReturnKey(params);
 
-        Reservation reservation = Reservation.create(
-                reservationId.longValue(),
-                request.name(),
-                request.date(),
-                findTimeById(request.timeId())
-        );
+        String selectSql = "SELECT"
+                + "    r.id as reservation_id,"
+                + "    r.name,"
+                + "    r.date,"
+                + "    t.id as time_id,"
+                + "    t.start_at as time_value"
+                + " FROM reservation as r"
+                + " INNER JOIN reservation_time as t ON r.time_id = t.id"
+                + " WHERE r.id = ?";
+
+        Reservation reservation = jdbcTemplate.queryForObject(
+                selectSql,
+                reservationRowMapper,
+                reservationId.longValue());
 
         return ResponseEntity.ok(ReservationResponse.from(reservation));
-    }
-
-    private ReservationTime findTimeById(Long id) {
-        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
-
-        return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, id);
     }
 
     @DeleteMapping("/reservations/{id}")
@@ -116,13 +126,19 @@ public class ReservationController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) ->
-            Reservation.create(
-                    rs.getLong("id"),
-                    rs.getString("name"),
-                    rs.getObject("date", LocalDate.class),
-                    findTimeById(rs.getLong("time_id"))
-            );
+    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> {
+        ReservationTime reservationTime = ReservationTime.create(
+                rs.getLong("time_id"),
+                rs.getObject("time_value", LocalTime.class)
+        );
+
+        return Reservation.create(
+                rs.getLong("reservation_id"),
+                rs.getString("name"),
+                rs.getObject("date", LocalDate.class),
+                reservationTime
+        );
+    };
 
     private final RowMapper<ReservationTime> reservationTimeRowMapper = (rs, rowNum) ->
             ReservationTime.create(

@@ -1,9 +1,9 @@
-package roomescape.service;
+package roomescape.reservation.service;
 
 import java.util.List;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
-import roomescape.service.dto.ReservationSaveServiceDto;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.domain.ReservationTime;
+import roomescape.reservation.service.dto.ReservationSaveServiceDto;
 
 public interface RoomescapeService {
     List<Reservation> getReservations();

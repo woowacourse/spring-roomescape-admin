@@ -1,6 +1,6 @@
-package roomescape.controller.dto;
+package roomescape.reservation.controller.dto;
 
-import roomescape.service.dto.ReservationSaveServiceDto;
+import roomescape.reservation.service.dto.ReservationSaveServiceDto;
 
 public class ReservationSaveRequestDto {
     private String name;

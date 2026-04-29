@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.reservation.repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,14 +10,14 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import roomescape.domain.Reservation;
+import roomescape.reservation.domain.Reservation;
 
 @Repository
-public class JdbcRoomescapeRepository implements RoomescapeRepository {
+public class JdbcReservationRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert reservationInsert;
 
-    public JdbcRoomescapeRepository(JdbcTemplate jdbcTemplate) {
+    public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.reservationInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")

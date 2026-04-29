@@ -1,6 +1,6 @@
-package roomescape.controller.dto;
+package roomescape.reservation.controller.dto;
 
-import roomescape.domain.Reservation;
+import roomescape.reservation.domain.Reservation;
 
 public class ReservationResponseDto {
     private final Long id;

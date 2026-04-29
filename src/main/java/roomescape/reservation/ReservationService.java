@@ -13,8 +13,10 @@ public class ReservationService {
         this.reservationDao = reservationDao;
     }
 
-    public List<Reservation> findAll() {
-        return reservationDao.findAll();
+    public List<ReservationResponse> findAll() {
+        return reservationDao.findAll().stream()
+                .map(ReservationResponse::from)
+                .toList();
     }
 
     public ReservationResponse save(ReservationRequest request) {

@@ -19,7 +19,7 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public List<Reservation> getReservations() {
+    public List<ReservationResponse> getReservations() {
         return reservationService.findAll();
     }
 

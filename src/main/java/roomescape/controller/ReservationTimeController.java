@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dao.JdbcReservationTimeDao;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationTimeDetailDto;
 import roomescape.dto.ReservationTimeSaveDto;
 
 @RestController
@@ -18,9 +19,10 @@ public class ReservationTimeController {
     }
 
     @PostMapping("/times")
-    public ResponseEntity<ReservationTime> createReservationTime(@RequestBody ReservationTimeSaveDto dto) {
+    public ResponseEntity<ReservationTimeDetailDto> createReservationTime(@RequestBody ReservationTimeSaveDto dto) {
         ReservationTime savedReservationTime = reservationTimeDao.insert(new ReservationTime(dto.startAt()));
-        return ResponseEntity.ok(savedReservationTime);
+        ReservationTimeDetailDto responseData = ReservationTimeDetailDto.from(savedReservationTime);
+        return ResponseEntity.ok(responseData);
     }
 
 }

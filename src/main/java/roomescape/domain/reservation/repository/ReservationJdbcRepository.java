@@ -28,11 +28,6 @@ public class ReservationJdbcRepository implements ReservationRepository {
                 ON r.time_id = t.id;
             """;
 
-    private static final String FIND_RESERVATION_TIME_BY_ID_QUERY = """
-            SELECT * FROM reservation_time
-            WHERE id = ?;
-            """;
-
     private static final String DELETE_RESERVATION_BY_ID_QUERY = """
             DELETE FROM reservation
             WHERE id = ?;

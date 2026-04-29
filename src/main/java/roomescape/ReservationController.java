@@ -39,14 +39,16 @@ public class ReservationController {
     public ResponseEntity<Reservation> create(@RequestBody ReservationRequestDto requestDto) {
         String sql = "INSERT INTO `reservation`(`name`, `date`, `time`) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        long id = jdbcTemplate.update(con -> {
-            PreparedStatement preparedStatement = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+        jdbcTemplate.update(con -> {
+            PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setString(1, requestDto.name());
             preparedStatement.setString(2, requestDto.date());
             preparedStatement.setString(3, requestDto.time());
 
             return preparedStatement;
         }, keyHolder);
+
+        long id = keyHolder.getKey().longValue();
 
         Reservation newReservation = new Reservation(id, requestDto.name(), requestDto.date(),
                 requestDto.time());

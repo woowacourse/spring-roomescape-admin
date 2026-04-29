@@ -23,31 +23,52 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public List<Reservation> list() {
-        String sql = "SELECT id, name, date, time FROM reservation";
+        String sql = """
+                SELECT
+                    r.id AS reservation_id,
+                    r.name AS reservation_name,
+                    r.date AS reservation_date,
+                    t.id AS time_id,
+                    t.start_at AS time_start_at
+                FROM reservation r
+                INNER JOIN reservation_time t ON r.time_id = t.id
+                """;
+
         RowMapper<Reservation> rowMapper = (rs, rowNum) -> new Reservation(
-                rs.getLong("id"),
-                rs.getString("name"),
-                rs.getString("date"),
-                rs.getString("time")
+                rs.getLong("reservation_id"),
+                rs.getString("reservation_name"),
+                rs.getString("reservation_date"),
+                new ReservationTime(
+                        rs.getLong("time_id"),
+                        rs.getString("time_start_at")
+                )
         );
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     @PostMapping("/reservations")
-    public Reservation create(@RequestBody Reservation request) {
-        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+    public Reservation create(@RequestBody ReservationRequest request) {
+        String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, request.getName());
             ps.setString(2, request.getDate());
-            ps.setString(3, request.getTime());
+            ps.setLong(3, request.getTimeId());
             return ps;
         }, keyHolder);
 
         Long id = keyHolder.getKey().longValue();
-        return new Reservation(id, request.getName(), request.getDate(), request.getTime());
+
+        ReservationTime time = jdbcTemplate.queryForObject(
+                "SELECT id, start_at FROM reservation_time WHERE id = ?",
+                (rs, rowNum) -> new ReservationTime(rs.getLong("id"), rs.getString("start_at")),
+                request.getTimeId()
+        );
+
+
+        return new Reservation(id, request.getName(), request.getDate(), time);
     }
 
     @DeleteMapping("/reservations/{id}")

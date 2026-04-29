@@ -1,7 +1,7 @@
 package roomescape.repository;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Repository;
 import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
@@ -15,7 +15,7 @@ public class ReservationRepository {
     }
 
     public List<Reservation> getAllReservation() {
-        return List.copyOf(reservationDao.getAllReservation());
+        return Collections.unmodifiableList(reservationDao.getAllReservation());
     }
 
     public Reservation addReservation(Reservation reservation) {

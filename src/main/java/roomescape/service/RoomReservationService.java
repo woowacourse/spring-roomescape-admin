@@ -15,7 +15,7 @@ public class RoomReservationService {
     }
 
     public List<Reservation> getAllReservation() {
-        return List.copyOf(reservationRepository.getAllReservation());
+        return reservationRepository.getAllReservation();
     }
 
     @Transactional

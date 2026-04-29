@@ -2,9 +2,15 @@ package roomescape;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class ReservationDAO {
@@ -37,6 +43,27 @@ public class ReservationDAO {
     public List<Reservation> findAllReservation() {
         String sql = "SELECT id, name, date, time FROM reservation";
         return jdbcTemplate.query(sql, rowMapper);
+    }
+
+    public void insert(Reservation reservation) {
+        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, reservation.getName(), reservation.getDate(), reservation.getTime());
+    }
+
+    public Long insertWithKeyHolder(Reservation reservation) {
+        String sql = "INSERT INTO reservation (name, date, time) VALUES(?, ?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    sql, new String[]{"id"});
+            preparedStatement.setString(1, reservation.getName());
+            preparedStatement.setDate(2, Date.valueOf(reservation.getDate()));
+            preparedStatement.setTime(3, Time.valueOf(reservation.getTime()));
+            return preparedStatement;
+        }, keyHolder);
+
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
 }

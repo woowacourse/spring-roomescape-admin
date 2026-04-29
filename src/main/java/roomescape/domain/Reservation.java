@@ -1,4 +1,4 @@
-package roomescape; // THINK domain? entity?
+package roomescape.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

@@ -3,7 +3,7 @@ package roomescape.dao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.Reservation;
+import roomescape.domain.Reservation;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;

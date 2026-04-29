@@ -2,7 +2,7 @@ package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.Reservation;
+import roomescape.domain.Reservation;
 import roomescape.dao.ReservationDao;
 import roomescape.dto.ReservationDetailDto;
 import roomescape.dto.ReservationSaveDto;

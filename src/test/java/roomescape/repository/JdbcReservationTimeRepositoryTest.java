@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalTime;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +22,7 @@ public class JdbcReservationTimeRepositoryTest {
 
     @BeforeEach
     void setup() {
-        ReservationTime nonIdReservationTime = ReservationTime.create("10:00");
+        ReservationTime nonIdReservationTime = ReservationTime.create(LocalTime.parse("10:00"));
         jdbcReservationTimeRepository.save(nonIdReservationTime);
     }
 
@@ -40,7 +41,7 @@ public class JdbcReservationTimeRepositoryTest {
     @DisplayName("예약 시간 저장")
     void reservationTime_save_test() {
         //given
-        ReservationTime nonIdReservationTime = ReservationTime.create("11:00");
+        ReservationTime nonIdReservationTime = ReservationTime.create(LocalTime.parse("11:00"));
 
         //when
         ReservationTime reservationTime = jdbcReservationTimeRepository.save(nonIdReservationTime);
@@ -73,7 +74,7 @@ public class JdbcReservationTimeRepositoryTest {
     @DisplayName("예약 시간 중복")
     void reservationTime_duplicate_test() {
         //given & when
-        boolean result = jdbcReservationTimeRepository.existsByStartAt("10:00");
+        boolean result = jdbcReservationTimeRepository.existsByStartAt(LocalTime.parse("10:00"));
 
         //then
         assertThat(result).isTrue();

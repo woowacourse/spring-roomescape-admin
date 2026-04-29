@@ -1,6 +1,7 @@
 package roomescape.time.repository;
 
 import java.sql.PreparedStatement;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,7 +17,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     private static final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) ->
             new ReservationTime(
                     resultSet.getLong("id"),
-                    resultSet.getString("start_at")
+                    resultSet.getTime("start_at").toLocalTime()
             );
 
     private final JdbcTemplate jdbcTemplate;
@@ -47,7 +48,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public boolean existsByStartAt(String startAt) {
+    public boolean existsByStartAt(LocalTime startAt) {
         final String sql = "SELECT EXISTS (SELECT 1 FROM reservation_time WHERE start_at = ?)";
 
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(
@@ -65,7 +66,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, reservationTime.getStartAt());
+            ps.setString(1, String.valueOf(reservationTime.getStartAt()));
             return ps;
         }, keyHolder);
 

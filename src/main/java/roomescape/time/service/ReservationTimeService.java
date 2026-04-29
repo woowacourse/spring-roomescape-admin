@@ -1,10 +1,11 @@
 package roomescape.time.service;
 
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.time.dto.ReservationTimeRequest;
-import roomescape.time.dto.ReservationTimeResponse;
+import roomescape.time.controller.dto.ReservationTimeRequest;
+import roomescape.time.controller.dto.ReservationTimeResponse;
 import roomescape.time.entity.ReservationTime;
 import roomescape.time.repository.ReservationTimeRepository;
 
@@ -41,7 +42,7 @@ public class ReservationTimeService {
         reservationTimeRepository.deleteById(id);
     }
 
-    public boolean existsByStartAt(String startAt){
+    public boolean existsByStartAt(LocalTime startAt){
         return reservationTimeRepository.existsByStartAt(startAt);
     }
 

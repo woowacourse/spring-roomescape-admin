@@ -3,14 +3,15 @@ package roomescape.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.time.dto.ReservationTimeRequest;
-import roomescape.time.dto.ReservationTimeResponse;
+import roomescape.time.controller.dto.ReservationTimeRequest;
+import roomescape.time.controller.dto.ReservationTimeResponse;
 import roomescape.time.entity.ReservationTime;
 import roomescape.time.repository.ReservationTimeRepository;
 import roomescape.time.service.ReservationTimeService;
@@ -26,7 +27,7 @@ public class ReservationTimeServiceTest {
 
     @BeforeEach
     void setup() {
-        ReservationTime nonIdReservationTime = ReservationTime.create("10:00");
+        ReservationTime nonIdReservationTime = ReservationTime.create(LocalTime.parse("10:00"));
         reservationTimeRepository.save(nonIdReservationTime);
     }
 
@@ -34,7 +35,7 @@ public class ReservationTimeServiceTest {
     @DisplayName("예약 시간 저장")
     void save_test() {
         //given
-        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest("11:00");
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(LocalTime.parse("11:00"));
 
         //when
         ReservationTimeResponse result = reservationTimeService.save(reservationTimeRequest);
@@ -48,7 +49,7 @@ public class ReservationTimeServiceTest {
     @DisplayName("예약 시간 저장 중복 예외")
     void save_startAt_duplicate_test() {
         //given
-        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest("10:00");
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(LocalTime.parse("10:00"));
 
         //when & then
         assertThatThrownBy(() -> reservationTimeService.save(reservationTimeRequest))

@@ -1,5 +1,6 @@
 package roomescape.reservation.repository;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,12 +17,13 @@ public class JdbcReservationRepository implements ReservationRepository {
     private static final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
         ReservationTime reservationTime = new ReservationTime(
                 resultSet.getLong("time_id"),
-                resultSet.getString("start_at"));
+                resultSet.getTime("start_at").toLocalTime()
+        );
 
         return new Reservation(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
-                resultSet.getString("date"),
+                resultSet.getDate("date").toLocalDate(),
                 reservationTime
         );
     };
@@ -56,7 +58,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate());
+            ps.setDate(2, Date.valueOf(reservation.getDate()));
             ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);

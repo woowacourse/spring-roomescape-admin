@@ -32,8 +32,4 @@ public class Reservation {
     public ReservationTime getTime() {
         return time;
     }
-
-    public static Reservation toEntity(Long id, ReservationRequest request) {
-        return new Reservation(id, request.name(), request.date(), request.time());
-    }
 }

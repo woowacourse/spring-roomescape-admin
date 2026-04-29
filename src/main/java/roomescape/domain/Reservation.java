@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import roomescape.dto.ReservationRequestDto;
 
 public class Reservation {
-    private final AtomicLong id;
+    private final Long id;
 
     private final String name;
 
@@ -14,21 +14,21 @@ public class Reservation {
 
     private final LocalTime time;
 
-    private Reservation(AtomicLong id, String name, LocalDate date, LocalTime time) {
+    private Reservation(Long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public Reservation create(AtomicLong id, ReservationRequestDto dto) {
+    public static Reservation create(Long id, ReservationRequestDto dto) {
         return new Reservation(id,
                 dto.name(),
                 dto.date(),
                 dto.time());
     }
 
-    public AtomicLong getId() {
+    public Long getId() {
         return id;
     }
 

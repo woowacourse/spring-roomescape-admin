@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.Reservation;
 
 public record ReservationResponseDto(
-        AtomicLong id,
+        Long id,
         String name,
         LocalDate date,
         LocalTime time

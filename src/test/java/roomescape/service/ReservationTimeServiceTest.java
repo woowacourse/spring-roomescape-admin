@@ -10,25 +10,21 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.service.stub.StubReservationTimeRepository;
 import roomescape.time.controller.dto.ReservationTimeRequest;
 import roomescape.time.controller.dto.ReservationTimeResponse;
 import roomescape.time.entity.ReservationTime;
 import roomescape.time.repository.ReservationTimeRepository;
 import roomescape.time.service.ReservationTimeService;
 
-@SpringBootTest
-@Transactional
+
 public class ReservationTimeServiceTest {
 
-    @Autowired
     private ReservationTimeService reservationTimeService;
-    @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
 
     @BeforeEach
     void setup() {
-        ReservationTime nonIdReservationTime = ReservationTime.createNew(LocalTime.parse("10:00"));
-        reservationTimeRepository.save(nonIdReservationTime);
+        reservationTimeService = new ReservationTimeService(new StubReservationTimeRepository());
     }
 
     @Test

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,26 +14,33 @@ import org.springframework.transaction.annotation.Transactional;
 import roomescape.reservation.controller.dto.ReservationRequest;
 import roomescape.reservation.controller.dto.ReservationResponse;
 import roomescape.reservation.service.ReservationService;
+import roomescape.service.stub.StubReservationRepository;
+import roomescape.service.stub.StubReservationTimeRepository;
+import roomescape.time.controller.dto.ReservationTimeRequest;
+import roomescape.time.controller.dto.ReservationTimeResponse;
 import roomescape.time.entity.ReservationTime;
 import roomescape.time.repository.ReservationTimeRepository;
+import roomescape.time.service.ReservationTimeService;
 
-@SpringBootTest
-@Transactional
 public class ReservationServiceTest {
 
-    @Autowired
     private ReservationService reservationService;
-    @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
+    private ReservationTimeService reservationTimeService;
+
+    @BeforeEach
+    void setup(){
+        reservationTimeService = new ReservationTimeService(new StubReservationTimeRepository());
+        reservationService = new ReservationService(new StubReservationRepository(),reservationTimeService);
+    }
 
     @Test
     @DisplayName("예약 저장")
     void save_test() {
         // given
-        ReservationTime nonIdReservationTime = ReservationTime.createNew(LocalTime.parse("10:00"));
-        ReservationTime reservationTime = reservationTimeRepository.save(nonIdReservationTime);
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(LocalTime.parse("10:00"));
+        ReservationTimeResponse reservationTimeResponse = reservationTimeService.save(reservationTimeRequest);
         ReservationRequest reservationRequest = new ReservationRequest("쿠다", LocalDate.parse("2023-08-06"),
-                reservationTime.getId());
+                reservationTimeResponse.id());
 
         // when
         ReservationResponse result = reservationService.save(reservationRequest);
@@ -55,11 +63,11 @@ public class ReservationServiceTest {
         // given
         LocalDate date = LocalDate.parse("2026-08-06");
 
-        ReservationTime nonIdReservationTime = ReservationTime.createNew(LocalTime.parse("10:00"));
-        ReservationTime reservationTime = reservationTimeRepository.save(nonIdReservationTime);
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(LocalTime.parse("10:00"));
+        ReservationTimeResponse reservationTimeResponse = reservationTimeService.save(reservationTimeRequest);
 
-        ReservationRequest reservationRequest = new ReservationRequest("쿠다", date, reservationTime.getId());
-        ReservationRequest newReservationRequest = new ReservationRequest("아루", date, reservationTime.getId());
+        ReservationRequest reservationRequest = new ReservationRequest("쿠다", date, reservationTimeResponse.id());
+        ReservationRequest newReservationRequest = new ReservationRequest("아루", date, reservationTimeResponse.id());
 
         // when
         reservationService.save(reservationRequest);

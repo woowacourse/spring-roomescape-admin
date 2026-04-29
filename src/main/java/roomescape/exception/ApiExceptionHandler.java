@@ -18,4 +18,9 @@ public class ApiExceptionHandler {
     public ResponseEntity<String> handleReservationNotFoundException(ReservationNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+
+    @ExceptionHandler(ReservationTimeNotFoundException.class)
+    public ResponseEntity<String> handleReservationTimeNotFoundException(ReservationTimeNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
 }

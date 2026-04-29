@@ -2,6 +2,7 @@ package roomescape;
 
 import static org.hamcrest.Matchers.is;
 
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,5 +74,26 @@ public class MissionStep3Test {
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    @Test
+    void 빈값으로_예약시간_추가시_400() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("time", null);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    void 존재하지_않는_예약시간_삭제시_404() {
+        RestAssured.given().log().all()
+                .when().delete("/times/0")
+                .then().log().all()
+                .statusCode(404);
     }
 }

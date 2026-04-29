@@ -3,6 +3,7 @@ package roomescape;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -56,7 +57,7 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
-    public Reservation findById(Long reservationId) {
+    public Optional<Reservation> findById(Long reservationId) {
         String sql = """
                 SELECT id, 
                        name, 
@@ -65,14 +66,14 @@ public class ReservationDao {
                 FROM reservation
                 WHERE id = ?""";
 
-        return jdbcTemplate.queryForObject(sql, ROW_MAPPER, reservationId);
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, reservationId));
     }
 
-    public void delete(Reservation foundReservation) {
+    public void delete(Reservation reservation) {
         String sql = """
                 DELETE FROM reservation
                 WHERE id = ?""";
 
-        jdbcTemplate.update(sql, foundReservation.getId());
+        jdbcTemplate.update(sql, reservation.getId());
     }
 }

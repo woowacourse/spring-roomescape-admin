@@ -35,7 +35,8 @@ public class RoomescapeController {
 
     @DeleteMapping("/{reservationId}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long reservationId) {
-        Reservation foundReservation = reservationDao.findById(reservationId);
+        Reservation foundReservation = reservationDao.findById(reservationId)
+                .orElseThrow(IllegalArgumentException::new);
         reservationDao.delete(foundReservation);
         return ResponseEntity.ok()
                 .build();

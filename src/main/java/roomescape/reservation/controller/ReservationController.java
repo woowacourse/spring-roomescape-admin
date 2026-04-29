@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.payload.ReservationRequest;
 import roomescape.reservation.payload.ReservationResponse;
+import roomescape.reservation.payload.ReservationWithTimeResponse;
 import roomescape.reservation.repository.ReservationRepository;
 
 @Controller
@@ -31,7 +32,7 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public ResponseEntity<?> getAllReservations() {
-        List<Reservation> reservations = reservationRepository.findAll();
+        List<ReservationWithTimeResponse> reservations = reservationRepository.findAll();
         return ResponseEntity.ok().body(reservations);
     }
 

@@ -2,6 +2,7 @@ package roomescape.reservation.repository;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.payload.ReservationRequest;
+import roomescape.reservation.payload.ReservationWithTimeResponse;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
@@ -37,14 +39,24 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> findAll() {
-        String sql = "select id, name, date, time_id from reservation";
+    public List<ReservationWithTimeResponse> findAll() {
+        String sql = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                INNER JOIN reservation_time as t
+                  ON r.time_id = t.id
+                """;
         return jdbcTemplate.query(sql, (rs, rowNum) ->
-                Reservation.of(
+                ReservationWithTimeResponse.of(
                         rs.getLong("id"),
                         rs.getString("name"),
                         rs.getObject("date", LocalDate.class),
-                        rs.getLong("time_id")
+                        rs.getObject("time_value", LocalTime.class)
                 )
         );
     }

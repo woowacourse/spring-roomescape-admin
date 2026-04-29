@@ -14,7 +14,7 @@ public class ReservationMemoryDao implements ReservationRepository{
 
     @Override
     public List<Reservation> selectReservations() {
-        return reservations;
+        return List.copyOf(reservations);
     }
 
     @Override

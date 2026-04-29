@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
+import roomescape.domain.Reservation;
 
 @Repository
 public class InMemoryReservationRepository implements ReservationRepository {

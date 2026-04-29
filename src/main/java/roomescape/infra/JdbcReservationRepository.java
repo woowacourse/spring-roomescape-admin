@@ -6,8 +6,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.domain.entity.Reservation;
+import roomescape.domain.entity.ReservationTime;
 import roomescape.repository.ReservationRepository;
 
 import java.time.LocalTime;

@@ -30,14 +30,9 @@ public class ReservationController {
     public ReservationResponse createReservation(@RequestBody ReservationRequest request) {
         return reservationDao.createReservation(request);
     }
-//
-//    @DeleteMapping("/reservations/{id}")
-//    public void deleteReservation(@PathVariable long id) {
-//        Reservation target = reservations.stream()
-//                .filter(reservation -> reservation.getId() == id)
-//                .findAny()
-//                .orElseThrow(RuntimeException::new);
-//
-//        reservations.remove(target);
-//    }
+
+    @DeleteMapping("/reservations/{id}")
+    public void deleteReservation(@PathVariable long id) {
+        reservationDao.deleteReservation(id);
+    }
 }

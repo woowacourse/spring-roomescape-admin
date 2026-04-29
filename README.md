@@ -18,15 +18,15 @@
 
 ### 예약 CRUD API
 - [x] 예약 조회
-  - 메서드/URL: `GET /reservations`
+  - 메서드/URL: `GET /step1/reservations`
   - 요청 본문: x
   - 응답: `[{id, name, date, time}, ...]`
 - [x] 예약 추가
-  - 메서드/URL: `POST /reservations`
+  - 메서드/URL: `POST /step1/reservations`
   - 요청 본문: `{name, date, time}`
   - 응답: `{id, name, date, time}`
 - [x] 예약 삭제
-  - 메서드/URL: `DELETE /reservations/{id}`
+  - 메서드/URL: `DELETE /step1/reservations/{id}`
   - 요청 본문: x
   - 응답: `200 OK`
 - [x] 예약_조회 테스트를 통과했는가?
@@ -53,3 +53,34 @@ spring.datasource.url=jdbc:h2:mem:database
 - [x] 데이터베이스_연동 테스트가 통과하는가?
 - [x] DB_조회_API_전환 테스트가 통과하는가?
 - [x] DB_추가_삭제_API_전환 테스트가 통과하는가?
+
+---
+
+## 🚀3단계: 시간 관리
+
+### 요구사항
+
+관리자가 매번 예약 시간을 텍스트로 직접 입력해 번거롭고 실수가 나는 상황이다.
+정해진 시간 슬롯을 관리자가 선택해서 쓸 수 있도록 시간 관리 기능을 추가하고 예약과 시간을 연결한다.
+
+### 시간 관리 기능 추가
+- [ ] reservation_time 테이블을 추가한다
+- [ ] 시간 추가
+  - 메서드/URL: `POST /step3/times`
+  - 요청 본문: `{startAt}`
+  - 응답: `{id, startAt}`
+- [ ] 시간 조회
+  - 메서드/URL: `GET /step3/times`
+  - 요청 본문: -
+  - 응답: `[{id, startAt}, ...]`
+- [ ] 시간 삭제
+  - 메서드/URL: `DELETE /step3/times/{id}`
+  - 요청 본문: -
+  - 응답: `200 OK`
+
+### 예약과 시간 연결
+- [ ] reservation 테이블의 `time` 컬럼을 `time_id`로 변경
+  - 기존 테스트 깨지는 걸 방지하기 위해 reservation_v2로 생성
+- [ ] `Reservation` 클래스의 `time` 필드를 `ReservationTime` 객체로 변경
+- [ ] 예약 추가 본문: `time` -> `timeId`로 변경
+- [ ] 예약 조회 응답: `time`을 객체로 변경

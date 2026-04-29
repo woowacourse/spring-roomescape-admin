@@ -1,8 +1,13 @@
 package roomescape.domain;
 
+import static com.fasterxml.jackson.annotation.JsonCreator.Mode.DELEGATING;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public record Name(String value) {
     private static final int MAX_LENGTH = 10;
 
+    @JsonCreator(mode = DELEGATING)
     public Name {
         if (value == null) {
             throw new IllegalArgumentException("[ERROR] 이름은 null일 수 없습니다.");

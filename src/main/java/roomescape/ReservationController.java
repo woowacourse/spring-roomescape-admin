@@ -12,30 +12,30 @@ import java.util.concurrent.atomic.AtomicLong;
 @Controller
 public class ReservationController {
 
-    private List<Reserver> reservers = new ArrayList<>();
+    private List<Reservation> reservations = new ArrayList<>();
     private AtomicLong index = new AtomicLong(1);
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reserver> create(@RequestBody Reserver reserver) {
-        Reserver newReserver = Reserver.toEntity(reserver, index.getAndIncrement());
-        reservers.add(newReserver);
-        return ResponseEntity.ok().body(newReserver);
+    public ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
+        Reservation newReservation = Reservation.toEntity(reservation, index.getAndIncrement());
+        reservations.add(newReservation);
+        return ResponseEntity.ok().body(newReservation);
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reserver>> read() {
-        return ResponseEntity.ok().body(reservers);
+    public ResponseEntity<List<Reservation>> read() {
+        return ResponseEntity.ok().body(reservations);
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<List<Reserver>> delete(@PathVariable Long id) {
-        Reserver reserver = reservers.stream()
+    public ResponseEntity<List<Reservation>> delete(@PathVariable Long id) {
+        Reservation reservation = reservations.stream()
                 .filter(it -> Objects.equals(it.getId(), id))
                 .findFirst()
                 .orElseThrow(RuntimeException::new);
 
-        reservers.remove(reserver);
+        reservations.remove(reservation);
 
-        return ResponseEntity.ok().body(reservers);
+        return ResponseEntity.ok().body(reservations);
     }
 }

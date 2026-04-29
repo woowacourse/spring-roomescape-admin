@@ -14,14 +14,14 @@ public class ReservationDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<Reserver> rowMapper = (resultSet, rowNum) -> {
-        Reserver reserver = new Reserver(
+    private final RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> {
+        Reservation reservation = new Reservation(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getDate("date").toLocalDate(),
                 resultSet.getTime("time").toLocalTime()
         );
-        return reserver;
+        return reservation;
     };
 
     public int count() {
@@ -29,12 +29,12 @@ public class ReservationDAO {
         return jdbcTemplate.queryForObject(sql, Integer.class);
     }
 
-    public Reserver findReserverById(Long id) {
+    public Reservation findReservationById(Long id) {
         String sql = "SELECT id, name, date, time FROM reservation WHERE id=?";
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
-    public List<Reserver> findAllReserver() {
+    public List<Reservation> findAllReservation() {
         String sql = "SELECT id, name, date, time FROM reservation";
         return jdbcTemplate.query(sql, rowMapper);
     }

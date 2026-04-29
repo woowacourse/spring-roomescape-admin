@@ -39,17 +39,17 @@ public class ReservationDAOTest {
     }
 
     @Test
-    void findReserverById() {
-        Reserver reserver = reservationDAO.findReserverById(1L);
+    void findReservationById() {
+        Reservation reservation = reservationDAO.findReservationById(1L);
 
-        assertThat(reserver).isNotNull();
-        assertThat(reserver.getName()).isEqualTo("user1");
+        assertThat(reservation).isNotNull();
+        assertThat(reservation.getName()).isEqualTo("user1");
     }
 
     @Test
-    void findAllReserver() {
-        List<Reserver> reservers = reservationDAO.findAllReserver();
+    void findAllReservation() {
+        List<Reservation> reservations = reservationDAO.findAllReservation();
 
-        assertThat(reservers).hasSize(3);
+        assertThat(reservations).hasSize(3);
     }
 }

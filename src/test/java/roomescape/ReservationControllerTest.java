@@ -14,44 +14,44 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ReservationControllerTest {
     private ReservationController controller;
-    private Reserver reserver;
-    private ResponseEntity<Reserver> createResponse;
+    private Reservation reservation;
+    private ResponseEntity<Reservation> createResponse;
 
     @BeforeEach
     void setUp() {
         controller = new ReservationController();
-        reserver = new Reserver("user1", LocalDate.of(2026, 4, 28),
+        reservation = new Reservation("user1", LocalDate.of(2026, 4, 28),
                 LocalTime.of(15, 0, 0));
-        createResponse = controller.create(reserver);
+        createResponse = controller.create(reservation);
     }
 
     @Test
     @DisplayName("예약자를 추가하면 200 코드를 반환한다.")
-    void return201Created_When_AddReserver() {
+    void return201Created_When_AddReservation() {
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
     @DisplayName("예약자를 조회하면 추가한 예약자의 정보를 반환한다.")
-    void returnReserverInfo_When_AddReserver() {
-        ResponseEntity<List<Reserver>> readResponse = controller.read();
-        List<Reserver> reservers = readResponse.getBody();
+    void returnReservationInfo_When_AddReservation() {
+        ResponseEntity<List<Reservation>> readResponse = controller.read();
+        List<Reservation> reservations = readResponse.getBody();
 
-        assertThat(reservers).isNotNull();
-        assertThat(reservers).hasSize(1);
-        assertThat(reservers.getFirst().getName()).isEqualTo("user1");
+        assertThat(reservations).isNotNull();
+        assertThat(reservations).hasSize(1);
+        assertThat(reservations.getFirst().getName()).isEqualTo("user1");
     }
 
     @Test
     @DisplayName("예약자를 삭제하면 200 코드를 반환한다.")
-    void return200OK_When_DeleteReserver() {
-        ResponseEntity<List<Reserver>> readResponse = controller.read();
-        List<Reserver> reservers = readResponse.getBody();
-        Long id = reservers.getFirst().getId();
-        int beforeSize = reservers.size();
+    void return200OK_When_DeleteReservation() {
+        ResponseEntity<List<Reservation>> readResponse = controller.read();
+        List<Reservation> reservations = readResponse.getBody();
+        Long id = reservations.getFirst().getId();
+        int beforeSize = reservations.size();
 
-        ResponseEntity<List<Reserver>> deleteResponse = controller.delete(id);
-        int afterSize = reservers.size();
+        ResponseEntity<List<Reservation>> deleteResponse = controller.delete(id);
+        int afterSize = reservations.size();
 
         assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(beforeSize).isEqualTo(afterSize + 1);

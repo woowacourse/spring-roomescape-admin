@@ -3,22 +3,22 @@ package roomescape;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class Reserver {
+public class Reservation {
     private Long id;
     private String name;
     private LocalDate date;
     private LocalTime time;
 
-    public Reserver() {
+    public Reservation() {
     }
 
-    public Reserver(String name, LocalDate date, LocalTime time) {
+    public Reservation(String name, LocalDate date, LocalTime time) {
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public Reserver(Long id, String name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -41,7 +41,7 @@ public class Reserver {
         return time;
     }
 
-    public static Reserver toEntity(Reserver reserver, Long id) {
-        return new Reserver(id, reserver.name, reserver.date, reserver.time);
+    public static Reservation toEntity(Reservation reservation, Long id) {
+        return new Reservation(id, reservation.name, reservation.date, reservation.time);
     }
 }

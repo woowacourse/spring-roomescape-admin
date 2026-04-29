@@ -1,4 +1,4 @@
-package roomescape.controller;
+package roomescape.reservation.controller;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.Reservation;
-import roomescape.dto.ReservationRequestDto;
-import roomescape.dto.ReservationResponseDto;
-import roomescape.repository.ReservationJdbcDao;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.dto.ReservationRequestDto;
+import roomescape.reservation.dto.ReservationResponseDto;
+import roomescape.reservation.repository.ReservationJdbcDao;
 
 @RestController
 @RequestMapping("/reservations")

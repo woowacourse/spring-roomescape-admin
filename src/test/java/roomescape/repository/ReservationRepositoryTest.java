@@ -6,20 +6,19 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
-@SpringBootTest
-@Transactional
+@JdbcTest
 class ReservationRepositoryTest {
 
     private static final long DEFAULT_ID = 1;
@@ -29,10 +28,14 @@ class ReservationRepositoryTest {
     private static final String DEFAULT_START_AT = "00:00";
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     private ReservationRepository reservationRepository;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    @BeforeEach
+    void setUp() {
+        reservationRepository = new ReservationRepository(jdbcTemplate);
+    }
 
     @Nested
     class 예약을_저장한다 {

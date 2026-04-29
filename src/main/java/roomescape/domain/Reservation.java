@@ -1,38 +1,35 @@
 package roomescape.domain;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public class Reservation {
 
-    private final Long reservationId;
-    private final String customerName;
-    private ReservationTime reservationTime;
+    private final Long id;
+    private final String name;
+    private final LocalDate date;
+    private final LocalTime time;
 
-    public Reservation(Long reservationId, String customerName, ReservationTime reservationTime) {
-        this.reservationId = reservationId;
-        this.customerName = customerName;
-        this.reservationTime = reservationTime;
+    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+        this.id = id;
+        this.name = name;
+        this.date = date;
+        this.time = time;
     }
 
-    public Reservation(String customerName, ReservationTime reservationTime) {
-        this(null, customerName, reservationTime);
+    public Long getId() {
+        return id;
     }
 
-    public boolean isOverlapping(ReservationTime otherReservationTime) {
-        return reservationTime.isOverlapping(otherReservationTime);
+    public String getName() {
+        return name;
     }
 
-    public boolean isSameId(Long reservationId) {
-        return this.reservationId != null && this.reservationId.equals(reservationId);
+    public LocalDate getDate() {
+        return date;
     }
 
-    public Long getReservationId() {
-        return reservationId;
-    }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public ReservationTime getReservationTime() {
-        return reservationTime;
+    public LocalTime getTime() {
+        return time;
     }
 }

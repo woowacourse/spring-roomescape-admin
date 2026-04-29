@@ -1,7 +1,8 @@
 package roomescape.controller;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,9 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.data.ReservationRepository;
 import roomescape.domain.Reservation;
-import roomescape.domain.Roomescape;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
@@ -20,28 +19,22 @@ import roomescape.dto.ReservationResponse;
 @RequestMapping("/reservations")
 public class RoomescapeApiController {
 
-    private final ReservationRepository reservationRepository;
-
-    public RoomescapeApiController(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
-    }
+    private final List<Reservation> reservations = new ArrayList<>();
+    private final AtomicLong index = new AtomicLong(1);
 
     @PostMapping
     public ResponseEntity<ReservationResponse> reserve(@RequestBody ReservationRequest reservationRequest) {
-        LocalDateTime reservationTime = LocalDateTime.of(reservationRequest.date(), reservationRequest.time());
-
-        Roomescape roomescape = new Roomescape(reservationRepository.findAll());
-        Reservation reservation = roomescape.reserve(reservationRequest.name(), reservationTime);
-        Reservation savedReservation = reservationRepository.save(reservation);
-
-        return ResponseEntity.ok(ReservationResponse.from(savedReservation));
+        Reservation reservation = new Reservation(index.getAndIncrement(),
+                reservationRequest.name(),
+                reservationRequest.date(),
+                reservationRequest.time());
+        reservations.add(reservation);
+        return ResponseEntity.ok(ReservationResponse.from(reservation));
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getAllReservations() {
-        List<ReservationResponse> response = reservationRepository.findAll()
-                .getSchedule()
-                .stream()
+        List<ReservationResponse> response = reservations.stream()
                 .map(ReservationResponse::from)
                 .toList();
         return ResponseEntity.ok(response);
@@ -49,9 +42,10 @@ public class RoomescapeApiController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> cancelReservation(@PathVariable Long id) {
-        Roomescape roomescape = new Roomescape(reservationRepository.findAll());
-        roomescape.cancelReservation(id);
-        reservationRepository.saveAll(roomescape.getSchedule());
+        reservations.stream()
+                .filter(reservation -> reservation.getId().equals(id))
+                .findFirst()
+                .ifPresent(reservations::remove);
         return ResponseEntity.ok().build();
     }
 }

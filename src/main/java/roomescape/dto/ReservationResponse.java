@@ -8,9 +8,10 @@ public record ReservationResponse(Long id, String name, LocalDate date, LocalTim
 
     public static ReservationResponse from(Reservation reservation) {
         return new ReservationResponse(
-                reservation.getReservationId(),
-                reservation.getCustomerName(),
-                reservation.getReservationTime().startTime().toLocalDate(),
-                reservation.getReservationTime().startTime().toLocalTime());
+                reservation.getId(),
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
+        );
     }
 }

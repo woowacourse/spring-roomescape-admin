@@ -1,35 +1,83 @@
 package roomescape.repository;
 
+import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
+import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
 @Repository
+@RequiredArgsConstructor
 public class ReservationRepository {
-    private final ConcurrentHashMap<Long, Reservation> reservationMap = new ConcurrentHashMap<>();
-    private final AtomicLong index = new AtomicLong(1);
+
+    private final JdbcTemplate jdbcTemplate;
+
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> new Reservation(
+            rs.getLong("id"),
+            rs.getString("name"),
+            LocalDateTime.of(LocalDate.parse(rs.getString("date")), LocalTime.parse(rs.getString("time")))
+    );
 
     public Reservation findById(long id) {
-        return reservationMap.get(id);
+        return jdbcTemplate.queryForObject("""
+                        SELECT id, name, date, time 
+                        FROM reservation 
+                        WHERE id = ?
+                   """,
+                reservationRowMapper,
+                id);
     }
+
     public long save(Reservation reservation) {
-        if (reservation.getId() == null || !reservationMap.containsKey(reservation.getId())) {
-            final long newId = index.getAndIncrement();
-            reservationMap.put(newId, new Reservation(newId, reservation.getReservationName(), reservation.getReservationDateTime()));
-            return newId;
+        final LocalDateTime reservationDateTime = reservation.getReservationDateTime();
+        final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+                    final PreparedStatement ps = con.prepareStatement("""
+                           MERGE INTO reservation r
+                           USING (VALUES (?, ?, ?, ?)) t(id, name, date, time) ON r.id = t.id
+                           WHEN MATCHED THEN
+                               UPDATE SET
+                                   name = t.name,
+                                   date = t.date,
+                                   time = t.time
+                           WHEN NOT MATCHED THEN
+                               INSERT (name, date, time)
+                               VALUES (t.name, t.date, t.time)""", new String[]{"id"});
+                    ps.setObject(1, reservation.getId());
+                    ps.setString(2, reservation.getReservationName());
+                    ps.setString(3, reservationDateTime.toLocalDate().format(dateFormatter));
+                    ps.setString(4, reservationDateTime.toLocalTime().format(timeFormatter));
+                    return ps;
+                },
+                keyHolder);
+        if (keyHolder.getKey() != null) {
+            return keyHolder.getKey().longValue();
         }
 
-        reservationMap.put(reservation.getId(), reservation);
         return reservation.getId();
     }
 
     public void deleteById(long id) {
-        reservationMap.remove(id);
+        jdbcTemplate.update("""
+                DELETE FROM reservation
+                WHERE id = ? """,
+                id);
     }
 
     public List<Reservation> findAll() {
-        return reservationMap.values().stream().toList();
+        return jdbcTemplate.query("""
+                        SELECT id, name, date, time 
+                        FROM reservation
+                   """,
+                reservationRowMapper);
     }
 }

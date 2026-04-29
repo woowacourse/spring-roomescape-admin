@@ -2,7 +2,6 @@ package roomescape.domain;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.concurrent.atomic.AtomicLong;
 import roomescape.dto.ReservationRequestDto;
 
 public class Reservation {
@@ -21,8 +20,8 @@ public class Reservation {
         this.time = time;
     }
 
-    public static Reservation create(Long id, ReservationRequestDto dto) {
-        return new Reservation(id,
+    public static Reservation create(ReservationRequestDto dto) {
+        return new Reservation(null,
                 dto.name(),
                 dto.date(),
                 dto.time());

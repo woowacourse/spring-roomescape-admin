@@ -2,7 +2,6 @@ package roomescape.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.Reservation;
 
 public record ReservationResponseDto(

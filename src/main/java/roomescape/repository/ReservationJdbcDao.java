@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
+@Repository
 public class ReservationJdbcDao {
 
     private JdbcTemplate jdbcTemplate;

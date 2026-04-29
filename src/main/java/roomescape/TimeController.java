@@ -22,7 +22,7 @@ public class TimeController {
     @PostMapping
     public ResponseEntity<ReservationTime> create(@RequestBody TimeCreateDto timeCreateDto) {
         String time = timeCreateDto.getStartAt();
-        ReservationTime created = timeRepository.create(time);
+        ReservationTime created = timeRepository.save(time);
 
         return ResponseEntity.ok(created);
     }

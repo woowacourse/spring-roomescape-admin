@@ -47,11 +47,20 @@ class JdbcTemplateReservationRepositoryTest {
 
     @Test
     @DisplayName("저장된 모든 Reservation 데이터를 조회한다.")
-    public void findAll() throws Exception {
+    public void findAll() {
         // given
-        repository.save(new Reservation("kim", "2023-08-05", "15:40"));
-        repository.save(new Reservation("lee", "2023-08-06", "16:10"));
-        repository.save(new Reservation("park", "2023-08-07", "17:30"));
+        jdbcTemplate.update(
+                "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
+                "kim", "2023-08-05", "15:40"
+        );
+        jdbcTemplate.update(
+                "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
+                "lee", "2023-08-06", "16:10"
+        );
+        jdbcTemplate.update(
+                "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
+                "park", "2023-08-07", "17:30"
+        );
 
         // when
         List<Reservation> reservations = repository.findAll();
@@ -70,7 +79,12 @@ class JdbcTemplateReservationRepositoryTest {
         repository.delete(saved.getId());
 
         // then
-        List<Reservation> reservations = repository.findAll();
-        assertThat(reservations).isEmpty();
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM reservation WHERE id = ?",
+                Integer.class,
+                saved.getId()
+        );
+
+        assertThat(count).isZero();
     }
 }

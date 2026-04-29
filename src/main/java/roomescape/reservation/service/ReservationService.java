@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationCreateDto;
 import roomescape.reservation.dto.ReservationDto;
+import roomescape.reservation.exception.ReservationException;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservationtime.domain.ReservationTime;
 import roomescape.reservationtime.service.ReservationTimeService;
@@ -27,6 +28,7 @@ public class ReservationService {
 
     public ReservationDto saveReservation(ReservationCreateDto request) {
         ReservationTime reservationTime = reservationTimeService.findById(request.timeId());
+        validateDuplicateReservation(request);
         Reservation reservation = request.toEntity(reservationTime);
 
         Long saveId = reservationRepository.save(reservation);
@@ -42,5 +44,12 @@ public class ReservationService {
 
     public void deleteReservation(Long id) {
         reservationRepository.delete(id);
+    }
+
+    private void validateDuplicateReservation(ReservationCreateDto request) {
+        Boolean existsByDateAndTime = reservationRepository.existsByDateAndTime(request.date(), request.timeId());
+        if (existsByDateAndTime) {
+            throw new ReservationException("[ERROR] 이미 해당 날짜와 시간에 예약이 존재합니다.");
+        }
     }
 }

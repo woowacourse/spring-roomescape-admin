@@ -64,4 +64,15 @@ public class JdbcReservationRepository implements ReservationRepository {
     public void delete(Long id) {
         jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
     }
+
+    @Override
+    public Boolean existsByDateAndTime(LocalDate date, Long timeId) {
+        String formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        return jdbcTemplate.queryForObject(
+                "SELECT EXISTS(SELECT 1 FROM reservation WHERE date = ? AND time_id = ?)",
+                Boolean.class,
+                formattedDate,
+                timeId);
+    }
 }

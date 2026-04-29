@@ -1,4 +1,4 @@
-package roomescape.time.presentation.dto;
+package roomescape.time.application.dto;
 
 import java.time.LocalTime;
 import roomescape.time.repository.TimeEntity;

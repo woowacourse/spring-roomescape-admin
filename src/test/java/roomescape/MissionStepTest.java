@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalTime;
@@ -17,7 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.reservation.presentation.dto.Reservation;
+import roomescape.reservation.application.dto.Reservation;
+import roomescape.reservation.presentation.ReservationController;
 import roomescape.time.repository.TimeEntity;
 import roomescape.time.repository.TimesRepository;
 
@@ -29,6 +31,8 @@ class MissionStepTest {
     TimesRepository timesRepository;
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private ReservationController reservationController;
 
     @Test
     void 예약_조회() {
@@ -179,5 +183,19 @@ class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", Is.is(1));
+    }
+
+    @Test
+    void 계층화_리팩터링() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : reservationController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
     }
 }

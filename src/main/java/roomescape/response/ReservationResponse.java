@@ -3,7 +3,6 @@ package roomescape.response;
 import roomescape.domain.Reservation;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 public record ReservationResponse(long id, String name, LocalDate date, ReservationTimeResponse time) {

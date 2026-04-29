@@ -14,20 +14,20 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class HierarchyTest {
-     @Autowired
-     private ReservationController reservationController;
+    @Autowired
+    private ReservationController reservationController;
 
-     @Test
-     void 계층화_리팩터링() {
-         boolean isJdbcTemplateInjected = false;
+    @Test
+    void 계층화_리팩터링() {
+        boolean isJdbcTemplateInjected = false;
 
-         for (Field field : reservationController.getClass().getDeclaredFields()) {
-             if (field.getType().equals(JdbcTemplate.class)) {
-                 isJdbcTemplateInjected = true;
-                 break;
-             }
-         }
+        for (Field field : reservationController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
 
-         assertThat(isJdbcTemplateInjected).isFalse();
-     }
+        assertThat(isJdbcTemplateInjected).isFalse();
+    }
 }

@@ -6,7 +6,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.response.ReservationTimeResponse;
 
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
@@ -17,7 +16,7 @@ import java.util.Objects;
 public class JdbcTemplateReservationRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public JdbcTemplateReservationRepository(JdbcTemplate jdbcTemplate, ReservationTimeRepository reservationTimeRepository) {
+    public JdbcTemplateReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -54,10 +53,6 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
                     return preparedStatement;
                 },
                 keyHolder);
-        ReservationTimeResponse reservationTimeResponse = jdbcTemplate.queryForObject(
-                "SELECT id, start_at FROM reservation_time WHERE id = ?",
-                (rs, row) -> new ReservationTimeResponse(rs.getLong("id"), rs.getTime("start_at").toLocalTime()),
-                reservation.timeId());
         return new Reservation(
                 Objects.requireNonNull(keyHolder.getKey()).longValue(),
                 reservation.name(),

@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.api;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;

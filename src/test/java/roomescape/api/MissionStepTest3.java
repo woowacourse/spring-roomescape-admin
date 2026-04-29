@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.api;
 
 import static org.hamcrest.Matchers.is;
 

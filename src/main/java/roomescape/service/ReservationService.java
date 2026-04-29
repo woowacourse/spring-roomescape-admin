@@ -17,7 +17,7 @@ public class ReservationService {
         this.repository = repository;
     }
 
-    public List<Reservation> getReservations() {
+    public List<Reservation> getAll() {
         return repository.getAll();
     }
 
@@ -32,8 +32,9 @@ public class ReservationService {
             time);
 
         Long savedId = repository.save(reservation);
+        reservation.setId(savedId);
 
-        return reservation.withId(savedId);
+        return reservation;
     }
 
     public void deleteById(long reservationId) {

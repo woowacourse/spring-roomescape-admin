@@ -1,9 +1,10 @@
-package roomescape.domain;
+package roomescape.reservation.domain;
 
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import roomescape.reservationtime.domain.ReservationTime;
 
 @Getter
 @Builder

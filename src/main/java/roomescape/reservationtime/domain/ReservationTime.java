@@ -1,4 +1,4 @@
-package roomescape.domain;
+package roomescape.reservationtime.domain;
 
 import java.time.LocalTime;
 import lombok.AllArgsConstructor;

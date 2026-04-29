@@ -37,10 +37,6 @@ public class Reservation {
         return LocalTime.parse(time);
     }
 
-    public boolean isEqualId(Long other) {
-        return other == this.id;
-    }
-
     public Long getId() {
         return id;
     }

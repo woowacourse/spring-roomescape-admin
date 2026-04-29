@@ -21,7 +21,7 @@ public class ReservationTimeController {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    @PostMapping()
+    @PostMapping()     //TODO 시간 중복 생성 방지, 잘못된 시간 형식 방지
     public ResponseEntity<ReservationTime> createReservation(@RequestBody CreateReservationTimeRequest request) {
         ReservationTime reservationTime = ReservationTime.createWithoutId(request.startAt());
         ReservationTime savedReservationTime = reservationTimeDao.save(reservationTime);

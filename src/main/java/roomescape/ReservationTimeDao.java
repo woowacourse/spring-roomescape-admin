@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -54,8 +55,11 @@ public class ReservationTimeDao {
                        start_at
                 FROM reservation_time
                 WHERE id = ?""";
-
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, reservationTimeId));
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(sql, ROW_MAPPER, reservationTimeId));
+        } catch (EmptyResultDataAccessException emptyResultDataAccessException) {
+            return Optional.empty();
+        }
     }
 
     public void delete(ReservationTime reservationTime) {

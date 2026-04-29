@@ -24,6 +24,18 @@ public class Reservation {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public LocalTime getTime() {
+        return time;
+    }
+
     @Override
     public String toString() {
         return "Reservation{" +

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.exception.InUseTimeException;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.command.ReservationCreateCommand;
@@ -65,7 +66,7 @@ public class ReservationService {
     @Transactional
     public void deleteTime(long timeId) {
         if (reservationRepository.existsTimeId(timeId)) {
-            throw new IllegalStateException("사용 중인 예약이 없는 시간만 제거할 수 있습니다.");
+            throw new InUseTimeException("사용 중인 예약이 없는 시간만 제거할 수 있습니다.");
         }
 
         timeRepository.delete(timeId);

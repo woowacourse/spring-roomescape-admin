@@ -85,3 +85,6 @@
 - 테스트 하는 과정에서 JdbcTemplate이라는 것을 어떻게
 - jdbc:h2:mem:test;DB_CLOSE_DELAY=-1 여기서 DB_CLOSE_DELAY=-1을 어떻게 처리하는가?
 - keyholder는 어떻게 동작하는걸까?
+- @JsonValue는 뭐지?
+- @JasonCreator는 뭐지?
+- DriverManagerDataSource 파보기!

@@ -26,6 +26,14 @@ public class ReservationController {
         return ResponseEntity.ok().body(reservations);
     }
 
+    @PostMapping("/reservations")
+    @ResponseBody
+    public ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
+        Reservation newReservation = Reservation.toEntity(reservation, index.getAndIncrement());
+        reservations.add(newReservation);
+        return ResponseEntity.ok().body(newReservation);
+    }
+
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Reservation> delete(@PathVariable Long id) {
         Reservation reservation = reservations.stream()

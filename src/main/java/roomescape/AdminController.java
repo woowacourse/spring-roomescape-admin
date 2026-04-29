@@ -2,7 +2,6 @@ package roomescape;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,7 +23,7 @@ public class AdminController {
             resultSet.getLong("id"),
             resultSet.getString("name"),
             LocalDate.parse(resultSet.getString("date")),
-            LocalTime.parse(resultSet.getString("time")));
+            new ReservationTime(resultSet.getString("time")));
 
     public AdminController(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -57,12 +56,7 @@ public class AdminController {
         String sql = "SELECT id, name, date, time FROM reservation";
         List<Reservation> reservations = jdbcTemplate.query(
                 sql,
-                (resultSet, rowNumber) -> new Reservation(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        LocalDate.parse(resultSet.getString("date")),
-                        LocalTime.parse(resultSet.getString("time"))
-                )
+                reservationRowMapper
         );
 
         return ResponseEntity.ok(reservations);
@@ -91,6 +85,28 @@ public class AdminController {
         );
 
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/times")
+    public ResponseEntity<ReservationTime> createTime(@RequestBody ReservationTime reservationTime) {
+        String sql = "INSERT INTO reservation_time(start_at) VALUES (?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+                    PreparedStatement preparedStatement = connection.prepareStatement(
+                            sql,
+                            new String[]{"id"}
+                    );
+                    preparedStatement.setString(1, reservationTime.getStartAt());
+                    return preparedStatement;
+                }, keyHolder
+        );
+
+        long id = keyHolder.getKey().longValue();
+        ReservationTime newReservationTime = ReservationTime.toEntity(reservationTime, id);
+
+        return ResponseEntity.ok(newReservationTime);
     }
 
 }

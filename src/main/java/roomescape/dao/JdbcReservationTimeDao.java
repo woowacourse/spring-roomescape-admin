@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-public class JdbcReservationTimeDao {
+public class JdbcReservationTimeDao implements ReservationTimeDao{
 
     private final JdbcTemplate jdbcTemplate;
 

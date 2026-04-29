@@ -11,50 +11,33 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationsResponse;
-import roomescape.model.Reservation;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+    private final ReservationService service;
+
+    public ReservationController(ReservationService service) {
+        this.service = service;
+    }
 
     @PostMapping()
     public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest request) {
-        Reservation newReservation = new Reservation(
-                index.getAndIncrement(),
-                request.getName(),
-                request.getDate(),
-                request.getTime()
-        );
-        reservations.add(newReservation);
-
-        return ResponseEntity.ok(ReservationResponse.of(newReservation));
+        ReservationResponse response = service.create(request);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping()
     public ResponseEntity<ReservationsResponse> read() {
-        List<ReservationResponse> responses = reservations.stream()
-                .map(ReservationResponse::of)
-                .toList();
-        return ResponseEntity.ok(ReservationsResponse.from(responses));
+        ReservationsResponse responses = service.findAll();
+        return ResponseEntity.ok(responses);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        for (int i = 0; i < reservations.size(); i++) {
-            Reservation reservation = reservations.get(i);
-
-            if (reservation.getId() == id) {
-                reservations.remove(i);
-                break;
-            }
-        }
+        int deleteCount = service.delete(id);
         return ResponseEntity.ok().build();
     }
 }

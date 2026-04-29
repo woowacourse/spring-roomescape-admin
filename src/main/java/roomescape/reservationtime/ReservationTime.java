@@ -1,4 +1,4 @@
-package roomescape.model;
+package roomescape.reservationtime;
 
 import java.time.LocalTime;
 

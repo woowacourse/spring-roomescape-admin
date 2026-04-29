@@ -1,10 +1,11 @@
-package roomescape.dao;
+package roomescape.reservation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Properties;
@@ -14,13 +15,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import roomescape.exception.ApiException;
 import roomescape.exception.ErrorCode;
-import roomescape.model.ReservationTime;
+import roomescape.reservationtime.ReservationTime;
 
-class ReservationTimeDaoTest {
-
+class ReservationDaoTest {
     private static final String TEST_PROPERTIES = "application-test.properties";
 
-    private ReservationTimeDao reservationTimeDao;
+    private ReservationDao reservationDao;
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
@@ -34,7 +34,7 @@ class ReservationTimeDaoTest {
         dataSource.setPassword(properties.getProperty("spring.datasource.password"));
 
         jdbcTemplate = new JdbcTemplate(dataSource);
-        reservationTimeDao = new ReservationTimeDao(jdbcTemplate);
+        reservationDao = new ReservationDao(jdbcTemplate);
 
         jdbcTemplate.execute("RUNSCRIPT FROM 'classpath:reset-test.sql'");
     }
@@ -53,61 +53,57 @@ class ReservationTimeDaoTest {
     }
 
     @Test
-    void 예약_시간을_저장할_수_있다() {
-        LocalTime time = LocalTime.of(15, 40);
-
-        ReservationTime saved = reservationTimeDao.save(time);
+    void 예약을_저장할_수_있다() {
+        ReservationTime reservationTime = createReservationTime(LocalTime.of(15, 40));
+        Reservation saved = reservationDao.save("브라운", LocalDate.of(2023, 8, 5), reservationTime);
 
         assertThat(saved.id()).isNotNull();
-        assertThat(saved.startAt()).isEqualTo(time);
+        assertThat(saved.name()).isEqualTo("브라운");
+        assertThat(saved.date()).isEqualTo(LocalDate.of(2023, 8, 5));
+        assertThat(saved.time().startAt()).isEqualTo(LocalTime.of(15, 40));
     }
 
     @Test
-    void 전체_예약_시간을_조회할_수_있다() {
-        reservationTimeDao.save(LocalTime.of(15, 40));
-        reservationTimeDao.save(LocalTime.of(16, 0));
+    void 저장된_예약을_전체_조회할_수_있다() {
+        ReservationTime firstTime = createReservationTime(LocalTime.of(15, 40));
+        ReservationTime secondTime = createReservationTime(LocalTime.of(16, 0));
 
-        List<ReservationTime> times = reservationTimeDao.findAll();
+        reservationDao.save("브라운", LocalDate.of(2023, 8, 5), firstTime);
+        reservationDao.save("코니", LocalDate.of(2023, 8, 6), secondTime);
 
-        assertThat(times).hasSize(2);
-        assertThat(times)
-                .extracting(ReservationTime::startAt)
-                .containsExactly(LocalTime.of(15, 40), LocalTime.of(16, 0));
+        List<Reservation> reservations = reservationDao.findAll();
+
+        assertThat(reservations).hasSize(2);
+        assertThat(reservations)
+                .extracting(Reservation::name)
+                .containsExactly("브라운", "코니");
     }
 
     @Test
-    void 단일_예약_시간을_조회할_수_있다() {
-        LocalTime time = LocalTime.of(15, 40);
-        ReservationTime saved = reservationTimeDao.save(time);
+    void 존재하는_ID로_예약을_삭제할_수_있다() {
+        ReservationTime reservationTime = createReservationTime(LocalTime.of(15, 40));
+        Reservation saved = reservationDao.save("브라운", LocalDate.of(2023, 8, 5), reservationTime);
 
-        ReservationTime found = reservationTimeDao.findById(saved.id());
+        reservationDao.delete(saved.id());
 
-        assertThat(found.id()).isEqualTo(saved.id());
-        assertThat(found.startAt()).isEqualTo(time);
-    }
-
-    @Test
-    void 존재하지_않는_ID로_조회하면_예외가_발생한다() {
-        assertThatThrownBy(() -> reservationTimeDao.findById(999L))
-                .isInstanceOf(ApiException.class)
-                .extracting(exception -> ((ApiException) exception).getErrorCode())
-                .isEqualTo(ErrorCode.RESERVATION_TIME_NOT_FOUND);
-    }
-
-    @Test
-    void 존재하는_ID로_예약_시간을_삭제할_수_있다() {
-        ReservationTime saved = reservationTimeDao.save(LocalTime.of(15, 40));
-
-        reservationTimeDao.delete(saved.id());
-
-        assertThat(reservationTimeDao.findAll()).isEmpty();
+        assertThat(reservationDao.findAll()).isEmpty();
     }
 
     @Test
     void 존재하지_않는_ID로_삭제하면_예외가_발생한다() {
-        assertThatThrownBy(() -> reservationTimeDao.delete(999L))
+        assertThatThrownBy(() -> reservationDao.delete(1L))
                 .isInstanceOf(ApiException.class)
                 .extracting(exception -> ((ApiException) exception).getErrorCode())
-                .isEqualTo(ErrorCode.RESERVATION_TIME_NOT_FOUND);
+                .isEqualTo(ErrorCode.RESERVATION_NOT_FOUND);
+    }
+
+    private ReservationTime createReservationTime(LocalTime startAt) {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", startAt);
+        Long id = jdbcTemplate.queryForObject(
+                "SELECT id FROM reservation_time WHERE start_at = ? ORDER BY id DESC LIMIT 1",
+                Long.class,
+                startAt
+        );
+        return new ReservationTime(id, startAt);
     }
 }

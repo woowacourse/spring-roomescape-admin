@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.reservation;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
@@ -12,11 +12,10 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.exception.ApiException;
 import roomescape.exception.ErrorCode;
-import roomescape.model.Reservation;
-import roomescape.model.ReservationTime;
+import roomescape.reservationtime.ReservationTime;
 
 @Repository
-public class ReservationDao {
+class ReservationDao {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Reservation> rowMapper = (rs, rowNum) -> new Reservation(
             rs.getLong("reservation_id"),
@@ -26,11 +25,11 @@ public class ReservationDao {
     );
 
 
-    public ReservationDao(JdbcTemplate jdbcTemplate) {
+    ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Reservation save(String name, LocalDate date, ReservationTime time) {
+    Reservation save(String name, LocalDate date, ReservationTime time) {
         String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -47,7 +46,7 @@ public class ReservationDao {
         return new Reservation(generatedId, name, date, time);
     }
 
-    public List<Reservation> findAll() {
+    List<Reservation> findAll() {
         String sql = "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value " +
                 "FROM reservation AS r " +
                 "INNER JOIN reservation_time AS t ON r.time_id = t.id";
@@ -55,7 +54,7 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public void delete(Long id) {
+    void delete(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         int affectedRows = jdbcTemplate.update(sql, id);
 

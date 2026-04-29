@@ -1,28 +1,25 @@
-package roomescape.service;
+package roomescape.reservation;
 
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.model.Reservation;
-import roomescape.model.ReservationTime;
-import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.reservationtime.ReservationTime;
+import roomescape.reservationtime.ReservationTimeService;
 
 @Service
 public class ReservationService {
-
     private final ReservationRepository reservationRepository;
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationService(ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
+    ReservationService(ReservationRepository reservationRepository, ReservationTimeService reservationTimeService) {
         this.reservationRepository = reservationRepository;
-        this.reservationTimeRepository = reservationTimeRepository;
+        this.reservationTimeService = reservationTimeService;
     }
 
     @Transactional
     public Reservation createReservation(String name, LocalDate date, Long timeId) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(timeId);
+        ReservationTime reservationTime = reservationTimeService.findById(timeId);
         return reservationRepository.save(name, date, reservationTime);
     }
 

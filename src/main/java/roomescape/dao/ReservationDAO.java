@@ -35,7 +35,7 @@ public class ReservationDAO {
                 });
     }
 
-    public ReservationResponse insert(Reservation reservation) {
+    public ReservationResponse save(Reservation reservation) {
         MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
                 .addValue("date", reservation.getDate())

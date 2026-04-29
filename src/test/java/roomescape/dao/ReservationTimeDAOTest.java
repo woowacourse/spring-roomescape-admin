@@ -43,6 +43,25 @@ class ReservationTimeDAOTest {
     }
 
     @Test
+    void 시간_추가_API() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
+//        RestAssured.given().log().all()
+//                .when().get("/times")
+//                .then().log().all()
+//                .statusCode(200)
+//                .body("size()", is(1));
+    }
+
+    @Test
     void 시간_관리_API() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");

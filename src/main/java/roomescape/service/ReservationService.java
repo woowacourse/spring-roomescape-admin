@@ -27,7 +27,7 @@ public class ReservationService {
                 request.time()
         );
 
-        return reservationDAO.insert(reservation);
+        return reservationDAO.save(reservation);
     }
 
     public int delete(Long id) {

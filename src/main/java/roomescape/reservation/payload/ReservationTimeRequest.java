@@ -1,4 +1,4 @@
-package roomescape.reservation;
+package roomescape.reservation.payload;
 
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalTime;

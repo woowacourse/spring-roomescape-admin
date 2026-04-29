@@ -1,6 +1,7 @@
-package roomescape.reservation;
+package roomescape.reservation.payload;
 
 import java.time.LocalTime;
+import roomescape.reservation.entity.ReservationTime;
 
 public record ReservationTimeResponse(
         Long id,

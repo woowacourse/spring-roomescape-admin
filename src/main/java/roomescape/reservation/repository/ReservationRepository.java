@@ -1,6 +1,8 @@
-package roomescape.reservation;
+package roomescape.reservation.repository;
 
 import java.util.List;
+import roomescape.reservation.entity.Reservation;
+import roomescape.reservation.payload.ReservationRequest;
 
 public interface ReservationRepository {
 

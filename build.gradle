@@ -26,6 +26,9 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.46")
     testCompileOnly("org.projectlombok:lombok:1.18.46")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.46")
+
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    runtimeOnly 'com.h2database:h2'
 }
 
 test {

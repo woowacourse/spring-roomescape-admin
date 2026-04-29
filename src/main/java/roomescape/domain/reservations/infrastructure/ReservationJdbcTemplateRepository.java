@@ -1,8 +1,13 @@
 package roomescape.domain.reservations.infrastructure;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import roomescape.domain.reservations.entity.Reservation;
 
 public class ReservationJdbcTemplateRepository implements ReservationRepository {
@@ -14,22 +19,67 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
     }
 
     @Override
-    public int save(Reservation reservation) {
-        return 0;
+    public Reservation save(Reservation reservation) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS
+            );
+
+            ps.setString(1, reservation.getName());
+            ps.setString(2, reservation.getDate().toString());
+            ps.setString(3, reservation.getTime().toString());
+
+            return ps;
+        }, keyHolder);
+
+        Number key = keyHolder.getKey();
+        if (key == null) {
+            throw new IllegalStateException("ID 생성 실패");
+        }
+
+        Long id = key.longValue();
+
+        return Reservation.of(
+                id,
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
+        );
     }
 
     @Override
-    public Reservation findById(Long id) {
-        return null;
+    public Optional<Reservation> findById(Long id) {
+        String sql = "SELECT * FROM reservation WHERE id = ?";
+        Reservation reservation = jdbcTemplate.queryForObject(
+                sql,
+                (rs, rowNum) -> Reservation.of(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getDate("date").toLocalDate(),
+                        rs.getTime("time").toLocalTime()
+                ),
+                id
+        );
+        return Optional.ofNullable(reservation);
     }
 
     @Override
     public List<Reservation> findAll() {
-        return List.of();
+        String sql = "SELECT * FROM reservation";
+        return jdbcTemplate.query(sql,
+                (rs, rowNum) -> Reservation.of(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getDate("date").toLocalDate(),
+                        rs.getTime("time").toLocalTime()
+                ));
     }
 
     @Override
     public void deleteById(Long id) {
-
+        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
     }
 }

@@ -4,15 +4,19 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import roomescape.reservationtime.domain.ReservationTime;
+import roomescape.reservationtime.dto.ReservationTimeCreateDto;
+import roomescape.reservationtime.dto.ReservationTimeDto;
 import roomescape.reservationtime.repository.ReservationTimeRepository;
-import roomescape.reservationtime.service.dto.ReservationTimeCreateDto;
-import roomescape.reservationtime.service.dto.ReservationTimeDto;
 
 @RequiredArgsConstructor
 @Service
 public class ReservationTimeService {
 
     private final ReservationTimeRepository reservationTimeRepository;
+
+    public ReservationTime findById(Long reservationTimeId) {
+        return reservationTimeRepository.findById(reservationTimeId);
+    }
 
     public List<ReservationTimeDto> findAllReservationTimes() {
         List<ReservationTime> result = reservationTimeRepository.findAll();

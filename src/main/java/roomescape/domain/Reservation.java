@@ -4,21 +4,20 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class Reservation {
 
     private final Long id;
     private final String memberName;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
     @JsonCreator
     public Reservation(
             @JsonProperty("id") Long id,
             @JsonProperty("name") String memberName,
             @JsonProperty("date") LocalDate date,
-            @JsonProperty("time") LocalTime time
+            ReservationTime time
     ) {
         this.id = id;
         this.memberName = memberName;
@@ -26,7 +25,7 @@ public class Reservation {
         this.time = time;
     }
 
-    public Reservation(String memberName, LocalDate date, LocalTime time) {
+    public Reservation(String memberName, LocalDate date, ReservationTime time) {
         this.id = null;
         this.memberName = memberName;
         this.date = date;
@@ -45,7 +44,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 }

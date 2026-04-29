@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationRequest;
 import roomescape.entity.Reservation;
+import roomescape.repository.ReservationRepository;
 
 @Service
 public class ReservationService {
@@ -16,8 +17,14 @@ public class ReservationService {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong nextId = new AtomicLong(1);
 
+    private final ReservationRepository repository;
+
+    public ReservationService(ReservationRepository repository) {
+        this.repository = repository;
+    }
+
     public List<Reservation> getReservations() {
-        return List.copyOf(reservations);
+        return repository.getAll();
     }
 
     public Reservation add(ReservationRequest request) {

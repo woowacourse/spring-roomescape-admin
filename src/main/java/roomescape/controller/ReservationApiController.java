@@ -1,11 +1,7 @@
 package roomescape.controller;
 
-import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,62 +13,37 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationApiController {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationApiController(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public ReservationApiController(
+            ReservationRepository reservationRepository,
+            ReservationTimeRepository reservationTimeRepository
+    ) {
+        this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> reserve(@RequestBody ReservationRequest request) {
-        ReservationTime time = jdbcTemplate.queryForObject(
-                "select * from reservation_time where id = ?",
-                (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getLong("id"),
-                        resultSet.getTime("start_at").toLocalTime()
-                ), request.timeId());
+        ReservationTime time = reservationTimeRepository.findById(request.timeId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간 정보입니다."));
+
         Reservation reservation = new Reservation(request.name(), request.date(), time);
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "insert into reservation (name, date, time_id) values (?, ?, ?)", new String[]{"id"});
-            ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate().toString());
-            ps.setLong(3, reservation.getTime().getId());
-            return ps;
-        }, keyHolder);
-
-        Long id = keyHolder.getKey().longValue();
-        Reservation saved = new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+        Reservation saved = reservationRepository.save(reservation);
         return ResponseEntity.ok(ReservationResponse.from(saved));
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getAllReservations() {
-        List<Reservation> reservations = jdbcTemplate.query("""
-                               SELECT r.id AS reservation_id, 
-                                      r.name,
-                                      r.date,
-                                      t.id AS time_id,
-                                      t.start_at
-                               FROM reservation as r
-                               INNER JOIN reservation_time as t
-                               ON r.time_id = t.id
-                               """,
-                (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("reservation_id"),
-                        resultSet.getString("name"),
-                        resultSet.getDate("date").toLocalDate(),
-                        new ReservationTime(
-                                resultSet.getLong("time_id"),
-                                resultSet.getTime("start_at").toLocalTime()
-                        )));
+        List<Reservation> reservations = reservationRepository.findAll();
         List<ReservationResponse> response = reservations.stream()
                 .map(ReservationResponse::from)
                 .toList();
@@ -81,7 +52,7 @@ public class ReservationApiController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> cancelReservation(@PathVariable Long id) {
-        jdbcTemplate.update("delete from reservation where id = ?", id);
+        reservationRepository.delete(id);
         return ResponseEntity.ok().build();
     }
 }

@@ -1,6 +1,8 @@
 package roomescape.reservation;
 
 import java.sql.PreparedStatement;
+import java.time.LocalTime;
+import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -28,6 +30,17 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
         Long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
         return ReservationTime.of(id, request.startAt());
+    }
+
+    @Override
+    public List<ReservationTime> findAll() {
+        String sql = "select id, start_at from reservation_time";
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                ReservationTime.of(
+                        rs.getLong("id"),
+                        rs.getObject("start_at", LocalTime.class)
+                )
+        );
     }
 
 }

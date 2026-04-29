@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.repository.ReservationRepository;
 import roomescape.domain.Reservation;
-import roomescape.dto.CreateReservationRequest;
+import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.util.DateAndTimeConverter;
 
@@ -17,7 +17,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
 
     @Transactional
-    public ReservationResponse save(CreateReservationRequest createReservationRequest) {
+    public ReservationResponse save(ReservationRequest createReservationRequest) {
         Reservation reservation = Reservation.create(
                 null,
                 createReservationRequest.name(),

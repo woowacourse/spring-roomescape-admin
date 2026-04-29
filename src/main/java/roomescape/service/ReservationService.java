@@ -23,7 +23,7 @@ public class ReservationService {
             request.date(),
             request.time()
         );
-        Reservation saved = reservationRepository.save(reservation);
+        Reservation saved = reservationRepository.create(reservation);
         return ReservationResponse.from(saved);
     }
 

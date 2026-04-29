@@ -2,7 +2,6 @@ package roomescape.repository;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +10,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationResponse;
 
 @Repository
 public class ReservationRepository {
@@ -33,7 +31,7 @@ public class ReservationRepository {
             .usingGeneratedKeyColumns("id");
     }
 
-    public Reservation save(Reservation reservation) {
+    public Reservation create(Reservation reservation) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", reservation.getName());
         parameters.put("date", Date.valueOf(reservation.getDate()));

@@ -24,6 +24,7 @@
 2. ResultSet을 바깥으로 빼면 안되는지
 3. Connection을 어디서 관리하는지
 4. Transcation이 걸렸을때 같은 커넥션을 어떻게 받아오는지
+5. NamedParameterJdbcTemplate vs JdbcTemplate 차이가 뭔지
 
 1,2번은 강하게 연결되어 있습니다.
 ResultSet은 Connection에 강하게 연결되어 있기 때문에 close를 자동으로 해주는 JDBC 템플릿에서는 인라인으로 처리할 필요가 있습니다.
@@ -31,12 +32,29 @@ ResultSet은 Connection에 강하게 연결되어 있기 때문에 close를 자�
 Spring에서 흐름을 관리하고, 이때 ResultSet을 반환하면 안되기 때문에 RowMapper를 이용함을 알게 되었습니다.
 
 3. DataSource에서 Connection을 관리하고 이때 커넥션 풀을 사용한다는 것을 알게 되었습니다.
--> 다음 사이클 : 커넥션 풀 초기 개수, 개수가 어떻게 늘어나는지, 개수가 늘어났을때 유지가 되는지 or 일정시간이 지나면 사라지는지 확인 
+-> 다음 사이클 : 커넥션 풀 초기 개수, 개수가 어떻게 늘어나는지, 개수가 늘어났을때 유지가 되는지 or 일정시간이 지나면 사라지는지 확인
+
 4. Transaction의 경우 TransactionManager에서 트랜잭션이 걸린 경우에 새로운 Connection이 아닌 트랜잭션과 동일한 커넥션을 Tread에 묶는 방식으로 전달한다는 것을 알았습니다.
 -> 다음 사이클 : TransactionManager 트랜잭션이 걸렸을때 어떻게 같은 커넥션을 반환하는지 탐구.
 
+5. 공식 문서를 보다보니 NamedParameter 있는데, 뭔 차이인지를 모르겠어서 질문했다.
+   JdbcTemplate 의 경우 아래와 같은 방식으로 인자를 전달한다.
+```java
+jdbcTemplate.update("INSERT INTO Reservation (name, date, time) VALUES (?, ?, ?)",
+                reservation.getName(), reservation.getDate(), reservation.getTime());
+```
 
+  NamedParameterJdbcTemplate의 경우 아래와 같은 방식으로 인자를 전달한다.
+```java
+String sql = "INSERT INTO reservation(name, date, time) VALUES (:name, :date, :time)";
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", reservation.getName());
+        params.put("date", reservation.getDate());
+        params.put("time", reservation.getTime());
 
+        long update = jdbcTemplate.update(sql, params);
+```
+버그를 줄이기 위해 NamedParameter를 사용하기로 결정했다.
 
 ### 3. 전략 평가
 - 효과적이었던 것과 그 이유
@@ -54,8 +72,9 @@ JdbcTemplate이 ResultSet을 외부에 노출하지 않는 이유는
 자원 관리
 안정성 / 생명주기
 ```
-
-힌트를 지우면 정답 근처에 가지도 못하는 경우가 종종 있어서, 베이스 지식이 없을때는 어쩔수 없다고 느껴진다.
+정답을 유도하는 질문을 한다.
+이건 내가 정답에 접근하지 못하고 계속 트라이 하다보니 AI가 저런 방식으로 정답을 유도했다.
+베이스 지식이 없을때는 어쩔수 없다고 느껴진다.
 
 - 막힌 것의 종류(1번)와 전략의 궁합은 어땠는가?
 No comment

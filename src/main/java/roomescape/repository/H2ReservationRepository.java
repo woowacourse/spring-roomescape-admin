@@ -1,9 +1,11 @@
 package roomescape.repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
@@ -16,9 +18,9 @@ public class H2ReservationRepository implements ReservationRepository {
                     resultSet.getString("date"),
                     resultSet.getString("time")
             );
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public H2ReservationRepository(JdbcTemplate jdbcTemplate) {
+    public H2ReservationRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -29,20 +31,33 @@ public class H2ReservationRepository implements ReservationRepository {
 
     @Override
     public Optional<Reservation> findById(long id) {
+        String sql = "SELECT * FROM reservation WHERE id = :id";
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+
         return Optional.ofNullable(jdbcTemplate.queryForObject(
-                "SELECT * FROM reservation WHERE id=?", reservationRowMapper, id));
+                sql, params, reservationRowMapper));
     }
 
     @Override
     public Reservation save(Reservation reservation) {
-        long update = jdbcTemplate.update("INSERT INTO Reservation (name, date, time) VALUES (?, ?, ?)",
-                reservation.getName(), reservation.getDate(), reservation.getTime());
+        String sql = "INSERT INTO reservation(name, date, time) VALUES (:name, :date, :time)";
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", reservation.getName());
+        params.put("date", reservation.getDate());
+        params.put("time", reservation.getTime());
+
+        long update = jdbcTemplate.update(sql, params);
 
         return new Reservation(update, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     @Override
     public void delete(long id) {
-        jdbcTemplate.update("DELETE FROM reservation WHERE id=?", id);
+        String sql = "DELETE FROM reservation WHERE id = :id";
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        jdbcTemplate.update(sql, params);
     }
 }

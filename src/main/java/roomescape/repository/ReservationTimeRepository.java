@@ -4,10 +4,13 @@ import static roomescape.repository.rowmapper.RowMapperUtils.RESERVATION_TIME_RO
 
 import java.util.List;
 import java.util.Map;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
+import roomescape.exception.InUseTimeException;
 
 @Repository
 public class ReservationTimeRepository {
@@ -53,8 +56,16 @@ public class ReservationTimeRepository {
         String deleteSql = "DELETE FROM reservation_time"
                 + " WHERE id = ?";
 
-        int deletedRows = jdbcTemplate.update(deleteSql, id);
-        if (deletedRows < 1) {
+        try {
+            int deletedRows = jdbcTemplate.update(deleteSql, id);
+            validateDeleted(deletedRows);
+        } catch (DataIntegrityViolationException exception) {
+            throw new InUseTimeException("사용중이지 않은 시간만 제거할 수 있습니다.");
+        }
+    }
+
+    private void validateDeleted(int deletedCount) {
+        if (deletedCount < 1) {
             throw new IllegalArgumentException("존재하지 않는 시간 id입니다.");
         }
     }

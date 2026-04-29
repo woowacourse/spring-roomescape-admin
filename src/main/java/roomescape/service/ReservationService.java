@@ -65,10 +65,6 @@ public class ReservationService {
 
     @Transactional
     public void deleteTime(long timeId) {
-        if (reservationRepository.existsTimeId(timeId)) {
-            throw new InUseTimeException("사용 중인 예약이 없는 시간만 제거할 수 있습니다.");
-        }
-
         timeRepository.delete(timeId);
     }
 }

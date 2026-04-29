@@ -1,4 +1,4 @@
-package roomescape.model;
+package roomescape.domain;
 
 public class ReservationTime {
     private final Long id;

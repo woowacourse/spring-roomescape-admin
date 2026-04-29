@@ -11,7 +11,7 @@ import java.util.List;
 public interface ReservationTimeRepository {
     ReservationTimeResponse addTime(ReservationTimeRequest request);
 
-    List<ReservationTimeResponse> findAllReservationTimes();
+    List<ReservationTime> findAllReservationTimes();
 
     void deleteTime(Long id);
 

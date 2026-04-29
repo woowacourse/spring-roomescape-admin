@@ -36,9 +36,9 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
     }
 
     @Override
-    public List<ReservationTimeResponse> findAllReservationTimes() {
+    public List<ReservationTime> findAllReservationTimes() {
         return jdbcTemplate.query("SELECT id, start_at FROM reservation_time",
-                (rs, rowNum) -> new ReservationTimeResponse(
+                (rs, rowNum) -> new ReservationTime(
                         rs.getLong("id"),
                         rs.getTime("start_at").toLocalTime()
                 ));

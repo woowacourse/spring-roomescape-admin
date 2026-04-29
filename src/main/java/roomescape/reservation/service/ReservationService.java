@@ -8,18 +8,22 @@ import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.mapper.ReservationMapper;
 import roomescape.reservation.repository.ReservationRepository;
+import roomescape.reservationtime.domain.ReservationTime;
+import roomescape.reservationtime.repository.ReservationTimeRepository;
 
 @Service
 @RequiredArgsConstructor
 public class ReservationService {
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
     public List<Reservation> findAllReservations() {
         return reservationRepository.findAllReservations();
     }
 
     public ReservationResponse saveReservation(ReservationRequest reservationRequest) {
-        Reservation reservation = ReservationMapper.toEntity(reservationRequest);
+        ReservationTime time = reservationTimeRepository.findById(reservationRequest.timeId());
+        Reservation reservation = ReservationMapper.toEntity(reservationRequest, time);
         Reservation createdReservation = reservationRepository.saveReservation(reservation);
         return ReservationMapper.toResponse(createdReservation);
     }

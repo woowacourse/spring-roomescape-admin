@@ -6,17 +6,16 @@ import java.time.format.DateTimeFormatter;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
+import roomescape.reservationtime.domain.ReservationTime;
 
 public class ReservationMapper {
 
     private ReservationMapper() {}
 
-    public static Reservation toEntity(ReservationRequest reservationRequest) {
-        LocalDate date = LocalDate.parse(reservationRequest.date(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        LocalTime time = LocalTime.parse(reservationRequest.time(), DateTimeFormatter.ofPattern("HH:mm"));
+    public static Reservation toEntity(ReservationRequest reservationRequest, ReservationTime time) {
         return Reservation.builder()
                 .name(reservationRequest.name())
-                .date(date)
+                .date(reservationRequest.date())
                 .time(time)
                 .build();
     }

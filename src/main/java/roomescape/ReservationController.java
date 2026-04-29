@@ -25,7 +25,7 @@ public class ReservationController {
     public ResponseEntity<List<Reservation>> readAll() {
         String sql = "SELECT * FROM `reservation`";
         List<Reservation> reservations = jdbcTemplate.query(sql, (rs, rowNum) -> {
-            long id = rs.getInt("id");
+            Long id = rs.getLong("id");
             String name = rs.getString("name");
             String date = rs.getString("date");
             String time = rs.getString("time");
@@ -48,7 +48,7 @@ public class ReservationController {
             return preparedStatement;
         }, keyHolder);
 
-        long id = keyHolder.getKey().longValue();
+        Long id = keyHolder.getKey().longValue();
 
         Reservation newReservation = new Reservation(id, requestDto.name(), requestDto.date(),
                 requestDto.time());
@@ -57,7 +57,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> delete(@PathVariable long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         String sql = "DELETE FROM `reservation` WHERE `id` = ?";
         jdbcTemplate.update(sql, id);
 

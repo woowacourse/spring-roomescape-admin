@@ -40,8 +40,7 @@ public class JdbcReservationRepository implements ReservationRepository {
                 .addValue("date", reservation.getDate())
                 .addValue("time", reservation.getTime());
 
-        Number number = simpleJdbcInsert.executeAndReturnKey(params);
-        return number.longValue();
+        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     @Override

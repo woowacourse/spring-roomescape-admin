@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -17,6 +18,7 @@ public class ReservationTimeDaoJdbcImplementation implements ReservationTimeDao 
 
     private static final String INSERT_RESERVATION_TIME_QUERY = "INSERT INTO reservation_time(start_at) VALUES (?)";
     private static final String SELECT_ALL_RESERVATION_TIME_QUERY = "SELECT id, start_at FROM reservation_time;";
+    private static final String SELECT_SPECIFIC_RESERVATION_TIME_QUERY = "SELECT id, start_at FROM reservation_time WHERE id = ?;";
     private static final String DELETE_SPECIFIC_RESERVATION_TIME_QUERY = "DELETE FROM reservation_time WHERE id = ?;";
 
     private final JdbcTemplate jdbcTemplate;
@@ -48,6 +50,26 @@ public class ReservationTimeDaoJdbcImplementation implements ReservationTimeDao 
         Long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
         return mapper.toReservationTime(entity.initializeWithId(id));
+    }
+
+    @Override
+    public ReservationTime findById(Long targetId) {
+        try {
+            return jdbcTemplate.queryForObject(
+                    SELECT_SPECIFIC_RESERVATION_TIME_QUERY,
+                    (resultSet, rowNum) -> {
+                        ReservationTimeEntity entity = new ReservationTimeEntity(
+                                resultSet.getLong("id"),
+                                resultSet.getString("start_at")
+                        );
+
+                        return mapper.toReservationTime(entity);
+                    },
+                    targetId
+            );
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("찾는 대상이 존재하지 않습니다.");
+        }
     }
 
     @Override

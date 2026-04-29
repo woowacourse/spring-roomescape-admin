@@ -54,6 +54,31 @@ class ReservationTimeDaoJdbcImplementationTest {
     }
 
     @Test
+    @DisplayName("id 기반으로 1개를 잘 찾는다.")
+    void findById_success() {
+        ReservationTime testTime = new ReservationTime(1L, TEST_TIME);
+        ReservationTime savedReservationTime = reservationTimeDao.save(testTime);
+
+        Long targetId = savedReservationTime.id();
+
+        ReservationTime result = reservationTimeDao.findById(targetId);
+
+        Assertions.assertEquals(1L, result.id());
+        Assertions.assertEquals(TEST_TIME, result.startAt());
+    }
+
+    @Test
+    @DisplayName("id 기반으로 1개를 찾을 때 대상이 없으면 오류가 발생한다")
+    void findById_failure_not_exist() {
+        Long notExistTargetId = 999L;
+
+        assertThatThrownBy(
+                () -> reservationTimeDao.findById(notExistTargetId)
+        ).isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("찾는 대상이 존재하지 않습니다.");
+    }
+
+    @Test
     @DisplayName("전체 조회를 잘 한다")
     void findAll_success() {
         ReservationTime testTime = new ReservationTime(1L, TEST_TIME);

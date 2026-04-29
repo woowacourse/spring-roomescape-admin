@@ -20,7 +20,10 @@ public class ReservationDao {
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getDate("date").toLocalDate(),
-                    resultSet.getTime("time").toLocalTime()
+                    new ReservationTime(
+                            resultSet.getLong("id"),
+                            resultSet.getTime("time").toLocalTime()
+                    )
             );
 
     public ReservationDao(JdbcTemplate jdbcTemplate) {

@@ -9,20 +9,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.request.CreateReservationRequest;
 
 @RestController
 @RequestMapping(value = "/reservations")
 public class RoomescapeController {
 
-    private ReservationDao reservationDao;
+    private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
 
-    public RoomescapeController(ReservationDao reservationDao) {
+    public RoomescapeController(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
         this.reservationDao = reservationDao;
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     @PostMapping()
     public ResponseEntity<Reservation> createReservation(@RequestBody CreateReservationRequest request) {
-        Reservation reservation = Reservation.createWithoutId(request.name(), request.date(), request.time());
+        ReservationTime reservationTime = reservationTimeDao.findById(request.reservationTimeId())
+                .orElseThrow(IllegalArgumentException::new);
+        Reservation reservation = Reservation.createWithoutId(request.name(), request.date(), reservationTime);
         Reservation savedReservation = reservationDao.save(reservation);
         return ResponseEntity.ok(savedReservation);
     }

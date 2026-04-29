@@ -3,10 +3,10 @@ package roomescape.reservationtime.dto;
 import java.time.format.DateTimeFormatter;
 import roomescape.reservationtime.domain.ReservationTime;
 
-public record ReservationTimeDto(Long id, String time) {
+public record ReservationTimeResponse(Long id, String time) {
 
-    public static ReservationTimeDto from(ReservationTime reservationTime) {
-        return new ReservationTimeDto(
+    public static ReservationTimeResponse from(ReservationTime reservationTime) {
+        return new ReservationTimeResponse(
                 reservationTime.getId(),
                 reservationTime.getStartAt().format(DateTimeFormatter.ofPattern("HH:mm"))
         );

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.reservationtime.dto.ReservationTimeCreateDto;
-import roomescape.reservationtime.dto.ReservationTimeDto;
+import roomescape.reservationtime.dto.ReservationTimeCreateRequest;
+import roomescape.reservationtime.dto.ReservationTimeResponse;
 import roomescape.reservationtime.service.ReservationTimeService;
 
 @RequiredArgsConstructor
@@ -23,13 +23,13 @@ public class ReservationTimeController {
     private final ReservationTimeService reservationTimeService;
 
     @GetMapping
-    public ResponseEntity<List<ReservationTimeDto>> findAllReservationTimes() {
+    public ResponseEntity<List<ReservationTimeResponse>> findAllReservationTimes() {
         return ResponseEntity.ok(reservationTimeService.findAllReservationTimes());
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTimeDto> createReservationTime(
-            @Valid @RequestBody ReservationTimeCreateDto request
+    public ResponseEntity<ReservationTimeResponse> createReservationTime(
+            @Valid @RequestBody ReservationTimeCreateRequest request
     ) {
         return ResponseEntity.ok(reservationTimeService.saveReservationTime(request));
     }

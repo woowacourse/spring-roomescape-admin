@@ -4,8 +4,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import roomescape.reservationtime.domain.ReservationTime;
-import roomescape.reservationtime.dto.ReservationTimeCreateDto;
-import roomescape.reservationtime.dto.ReservationTimeDto;
+import roomescape.reservationtime.dto.ReservationTimeCreateRequest;
+import roomescape.reservationtime.dto.ReservationTimeResponse;
 import roomescape.reservationtime.exception.ReservationTimeException;
 import roomescape.reservationtime.repository.ReservationTimeRepository;
 
@@ -20,15 +20,15 @@ public class ReservationTimeService {
                 .orElseThrow(() -> new ReservationTimeException("[ERROR] 존재하지 않는 시간 입니다."));
     }
 
-    public List<ReservationTimeDto> findAllReservationTimes() {
+    public List<ReservationTimeResponse> findAllReservationTimes() {
         List<ReservationTime> result = reservationTimeRepository.findAll();
 
         return result.stream()
-                .map(ReservationTimeDto::from)
+                .map(ReservationTimeResponse::from)
                 .toList();
     }
 
-    public ReservationTimeDto saveReservationTime(ReservationTimeCreateDto request) {
+    public ReservationTimeResponse saveReservationTime(ReservationTimeCreateRequest request) {
         ReservationTime reservationTime = request.toEntity();
 
         Long saveId = reservationTimeRepository.save(reservationTime);
@@ -37,7 +37,7 @@ public class ReservationTimeService {
                 .startAt(reservationTime.getStartAt())
                 .build();
 
-        return ReservationTimeDto.from(saved);
+        return ReservationTimeResponse.from(saved);
     }
 
     public void deleteReservationTime(Long id) {

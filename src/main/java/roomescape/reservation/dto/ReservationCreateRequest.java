@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservationtime.domain.ReservationTime;
 
-public record ReservationCreateDto(
+public record ReservationCreateRequest(
         @NotBlank(message = "[ERROR] 이름은 비어있을 수 없습니다.")
         String name,
         @NotNull(message = "[ERROR] 날짜는 비어있을 수 없습니다.")

@@ -20,7 +20,6 @@ public class ReservationController {
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
         final List<ReservationResult> results = reservationService.getReservations();
-
         return ResponseEntity.ok(ReservationResponse.from(results));
     }
 
@@ -29,7 +28,6 @@ public class ReservationController {
             @RequestBody ReservationCreateRequest request
     ) {
         final ReservationResult result = reservationService.create(request.toData());
-
         return ResponseEntity.ok(ReservationResponse.from(result));
     }
 
@@ -38,7 +36,6 @@ public class ReservationController {
             @PathVariable("reservation-id") Long reservationId
     ) {
         reservationService.delete(reservationId);
-
         return ResponseEntity.ok(null);
     }
 }

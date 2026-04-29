@@ -51,7 +51,7 @@ public class RoomescapeApiController {
     public ResponseEntity<Void> cancelReservation(@PathVariable Long id) {
         Roomescape roomescape = new Roomescape(reservationRepository.findAll());
         roomescape.cancelReservation(id);
-        reservationRepository.saveAll(roomescape.getReservations());
+        reservationRepository.saveAll(roomescape.getSchedule());
         return ResponseEntity.ok().build();
     }
 }

@@ -4,7 +4,7 @@ public class Reservation {
 
     private final Long reservationId;
     private final String customerName;
-    private final ReservationTime reservationTime;
+    private ReservationTime reservationTime;
 
     public Reservation(Long reservationId, String customerName, ReservationTime reservationTime) {
         this.reservationId = reservationId;
@@ -18,6 +18,10 @@ public class Reservation {
 
     public boolean isOverlapping(ReservationTime otherReservationTime) {
         return reservationTime.isOverlapping(otherReservationTime);
+    }
+
+    public boolean isSameId(Long reservationId) {
+        return this.reservationId != null && this.reservationId.equals(reservationId);
     }
 
     public Long getReservationId() {

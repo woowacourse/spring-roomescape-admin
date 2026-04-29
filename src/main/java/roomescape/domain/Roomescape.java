@@ -1,36 +1,30 @@
 package roomescape.domain;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class Roomescape {
 
-    private final Reservations reservations;
+    private final Reservations schedule;
     private final PlayingTime playingTime;
 
-    public Roomescape(Reservations reservations) {
-        this.reservations = reservations;
+    public Roomescape(Reservations schedule) {
+        this.schedule = schedule;
         this.playingTime = PlayingTime.toDefaultPlayingTime();
     }
 
     public Reservation reserve(String customerName, LocalDateTime startTime) {
         ReservationTime reservationTime = playingTime.calculateReservationTime(startTime);
-        if (reservations.hasOverlapTime(reservationTime)) {
+        if (schedule.hasOverlapTime(reservationTime)) {
             throw new IllegalArgumentException("해당 시간에 이미 예약된 정보가 있습니다.");
         }
         return new Reservation(customerName, reservationTime);
     }
 
     public void cancelReservation(Long reservationId) {
-        List<Reservation> schedule = reservations.getSchedule();
-        Reservation toDelete = schedule.stream()
-                .filter(r -> r.getReservationId().equals(reservationId))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 정보입니다."));
-        schedule.remove(toDelete);
+        schedule.removeById(reservationId);
     }
 
-    public Reservations getReservations() {
-        return reservations;
+    public Reservations getSchedule() {
+        return schedule;
     }
 }

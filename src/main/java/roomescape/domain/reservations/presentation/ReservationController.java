@@ -9,17 +9,26 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.reservations.entity.Reservation;
+import roomescape.domain.reservations.entity.ReservationTime;
 import roomescape.domain.reservations.infrastructure.ReservationJdbcTemplateRepository;
+import roomescape.domain.reservations.infrastructure.ReservationTimeJdbcTemplateRepository;
 import roomescape.domain.reservations.presentation.dto.ReservationRequest;
 import roomescape.domain.reservations.presentation.dto.ReservationResponse;
+import roomescape.domain.reservations.presentation.dto.ReservationTimeRequest;
+import roomescape.domain.reservations.presentation.dto.ReservationTimeResponse;
 
 @RestController
 public class ReservationController {
 
-    private final ReservationJdbcTemplateRepository repository;
+    private final ReservationJdbcTemplateRepository reservationRepository;
+    private final ReservationTimeJdbcTemplateRepository reservationTimeRepository;
 
-    public ReservationController(ReservationJdbcTemplateRepository repository) {
-        this.repository = repository;
+    public ReservationController(
+            ReservationJdbcTemplateRepository reservationRepository,
+            ReservationTimeJdbcTemplateRepository reservationTimeRepository
+    ) {
+        this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @PostMapping("/reservations")
@@ -32,13 +41,13 @@ public class ReservationController {
                 request.date(),
                 request.time()
         );
-        Reservation savedReservation = repository.save(reservation);
+        Reservation savedReservation = reservationRepository.save(reservation);
         return ResponseEntity.ok(ReservationResponse.from(savedReservation));
     }
 
     @GetMapping("/reservations")
     public List<Reservation> getReservations() {
-        List<Reservation> reservations = repository.findAll();
+        List<Reservation> reservations = reservationRepository.findAll();
         return ResponseEntity.ok(reservations).getBody();
     }
 
@@ -46,7 +55,33 @@ public class ReservationController {
     public ResponseEntity<Void> deleteReservation(
             @PathVariable Long id
     ) {
-        repository.deleteById(id);
+        reservationRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/times")
+    public ResponseEntity<ReservationTimeResponse> addTime(
+            @RequestBody ReservationTimeRequest request
+    ) {
+        ReservationTime reservationTime = ReservationTime.of(
+                null,
+                request.startAt()
+        );
+        ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
+        return ResponseEntity.ok(ReservationTimeResponse.from(savedReservationTime));
+    }
+
+    @GetMapping("/times")
+    public List<ReservationTime> getTimes() {
+        List<ReservationTime> times = reservationTimeRepository.findAll();
+        return ResponseEntity.ok(times).getBody();
+    }
+
+    @DeleteMapping("/times/{id}")
+    public ResponseEntity<Void> deleteTime(
+            @PathVariable Long id
+    ) {
+        reservationTimeRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }

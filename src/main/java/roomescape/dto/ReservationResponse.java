@@ -12,13 +12,13 @@ public record ReservationResponse(
         LocalDate date,
         LocalTime time
 ) {
-    public static ReservationResponse from(Reservation reservation) {
+    public static ReservationResponse fromEntity(Reservation reservation) {
         return new ReservationResponse(reservation.id(), reservation.name(), reservation.date(), reservation.time());
     }
 
-    public static List<ReservationResponse> from(List<Reservation> reservations) {
+    public static List<ReservationResponse> fromEntities(List<Reservation> reservations) {
         return reservations.stream()
-                .map(ReservationResponse::from)
+                .map(ReservationResponse::fromEntity)
                 .toList();
     }
 }

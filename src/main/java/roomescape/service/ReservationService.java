@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
@@ -27,7 +28,14 @@ public class ReservationService {
     }
 
     public List<ReservationResponse> getAllReservations() {
-        return reservationRepository.findAll();
+        List<Reservation> reservations = reservationRepository.findAll();
+
+        List<ReservationResponse> responses = new ArrayList<>();
+        for (Reservation reservation : reservations) {
+            ReservationResponse response = ReservationResponse.from(reservation);
+            responses.add(response);
+        }
+        return responses;
     }
 
     public void deleteReservation(Long id) {

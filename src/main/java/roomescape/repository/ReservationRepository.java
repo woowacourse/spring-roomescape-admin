@@ -42,16 +42,9 @@ public class ReservationRepository {
         return Reservation.of(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
-    public List<ReservationResponse> findAll() {
+    public List<Reservation> findAll() {
         String query = "select * from reservation";
-        List<Reservation> reservations = jdbcTemplate.query(query, rowMapper);
-
-        List<ReservationResponse> responses = new ArrayList<>();
-        for (Reservation reservation : reservations) {
-            ReservationResponse response = ReservationResponse.from(reservation);
-            responses.add(response);
-        }
-        return responses;
+        return jdbcTemplate.query(query, rowMapper);
     }
 
     public void deleteById(Long id) {

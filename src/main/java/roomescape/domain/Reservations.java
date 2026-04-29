@@ -1,6 +1,6 @@
 package roomescape.domain;
 
-import roomescape.exception.BusinessException;
+import roomescape.exception.ReservationException;
 import roomescape.exception.ErrorCode;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class Reservations {
         boolean removed = reservations.removeIf(reservation -> reservation.getId().equals(id));
 
         if(!removed){
-            throw new BusinessException(ErrorCode.RESERVATION_NOT_FOUND);
+            throw new ReservationException(ErrorCode.RESERVATION_NOT_FOUND);
         }
     }
 

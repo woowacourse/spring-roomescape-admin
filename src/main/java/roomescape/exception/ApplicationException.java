@@ -1,10 +1,10 @@
 package roomescape.exception;
 
-public class BusinessException extends RuntimeException {
+public class ApplicationException extends RuntimeException {
 
     private final ErrorCode errorCode;
 
-    public BusinessException(ErrorCode errorCode) {
+    public ApplicationException(ErrorCode errorCode) {
         super(errorCode.message());
         this.errorCode = errorCode;
     }

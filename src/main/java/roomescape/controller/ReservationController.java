@@ -1,15 +1,13 @@
 package roomescape.controller;
 
-import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,18 +39,17 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> create(@RequestBody ReservationRequestDto reservationRequestDto) {
-        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement pstmt = connection.prepareStatement(sql, new String[]{"id"});
-            pstmt.setString(1, reservationRequestDto.name());
-            pstmt.setObject(2, reservationRequestDto.date());
-            pstmt.setObject(3, reservationRequestDto.time());
-            return pstmt;
-        }, keyHolder);
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
+        long generatedKey = simpleJdbcInsert.executeAndReturnKey(Map.of(
+                "name", reservationRequestDto.name(),
+                "date", reservationRequestDto.date(),
+                "time", reservationRequestDto.time()
+        )).longValue();
 
         Reservation reservation = new Reservation(
-                Objects.requireNonNull(keyHolder.getKey()).longValue(),
+                generatedKey,
                 reservationRequestDto.name(),
                 reservationRequestDto.date(),
                 reservationRequestDto.time()

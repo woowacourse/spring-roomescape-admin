@@ -24,7 +24,7 @@ public class ReservationController {
     }
 
     @GetMapping
-    public List<ReservationResponse> findAll(){
+    public List<ReservationResponse> list(){
         return reservationService.findAll()
                 .stream()
                 .map(ReservationResponse::from)

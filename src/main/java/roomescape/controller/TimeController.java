@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 import roomescape.request.ReservationTimeRequest;
 import roomescape.response.ReservationTimeResponse;
@@ -29,7 +30,8 @@ public class TimeController {
 
     @GetMapping
     public List<ReservationTimeResponse> getReservationTimes() {
-        return reservationTimeRepository.findAllReservationTimes();
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAllReservationTimes();
+        return ReservationTimeResponse.from(reservationTimes);
     }
 
     @DeleteMapping("/{id}")

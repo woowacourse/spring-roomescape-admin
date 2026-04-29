@@ -1,9 +1,6 @@
 package roomescape;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,10 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class RoomEscapeController {
 
     private final QueryingDAO queryingDAO;
+    private final UpdatingDAO updatingDAO;
 
-    RoomEscapeController(QueryingDAO queryingDAO) {
+    public RoomEscapeController(QueryingDAO queryingDAO, UpdatingDAO updatingDAO) {
         this.queryingDAO = queryingDAO;
+        this.updatingDAO = updatingDAO;
     }
+
     @GetMapping("/reservations")
     @ResponseBody
     public List<Reservation> read() {
@@ -28,19 +28,17 @@ public class RoomEscapeController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> add(@RequestBody ReservationRequest newReservation) {
-        Reservation reservation = newReservation.toEntity(index.incrementAndGet());
-        reservations.add(reservation);
-        return ResponseEntity.ok(reservation);
+    @ResponseBody
+    public ResponseEntity<Reservation> add(@RequestBody Reservation reservation) {
+        Long id = updatingDAO.add(reservation);
+        Reservation newReservation = new Reservation(id, reservation.getName(),
+                reservation.getDate(), reservation.getTime());
+        return ResponseEntity.ok(newReservation);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Reservation reservation = reservations.stream()
-                .filter(it -> Objects.equals(it.getId(), id))
-                .findFirst()
-                .orElseThrow(RuntimeException::new);
-        reservations.remove(reservation);
+        updatingDAO.delete(id);
         return ResponseEntity.ok().build();
     }
 }

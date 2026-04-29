@@ -13,7 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ReservationRequestDtoValidationTest {
+public class ReservationRequestValidationTest {
 
     @Test
     @DisplayName("이름이 비어있으면 예약 생성 실패 (400)")

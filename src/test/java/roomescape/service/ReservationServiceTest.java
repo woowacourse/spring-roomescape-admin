@@ -2,14 +2,13 @@ package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.reservation.dto.ReservationRequestDto;
-import roomescape.reservation.dto.ReservationResponseDto;
+import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.service.ReservationService;
 import roomescape.time.entity.ReservationTime;
 import roomescape.time.repository.ReservationTimeRepository;
@@ -29,10 +28,10 @@ public class ReservationServiceTest {
         // given
         ReservationTime nonIdReservationTime = ReservationTime.create("10:00");
         ReservationTime reservationTime = reservationTimeRepository.save(nonIdReservationTime);
-        ReservationRequestDto reservationRequestDto = new ReservationRequestDto("쿠다", "2023-08-06", reservationTime.getId());
+        ReservationRequest reservationRequest = new ReservationRequest("쿠다", "2023-08-06", reservationTime.getId());
 
         // when
-        ReservationResponseDto result = reservationService.save(reservationRequestDto);
+        ReservationResponse result = reservationService.save(reservationRequest);
 
         // then
         assertThat(result.id()).isNotNull();

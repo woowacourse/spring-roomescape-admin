@@ -3,8 +3,8 @@ package roomescape.time.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.time.dto.ReservationTimeRequestDto;
-import roomescape.time.dto.ReservationTimeResponseDto;
+import roomescape.time.dto.ReservationTimeRequest;
+import roomescape.time.dto.ReservationTimeResponse;
 import roomescape.time.entity.ReservationTime;
 import roomescape.time.repository.ReservationTimeRepository;
 
@@ -18,12 +18,12 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public ReservationTimeResponseDto save(ReservationTimeRequestDto reservationTimeRequestDto) {
-        if(existsByStartAt(reservationTimeRequestDto.startAt()))
+    public ReservationTimeResponse save(ReservationTimeRequest reservationTimeRequest) {
+        if(existsByStartAt(reservationTimeRequest.startAt()))
             throw new IllegalArgumentException("[ERROR] 시간 중복 추가는 불가능합니다.");
 
-        ReservationTime reservationTime = ReservationTime.create(reservationTimeRequestDto.startAt());
-        return ReservationTimeResponseDto.from(reservationTimeRepository.save(reservationTime));
+        ReservationTime reservationTime = ReservationTime.create(reservationTimeRequest.startAt());
+        return ReservationTimeResponse.from(reservationTimeRepository.save(reservationTime));
     }
 
     public ReservationTime findById(Long id) {
@@ -31,9 +31,9 @@ public class ReservationTimeService {
                 .orElseThrow(() -> new IllegalArgumentException("[ERROR] 찾는 예약 시간이 없습니다."));
     }
 
-    public List<ReservationTimeResponseDto> findAll() {
+    public List<ReservationTimeResponse> findAll() {
         return reservationTimeRepository.finaAll().stream()
-                .map(ReservationTimeResponseDto::from)
+                .map(ReservationTimeResponse::from)
                 .toList();
     }
 

@@ -3,8 +3,8 @@ package roomescape.reservation.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.reservation.dto.ReservationRequestDto;
-import roomescape.reservation.dto.ReservationResponseDto;
+import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.time.entity.ReservationTime;
@@ -23,19 +23,19 @@ public class ReservationService {
         this.reservationTimeService = reservationTimeService;
     }
 
-    public ReservationResponseDto save(ReservationRequestDto reservationRequestDto) {
-        ReservationTime reservationTime = reservationTimeService.findById(reservationRequestDto.timeId());
+    public ReservationResponse save(ReservationRequest reservationRequest) {
+        ReservationTime reservationTime = reservationTimeService.findById(reservationRequest.timeId());
         Reservation reservation = Reservation.create(
-                reservationRequestDto.name(),
-                reservationRequestDto.date(),
+                reservationRequest.name(),
+                reservationRequest.date(),
                 reservationTime
         );
-        return ReservationResponseDto.from(reservationRepository.save(reservation));
+        return ReservationResponse.from(reservationRepository.save(reservation));
     }
 
-    public List<ReservationResponseDto> findAll() {
+    public List<ReservationResponse> findAll() {
         return reservationRepository.findAll().stream()
-                .map(ReservationResponseDto::from)
+                .map(ReservationResponse::from)
                 .toList();
     }
 

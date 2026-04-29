@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.time.dto.ReservationTimeRequestDto;
-import roomescape.time.dto.ReservationTimeResponseDto;
+import roomescape.time.dto.ReservationTimeRequest;
+import roomescape.time.dto.ReservationTimeResponse;
 import roomescape.time.entity.ReservationTime;
 import roomescape.time.repository.ReservationTimeRepository;
 import roomescape.time.service.ReservationTimeService;
@@ -34,10 +34,10 @@ public class ReservationTimeServiceTest {
     @DisplayName("예약 시간 저장")
     void save_test() {
         //given
-        ReservationTimeRequestDto reservationTimeRequestDto = new ReservationTimeRequestDto("11:00");
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest("11:00");
 
         //when
-        ReservationTimeResponseDto result = reservationTimeService.save(reservationTimeRequestDto);
+        ReservationTimeResponse result = reservationTimeService.save(reservationTimeRequest);
 
         //then
         assertThat(result.id()).isNotNull();
@@ -48,10 +48,10 @@ public class ReservationTimeServiceTest {
     @DisplayName("예약 시간 저장 중복 예외")
     void save_startAt_duplicate_test() {
         //given
-        ReservationTimeRequestDto reservationTimeRequestDto = new ReservationTimeRequestDto("10:00");
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest("10:00");
 
         //when & then
-        assertThatThrownBy(() -> reservationTimeService.save(reservationTimeRequestDto))
+        assertThatThrownBy(() -> reservationTimeService.save(reservationTimeRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("[ERROR] 시간 중복 추가는 불가능합니다.");
     }

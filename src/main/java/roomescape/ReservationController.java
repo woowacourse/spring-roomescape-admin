@@ -20,10 +20,10 @@ public class ReservationController {
     private AtomicLong index = new AtomicLong(1);
 
     @PostMapping("/reservations")
-    public ResponseEntity<Void> create(@RequestBody Reservation reservation) {
+    public ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
         Reservation newReservation = Reservation.toEntity(reservation, index.getAndIncrement());
         reservations.add(newReservation);
-        return ResponseEntity.created(URI.create("/members/" + newReservation.getId())).build();
+        return ResponseEntity.ok(newReservation);
     }
 
     @GetMapping("/reservations")
@@ -31,7 +31,7 @@ public class ReservationController {
         return ResponseEntity.ok().body(reservations);
     }
 
-    @DeleteMapping("/reservations")
+    @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         Reservation reservation = reservations.stream()
                 .filter(it -> Objects.equals(it.getId(), id))
@@ -40,7 +40,7 @@ public class ReservationController {
 
         reservations.remove(reservation);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
 }

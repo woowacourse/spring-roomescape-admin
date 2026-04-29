@@ -10,6 +10,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 import java.time.LocalTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,5 +40,21 @@ class JdbcTemplateReservationTimeRepositoryTest {
         assertThat(saved.getId()).isNotNull();
         assertThat(saved.getStartAt()).isEqualTo(reservationTime.getStartAt());
     }
+
+    @Test
+    @DisplayName("저장된 모든 ReservationTime 데이터를 조회한다.")
+    public void findAll() {
+        // given
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "16:10");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "17:30");
+
+        // when
+        List<ReservationTime> reservationTimes = repository.findAll();
+
+        // then
+        assertThat(reservationTimes).hasSize(3);
+    }
+
 
 }

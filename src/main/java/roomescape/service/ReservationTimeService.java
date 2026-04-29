@@ -5,6 +5,8 @@ import roomescape.controller.dto.request.ReservationTimeRequest;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
+import java.util.List;
+
 @Service
 public class ReservationTimeService {
 
@@ -16,5 +18,9 @@ public class ReservationTimeService {
 
     public ReservationTime addReservationTime(ReservationTimeRequest request) {
         return repository.save(new ReservationTime(request.startAt()));
+    }
+
+    public List<ReservationTime> getReservationTimes() {
+        return repository.findAll();
     }
 }

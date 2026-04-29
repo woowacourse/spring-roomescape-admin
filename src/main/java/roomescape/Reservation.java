@@ -10,7 +10,6 @@ public class Reservation {
     private LocalDate date;
     private LocalTime time;
 
-
     public Reservation() {
     }
 

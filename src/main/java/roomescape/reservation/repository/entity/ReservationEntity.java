@@ -1,18 +1,24 @@
-package roomescape.dto;
+package roomescape.reservation.repository.entity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class CreateRoomReservationDto {
+public class ReservationEntity {
 
+    private final Long id;
     private final String name;
     private final LocalDate date;
     private final LocalTime time;
 
-    public CreateRoomReservationDto(String name, LocalDate date, LocalTime time) {
+    public ReservationEntity(Long id, String name, LocalDate date, LocalTime time) {
+        this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {

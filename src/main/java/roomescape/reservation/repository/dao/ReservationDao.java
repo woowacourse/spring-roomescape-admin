@@ -1,4 +1,4 @@
-package roomescape.repository.dao;
+package roomescape.reservation.repository.dao;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
@@ -10,14 +10,14 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.RoomReservation;
-import roomescape.repository.entity.RoomReservationEntity;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.repository.entity.ReservationEntity;
 
 @Repository
-public class RoomReservationDao {
+public class ReservationDao {
 
-    private static final RowMapper<RoomReservationEntity> reservationRowMapper = (rs, rowNum) ->
-            new RoomReservationEntity(
+    private static final RowMapper<ReservationEntity> reservationRowMapper = (rs, rowNum) ->
+            new ReservationEntity(
                     rs.getLong("id"),
                     rs.getString("name"),
                     LocalDate.parse(rs.getString("date")),
@@ -25,23 +25,23 @@ public class RoomReservationDao {
             );
     private final JdbcTemplate jdbcTemplate;
 
-    public RoomReservationDao(JdbcTemplate jdbcTemplate) {
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<RoomReservationEntity> selectAll() {
+    public List<ReservationEntity> selectAll() {
         String sql = "select * from reservation;";
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
-    public Long insert(RoomReservation roomReservation) {
+    public Long insert(Reservation reservation) {
         String sql = "insert into reservation (name, date, time) values (?,?,?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement pstm = connection.prepareStatement(sql, new String[]{"id"});
-            pstm.setString(1, roomReservation.getName());
-            pstm.setString(2, String.valueOf(roomReservation.getDate()));
-            pstm.setString(3, String.valueOf(roomReservation.getTime()));
+            pstm.setString(1, reservation.getName());
+            pstm.setString(2, String.valueOf(reservation.getDate()));
+            pstm.setString(3, String.valueOf(reservation.getTime()));
             return pstm;
         }, keyHolder);
 

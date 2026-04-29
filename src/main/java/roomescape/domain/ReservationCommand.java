@@ -1,4 +1,4 @@
 package roomescape.domain;
 
-public record ReservationCommand(String date, String name, long timeId) {
+public record ReservationCommand(String name, String date,  long timeId) {
 }

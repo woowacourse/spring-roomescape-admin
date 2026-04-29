@@ -40,7 +40,7 @@ public class ReservationControllerTest {
 
     @Test
     @DisplayName("예약자를 추가하면 200 코드를 반환한다.")
-    void return201Created_When_AddReservation() {
+    void return200OK_When_AddReservation() {
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 

@@ -7,6 +7,7 @@ import roomescape.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Objects;
 
 @Repository
@@ -16,6 +17,14 @@ public class JdbcReservationTimeDao {
 
     public JdbcReservationTimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public List<ReservationTime> selectAll() {
+        String sql = "select * from reservation_time";
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(
+                resultSet.getLong("id"),
+                resultSet.getTime("start_at").toLocalTime()
+        ));
     }
 
     public ReservationTime insert(ReservationTime reservationTime) {

@@ -104,16 +104,16 @@ class ReservationTimeRepositoryTest {
             timeRepository.delete(DEFAULT_ID);
 
             // then
-            String findSql = "SELECT *"
+            String countSql = "SELECT count(*)"
                     + " FROM reservation_time"
                     + " WHERE id = ?";
-            List<ReservationTime> foundTimes = jdbcTemplate.query(
-                    findSql,
-                    reservationTimeRowMapper(),
+            Integer timeCount = jdbcTemplate.queryForObject(
+                    countSql,
+                    Integer.class,
                     DEFAULT_ID
             );
 
-            assertThat(foundTimes).isEmpty();
+            assertThat(timeCount).isEqualTo(0);
         }
 
         @Test

@@ -40,18 +40,27 @@ public class JdbcReservationRepositoryTest {
     void reservation_save_test() {
         //given
         String name = "쿠다";
-        String date = "2023-08-06";
+        LocalDate date = LocalDate.parse("2023-08-05");
         ReservationTime reservationTime = jdbcReservationTimeRepository.findAll()
                 .stream()
                 .findFirst()
                 .orElseThrow();
 
-        Reservation reservation = Reservation.createNew(name, LocalDate.parse(date), reservationTime);
+        Reservation reservation = Reservation.createNew(name, date, reservationTime);
         //when
         Reservation result = jdbcReservationRepository.save(reservation);
+        Reservation saved = jdbcReservationRepository.findById(result.getId())
+                .orElseThrow();
 
-        //then
+        // then
         assertThat(result.getId()).isNotNull();
+        assertThat(result.getName()).isEqualTo(name);
+        assertThat(result.getDate()).isEqualTo(date);
+        assertThat(result.getTime().getId()).isEqualTo(reservationTime.getId());
+
+        assertThat(saved.getId()).isEqualTo(result.getId());
+        assertThat(saved.getDate()).isEqualTo(result.getDate());
+        assertThat(saved.getTime().getId()).isEqualTo(result.getTime().getId());
     }
 
     @Test

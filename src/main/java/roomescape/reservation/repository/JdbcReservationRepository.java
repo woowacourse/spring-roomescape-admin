@@ -2,7 +2,10 @@ package roomescape.reservation.repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -34,16 +37,17 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        final String sql =
-                "SELECT " +
-                        "r.id, " +
-                        "r.name, " +
-                        "r.date, " +
-                        "t.id as time_id, " +
-                        "t.start_at " +
-                        "FROM reservation r " +
-                        "INNER JOIN reservation_time t " +
-                        "ON r.time_id = t.id";
+        final String sql = """
+                SELECT
+                    r.id,
+                    r.name,
+                    r.date,
+                    t.id AS time_id,
+                    t.start_at
+                FROM reservation r
+                INNER JOIN reservation_time t
+                    ON r.time_id = t.id
+                """;
 
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
@@ -82,6 +86,44 @@ public class JdbcReservationRepository implements ReservationRepository {
                 Boolean.class,
                 id
         ));
+    }
+
+    @Override
+    public boolean existsByDateAndTime(LocalDate date, LocalTime time) {
+        final String sql = """
+                 SELECT EXISTS (
+                     SELECT 1
+                     FROM reservation r
+                     JOIN reservation_time t ON r.time_id = t.id
+                     WHERE r.date = ? and t.start_at = ?
+                     )
+                """;
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(
+                sql,
+                Boolean.class,
+                date,
+                time
+        ));
+    }
+
+    @Override
+    public Optional<Reservation> findById(long id) {
+        final String sql = """
+                SELECT
+                    r.id,
+                    r.name,
+                    r.date,
+                    t.id AS time_id,
+                    t.start_at
+                FROM reservation r
+                INNER JOIN reservation_time t
+                    ON r.time_id = t.id
+                WHERE r.id = ?
+                """;
+
+        return jdbcTemplate.query(sql, reservationRowMapper, id)
+                .stream()
+                .findFirst();
     }
 
 }

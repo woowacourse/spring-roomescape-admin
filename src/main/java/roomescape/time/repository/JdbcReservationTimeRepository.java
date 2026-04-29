@@ -1,7 +1,6 @@
 package roomescape.time.repository;
 
 import java.sql.PreparedStatement;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

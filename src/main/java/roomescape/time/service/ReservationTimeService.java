@@ -23,7 +23,7 @@ public class ReservationTimeService {
         return ReservationTimeResponse.from(reservationTimeRepository.save(reservationTime));
     }
 
-    public ReservationTime findById(long id) {
+    public ReservationTime getById(long id) {
         return reservationTimeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("찾는 예약 시간이 없습니다."));
     }

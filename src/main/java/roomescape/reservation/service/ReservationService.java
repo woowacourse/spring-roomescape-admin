@@ -1,5 +1,7 @@
 package roomescape.reservation.service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,14 @@ public class ReservationService {
     private final ReservationTimeService reservationTimeService;
 
     public ReservationResponse save(ReservationRequest reservationRequest) {
-        ReservationTime reservationTime = reservationTimeService.findById(reservationRequest.timeId());
+        ReservationTime reservationTime = reservationTimeService.getById(reservationRequest.timeId());
+
+        LocalDate date = reservationRequest.date();
+        LocalTime time = reservationTime.getStartAt();
+        if (reservationRepository.existsByDateAndTime(date, time)) {
+            throw new IllegalArgumentException("중복으로 예약을 생성할 수 없습니다.");
+        }
+
         Reservation reservation = Reservation.createNew(
                 reservationRequest.name(),
                 reservationRequest.date(),
@@ -36,10 +45,17 @@ public class ReservationService {
     }
 
     public void deleteById(long id) {
-        if(reservationRepository.existsById(id))
+        if (!reservationRepository.existsById(id)) {
             throw new IllegalArgumentException("삭제할 예약이 존재하지 않습니다.");
+        }
 
         reservationRepository.deleteById(id);
+    }
+
+    public ReservationResponse getById(long id) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
+        return ReservationResponse.from(reservation);
     }
 
 }

@@ -41,13 +41,19 @@ public class JdbcReservationTimeRepositoryTest {
     @DisplayName("예약 시간 저장")
     void reservationTime_save_test() {
         //given
-        ReservationTime nonIdReservationTime = ReservationTime.createNew(LocalTime.parse("11:00"));
+        LocalTime time = LocalTime.parse("11:00");
+        ReservationTime nonIdReservationTime = ReservationTime.createNew(time);
 
         //when
-        ReservationTime reservationTime = jdbcReservationTimeRepository.save(nonIdReservationTime);
-
+        ReservationTime result = jdbcReservationTimeRepository.save(nonIdReservationTime);
+        ReservationTime saved = jdbcReservationTimeRepository.findById(result.getId())
+                .orElseThrow();
         //then
-        assertThat(reservationTime.getId()).isNotNull();
+        assertThat(result.getId()).isNotNull();
+        assertThat(result.getStartAt()).isEqualTo(time);
+
+        assertThat(result.getId()).isEqualTo(saved.getId());
+        assertThat(result.getStartAt()).isEqualTo(saved.getStartAt());
     }
 
     @Test

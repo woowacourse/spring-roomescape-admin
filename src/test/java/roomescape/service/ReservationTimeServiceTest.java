@@ -35,22 +35,27 @@ public class ReservationTimeServiceTest {
     @DisplayName("예약 시간 저장")
     void save_test() {
         //given
-        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(LocalTime.parse("11:00"));
+        LocalTime time = LocalTime.parse("11:00");
+        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(time);
 
         //when
         ReservationTimeResponse result = reservationTimeService.save(reservationTimeRequest);
+        ReservationTime saved = reservationTimeService.getById(result.id());
 
         //then
         assertThat(result.id()).isNotNull();
-        assertThat(result.startAt()).isEqualTo("11:00");
+        assertThat(result.startAt()).isEqualTo(time);
+
+        assertThat(result.id()).isEqualTo(saved.getId());
+        assertThat(result.startAt()).isEqualTo(saved.getStartAt());
     }
 
     @Test
     @DisplayName("예약 시간 단일 조회 id 없음 예외")
     void findById_null_search_test() {
         //given & when & then
-        assertThatThrownBy(() -> reservationTimeService.findById(99L))
+        assertThatThrownBy(() -> reservationTimeService.getById(99L))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("[ERROR] 찾는 예약 시간이 없습니다.");
+                .hasMessageContaining("찾는 예약 시간이 없습니다.");
     }
 }

@@ -5,21 +5,25 @@ import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
+import roomescape.repository.ReservationRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(0);
+    private final ReservationRepository reservationRepository;
+
+    public ReservationController(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ReservationResponseDto> getReservations() {
         List<ReservationResponseDto> responseDtos = new ArrayList<>();
+        List<Reservation> reservations = reservationRepository.findAll();
 
         for (Reservation reservation : reservations) {
             responseDtos.add(ReservationResponseDto.from(reservation));
@@ -30,10 +34,9 @@ public class ReservationController {
 
     @PostMapping
     public ReservationResponseDto addReservation(@RequestBody ReservationRequestDto requestDto) {
-        Long id = index.incrementAndGet();
-        Reservation reservation = new Reservation(id, requestDto.name(), requestDto.date(), requestDto.time());
+        Reservation reservation = new Reservation(null, requestDto.name(), requestDto.date(), requestDto.time());
 
-        reservations.add(reservation);
+        reservationRepository.createReservation(reservation);
 
         return ReservationResponseDto.from(reservation);
     }
@@ -41,11 +44,6 @@ public class ReservationController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteReservation(@PathVariable("id") Long id) {
-        Reservation target = reservations.stream()
-                .filter(reservation -> reservation.isEqualId(id))
-                .findFirst()
-                .orElseThrow();
-
-        reservations.remove(target);
+        reservationRepository.deleteById(id);
     }
 }

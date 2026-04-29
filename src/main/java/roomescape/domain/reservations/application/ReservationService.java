@@ -35,7 +35,7 @@ public class ReservationService {
                 time
         );
         Reservation savedReservation = reservationRepository.save(reservation);
-        return ReservationResponse.from(savedReservation, time);
+        return ReservationResponse.from(savedReservation);
     }
 
     public List<Reservation> getReservations() {
@@ -44,22 +44,5 @@ public class ReservationService {
 
     public void deleteReservation(Long id) {
         reservationRepository.deleteById(id);
-    }
-
-    public ReservationTimeResponse saveTime(ReservationTimeRequest request) {
-        ReservationTime reservationTime = ReservationTime.of(
-                null,
-                request.startAt()
-        );
-        ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
-        return ReservationTimeResponse.from(savedReservationTime);
-    }
-
-    public List<ReservationTime> getTimes() {
-        return reservationTimeRepository.findAll();
-    }
-
-    public void deleteTime(Long id) {
-        reservationTimeRepository.deleteById(id);
     }
 }

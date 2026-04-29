@@ -44,24 +44,4 @@ public class ReservationController {
         service.deleteReservation(id);
         return ResponseEntity.ok().build();
     }
-
-    @PostMapping("/times")
-    public ResponseEntity<ReservationTimeResponse> saveTime(
-            @RequestBody ReservationTimeRequest request
-    ) {
-        return ResponseEntity.ok(service.saveTime(request));
-    }
-
-    @GetMapping("/times")
-    public List<ReservationTime> getTimes() {
-        return ResponseEntity.ok(service.getTimes()).getBody();
-    }
-
-    @DeleteMapping("/times/{id}")
-    public ResponseEntity<Void> deleteTime(
-            @PathVariable Long id
-    ) {
-        service.deleteTime(id);
-        return ResponseEntity.ok().build();
-    }
 }

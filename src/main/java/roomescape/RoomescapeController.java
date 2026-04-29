@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoomescapeController {
 
-    private static final String FIND_RESERVATION = """
+    private static final String FIND_RESERVATION_BY_ID = """
             SELECT id, name, date, time
             FROM reservation
             WHERE id = ?
@@ -34,7 +34,7 @@ public class RoomescapeController {
             INSERT INTO reservation (name, date, time)
             VALUES (?, ?, ?)
             """;
-    private static final String DELETE_RESERVATION = """
+    private static final String DELETE_RESERVATION_BY_ID = """
             DELETE FROM reservation
             WHERE id = ?
             """;
@@ -64,7 +64,7 @@ public class RoomescapeController {
     public ResponseEntity<Void> delete(
             @PathVariable("reservation-id") Long reservationId
     ) {
-        // TODO!
+        jdbcTemplate.update(DELETE_RESERVATION_BY_ID, reservationId);
         return ResponseEntity.ok(null);
     }
 
@@ -98,7 +98,7 @@ public class RoomescapeController {
 
     private Reservation findReservationBy(final long reservationId) {
         return jdbcTemplate.queryForObject(
-                FIND_RESERVATION,
+                FIND_RESERVATION_BY_ID,
                 this::mapToReservation,
                 reservationId
         );

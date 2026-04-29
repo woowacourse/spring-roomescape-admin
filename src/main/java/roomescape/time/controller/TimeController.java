@@ -10,32 +10,33 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import roomescape.reservation.controller.dto.ReservationResponseDto;
-import roomescape.reservation.controller.dto.ReservationSaveRequestDto;
-import roomescape.reservation.service.RoomescapeService;
+import roomescape.time.controller.dto.TimeResponseDto;
+import roomescape.time.controller.dto.TimeSaveRequestDto;
+import roomescape.time.service.TimeService;
 
 @RestController
 public class TimeController {
   private final TimeService timeService;
 
-  public ReservationController(RoomescapeService timeService) {
+  public TimeController(TimeService timeService) {
     this.timeService = timeService;
   }
 
-  @GetMapping("/reservations")
-  public List<ReservationResponseDto> getReservations() {
-    return timeService.getReservations().stream()
-        .map(ReservationResponseDto::from)
+  @PostMapping("/times")
+  public TimeResponseDto create(@RequestBody TimeSaveRequestDto request) {
+    return TimeResponseDto.from(timeService.create(request.getStartAt()));
+  }
+
+  @GetMapping("/times")
+  public List<TimeResponseDto> findAll() {
+    return timeService.findAll()
+        .stream()
+        .map(TimeResponseDto::from)
         .collect(Collectors.toList());
   }
 
-  @PostMapping("/reservations")
-  public ReservationResponseDto saveReservation(@RequestBody ReservationSaveRequestDto reservationRequest) {
-    return ReservationResponseDto.from(timeService.save(reservationRequest.toServiceDto()));
-  }
-
-  @DeleteMapping("/reservations/{id}")
-  public boolean deleteReservation(@PathVariable long id) {
-    return timeService.deleteById(id);
+  @DeleteMapping("/times/{id}")
+  public void deleteById(@PathVariable long id) {
+    timeService.deleteById(id);
   }
 }

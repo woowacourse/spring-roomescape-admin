@@ -1,5 +1,33 @@
 package roomescape.time.service;
 
-public class TimeServiceImpl {
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import roomescape.reservation.domain.ReservationTime;
+import roomescape.time.repository.TimeRepository;
+
+@Service
+public class TimeServiceImpl implements TimeService {
+  private final TimeRepository timeRepository;
+
+  public TimeServiceImpl(TimeRepository timeRepository) {
+    this.timeRepository = timeRepository;
+  }
+
+  @Override
+  public ReservationTime create(String startAt) {
+    return timeRepository.save(startAt);
+  }
+
+  @Override
+  public List<ReservationTime> findAll() {
+    return timeRepository.findAll();
+  }
+
+  @Override
+  public void deleteById(long id) {
+    timeRepository.deleteById(id);
+  }
 
 }

@@ -18,7 +18,11 @@ import roomescape.repository.ReservationJdbcDao;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private ReservationJdbcDao jdbcDao;
+    private final ReservationJdbcDao jdbcDao;
+
+    public ReservationController(ReservationJdbcDao jdbcDao) {
+        this.jdbcDao = jdbcDao;
+    }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponseDto>> getAll() {

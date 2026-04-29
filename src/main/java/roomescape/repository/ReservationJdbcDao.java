@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,7 +12,7 @@ import roomescape.domain.Reservation;
 @Repository
 public class ReservationJdbcDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public ReservationJdbcDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -28,7 +29,7 @@ public class ReservationJdbcDao {
                     new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setString(2, reservation.getDate().toString());
-            ps.setString(2, reservation.getTime().toString());
+            ps.setString(3, reservation.getTime().toString());
             return ps;
         }, keyHolder);
 

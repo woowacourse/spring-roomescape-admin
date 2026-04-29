@@ -37,4 +37,4 @@ public record ReservationRequest(String name, LocalDate date, Long timeId) {
 }
 ```
 
-의존 방향도 HTTP 요청 dto -> 도메인 객체이므로 방향 자체는 맞게 된다. 하지만 `toDomain()` 메서드가 ReservationTime을 파라미터로 받는 형태는 DTO가 도메인 객체에 의존하는 형태가 되어버린다. DTO가 도메인 객체를 알아야 하는 상황이 생긴 것이다. 이 부분이 옳은지 아닌지는 아직 감이 오지 않는다.
+의존 방향도 HTTP 요청 dto -> 도메인 객체이므로 방향 자체는 맞게 된다. 하지만 `toDomain()` 메서드가 ReservationTime을 파라미터로 받는 형태는 DTO가 도메인 객체에 의존하는 형태가 되어버린다. DTO가 도메인 객체를 알아야 하는 상황이 생긴 것이다. 이 부분이 옳은지 아닌지는 _아직 감이 오지 않는다._

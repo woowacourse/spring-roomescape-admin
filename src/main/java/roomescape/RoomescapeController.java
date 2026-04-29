@@ -44,8 +44,8 @@ public class RoomescapeController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getReservations() {
-        // TODO!
-        return null;
+        final List<Reservation> reservations = jdbcTemplate.query(FIND_ALL_RESERVATION, this::mapToReservation);
+        return ResponseEntity.ok(ReservationResponse.from(reservations));
     }
 
     @PostMapping

@@ -26,7 +26,7 @@ public class ReservationService {
         return ReservationResponse.from(saved);
     }
 
-    public List<ReservationResponse> getReservations() {
+    public List<ReservationResponse> getAllReservations() {
         return reservationRepository.findAll();
     }
 

@@ -16,7 +16,6 @@ public class ReservationTimeService {
     private final ReservationRepository reservationRepository;
 
     public CreateTimeResponse createReservationTime(CreateTimeRequest request) {
-        request.validate();
         ReservationTime reservationTime = reservationTimeRepository.save(request.toEntity());
         return CreateTimeResponse.from(reservationTime);
     }

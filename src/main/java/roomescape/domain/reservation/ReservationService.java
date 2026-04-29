@@ -17,7 +17,6 @@ public class ReservationService {
     private final ReservationTimeRepository reservationTimeRepository;
 
     public CreateReservationResponse createReservation(CreateReservationRequest request) {
-        request.validate();
         ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId())
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간대 입니다."));
         Reservation savedReservation = reservationRepository.save(request.toEntity(reservationTime));

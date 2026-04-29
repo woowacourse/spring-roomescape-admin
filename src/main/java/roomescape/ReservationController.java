@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReservationController {
 
     private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationController(ReservationDao reservationDao) {
+    public ReservationController(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
         this.reservationDao = reservationDao;
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     @GetMapping("/reservations")
@@ -24,8 +26,9 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
-        return ResponseEntity.ok(reservationDao.insertReservation(reservation));
+    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationRequest reservationRequest) {
+        ReservationTime reservationTime = reservationTimeDao.selectById(reservationRequest.getTimeId());
+        return ResponseEntity.ok(reservationDao.insertReservation(reservationRequest, reservationTime));
     }
 
     @DeleteMapping("/reservations/{id}")

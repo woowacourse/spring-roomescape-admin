@@ -15,6 +15,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
 
+/**
+ * 단계 2 요구사항 테스트
+ *  - 단계 3에서 입력 형식과 출력 형식이 변경되어 해당 테스트는 실패합니다.
+ */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class JDBCTemplateTest {
     @Autowired

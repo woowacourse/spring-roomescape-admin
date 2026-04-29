@@ -10,6 +10,10 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import static org.hamcrest.Matchers.is;
 
+/**
+ * 단계 1 요구사항 테스트
+ *  - 단계 3에서 입력 형식과 출력 형식이 변경되어 해당 테스트는 실패합니다.
+ */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {

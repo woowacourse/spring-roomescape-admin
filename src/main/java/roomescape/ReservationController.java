@@ -9,47 +9,49 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class ReservationController {
 
-    private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(1);
+    private final QueryingDAO queryingDAO;
+    private final UpdatingDAO updatingDAO;
+
+    public ReservationController(QueryingDAO queryingDAO, UpdatingDAO updatingDAO) {
+        this.queryingDAO = queryingDAO;
+        this.updatingDAO = updatingDAO;
+    }
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
-        Reservation newReservation = Reservation.toEntity(reservation, index.getAndIncrement());
-        reservations.add(newReservation);
+        Long generatedId = updatingDAO.insertWithKeyHolder(reservation);
+        Reservation newReservation = queryingDAO.findReservationById(generatedId);
         return ResponseEntity.ok().body(newReservation);
     }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> read() {
+        List<Reservation> reservations = queryingDAO.findAllReservations();
         return ResponseEntity.ok().body(reservations);
     }
 
     @PutMapping("/reservations/{id}")
-    public ResponseEntity<List<Reservation>> update(@RequestBody Reservation newReservation, @PathVariable Long id) {
-        Reservation reservation = reservations.stream()
-                .filter(it -> it.getId().equals(id))
-                .findFirst()
-                .orElseThrow(RuntimeException::new);
-
+    public ResponseEntity<Void> update(@RequestBody Reservation newReservation, @PathVariable Long id) {
+        Reservation reservation = queryingDAO.findReservationById(id);
         reservation.update(newReservation);
+        updatingDAO.update(id, reservation);
+
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Reservation reservation = reservations.stream()
-                .filter(it -> it.getId().equals(id))
-                .findFirst()
-                .orElseThrow(RuntimeException::new);
+        int count = updatingDAO.delete(id);
 
-        reservations.remove(reservation);
+        if (count == 0) {
+            throw new RuntimeException("삭제하려는 예약을 찾을 수 없습니다.");
+        }
+
         return ResponseEntity.ok().build();
     }
 }

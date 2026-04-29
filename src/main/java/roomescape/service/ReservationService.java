@@ -40,4 +40,8 @@ public class ReservationService {
         Reservation reservation = new Reservation(requestDTO.name(), requestDTO.date(), requestDTO.time());
         return convertReservationToDTO(reservationRepository.save(reservation));
     }
+
+    public void deleteReservationById(Long id) {
+        reservationRepository.deleteReservationById(id);
+    }
 }

@@ -8,4 +8,6 @@ public interface ReservationRepository {
     List<Reservation> findAllReservations();
 
     Reservation save(Reservation reservation);
+
+    void deleteReservationById(Long id);
 }

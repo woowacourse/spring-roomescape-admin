@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
@@ -24,5 +25,10 @@ public class InMemoryReservationRepository implements ReservationRepository {
             reservation.getTime());
         reservations.add(savedReservation);
         return savedReservation;
+    }
+
+    @Override
+    public void deleteReservationById(Long id) {
+        reservations.removeIf(reservation -> Objects.equals(reservation.getId(), id));
     }
 }

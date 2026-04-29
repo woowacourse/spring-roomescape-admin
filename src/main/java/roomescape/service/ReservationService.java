@@ -26,7 +26,8 @@ public class ReservationService {
     }
 
     public ReservationResponse createReservation(ReservationCreateRequest request) {
-        Long id = reservationDao.insertReservation(request.toEntity());
+        ReservationTime reservationTime = reservationTimeDao.findById(request.timeId());
+        Long id = reservationDao.insertReservation(request.toEntity(reservationTime));
         return ReservationResponse.fromEntity(reservationDao.findReservation(id));
     }
 

@@ -33,7 +33,7 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> getReservationsDao() {
+    public ResponseEntity<List<Reservation>> getReservations() {
         List<ReservationEntity> reservationEntities = reservationsRepository.getReservations();
 
         List<Reservation> reservations = reservationEntities.stream()

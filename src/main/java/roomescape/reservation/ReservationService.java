@@ -3,6 +3,7 @@ package roomescape.reservation;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import roomescape.exception.ReservationNotFoundException;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 
@@ -32,6 +33,7 @@ public class ReservationService {
     }
 
     public void delete(Long id) {
+        reservationRepository.findById(id).orElseThrow(ReservationNotFoundException::new);
         reservationRepository.deleteById(id);
     }
 }

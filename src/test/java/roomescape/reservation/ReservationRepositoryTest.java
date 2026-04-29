@@ -75,4 +75,27 @@ class ReservationRepositoryTest {
         Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(countAfterDelete).isEqualTo(0);
     }
+
+    @Test
+    void 빈값으로_예약_추가시_400() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "");
+        params.put("date", "2023-08-05");
+        params.put("time", "15:40");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    void 존재하지_않는_예약_삭제시_404() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/0")
+                .then().log().all()
+                .statusCode(404);
+    }
 }

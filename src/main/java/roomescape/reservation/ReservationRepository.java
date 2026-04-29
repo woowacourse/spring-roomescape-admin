@@ -2,6 +2,7 @@ package roomescape.reservation;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -43,6 +44,12 @@ public class ReservationRepository {
     public List<Reservation> findAll() {
         String sql = "SELECT * FROM reservation";
         return jdbcTemplate.query(sql, reservationRowMapper);
+    }
+
+    public Optional<Reservation> findById(Long id) {
+        String sql = "SELECT * FROM reservation WHERE id = ?";
+        List<Reservation> reservations = jdbcTemplate.query(sql, reservationRowMapper, id);
+        return reservations.stream().findFirst();
     }
 
     public void deleteById(Long id) {

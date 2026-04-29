@@ -1,6 +1,6 @@
 package roomescape.reservation.domain;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -26,7 +26,7 @@ class ReservationTest {
         Long actual = reservation.getId();
 
         //then
-        assertThat(expected).isEqualTo(actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -39,7 +39,7 @@ class ReservationTest {
         String actual = reservation.getName();
 
         //then
-        assertThat(expected).isEqualTo(actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -52,7 +52,7 @@ class ReservationTest {
         LocalDate actual = reservation.getDate();
 
         //then
-        assertThat(expected).isEqualTo(actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -65,7 +65,7 @@ class ReservationTest {
         LocalTime actual = reservation.getTime();
 
         //then
-        assertThat(expected).isEqualTo(actual);
+        assertEquals(expected, actual);
     }
 
 }

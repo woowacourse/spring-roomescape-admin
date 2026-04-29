@@ -3,44 +3,46 @@ package roomescape.dao;
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import roomescape.exception.ApiException;
 import roomescape.exception.ErrorCode;
 import roomescape.model.ReservationTime;
 
-@Component
+@Repository
 public class ReservationTimeDao {
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<ReservationTime> rowMapper = (rs, rowNum) -> new ReservationTime(
+            rs.getLong("id"),
+            rs.getObject("start_at", LocalTime.class)
+    );
 
     public ReservationTimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ReservationTime save(LocalTime start_at) {
+    public ReservationTime save(LocalTime startAt) {
         String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setObject(1, start_at);
+            ps.setObject(1, startAt);
             return ps;
         }, keyHolder);
 
-        long generatedId = keyHolder.getKey().longValue();
-        return new ReservationTime(generatedId, start_at);
+        long generatedId = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return new ReservationTime(generatedId, startAt);
     }
 
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";
-        return jdbcTemplate.query(sql,
-                (rs, rowNum) -> new ReservationTime(
-                        rs.getLong("id"),
-                        rs.getObject("start_at", LocalTime.class)
-                ));
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     public void delete(Long id) {
@@ -49,6 +51,7 @@ public class ReservationTimeDao {
 
         if (affectedRows == 0) {
             throw new ApiException(ErrorCode.RESERVATION_TIME_NOT_FOUND, id);
+
         }
     }
 
@@ -56,14 +59,7 @@ public class ReservationTimeDao {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
 
         try {
-            return jdbcTemplate.queryForObject(
-                    sql,
-                    (rs, rowNum) -> new ReservationTime(
-                            rs.getLong("id"),
-                            rs.getObject("start_at", LocalTime.class)
-                    ),
-                    id
-            );
+            return jdbcTemplate.queryForObject(sql,rowMapper, id);
         } catch (EmptyResultDataAccessException exception) {
             throw new ApiException(ErrorCode.RESERVATION_TIME_NOT_FOUND, id);
         }

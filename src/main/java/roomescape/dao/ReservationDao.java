@@ -4,18 +4,27 @@ import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import roomescape.exception.ApiException;
 import roomescape.exception.ErrorCode;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 
-@Component
+@Repository
 public class ReservationDao {
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<Reservation> rowMapper = (rs, rowNum) -> new Reservation(
+            rs.getLong("reservation_id"),
+            rs.getString("name"),
+            rs.getObject("date", LocalDate.class),
+            new ReservationTime(rs.getLong("time_id"), rs.getObject("time_value", LocalTime.class))
+    );
+
 
     public ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -33,7 +42,7 @@ public class ReservationDao {
             return ps;
         }, keyHolder);
 
-        long generatedId = keyHolder.getKey().longValue();
+        long generatedId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
         return new Reservation(generatedId, name, date, time);
     }
@@ -43,13 +52,7 @@ public class ReservationDao {
                 "FROM reservation AS r " +
                 "INNER JOIN reservation_time AS t ON r.time_id = t.id";
 
-        return jdbcTemplate.query(sql,
-                (rs, rowNum) -> new Reservation(
-                        rs.getLong("reservation_id"),
-                        rs.getString("name"),
-                        rs.getObject("date", LocalDate.class),
-                        new ReservationTime(rs.getLong("time_id"), rs.getObject("time_value", LocalTime.class))
-                ));
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     public void delete(Long id) {

@@ -1,7 +1,6 @@
 package roomescape.controller;
 
 import java.util.List;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.Reservation;
 import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 import roomescape.service.ReservationService;
+import roomescape.util.ReservationMapper;
 
 @RestController
 @RequestMapping("/reservations")
@@ -25,19 +26,25 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> reservations() {
-        return ResponseEntity.ok(reservationService.allReservations());
+    public ResponseEntity<List<ReservationResponse>> reservations() {
+        return ResponseEntity.ok(convertToReservationResponse(reservationService.allReservations()));
     }
 
     @PostMapping
-    public ResponseEntity newReservation(@RequestBody ReservationRequest reservationRequest) {
-        reservationService.saveReservation(reservationRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<Reservation> newReservation(@RequestBody ReservationRequest reservationRequest) {
+        long reservationId = reservationService.saveReservation(reservationRequest);
+        return ResponseEntity.ok(reservationService.findReservation(reservationId));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteReservation(@PathVariable long id) {
         reservationService.removeReservation(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
+    }
+
+    private List<ReservationResponse> convertToReservationResponse(List<Reservation> reservations) {
+        return reservations.stream()
+                .map(ReservationMapper::toResponse)
+                .toList();
     }
 }

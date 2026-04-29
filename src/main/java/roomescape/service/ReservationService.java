@@ -11,23 +11,28 @@ import roomescape.dto.ReservationRequest;
 public class ReservationService {
 
 
-    private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(1);
+    private final List<Reservation> reservations = new ArrayList<>();
+    private final AtomicLong index = new AtomicLong(1);
 
     public List<Reservation> allReservations() {
         return reservations;
     }
 
-    public void saveReservation(ReservationRequest reservationRequest) {
+    public long saveReservation(ReservationRequest reservationRequest) {
         long id = index.getAndIncrement();
         String name = reservationRequest.name();
         String date = reservationRequest.date();
         String time = reservationRequest.time();
         Reservation reservation = new Reservation(id, name, date, time);
         reservations.add(reservation);
+        return id;
     }
 
-    public void removeReservation(long id) {
-        reservations.remove((int) id);
+    public Reservation removeReservation(long id) {
+        return reservations.remove((int) id - 1);
+    }
+
+    public Reservation findReservation(long reservationId) {
+        return reservations.get((int) reservationId - 1);
     }
 }

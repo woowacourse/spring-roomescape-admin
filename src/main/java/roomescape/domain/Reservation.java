@@ -16,6 +16,10 @@ public class Reservation {
         this(null, customerName, reservationTime);
     }
 
+    public boolean isOverlapping(ReservationTime otherReservationTime) {
+        return reservationTime.isOverlapping(otherReservationTime);
+    }
+
     public Long getReservationId() {
         return reservationId;
     }

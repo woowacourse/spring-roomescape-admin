@@ -11,7 +11,12 @@ public class Reservations {
         this.schedule = new ArrayList<>(schedule);
     }
 
+    public boolean hasOverlapTime(ReservationTime reservationTime) {
+        return schedule.stream()
+                .anyMatch(reservation -> reservation.isOverlapping(reservationTime));
+    }
+
     public List<Reservation> getSchedule() {
-        return schedule;
+        return List.copyOf(schedule);
     }
 }

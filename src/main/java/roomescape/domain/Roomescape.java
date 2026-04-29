@@ -13,21 +13,9 @@ public class Roomescape {
         this.playingTime = PlayingTime.toDefaultPlayingTime();
     }
 
-    public Reservation reserve(String customerName, ReservationTime reservationTime) {
-        LocalDateTime reservationStartTime = reservationTime.time();
-        LocalDateTime reservationEndTime = reservationStartTime.plus(playingTime.getPlayingTime());
-
-        List<Reservation> schedule = reservations.getSchedule();
-        boolean hasOverlapTime = schedule.stream()
-                .map(Reservation::getReservationTime)
-                .anyMatch(existingTime -> {
-                    LocalDateTime existingStartTime = existingTime.time();
-                    LocalDateTime existingEndTime = existingStartTime.plus(playingTime.getPlayingTime());
-                    return existingStartTime.isBefore(reservationEndTime) &&
-                            reservationStartTime.isBefore(existingEndTime);
-                });
-
-        if (hasOverlapTime) {
+    public Reservation reserve(String customerName, LocalDateTime startTime) {
+        ReservationTime reservationTime = playingTime.calculateReservationTime(startTime);
+        if (reservations.hasOverlapTime(reservationTime)) {
             throw new IllegalArgumentException("해당 시간에 이미 예약된 정보가 있습니다.");
         }
         return new Reservation(customerName, reservationTime);

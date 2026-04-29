@@ -18,7 +18,7 @@
 
 * playingTime:PlayingTime
     * 방탈출 게임은 진행 시간을 가지고 있다.
-* reservations:ReservationSchedule
+* reservations:Reservations
   * 방탈출 게임은 시간표를 통해 예약 일정을 처리할 수 있다.
 
 > 행위
@@ -32,14 +32,29 @@
 
 * playingTime:Duration
   * 방탈출 게임의 진행 시간을 관리한다.
-  * 기본 값: 1시간
 
-### ReservationSchedule (방탈출 시간표)
+> 행위 
+
+* static toDefaultPlayingTime
+  * 기본 플레이 시간을 반환한다.
+  * 기본 값: 1시간
+* static ofMinutes
+  * 분을 기준으로 다양한 플레이 시간을 반환한다.
+  * 플레이 시간의 다형성
+* calculateEndTime
+  * 예약 시간을 기준으로 끝나는 시간을 계산한다.
+
+### Reservations (방탈출 시간표)
 
 > 상태
 
 * schedule:List<Reservation> 
   * 방탈출 시간표는 예약 정보로 일정을 관리할 수 있다.
+
+> 행위 
+
+* hasOverlapTime(ReservationTime)
+  * 예약 일정 목록 중 예약 시간이 겹치는게 있는지 확인한다.
 
 ### Resrevation (예약 정보)
 
@@ -49,10 +64,22 @@
   * 예약자 이름
 * reservationTime:ReservationTime
   * 예약 시간
+
+> 행위
+
+* isOverlapping(ReservationTime)
+  * 예약 시간이 겹치는지 확인하는 작업을 위임한다.
+
   
 ### ReservationTime (예약 시간)
 
 > 상태 
 
-* time:LocalDateTime
+* startTime:LocalDateTime
+* endTime:LocalDateTime
+
+> 행위
+
+* isOverlapping(ReservationTime)
+  * 예약 시간이 겹치는지 확인한다.
 

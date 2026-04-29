@@ -10,7 +10,7 @@ public record ReservationResponse(Long id, String name, LocalDate date, LocalTim
         return new ReservationResponse(
                 reservation.getReservationId(),
                 reservation.getCustomerName(),
-                reservation.getReservationTime().time().toLocalDate(),
-                reservation.getReservationTime().time().toLocalTime());
+                reservation.getReservationTime().startTime().toLocalDate(),
+                reservation.getReservationTime().startTime().toLocalTime());
     }
 }

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.data.ReservationRepository;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
 import roomescape.domain.Roomescape;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
@@ -32,7 +31,7 @@ public class RoomescapeApiController {
         LocalDateTime reservationTime = LocalDateTime.of(reservationRequest.date(), reservationRequest.time());
 
         Roomescape roomescape = new Roomescape(reservationRepository.findAll());
-        Reservation reservation = roomescape.reserve(reservationRequest.name(), new ReservationTime(reservationTime));
+        Reservation reservation = roomescape.reserve(reservationRequest.name(), reservationTime);
         Reservation savedReservation = reservationRepository.save(reservation);
 
         return ResponseEntity.ok(ReservationResponse.from(savedReservation));

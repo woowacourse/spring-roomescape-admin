@@ -1,6 +1,7 @@
 package roomescape.domain;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class PlayingTime {
 
@@ -20,7 +21,7 @@ public class PlayingTime {
         return new PlayingTime(Duration.ofMinutes(minutes));
     }
 
-    public Duration getPlayingTime() {
-        return playingTime;
+    public ReservationTime calculateReservationTime(LocalDateTime startTime) {
+        return new ReservationTime(startTime, startTime.plus(this.playingTime));
     }
 }

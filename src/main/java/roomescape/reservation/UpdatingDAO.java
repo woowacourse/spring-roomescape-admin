@@ -10,7 +10,7 @@ import java.sql.PreparedStatement;
 @Repository
 public class UpdatingDAO {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public UpdatingDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

@@ -1,14 +1,14 @@
 package roomescape;
 
+import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Controller
 public class AdminController {
     private final JdbcTemplate jdbcTemplate;
-
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
 
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("id"),
@@ -35,10 +32,23 @@ public class AdminController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
-        Reservation newReservation = Reservation.toEntity(reservation, index.getAndIncrement());
+        String sql = "INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)";
 
-        reservations.add(newReservation);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+                    PreparedStatement preparedStatement = connection.prepareStatement(
+                            sql,
+                            new String[]{"id"}
+                    );
+                    preparedStatement.setString(1, reservation.getName());
+                    preparedStatement.setString(2, reservation.getDate().toString());
+                    preparedStatement.setString(3, reservation.getTime().toString());
+                    return preparedStatement;
+                }, keyHolder
+        );
 
+        long id = keyHolder.getKey().longValue();
+        Reservation newReservation = Reservation.toEntity(reservation, id);
         return ResponseEntity.ok(newReservation);
     }
 
@@ -73,15 +83,14 @@ public class AdminController {
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Reservation reservation = reservations.stream()
-                .filter(it -> Objects.equals(it.getId(), id))
-                .findAny()
-                .orElseThrow();
+        String sql = "DELETE FROM reservation WHERE id = ?";
 
-        reservations.remove(reservation);
+        jdbcTemplate.update(
+                sql,
+                id
+        );
 
         return ResponseEntity.ok().build();
     }
-
 
 }

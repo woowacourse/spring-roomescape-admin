@@ -2,12 +2,14 @@ package roomescape.exception;
 
 import java.util.HashMap;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -29,6 +31,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorMessage> handleRuntimeException(
             RuntimeException e
     ) {
+        log.warn("IllegalArgumentException 발생: {}", e.getMessage(), e);
+
         return ResponseEntity
                 .badRequest()
                 .body(new ErrorMessage(e.getMessage()));
@@ -38,6 +42,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorMessage> handleException(
             Exception e
     ) {
+        log.error("Unexpected Exception 발생", e);
+
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorMessage("서버 에러가 발생했습니다."));

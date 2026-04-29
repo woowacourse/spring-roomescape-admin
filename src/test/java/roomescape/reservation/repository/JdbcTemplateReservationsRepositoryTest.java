@@ -6,16 +6,24 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
-@SpringBootTest
+@JdbcTest
 class JdbcTemplateReservationsRepositoryTest {
 
     @Autowired
-    ReservationsRepository reservationsRepository;
+    JdbcTemplate jdbcTemplate;
+    JdbcTemplateReservationsRepository reservationsRepository;
+
+    @BeforeEach
+    void beforeEach() {
+        reservationsRepository = new JdbcTemplateReservationsRepository(jdbcTemplate);
+    }
 
     @DisplayName("기본적으로는 아무런 예약도 존재하지 않는다.")
     @Test

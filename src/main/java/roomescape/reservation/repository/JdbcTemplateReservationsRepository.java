@@ -13,7 +13,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JdbcTemplateReservationRepository implements ReservationsRepository {
+public class JdbcTemplateReservationsRepository implements ReservationsRepository {
 
     private final static String ID_COLUMN = "id";
     private final static String NAME_COLUMN = "name";
@@ -23,7 +23,7 @@ public class JdbcTemplateReservationRepository implements ReservationsRepository
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public JdbcTemplateReservationRepository(JdbcTemplate jdbcTemplate) {
+    public JdbcTemplateReservationsRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -45,10 +45,9 @@ public class JdbcTemplateReservationRepository implements ReservationsRepository
     @Override
     public ReservationEntity saveReservation(ReservationEntity entity) {
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)";
 
         jdbcTemplate.update(connection ->
-                        createPreparedStatement(entity, connection, sql),
+                        createPreparedStatement(entity, connection),
                 keyHolder
         );
 
@@ -58,9 +57,10 @@ public class JdbcTemplateReservationRepository implements ReservationsRepository
 
     private PreparedStatement createPreparedStatement(
             ReservationEntity reservationEntity,
-            Connection connection,
-            String sql
+            Connection connection
     ) throws SQLException {
+        String sql = "INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)";
+
         PreparedStatement preparedStatement = connection.prepareStatement(
                 sql,
                 Statement.RETURN_GENERATED_KEYS

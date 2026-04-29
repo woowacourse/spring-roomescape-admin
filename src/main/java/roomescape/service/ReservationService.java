@@ -2,6 +2,7 @@
 
     import java.util.List;
     import org.springframework.stereotype.Service;
+    import org.springframework.transaction.annotation.Transactional;
     import roomescape.domain.Reservation;
     import roomescape.domain.ReservationTime;
     import roomescape.repository.ReservationRepository;
@@ -22,6 +23,7 @@
             this.timeRepository = timeRepository;
         }
 
+        @Transactional
         public Reservation create(
                 ReservationCreateCommand createCommand
         ) {
@@ -35,10 +37,12 @@
             return reservationRepository.create(reservation);
         }
 
+        @Transactional
         public List<Reservation> findAll() {
             return reservationRepository.findAll();
         }
 
+        @Transactional
         public void delete(long id) {
             reservationRepository.delete(id);
         }

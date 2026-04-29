@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import roomescape.dao.ReservationTimeDao;
@@ -18,7 +19,7 @@ public class ReservationTimeRepository {
         return reservationTimeDao.findAll();
     }
 
-    public ReservationTime save(String startAt) {
+    public ReservationTime save(LocalTime startAt) {
         return reservationTimeDao.save(startAt);
     }
 

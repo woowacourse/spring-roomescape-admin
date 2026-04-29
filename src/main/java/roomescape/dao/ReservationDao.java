@@ -1,6 +1,8 @@
 package roomescape.dao;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -19,14 +21,14 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Reservation save(String name, String date, ReservationTime time) {
+    public Reservation save(String name, LocalDate date, ReservationTime time) {
         String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, name);
-            ps.setString(2, date);
+            ps.setObject(2, date);
             ps.setLong(3, time.id());
             return ps;
         }, keyHolder);
@@ -45,8 +47,8 @@ public class ReservationDao {
                 (rs, rowNum) -> new Reservation(
                         rs.getLong("reservation_id"),
                         rs.getString("name"),
-                        rs.getString("date"),
-                        new ReservationTime(rs.getLong("time_id"), rs.getString("time_value"))
+                        rs.getObject("date", LocalDate.class),
+                        new ReservationTime(rs.getLong("time_id"), rs.getObject("time_value", LocalTime.class))
                 ));
     }
 

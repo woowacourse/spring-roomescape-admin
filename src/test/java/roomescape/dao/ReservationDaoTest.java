@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Properties;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,22 +56,22 @@ class ReservationDaoTest {
 
     @Test
     void 예약을_저장할_수_있다() {
-        ReservationTime reservationTime = createReservationTime("15:40");
-        Reservation saved = reservationDao.save("브라운", "2023-08-05", reservationTime);
+        ReservationTime reservationTime = createReservationTime(LocalTime.of(15, 40));
+        Reservation saved = reservationDao.save("브라운", LocalDate.of(2023, 8, 5), reservationTime);
 
         assertThat(saved.id()).isNotNull();
         assertThat(saved.name()).isEqualTo("브라운");
-        assertThat(saved.date()).isEqualTo("2023-08-05");
-        assertThat(saved.time().startAt()).isEqualTo("15:40");
+        assertThat(saved.date()).isEqualTo(LocalDate.of(2023, 8, 5));
+        assertThat(saved.time().startAt()).isEqualTo(LocalTime.of(15, 40));
     }
 
     @Test
     void 저장된_예약을_전체_조회할_수_있다() {
-        ReservationTime firstTime = createReservationTime("15:40");
-        ReservationTime secondTime = createReservationTime("16:00");
+        ReservationTime firstTime = createReservationTime(LocalTime.of(15, 40));
+        ReservationTime secondTime = createReservationTime(LocalTime.of(16, 0));
 
-        reservationDao.save("브라운", "2023-08-05", firstTime);
-        reservationDao.save("코니", "2023-08-06", secondTime);
+        reservationDao.save("브라운", LocalDate.of(2023, 8, 5), firstTime);
+        reservationDao.save("코니", LocalDate.of(2023, 8, 6), secondTime);
 
         List<Reservation> reservations = reservationDao.findAll();
 
@@ -81,8 +83,8 @@ class ReservationDaoTest {
 
     @Test
     void 존재하는_ID로_예약을_삭제할_수_있다() {
-        ReservationTime reservationTime = createReservationTime("15:40");
-        Reservation saved = reservationDao.save("브라운", "2023-08-05", reservationTime);
+        ReservationTime reservationTime = createReservationTime(LocalTime.of(15, 40));
+        Reservation saved = reservationDao.save("브라운", LocalDate.of(2023, 8, 5), reservationTime);
 
         reservationDao.delete(saved.id());
 
@@ -97,7 +99,7 @@ class ReservationDaoTest {
                 .isEqualTo(ErrorCode.RESERVATION_NOT_FOUND);
     }
 
-    private ReservationTime createReservationTime(String startAt) {
+    private ReservationTime createReservationTime(LocalTime startAt) {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", startAt);
         Long id = jdbcTemplate.queryForObject(
                 "SELECT id FROM reservation_time WHERE start_at = ? ORDER BY id DESC LIMIT 1",

@@ -1,4 +1,6 @@
 package roomescape.model;
 
-public record ReservationTime(Long id, String startAt) {
+import java.time.LocalTime;
+
+public record ReservationTime(Long id, LocalTime startAt) {
 }

@@ -15,4 +15,5 @@ CREATE TABLE IF NOT EXISTS reservation
 
     PRIMARY KEY (id),
     FOREIGN KEY (time_id) REFERENCES reservation_time (id)
+        ON DELETE CASCADE
 );

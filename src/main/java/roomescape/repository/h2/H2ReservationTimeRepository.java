@@ -1,5 +1,6 @@
 package roomescape.repository.h2;
 
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +17,7 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
     private final RowMapper<ReservationTime> rowMapper = (rs, rowNum) ->
             new ReservationTime(
                     rs.getLong("id"),
-                    rs.getString("start_at"));
+                    LocalTime.parse(rs.getString("start_at")));
 
     public H2ReservationTimeRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

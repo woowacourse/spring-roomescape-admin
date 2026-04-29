@@ -16,16 +16,6 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
-    public ReservationTime(String time) {
-        this.id = null;
-        this.startAt = LocalTime.parse(time);
-    }
-
-    public ReservationTime(long id, String startAt) {
-        this.id = id;
-        this.startAt = LocalTime.parse(startAt);
-    }
-
     public Long getId() {
         return id;
     }

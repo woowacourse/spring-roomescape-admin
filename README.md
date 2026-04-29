@@ -84,3 +84,17 @@ spring.datasource.url=jdbc:h2:mem:database
 - [x] `Reservation` 클래스의 `time` 필드를 `ReservationTime` 객체로 변경
 - [x] 예약 추가 본문: `time` -> `timeId`로 변경
 - [x] 예약 조회 응답: `time`을 객체로 변경
+
+---
+
+## 4단계: 계층 분리
+
+### 요구사항
+- 레이어드 아키텍처로 레이어별 책임에 따라 코드를 분리한다.
+- `ReservationController`에 `JdbcTemplate` 필드가 남아있지 않아야 한다.
+- 레이어별 책임과 역할에 따라 클래스를 분리하고, 분리한 클래스를 Spring Bean으로 등록한다.
+
+- [ ] Controller 레이어는 웹 요청, 응답 책임을 가지도록 한다.
+- [ ] Service는 비즈니스 플로우 책임을 가지도록 한다
+- [ ] Repository는 DB 접근 책임을 가지도록 한다.
+- [ ] Domain은 비즈니스 규칙을 갖도록 한다.

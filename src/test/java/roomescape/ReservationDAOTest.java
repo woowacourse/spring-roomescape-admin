@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,11 +25,11 @@ public class ReservationDAOTest {
 
         jdbcTemplate.execute("DROP TABLE reservation IF EXISTS");
         jdbcTemplate.execute("CREATE TABLE reservation(" +
-                "id BIGINT, name VARCHAR(255), date DATE, time TIME)");
+                "id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), date DATE, time TIME)");
 
-        jdbcTemplate.update("INSERT INTO reservation(id, name, date, time) VALUES (?, ?, ?, ?)", 1, "user1", "2026-04-28", "15:00");
-        jdbcTemplate.update("INSERT INTO reservation(id, name, date, time) VALUES (?, ?, ?, ?)", 2, "user2", "2026-04-29", "16:00");
-        jdbcTemplate.update("INSERT INTO reservation(id, name, date, time) VALUES (?, ?, ?, ?)", 3, "user3", "2026-04-30", "17:00");
+        jdbcTemplate.update("INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)", "user1", "2026-04-28", "15:00");
+        jdbcTemplate.update("INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)", "user2", "2026-04-29", "16:00");
+        jdbcTemplate.update("INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)", "user3", "2026-04-30", "17:00");
 
     }
 
@@ -51,5 +53,19 @@ public class ReservationDAOTest {
         List<Reservation> reservations = reservationDAO.findAllReservation();
 
         assertThat(reservations).hasSize(3);
+    }
+
+    @Test
+    void insert() {
+        Reservation reservation = new Reservation("user1", LocalDate.of(2026, 4, 29), LocalTime.of(14, 0, 0));
+        reservationDAO.insert(reservation);
+    }
+
+    @Test
+    void keyHolder() {
+        Reservation reservation = new Reservation("user4", LocalDate.of(2026, 5, 1), LocalTime.of(15, 0, 0));
+        Long id = reservationDAO.insertWithKeyHolder(reservation);
+
+        assertThat(id).isNotNull();
     }
 }

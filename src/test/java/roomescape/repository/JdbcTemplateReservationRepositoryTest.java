@@ -4,18 +4,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 @JdbcTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class JdbcTemplateReservationRepositoryTest {
 
     @Autowired
@@ -32,7 +32,8 @@ class JdbcTemplateReservationRepositoryTest {
     @DisplayName("Reservation 데이터를 데이터베이스에 저장한다.")
     public void save() {
         // given
-        Reservation reservation = new Reservation("name", "2023-08-05", "15:40");
+        Reservation reservation = new Reservation(
+                "name", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40));
 
         // when
         Reservation saved = repository.save(reservation);
@@ -73,7 +74,8 @@ class JdbcTemplateReservationRepositoryTest {
     @DisplayName("특정 id의 Reservation을 삭제한다.")
     public void delete() {
         // given
-        Reservation saved = repository.save(new Reservation("kim", "2023-08-05", "15:40"));
+        Reservation saved = repository.save(new Reservation(
+                "name", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40)));
 
         // when
         repository.delete(saved.getId());

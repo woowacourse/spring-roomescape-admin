@@ -29,4 +29,8 @@ public class RoomReservationService {
         Long roomReservationId = roomReservationRepository.save(roomReservation);
         return RoomReservationMapper.toRoomReservationResultDto(roomReservationId, roomReservation);
     }
+
+    public void cancelReservation(Long id) {
+        roomReservationRepository.delete(id);
+    }
 }

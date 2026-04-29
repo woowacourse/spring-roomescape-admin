@@ -33,4 +33,12 @@ public class RoomReservationRepository {
         reservationStorage.put(id, RoomReservationMapper.toRoomReservationEntity(id, roomReservation));
         return id;
     }
+
+    public void delete(Long id) {
+        if(reservationStorage.containsKey(id)) {
+            reservationStorage.remove(id);
+            return;
+        }
+        throw new IllegalArgumentException("존재하지 않는 예약 번호입니다.");
+    }
 }

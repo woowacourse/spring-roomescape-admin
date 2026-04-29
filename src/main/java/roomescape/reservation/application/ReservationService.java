@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.presentation.dto.request.ReservationSaveRequest;
+import roomescape.reservation.presentation.dto.response.ReservationFindResponse;
 import roomescape.reservation.presentation.dto.response.ReservationSaveResponse;
 
 @Service
@@ -18,5 +19,16 @@ public class ReservationService {
         reservations.add(reservation);
         return new ReservationSaveResponse(reservation.getId(), reservation.getName(), reservation.getDate(),
                 reservation.getTime());
+    }
+
+    public List<ReservationFindResponse> findAllReservations() {
+        return reservations.stream()
+                .map(reservation -> new ReservationFindResponse(
+                        reservation.getId(),
+                        reservation.getName(),
+                        reservation.getDate(),
+                        reservation.getTime()
+                ))
+                .toList();
     }
 }

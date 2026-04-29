@@ -6,26 +6,33 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import org.springframework.http.HttpStatus;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.domain.Reservation;
-import roomescape.domain.User;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import roomescape.dto.ReservationResponseDTO;
 
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationTest {
     @DisplayName("예약자 이름, 날짜, 시간으로 예약을 생성한다.")
     @Test
     void 예약_생성_테스트() {
         // given
-        User user = new User("brown");
-        LocalDate date = LocalDate.now();
-        LocalTime time = LocalTime.now();
-        Reservation reservation = new Reservation(user, date, time);
+        var body = Map.of(
+                "name", "brown",
+                "date", LocalDate.now().toString(),
+                "time", LocalTime.now().toString()
+        );
 
         // when
         var response = RestAssured
                 .given().log().all()
-                .body(reservation)
+                .body(body)
                 .contentType(ContentType.JSON)
                 .when().post("/reservations")
                 .then().log().all().extract();
@@ -44,12 +51,12 @@ public class ReservationTest {
         var response = RestAssured
                 .given().log().all()
                 .contentType(ContentType.JSON)
-                .when().post("/reservations")
+                .when().get("/reservations")
                 .then().log().all().extract();
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.jsonPath().getList("", Reservation.class)).hasSize(1);
+        assertThat(response.jsonPath().getList("", ReservationResponseDTO.class)).hasSize(1);
     }
 
     @DisplayName("예약 ID로 예약을 삭제한다.")

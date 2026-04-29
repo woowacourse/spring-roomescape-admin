@@ -54,8 +54,7 @@ public class ReservationRepository {
         int rowCount = jdbcTemplate.queryForObject(
             "SELECT COUNT(*) FROM reservation WHERE id = ?",
             Integer.class,
-            reservationId
-        );
+            reservationId);
         if (rowCount == 0) {
             throw new NoSuchElementException("존재하지 않는 예약 아이디 입니다. reservationId: " + reservationId);
         }

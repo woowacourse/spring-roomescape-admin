@@ -29,4 +29,8 @@ public class ReservationTimeService {
         reservationTime.setId(savedId);
         return reservationTime;
     }
+
+    public void deleteById(long id) {
+        repository.deleteById(id);
+    }
 }

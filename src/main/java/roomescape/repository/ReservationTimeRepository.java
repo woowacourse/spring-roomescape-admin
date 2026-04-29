@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -42,5 +43,17 @@ public class ReservationTimeRepository {
         }, keyHolder);
 
         return keyHolder.getKey().longValue();
+    }
+
+    public void deleteById(long id) {
+        final int rowCount = jdbcTemplate.queryForObject(
+            "SELECT COUNT(1) FROM reservation_time WHERE id = ?",
+            Integer.class,
+            id);
+        if (rowCount == 0) {
+            throw new NoSuchElementException("존재하지 않는 예약 시간 아이디 입니다. reservationTimeId: " + id);
+        }
+
+        jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
     }
 }

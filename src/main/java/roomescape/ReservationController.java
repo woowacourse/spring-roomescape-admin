@@ -13,12 +13,12 @@ import roomescape.request.CreateReservationRequest;
 
 @RestController
 @RequestMapping(value = "/reservations")
-public class RoomescapeController {
+public class ReservationController {
 
     private final ReservationDao reservationDao;
     private final ReservationTimeDao reservationTimeDao;
 
-    public RoomescapeController(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
+    public ReservationController(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
         this.reservationDao = reservationDao;
         this.reservationTimeDao = reservationTimeDao;
     }

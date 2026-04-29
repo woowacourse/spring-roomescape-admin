@@ -3,10 +3,10 @@ package roomescape.controller;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,11 +42,9 @@ public class ReservationController {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
-        long generatedKey = simpleJdbcInsert.executeAndReturnKey(Map.of(
-                "name", reservationRequestDto.name(),
-                "date", reservationRequestDto.date(),
-                "time", reservationRequestDto.time()
-        )).longValue();
+        long generatedKey = simpleJdbcInsert
+                .executeAndReturnKey(new BeanPropertySqlParameterSource(reservationRequestDto))
+                .longValue();
 
         Reservation reservation = new Reservation(
                 generatedKey,

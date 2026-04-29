@@ -7,18 +7,21 @@ import java.util.Objects;
 public class Reservation {
 
     private Long id;
-    private final String name;
-    private final LocalDate date; // THINK change LocalDateTime??
-    private final LocalTime time;
+    private String name;
+    private LocalDate date; // THINK change LocalDateTime??
+    private LocalTime time;
 
-    public Reservation(String name, LocalDate date, LocalTime time) {
+    public Reservation() {
+    }
+
+    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+        this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
-        this.id = id;
+    public Reservation(String name, LocalDate date, LocalTime time) {
         this.name = name;
         this.date = date;
         this.time = time;

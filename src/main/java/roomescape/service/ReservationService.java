@@ -3,28 +3,29 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
+import roomescape.repository.ReservationDao;
 import roomescape.repository.ReservationRepository;
 
 @Service
 public class ReservationService {
 
-    private final ReservationRepository reservationRepository;
+    private final ReservationDao reservationDao;
 
-    public ReservationService(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
+    public ReservationService(ReservationRepository reservationDao) {
+        this.reservationDao = reservationDao;
     }
 
     public Reservation add(String name, String date, String time) {
-        return reservationRepository.save(
+        return reservationDao.save(
                 Reservation.constructWithNoId(name, date, time)
         );
     }
 
     public List<Reservation> find() {
-        return reservationRepository.findAll();
+        return reservationDao.findAll();
     }
 
     public void delete(Long targetId) {
-        reservationRepository.delete(targetId);
+        reservationDao.delete(targetId);
     }
 }

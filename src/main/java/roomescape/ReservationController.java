@@ -48,7 +48,7 @@ public class ReservationController {
             ORDER BY r.id
             """;
     private static final String INSERT_RESERVATION = """
-            INSERT INTO reservation (name, date, time)
+            INSERT INTO reservation (name, date, time_id)
             VALUES (?, ?, ?)
             """;
     private static final String DELETE_RESERVATION_BY_ID = """
@@ -97,7 +97,7 @@ public class ReservationController {
 
             preparedStatement.setString(1, reservation.getName());
             preparedStatement.setString(2, reservation.getDate().toString());
-            preparedStatement.setString(3, reservation.getTime().toString());
+            preparedStatement.setLong(3, reservation.getTime().getId());
 
             return preparedStatement;
         }, keyHolder);

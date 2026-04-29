@@ -31,8 +31,8 @@ public class TimeController {
             ORDER BY id
             """;
     private static final String INSERT_TIME = """
-            INSERT INTO reservation_time (id, start_at)
-            VALUES (?, ?)
+            INSERT INTO reservation_time (start_at)
+            VALUES ?
             """;
     private static final String DELETE_TIME_BY_ID = """
             DELETE FROM reservation_time

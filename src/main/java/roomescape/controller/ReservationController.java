@@ -1,56 +1,33 @@
 package roomescape.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.util.DateAndTimeConverter;
+import roomescape.service.ReservationService;
 import roomescape.dto.CreateReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.domain.Reservation;
-import roomescape.domain.Reservations;
 
 import java.util.List;
 
 @RequestMapping("/reservations")
 @RestController
+@RequiredArgsConstructor
 public class ReservationController {
-    private final Reservations reservations = new Reservations();
+    private final ReservationService reservationService;
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody CreateReservationRequest createReservationRequest) {
-        Reservation reservation = new Reservation(
-                createReservationRequest.name(),
-                DateAndTimeConverter.parseToDate(createReservationRequest.date()),
-                DateAndTimeConverter.parseToTime(createReservationRequest.time())
-        );
-
-        ReservationResponse reservationResponse = new ReservationResponse(
-                reservations.add(reservation),
-                reservation.name(),
-                DateAndTimeConverter.formatDate(reservation.date()),
-                DateAndTimeConverter.formatTime(reservation.time())
-        );
-
-        return ResponseEntity.ok(reservationResponse);
+        return ResponseEntity.ok(reservationService.save(createReservationRequest));
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponse>> getAllReservations(){
-       List<ReservationResponse> reservationResponses = reservations.getAllReservations()
-                .stream()
-                .map(reservation -> new ReservationResponse(
-                       reservations.getReservationId(reservation),
-                        reservation.name(),
-                        DateAndTimeConverter.formatDate(reservation.date()),
-                        DateAndTimeConverter.formatTime(reservation.time())
-                ))
-                .toList();
-
-       return ResponseEntity.ok(reservationResponses);
+    public ResponseEntity<List<ReservationResponse>> getAllReservations() {
+        return ResponseEntity.ok(reservationService.getAll());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        reservations.deleteById(id);
+        reservationService.delete(id);
 
         return ResponseEntity.ok().build();
     }

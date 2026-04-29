@@ -1,9 +1,10 @@
-package roomescape.dao;
+package roomescape.reservation.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import roomescape.entity.Reservation;
+import roomescape.reservation.entity.Reservation;
+import roomescape.time.entity.ReservationTime;
 
 import java.util.List;
 
@@ -17,14 +18,17 @@ public class QueryingDao {
     }
 
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
-        Reservation reservation = new Reservation(
+        ReservationTime time = new ReservationTime(
+                resultSet.getLong("time_id"),
+                resultSet.getString("start_at")
+        );
+
+        return new Reservation(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getDate("date").toLocalDate(),
-                resultSet.getTime("time").toLocalTime()
+                time
         );
-
-        return reservation;
     };
 
     public int count() {
@@ -33,12 +37,17 @@ public class QueryingDao {
     }
 
     public Reservation findById(Long id) {
-        String sql = "select id, name, date, time from reservation where id = ?";
+        String sql = "select r.id, r.name, r.date, r.time_id, t.start_at " +
+                "from reservation r " +
+                "inner join reservation_time t on r.time_id = t.id " +
+                "where r.id = ?";
         return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
     public List<Reservation> findAll() {
-        String sql = "select id, name, date, time from reservation";
+        String sql = "select r.id, r.name, r.date, r.time_id, t.start_at " +
+                "from reservation r " +
+                "inner join reservation_time t on r.time_id = t.id";
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 }

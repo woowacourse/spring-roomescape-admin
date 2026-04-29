@@ -8,6 +8,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationCommand;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationDao {
@@ -17,7 +19,10 @@ public class ReservationDao {
             rs.getLong("id"),
             rs.getString("name"),
             rs.getString("date"),
-            rs.getString("time")
+            new ReservationTime(
+                    rs.getLong("timeId"),
+                    rs.getString("startAt")
+            )
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -27,19 +32,19 @@ public class ReservationDao {
     }
 
     public List<Reservation> getAllReservation() {
-        String sql = "SELECT id, name, date, time FROM reservation";
+        String sql = "SELECT r.id as id, r.name as name, r.date as date, t.id as timeId, t.start_at as startAt FROM reservation AS r JOIN reservation_time AS t ON reservation.time_id = reservation_time.id";
         return jdbcTemplate.query(sql, MAPPER);
     }
 
-    public Reservation insertReservation(Reservation reservation) {
+    public long insertReservation(ReservationCommand reservationCommand) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
 
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(sql, new String[] { "id" });
-            statement.setString(1, reservation.name());
-            statement.setString(2, reservation.date());
-            statement.setString(3, reservation.time());
+            statement.setString(1, reservationCommand.name());
+            statement.setString(2, reservationCommand.date());
+            statement.setLong(3, reservationCommand.timeId());
             return statement;
         }, keyHolder);
 
@@ -48,7 +53,7 @@ public class ReservationDao {
         if(key == null) {
             throw new RuntimeException(FAILED_ID_GENERATE);
         }
-        return reservation.update(key.longValue());
+        return key.longValue();
     }
 
     public int deleteReservation(long id) {

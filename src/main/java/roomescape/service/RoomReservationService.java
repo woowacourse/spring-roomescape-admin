@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationCommand;
 import roomescape.repository.ReservationRepository;
 
 @Service
@@ -19,8 +20,8 @@ public class RoomReservationService {
     }
 
     @Transactional
-    public Reservation addReservation(Reservation reservation) {
-        return reservationRepository.addReservation(reservation);
+    public Reservation addReservation(ReservationCommand reservationCommand) {
+        return reservationRepository.addReservation(reservationCommand);
     }
 
     public int deleteReservation(long id) {

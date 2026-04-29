@@ -1,4 +1,9 @@
 package roomescape.dto;
 
-public record AddReservationRequest(String name, String date, String time) {
+import roomescape.domain.ReservationCommand;
+
+public record AddReservationRequest(String date, String name, long timeId) {
+    public ReservationCommand to() {
+        return new ReservationCommand(date, name, timeId);
+    }
 }

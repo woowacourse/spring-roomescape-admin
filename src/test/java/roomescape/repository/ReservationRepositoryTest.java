@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import roomescape.domain.Reservation;
@@ -158,19 +160,15 @@ class ReservationRepositoryTest {
     }
 
     private ReservationTime persistTime(String startAt) {
-        String insertSql = "INSERT INTO reservation_time(start_at)"
-                + " VALUES (?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, startAt);
-
-            return statement;
-        }, keyHolder);
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
+        Number id = simpleJdbcInsert.executeAndReturnKey(Map.of(
+                "start_at", startAt
+        ));
 
         return ReservationTime.retrieve(
-                keyHolder.getKeyAs(Long.class),
+                id.longValue(),
                 startAt
         );
     }

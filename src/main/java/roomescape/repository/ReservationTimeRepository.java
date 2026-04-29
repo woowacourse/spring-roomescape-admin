@@ -1,13 +1,10 @@
 package roomescape.repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
@@ -15,24 +12,19 @@ import roomescape.domain.ReservationTime;
 public class ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
     public ReservationTime create(ReservationTime reservationTime) {
-        String createSql = "INSERT INTO reservation_time (start_at) VALUES (?)";
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(createSql, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, reservationTime.getStartAt());
-
-            return statement;
-        }, keyHolder);
-
-        Number id = keyHolder.getKey();
-        validateNotNull(id);
+        Number id = simpleJdbcInsert.executeAndReturnKey(Map.of(
+                "start_at", reservationTime.getStartAt()
+        ));
 
         return reservationTime.with(id.longValue());
     }
@@ -73,11 +65,5 @@ public class ReservationTimeRepository {
 
             return ReservationTime.retrieve(id, startAt);
         };
-    }
-
-    private void validateNotNull(Number id) {
-        if (id == null) {
-            throw new InvalidDataAccessApiUsageException("ID 조회에 실패했습니다.");
-        }
     }
 }

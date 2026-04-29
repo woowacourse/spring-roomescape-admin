@@ -1,13 +1,10 @@
 package roomescape.repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -16,29 +13,23 @@ import roomescape.domain.ReservationTime;
 public class ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ReservationRepository(
             JdbcTemplate jdbcTemplate
     ) {
         this.jdbcTemplate = jdbcTemplate;
+        simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public Reservation create(Reservation reservation) {
-        String createSql = "INSERT INTO reservation(name, date, time_id)"
-                + " VALUES (?, ?, ?)";
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(createSql, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, reservation.getName());
-            statement.setObject(2, reservation.getDate());
-            statement.setLong(3, reservation.getTimeId());
-
-            return statement;
-        }, keyHolder);
-
-        Number id = keyHolder.getKey();
-        validateNotNull(id);
+        Number id = simpleJdbcInsert.executeAndReturnKey(Map.of(
+                "name", reservation.getName(),
+                "date", reservation.getDate(),
+                "time_id", reservation.getTimeId()
+        ));
 
         return reservation.withId(id.longValue());
     }
@@ -74,11 +65,5 @@ public class ReservationRepository {
                     ReservationTime.retrieve(timeId, startAt)
             );
         };
-    }
-
-    private void validateNotNull(Number id) {
-        if (id == null) {
-            throw new InvalidDataAccessApiUsageException("ID 조회에 실패했습니다.");
-        }
     }
 }

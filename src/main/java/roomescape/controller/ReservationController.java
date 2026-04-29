@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,5 +35,18 @@ public class ReservationController {
         reservations.add(reservation);
 
         return ReservationResponse.from(reservation);
+    }
+
+    @GetMapping("/reservations")
+    @ResponseBody
+    public List<ReservationResponse> findAll() {
+        List<ReservationResponse> reservationResponses = new ArrayList<>();
+
+        for (Reservation reservation : reservations) {
+            ReservationResponse reservationResponse = ReservationResponse.from(reservation);
+            reservationResponses.add(reservationResponse);
+        }
+
+        return reservationResponses;
     }
 }

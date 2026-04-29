@@ -16,6 +16,6 @@ public record ReservationDto(
     }
 
     public Reservation toReservation() {
-        return new Reservation(name, date, time);
+        return new Reservation(id, name, date, time);
     }
 }

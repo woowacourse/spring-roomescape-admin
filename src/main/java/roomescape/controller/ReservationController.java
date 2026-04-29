@@ -29,7 +29,7 @@ public class ReservationController {
                 .toList();
     }
 
-    @GetMapping
+    @GetMapping("/{id}")
     public ReservationDto getReservationById(@RequestParam long id){
         return ReservationDto.from(reservationService.findById(id));
     }

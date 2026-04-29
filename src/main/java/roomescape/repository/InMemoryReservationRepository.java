@@ -6,10 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
-@Repository
 public class InMemoryReservationRepository implements ReservationRepository {
     private final Map<Long, Reservation> reservations = new HashMap<>();
     private final AtomicLong index = new AtomicLong(1);
@@ -27,7 +25,8 @@ public class InMemoryReservationRepository implements ReservationRepository {
     @Override
     public Reservation save(Reservation reservation) {
         long id = index.getAndIncrement();
-        Reservation savedReservation = new Reservation(id, reservation);
+        Reservation savedReservation =
+                new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
         reservations.put(id, savedReservation);
         return savedReservation;
     }

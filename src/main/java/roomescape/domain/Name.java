@@ -7,6 +7,10 @@ public class Name {
     private static final int MAX_NAME_LENGTH = 7;
     private final String value;
 
+    public Name(){
+        this.value = null;
+    }
+
     public Name(String value) {
         validateLength(value);
         this.value = value;

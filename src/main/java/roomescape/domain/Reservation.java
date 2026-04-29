@@ -17,15 +17,17 @@ public class Reservation {
         this.time = time;
     }
 
-    public static Reservation of(Long id, String name, LocalDate date, LocalTime time) {
-        validate(id, name);
+    public static Reservation create(String name, LocalDate date, LocalTime time) {
+        validate(name);
+        return new Reservation(null, name, date, time);
+    }
+
+    public static Reservation withId(Long id, String name, LocalDate date, LocalTime time) {
+        validate(name);
         return new Reservation(id, name, date, time);
     }
 
-    private static void validate(Long id, String name) {
-        if (id == null) {
-            throw new IllegalArgumentException("예약 ID가 없습니다.");
-        }
+    private static void validate(String name) {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("예약자명이 없습니다.");
         }

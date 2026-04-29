@@ -4,44 +4,39 @@ import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationCreateReqDto;
 import roomescape.dto.ReservationResDto;
+import roomescape.repository.ReservationDao;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class ReservationService {
 
-    private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(1);
+    private final ReservationDao reservationDao;
+
+    public ReservationService(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
 
     public ReservationResDto createReservation(ReservationCreateReqDto dto) {
-        Reservation reservation = Reservation.of(index.getAndIncrement(), dto.getName(), dto.getDate(), dto.getTime());
-        reservations.add(reservation);
-        return ReservationResDto.from(reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime());
+        Reservation reservation = Reservation.create(dto.getName(), dto.getDate(), dto.getTime());
+        Reservation savedReservation = reservationDao.save(reservation);
+        return ReservationResDto.from(savedReservation.getId(), savedReservation.getName(), savedReservation.getDate(), savedReservation.getTime());
     }
 
     public List<ReservationResDto> getReservations() {
-        return reservations.stream()
+        return reservationDao.findAll()
+                .stream()
                 .map(r -> ReservationResDto.from(r.getId(), r.getName(), r.getDate(), r.getTime()))
                 .toList();
     }
 
     public ReservationResDto getReservationById(Long id) {
-        Reservation reservation = reservations.stream()
-                .filter(r -> r.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
-
+        Reservation reservation = reservationDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ID입니다."));
         return ReservationResDto.from(reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     public void deleteReservation(Long id) {
-        Reservation reservation = reservations.stream()
-                .filter(r -> r.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
-
-        reservations.remove(reservation);
+        reservationDao.deleteById(id);
     }
 }

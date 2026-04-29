@@ -26,4 +26,8 @@ public class ReservationTime {
     public static ReservationTime createWithId(Long id, ReservationTime reservationTime) {
         return new ReservationTime(id, reservationTime.getStartAt());
     }
+
+    public static ReservationTime of(Long id, LocalTime startAt) {
+        return new ReservationTime(id, startAt);
+    }
 }

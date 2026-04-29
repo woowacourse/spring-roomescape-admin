@@ -2,8 +2,11 @@ package roomescape.domain.reservationtime;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.LocalTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -14,6 +17,10 @@ public class ReservationTimeRepository {
 
     private static final String INSERT_SQL =
         "insert into reservation_time(start_at) values (?)";
+    private static final String FIND_ALL_SQL =
+        "select id, start_at from reservation_time order by id";
+    private static final String DELETE_BY_ID_SQL =
+        "delete from reservation_time where id = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -26,6 +33,21 @@ public class ReservationTimeRepository {
         }, keyHolder);
         long id = extractId(keyHolder);
         return ReservationTime.createWithId(id, reservationTime);
+    }
+
+    public List<ReservationTime> findAll() {
+        return jdbcTemplate.query(FIND_ALL_SQL, reservationTimeRowMapper());
+    }
+
+    public int deleteById(Long id) {
+        return jdbcTemplate.update(DELETE_BY_ID_SQL, id);
+    }
+
+    private RowMapper<ReservationTime> reservationTimeRowMapper() {
+        return (rs, rowNum) -> ReservationTime.of(
+            rs.getLong("id"),
+            LocalTime.parse(rs.getString("start_at"))
+        );
     }
 
     private long extractId(KeyHolder keyHolder) {

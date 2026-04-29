@@ -1,5 +1,7 @@
 package roomescape;
 
+import static org.hamcrest.Matchers.is;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
@@ -22,5 +24,12 @@ public class ReservationTimeTest {
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200);
+
+        // 조회 검증
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 }

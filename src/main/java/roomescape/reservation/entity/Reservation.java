@@ -1,8 +1,10 @@
 package roomescape.reservation.entity;
 
 import java.time.LocalDate;
+import lombok.Getter;
 import roomescape.time.entity.ReservationTime;
 
+@Getter
 public class Reservation {
 
     private final Long id;
@@ -21,28 +23,12 @@ public class Reservation {
         return new Reservation(null, name, date, time);
     }
 
-    public static Reservation of(Long id, String name, LocalDate date, ReservationTime time) {
+    public static Reservation of(long id, String name, LocalDate date, ReservationTime time) {
         return new Reservation(id, name, date, time);
     }
 
-    public Reservation withId(Long id) {
+    public Reservation withId(long id) {
         return new Reservation(id, this.name, this.date, this.time);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public ReservationTime getTime() {
-        return time;
     }
 
 }

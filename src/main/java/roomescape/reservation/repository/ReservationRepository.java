@@ -1,6 +1,8 @@
 package roomescape.reservation.repository;
 
+import java.time.LocalTime;
 import java.util.List;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.entity.Reservation;
 
@@ -11,6 +13,7 @@ public interface ReservationRepository {
 
     List<Reservation> findAll();
 
-    void deleteById(Long id);
+    void deleteById(long id);
 
+    boolean existsById(long id);
 }

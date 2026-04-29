@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.time.entity.ReservationTime;
 
 @Repository
+@RequiredArgsConstructor
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
 
     private static final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) ->
@@ -22,10 +24,6 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     private final JdbcTemplate jdbcTemplate;
 
-    public JdbcReservationTimeRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     @Override
     public List<ReservationTime> finaAll() {
         final String sql = "SELECT * FROM reservation_time";
@@ -33,7 +31,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public Optional<ReservationTime> findById(Long id) {
+    public Optional<ReservationTime> findById(long id) {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
 
         return jdbcTemplate.query(sql, reservationTimeRowMapper, id)
@@ -42,7 +40,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         final String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }

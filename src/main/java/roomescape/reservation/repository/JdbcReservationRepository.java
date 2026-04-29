@@ -3,6 +3,7 @@ package roomescape.reservation.repository;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,6 +13,7 @@ import roomescape.reservation.entity.Reservation;
 import roomescape.time.entity.ReservationTime;
 
 @Repository
+@RequiredArgsConstructor
 public class JdbcReservationRepository implements ReservationRepository {
 
     private static final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
@@ -29,10 +31,6 @@ public class JdbcReservationRepository implements ReservationRepository {
     };
 
     private final JdbcTemplate jdbcTemplate;
-
-    public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public List<Reservation> findAll() {
@@ -69,10 +67,21 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         final String sql = "DELETE FROM reservation WHERE id = ?";
 
         jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public boolean existsById(long id) {
+        final String sql = "SELECT EXISTS (SELECT 1 FROM reservation WHERE id = ?)";
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(
+                sql,
+                Boolean.class,
+                id
+        ));
     }
 
 }

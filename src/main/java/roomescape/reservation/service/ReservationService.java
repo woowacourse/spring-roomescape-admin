@@ -1,6 +1,7 @@
 package roomescape.reservation.service;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.reservation.controller.dto.ReservationRequest;
@@ -11,17 +12,12 @@ import roomescape.time.entity.ReservationTime;
 import roomescape.time.service.ReservationTimeService;
 
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final ReservationTimeService reservationTimeService;
-
-    public ReservationService(ReservationRepository reservationRepository,
-                              ReservationTimeService reservationTimeService) {
-        this.reservationRepository = reservationRepository;
-        this.reservationTimeService = reservationTimeService;
-    }
 
     public ReservationResponse save(ReservationRequest reservationRequest) {
         ReservationTime reservationTime = reservationTimeService.findById(reservationRequest.timeId());
@@ -39,7 +35,10 @@ public class ReservationService {
                 .toList();
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
+        if(reservationRepository.existsById(id))
+            throw new IllegalArgumentException("[ERROR] 삭제할 예약이 존재하지 않습니다.");
+
         reservationRepository.deleteById(id);
     }
 

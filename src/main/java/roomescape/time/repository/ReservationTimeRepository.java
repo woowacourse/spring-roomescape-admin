@@ -11,9 +11,9 @@ public interface ReservationTimeRepository {
 
     List<ReservationTime> finaAll();
 
-    Optional<ReservationTime> findById(Long id);
+    Optional<ReservationTime> findById(long id);
 
-    void deleteById(Long id);
+    void deleteById(long id);
 
     boolean existsByStartAt(LocalTime startAt);
 }

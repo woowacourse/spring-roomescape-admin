@@ -18,31 +18,37 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/reservations")
 public class ReservationController {
     private final JdbcTemplate jdbcTemplate;
+    private final TimeRepository timeRepository;
 
-    public ReservationController(JdbcTemplate jdbcTemplate) {
+//    public ReservationController(JdbcTemplate jdbcTemplate) {
+//        this.jdbcTemplate = jdbcTemplate;
+//    }
+
+    public ReservationController(JdbcTemplate jdbcTemplate, TimeRepository timeRepository) {
         this.jdbcTemplate = jdbcTemplate;
+        this.timeRepository = timeRepository;
     }
 
     @GetMapping
     public ResponseEntity<List<Reservation>> get() {
-        String sql = "select id, name, date, time from reservation";
+        String sql = "select r.id as reservation_id, r.name, r.date, rt.id as time_id, rt.start_at from reservation r inner join reservation_time rt on r.time_id = rt.id";
         List<Reservation> find = jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) -> {
-                    return new Reservation(
-                            resultSet.getLong("id"),
-                            resultSet.getString("name"),
-                            resultSet.getString("date"),
-                            resultSet.getString("time"));
-                }
-        );
+                (resultSet, rowNum) -> new Reservation(
+                        resultSet.getLong("reservation_id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("date"),
+                        new ReservationTime(resultSet.getLong("time_id"), resultSet.getString("start_at"))));
         return ResponseEntity.ok(find);
     }
 
     @PostMapping
     public ResponseEntity<Reservation> create(@RequestBody ReservationCreateDto reservationCreateDto) {
 
-        String sql = "insert into reservation(name, date, time) values (?, ?, ?)";
+        ReservationTime find = timeRepository.findById(reservationCreateDto.getTimeId())
+                .orElseThrow(() -> new IllegalArgumentException("조회된 타임 슬롯이 없습니다."));
+
+        String sql = "insert into reservation(name, date, time_id) values (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -52,18 +58,18 @@ public class ReservationController {
 
             pstmt.setString(1, reservationCreateDto.getName());
             pstmt.setString(2, reservationCreateDto.getDate());
-            pstmt.setString(3, reservationCreateDto.getTime());
+            pstmt.setLong(3, find.getId());
             return pstmt;
         }, keyHolder);
 
         Reservation reservation = jdbcTemplate.queryForObject(
-                "select id, name, date, time from reservation where id = ?",
+                "select id, name, date, time_id from reservation where id = ?",
                 (resultSet, rowNum) -> {
                     return new Reservation(
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
                             resultSet.getString("date"),
-                            resultSet.getString("time"));
+                            new ReservationTime(find.getId(), find.getStartAt()));
                 },
                 keyHolder.getKey().longValue());
         return ResponseEntity.ok(reservation);

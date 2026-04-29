@@ -21,7 +21,6 @@ public class MissionStep2Test {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-
     @Test
     void 데이터베이스_연동() throws RuntimeException {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {

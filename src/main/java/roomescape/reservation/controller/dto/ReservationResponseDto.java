@@ -20,7 +20,7 @@ public class ReservationResponseDto {
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getDate(),
-                reservation.getTime()
+                reservation.getTime() == null ? null : reservation.getTime().getStartAt()
         );
     }
 

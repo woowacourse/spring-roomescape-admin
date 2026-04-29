@@ -5,7 +5,7 @@ import roomescape.reservation.service.dto.ReservationSaveServiceDto;
 public class ReservationSaveRequestDto {
     private String name;
     private String date;
-    private String time;
+    private Long timeId;
 
     public void setName(String name) {
         this.name = name;
@@ -15,11 +15,11 @@ public class ReservationSaveRequestDto {
         this.date = date;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setTimeId(Long timeId) {
+        this.timeId = timeId;
     }
 
     public ReservationSaveServiceDto toServiceDto() {
-        return new ReservationSaveServiceDto(name, date, time);
+        return new ReservationSaveServiceDto(name, date, timeId);
     }
 }

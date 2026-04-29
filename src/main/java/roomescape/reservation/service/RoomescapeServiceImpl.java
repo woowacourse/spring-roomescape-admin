@@ -36,19 +36,4 @@ public class RoomescapeServiceImpl implements RoomescapeService {
     public boolean deleteById(long id) {
         return reservationRepository.deleteById(id);
     }
-
-    @Override
-    public List<ReservationTime> getReservationTimes() {
-        return reservationRepository.findReservationTimes();
-    }
-
-    @Override
-    public ReservationTime saveReservationTime(ReservationTime reservationTime) {
-        return reservationRepository.saveReservationTime(reservationTime);
-    }
-
-    @Override
-    public boolean deleteReservationTimeById(long id) {
-        return reservationRepository.deleteReservationTimeById(id);
-    }
 }

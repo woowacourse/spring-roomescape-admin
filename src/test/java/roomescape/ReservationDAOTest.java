@@ -68,4 +68,11 @@ public class ReservationDAOTest {
 
         assertThat(id).isNotNull();
     }
+
+    @Test
+    void delete() {
+        int rowNum = reservationDAO.delete(1L);
+
+        assertThat(rowNum).isEqualTo(1);
+    }
 }

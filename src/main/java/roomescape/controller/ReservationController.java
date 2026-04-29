@@ -3,38 +3,33 @@ package roomescape.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import roomescape.model.QueryingDAO;
+import roomescape.dao.ReservationDAO;
 import roomescape.model.Reservation;
-import roomescape.model.UpdatingDAO;
 
 import java.util.List;
 
-
 @Controller
 public class ReservationController {
-    private final QueryingDAO queryingDAO;
-    private final UpdatingDAO updatingDAO;
+    private final ReservationDAO reservationDAO;
 
-    public ReservationController(QueryingDAO queryingDAO, UpdatingDAO updatingDAO) {
-        this.queryingDAO = queryingDAO;
-        this.updatingDAO = updatingDAO;
+    public ReservationController(ReservationDAO reservationDAO) {
+        this.reservationDAO = reservationDAO;
     }
-
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> read() {
-        return ResponseEntity.ok(queryingDAO.findAllReservations());
+        return ResponseEntity.ok(reservationDAO.findAllReservations());
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> create(@RequestBody Reservation newReservation) {
-        Long id = updatingDAO.insertWithKeyHolder(newReservation);
-        return ResponseEntity.ok(queryingDAO.findReservationById(id));
+        Long id = reservationDAO.insertWithKeyHolder(newReservation);
+        return ResponseEntity.ok(reservationDAO.findReservationById(id));
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        updatingDAO.delete(id);
+        reservationDAO.delete(id);
         return ResponseEntity.ok().build();
     }
 }

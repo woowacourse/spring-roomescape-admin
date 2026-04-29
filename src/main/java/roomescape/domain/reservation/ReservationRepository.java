@@ -3,7 +3,6 @@ package roomescape.domain.reservation;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,19 +10,21 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.domain.reservationtime.ReservationTime;
 
 @Repository
 @RequiredArgsConstructor
 public class ReservationRepository {
 
-    private static final String INSERT_SQL =
-        "insert into reservation(name, date, time) values (?, ?, ?)";
+    private static final String INSERT_SQL = "insert into reservation(name, date, time_id) values (?, ?, ?)";
     private static final String FIND_ALL_SQL =
-        "select id, name, date, time from reservation order by id";
-    private static final String FIND_BY_ID_SQL =
-        "select id, name, date, time from reservation where id = ?";
-    private static final String DELETE_BY_ID_SQL =
-        "delete from reservation where id = ?";
+        """
+            select r.id, r.name, r.date, rt.id as time_id, rt.start_at
+            from reservation r
+            join reservation_time rt on r.time_id = rt.id
+            order by r.id
+            """;
+    private static final String DELETE_BY_ID_SQL = "delete from reservation where id = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -33,7 +34,7 @@ public class ReservationRepository {
             PreparedStatement ps = connection.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, reservation.getName());
             ps.setString(2, reservation.getDate().toString());
-            ps.setString(3, reservation.getTime().toString());
+            ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
         long id = extractId(keyHolder);
@@ -53,7 +54,10 @@ public class ReservationRepository {
             rs.getLong("id"),
             rs.getString("name"),
             LocalDate.parse(rs.getString("date")),
-            LocalTime.parse(rs.getString("time"))
+            ReservationTime.of(
+                rs.getLong("time_id"),
+                rs.getString("start_at")
+            )
         );
     }
 

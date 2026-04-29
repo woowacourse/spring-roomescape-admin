@@ -3,7 +3,6 @@ package roomescape.domain.reservation.dto;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import org.junit.jupiter.api.Test;
 
 class CreateReservationRequestTest {
@@ -14,7 +13,7 @@ class CreateReservationRequestTest {
         CreateReservationRequest request = new CreateReservationRequest(
             null,
             LocalDate.of(2023, 8, 5),
-            LocalTime.of(10, 0)
+            1L
         );
 
         // when & then
@@ -29,7 +28,7 @@ class CreateReservationRequestTest {
         CreateReservationRequest request = new CreateReservationRequest(
             "   ",
             LocalDate.of(2023, 8, 5),
-            LocalTime.of(10, 0)
+            1L
         );
 
         // when & then
@@ -44,7 +43,7 @@ class CreateReservationRequestTest {
         CreateReservationRequest request = new CreateReservationRequest(
             "보예",
             null,
-            LocalTime.of(10, 0)
+            1L
         );
 
         // when & then
@@ -54,7 +53,7 @@ class CreateReservationRequestTest {
     }
 
     @Test
-    void 시간이_null이면_예외가_발생한다() {
+    void 시간_id가_null이면_예외가_발생한다() {
         // given
         CreateReservationRequest request = new CreateReservationRequest(
             "보예",

@@ -6,16 +6,21 @@ import org.springframework.stereotype.Service;
 import roomescape.domain.reservation.dto.CreateReservationRequest;
 import roomescape.domain.reservation.dto.CreateReservationResponse;
 import roomescape.domain.reservation.dto.ReservationResponse;
+import roomescape.domain.reservationtime.ReservationTime;
+import roomescape.domain.reservationtime.ReservationTimeRepository;
 
 @Service
 @RequiredArgsConstructor
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
     public CreateReservationResponse createReservation(CreateReservationRequest request) {
         request.validate();
-        Reservation savedReservation = reservationRepository.save(request.toEntity());
+        ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId())
+            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간대 입니다."));
+        Reservation savedReservation = reservationRepository.save(request.toEntity(reservationTime));
         return CreateReservationResponse.from(savedReservation);
     }
 

@@ -1,13 +1,13 @@
 package roomescape.domain.reservation.dto;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import roomescape.domain.reservation.Reservation;
+import roomescape.domain.reservationtime.ReservationTime;
 
 public record CreateReservationRequest(
     String name,
     LocalDate date,
-    LocalTime time
+    Long timeId
 ) {
 
     public void validate() {
@@ -17,16 +17,16 @@ public record CreateReservationRequest(
         if (date == null) {
             throw new IllegalArgumentException("날짜는 필수입니다.");
         }
-        if (time == null) {
+        if (timeId == null) {
             throw new IllegalArgumentException("시간은 필수입니다.");
         }
     }
 
-    public Reservation toEntity() {
+    public Reservation toEntity(ReservationTime reservationTime) {
         return Reservation.createWithoutId(
             name,
             date,
-            time
+            reservationTime
         );
     }
 }

@@ -3,6 +3,7 @@ package roomescape.reservation.application;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.reservation.application.dto.Reservation;
 import roomescape.reservation.application.dto.ReservationRequest;
 import roomescape.reservation.repository.ReservationEntity;
@@ -36,6 +37,7 @@ public class ReservationsService {
                 ).toList();
     }
 
+    @Transactional
     public Reservation register(ReservationRequest request) {
         ReservationEntity entity = request.to();
         ReservationEntity entityWithId =
@@ -47,6 +49,7 @@ public class ReservationsService {
         );
     }
 
+    @Transactional
     public void deleteReservationById(Long id) {
         reservationsRepository.deleteReservationById(id);
     }

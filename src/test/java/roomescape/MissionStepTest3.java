@@ -45,6 +45,16 @@ public class MissionStepTest3 {
         reservation.put("date", "2023-08-05");
         reservation.put("timeId", 1);
 
+        Map<String, String> time = new HashMap<>();
+        time.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(time)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(reservation)

@@ -43,4 +43,14 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         );
     }
 
+    @Override
+    public void deleteById(Long id) {
+        String sql = "delete from reservation_time where id = ?";
+
+        int affectedRows = jdbcTemplate.update(sql, id);
+        if (affectedRows == 0) {
+            throw new IllegalArgumentException("존재하지 않는 예약 시간입니다. id=" + id);
+        }
+    }
+
 }

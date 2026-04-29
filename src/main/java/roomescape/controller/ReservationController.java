@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dao.ReservationDAO;
+import roomescape.dto.ReservationRequest;
 import roomescape.model.Reservation;
 
 import java.util.List;
@@ -22,8 +23,8 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> create(@RequestBody Reservation newReservation) {
-        Long id = reservationDAO.insertWithKeyHolder(newReservation);
+    public ResponseEntity<Reservation> create(@RequestBody ReservationRequest reservationRequest) {
+        Long id = reservationDAO.insertWithKeyHolder(reservationRequest);
         return ResponseEntity.ok(reservationDAO.findReservationById(id));
     }
 

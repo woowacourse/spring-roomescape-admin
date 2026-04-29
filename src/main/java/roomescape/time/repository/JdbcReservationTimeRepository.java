@@ -45,6 +45,14 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
+    public boolean existsByStartAt(String startAt) {
+        final String sql = "SELECT COUNT(*) FROM reservation_time WHERE start_at = ?";
+
+        Long count = jdbcTemplate.queryForObject(sql, Long.class);
+        return count > 0;
+    }
+
+    @Override
     public ReservationTime save(ReservationTime reservationTime) {
         final String sql = "INSERT INTO reservation_time(start_at) VALUES (?)";
 

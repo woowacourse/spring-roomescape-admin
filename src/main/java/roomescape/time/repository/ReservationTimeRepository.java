@@ -14,4 +14,5 @@ public interface ReservationTimeRepository {
 
     void deleteById(Long id);
 
+    boolean existsByStartAt(String startAt);
 }

@@ -17,6 +17,9 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponseDto save(ReservationTimeRequestDto reservationTimeRequestDto) {
+        if(existsByStartAt(reservationTimeRequestDto.startAt()))
+            throw new IllegalArgumentException("[ERROR] 시간 중복 추가는 불가능합니다.");
+
         ReservationTime reservationTime = ReservationTime.create(reservationTimeRequestDto.startAt());
         return ReservationTimeResponseDto.from(reservationTimeRepository.save(reservationTime));
     }
@@ -34,6 +37,10 @@ public class ReservationTimeService {
 
     public void deleteById(Long id) {
         reservationTimeRepository.deleteById(id);
+    }
+
+    public boolean existsByStartAt(String startAt){
+        return reservationTimeRepository.existsByStartAt(startAt);
     }
 
 }

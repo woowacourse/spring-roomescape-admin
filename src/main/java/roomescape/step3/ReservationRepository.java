@@ -25,7 +25,7 @@ public class ReservationRepository {
                 "JOIN reservation_time rt ON r.time_id = rt.id";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            return Reservation.toEntity(
+            return new Reservation(
                     rs.getLong("id"),
                     rs.getString("name"),
                     LocalDate.parse(rs.getString("date")),
@@ -58,7 +58,7 @@ public class ReservationRepository {
 
         long id = keyHolder.getKey().longValue();
 
-        return Reservation.toEntity(
+        return new Reservation(
                 id,
                 request.name(),
                 request.date(),
@@ -84,7 +84,7 @@ public class ReservationRepository {
 
         long id = keyHolder.getKey().longValue();
 
-        return ReservationTime.toEntity(id, request.startAt());
+        return new ReservationTime(id, request.startAt());
     }
 
     public List<ReservationTime> findAllReservationTimes() {

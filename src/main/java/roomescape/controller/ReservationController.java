@@ -11,33 +11,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationCreateRequest;
-import roomescape.repository.ReservationRepository;
+import roomescape.service.ReservationService;
+import roomescape.service.command.ReservationCreateCommand;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationRepository reservationRepository;
+    private final ReservationService reservationService;
 
-    public ReservationController(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @PostMapping
     public ResponseEntity<Reservation> create(
             @RequestBody ReservationCreateRequest createRequest
     ) {
-        Reservation createdReservation = reservationRepository.create(Reservation.create(
+        ReservationCreateCommand createCommand = new ReservationCreateCommand(
                 createRequest.name(),
-                createRequest.date()
-        ), createRequest.timeId());
+                createRequest.date(),
+                createRequest.timeId()
+        );
+        Reservation createdReservation = reservationService.create(createCommand);
 
         return ResponseEntity.ok(createdReservation);
     }
 
     @GetMapping
     public ResponseEntity<List<Reservation>> findAll() {
-        List<Reservation> reservations = reservationRepository.findAll();
+        List<Reservation> reservations = reservationService.findAll();
 
         return ResponseEntity.ok(reservations);
     }
@@ -46,7 +49,7 @@ public class ReservationController {
     public ResponseEntity<Void> delete(
             @PathVariable long id
     ) {
-        reservationRepository.delete(id);
+        reservationService.delete(id);
 
         return ResponseEntity.ok().build();
     }

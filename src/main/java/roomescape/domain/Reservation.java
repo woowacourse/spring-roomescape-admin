@@ -11,6 +11,13 @@ public class Reservation {
     private final LocalDate date;
     private final LocalTime time;
 
+    public Reservation() {
+        this.id = null;
+        this.name = null;
+        this.date = null;
+        this.time = null;
+    }
+
     public Reservation(Long id, String name, String date, String time) {
         this.id = id;
         this.name = new Name(name);

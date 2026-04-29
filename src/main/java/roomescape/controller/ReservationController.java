@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
+import roomescape.controller.dto.ReservationTimeResponse;
 import roomescape.domain.Reservation;
 import roomescape.service.ReservationService;
 
@@ -27,7 +28,7 @@ public class ReservationController {
 
     @GetMapping
     ResponseEntity<List<ReservationResponse>> findReservations() {
-        List<Reservation> resultOfFind = reservationService.find();
+        List<Reservation> resultOfFind = reservationService.findAllReservations();
 
         List<ReservationResponse> responseData = resultOfFind.stream()
                 .map(this::parseReservationToReservationResponse)
@@ -41,10 +42,10 @@ public class ReservationController {
 
     @PostMapping
     ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest request) {
-        Reservation result = reservationService.add(
+        Reservation result = reservationService.enrollReservation(
                 request.name(),
                 request.date(),
-                request.time()
+                request.timeId()
         );
 
         ReservationResponse responseData = parseReservationToReservationResponse(result);
@@ -57,7 +58,7 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        reservationService.delete(id);
+        reservationService.deleteSpecificReservationById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -66,7 +67,7 @@ public class ReservationController {
                 result.id(),
                 result.name(),
                 result.date(),
-                result.time()
+                new ReservationTimeResponse(result.time().id(), result.time().startAt())
         );
     }
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -21,4 +22,10 @@ public class ReservationController {
         reservations.add(newReservation);
         return ResponseEntity.created(URI.create("/members/" + newReservation.getId())).build();
     }
+
+    @GetMapping("/reservations")
+    public ResponseEntity<List<Reservation>> read() {
+        return ResponseEntity.ok().body(reservations);
+    }
+
 }

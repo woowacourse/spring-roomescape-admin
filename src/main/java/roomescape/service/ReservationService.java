@@ -28,8 +28,8 @@ public class ReservationService {
         return id;
     }
 
-    public Reservation removeReservation(long id) {
-        return reservations.remove((int) id - 1);
+    public void removeReservation(long id) {
+        reservations.remove((int) id - 1);
     }
 
     public Reservation findReservation(long reservationId) {

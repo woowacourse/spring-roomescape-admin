@@ -33,7 +33,7 @@ public class ReservationTimeController {
         ReservationTimeResponse response = reservationTimeService.saveReservationTime(request);
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.LOCATION, String.valueOf(response.id()))
+                .header(HttpHeaders.LOCATION, "/times/" + response.id())
                 .body(response);
     }
 

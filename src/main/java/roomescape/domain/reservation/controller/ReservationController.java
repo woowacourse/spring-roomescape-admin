@@ -32,7 +32,7 @@ public class ReservationController {
     public ResponseEntity<ReservationResponse> save(@RequestBody ReservationCreateRequest request) {
         ReservationResponse response = reservationService.saveReservation(request);
         return ResponseEntity.ok()
-                .header(HttpHeaders.LOCATION, String.valueOf(response.id()))
+                .header(HttpHeaders.LOCATION, "/reservations/" + response.id())
                 .body(response);
     }
 

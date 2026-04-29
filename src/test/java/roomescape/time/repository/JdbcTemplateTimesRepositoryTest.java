@@ -56,7 +56,9 @@ class JdbcTemplateTimesRepositoryTest {
     @Test
     void deleteTimeById_success() {
         //given
-        TimeEntity entity = jdbcTemplateTimesRepository.saveTime(TimeEntity.of(LocalTime.of(10, 0)));
+        TimeEntity entity = jdbcTemplateTimesRepository.saveTime(
+                TimeEntity.of(LocalTime.of(10, 0))
+        );
 
         //when
         jdbcTemplateTimesRepository.deleteTimeById(entity.id());
@@ -73,5 +75,30 @@ class JdbcTemplateTimesRepositoryTest {
                 jdbcTemplateTimesRepository.deleteTimeById(1L)
         ).isInstanceOf(IllegalArgumentException.class)
                         .hasMessage("해당 시간은 존재하지 않습니다.");
+    }
+
+    @DisplayName("id에 해당하는 시간을 조회한다.")
+    @Test
+    void getTimeEntityById_success() {
+        //given
+        TimeEntity entity = jdbcTemplateTimesRepository.saveTime(
+                TimeEntity.of(LocalTime.of(10, 0))
+        );
+
+        //when
+        TimeEntity found = jdbcTemplateTimesRepository.getTimeEntityById(entity.id());
+
+        //then
+        assertThat(found).isEqualTo(entity);
+    }
+
+    @DisplayName("id에 해당하는 시간이 없으면 예외가 발생한다.")
+    @Test
+    void getTimeEntityById_fail() {
+        //when & then
+        assertThatThrownBy(() ->
+                        jdbcTemplateTimesRepository.getTimeEntityById(1L)
+        ).isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("해당하는 시간이 존재하지 않습니다.");
     }
 }

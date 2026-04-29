@@ -1,24 +1,23 @@
 package roomescape.reservation.repository;
 
 import java.sql.Date;
-import java.sql.Time;
 
 public record ReservationEntity(
         Long id,
         String name,
         Date date,
-        Time time
+        Long timeId
 ) {
     public static ReservationEntity of(
             String name,
             Date date,
-            Time time
+            Long timeId
     ) {
         return new ReservationEntity(
                 null,
                 name,
                 date,
-                time
+                timeId
         );
     }
 
@@ -27,7 +26,7 @@ public record ReservationEntity(
                 id,
                 this.name,
                 this.date,
-                this.time
+                this.timeId
         );
     }
 }

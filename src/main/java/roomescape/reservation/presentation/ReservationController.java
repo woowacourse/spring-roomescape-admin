@@ -14,16 +14,22 @@ import roomescape.reservation.presentation.dto.Reservation;
 import roomescape.reservation.presentation.dto.ReservationRequest;
 import roomescape.reservation.repository.ReservationEntity;
 import roomescape.reservation.repository.ReservationsRepository;
+import roomescape.time.repository.TimesRepository;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationsRepository reservationsRepository;
+    private final TimesRepository timesRepository;
 
     @Autowired
-    public ReservationController(ReservationsRepository reservationsRepository) {
+    public ReservationController(
+            ReservationsRepository reservationsRepository,
+            TimesRepository timesRepository
+    ) {
         this.reservationsRepository = reservationsRepository;
+        this.timesRepository = timesRepository;
     }
 
     @GetMapping
@@ -31,8 +37,12 @@ public class ReservationController {
         List<ReservationEntity> reservationEntities = reservationsRepository.getReservations();
 
         List<Reservation> reservations = reservationEntities.stream()
-                .map(Reservation::from)
-                .toList();
+                .map(e ->
+                        Reservation.from(
+                                e,
+                                timesRepository.getTimeEntityById(e.timeId())
+                        )
+                ).toList();
 
         return ResponseEntity.ok(reservations);
     }
@@ -45,10 +55,14 @@ public class ReservationController {
         ReservationEntity entityWithId =
                 reservationsRepository.saveReservation(entity);
 
-        Reservation reservation = Reservation.from(entityWithId);
+        Reservation reservation = Reservation.from(
+                entityWithId,
+                timesRepository.getTimeEntityById(entityWithId.timeId())
+        );
 
         return ResponseEntity.ok(reservation);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {

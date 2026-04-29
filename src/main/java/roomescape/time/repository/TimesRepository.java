@@ -8,4 +8,6 @@ public interface TimesRepository {
     List<TimeEntity> getTimes();
 
     void deleteTimeById(Long id);
+
+    TimeEntity getTimeEntityById(Long id);
 }

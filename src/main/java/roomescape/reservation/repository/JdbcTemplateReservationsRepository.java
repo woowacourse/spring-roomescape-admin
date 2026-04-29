@@ -16,7 +16,7 @@ public class JdbcTemplateReservationsRepository implements ReservationsRepositor
     private final static String ID_COLUMN = "id";
     private final static String NAME_COLUMN = "name";
     private final static String DATE_COLUMN = "date";
-    private final static String TIME_COLUMN = "time";
+    private final static String TIME_ID_COLUMN = "time_id";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -35,7 +35,7 @@ public class JdbcTemplateReservationsRepository implements ReservationsRepositor
                         rs.getLong(ID_COLUMN),
                         rs.getString(NAME_COLUMN),
                         rs.getDate(DATE_COLUMN),
-                        rs.getTime(TIME_COLUMN)
+                        rs.getLong(TIME_ID_COLUMN)
                 )
         );
     }
@@ -57,7 +57,7 @@ public class JdbcTemplateReservationsRepository implements ReservationsRepositor
             ReservationEntity reservationEntity,
             Connection connection
     ) throws SQLException {
-        String sql = "INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
 
         PreparedStatement preparedStatement = connection.prepareStatement(
                 sql,
@@ -66,7 +66,7 @@ public class JdbcTemplateReservationsRepository implements ReservationsRepositor
 
         preparedStatement.setString(1, reservationEntity.name());
         preparedStatement.setDate(2, reservationEntity.date());
-        preparedStatement.setTime(3, reservationEntity.time());
+        preparedStatement.setLong(3, reservationEntity.timeId());
 
         return preparedStatement;
     }
@@ -74,6 +74,7 @@ public class JdbcTemplateReservationsRepository implements ReservationsRepositor
     @Override
     public void deleteReservationById(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
+
         int affectedRows = jdbcTemplate.update(sql, id);
 
         if (affectedRows == 0) {

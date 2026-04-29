@@ -1,40 +1,40 @@
-package roomescape.reservation.domain.dao;
+package roomescape.reservation.dao;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
-import roomescape.reservation.domain.Reservation;
 
 public class InMemoryReservationsDao implements ReservationsDao {
 
-    private final Map<Long, Reservation> reservations;
+    private final Map<Long, ReservationEntity> reservationEntities;
     private final AtomicLong index;
 
     public InMemoryReservationsDao() {
-        this.reservations = new HashMap<>();
+        this.reservationEntities = new HashMap<>();
         this.index =  new AtomicLong(0);
     }
 
-    public List<Reservation> getReservations() {
-        return reservations.values()
+    @Override
+    public List<ReservationEntity> getReservations() {
+        return reservationEntities.values()
                 .stream()
                 .toList();
     }
 
     @Override
-    public Long saveReservation(Reservation reservation) {
+    public Long saveReservation(ReservationEntity reservationEntity) {
         long now = index.incrementAndGet();
-        reservations.put(now, reservation);
+        reservationEntities.put(now, reservationEntity);
         return now;
     }
 
     @Override
     public void deleteReservationById(Long id) {
-        if (!reservations.containsKey(id)) {
+        if (!reservationEntities.containsKey(id)) {
             throw new IllegalArgumentException("해당 예약은 존재하지 않습니다.");
         }
 
-        reservations.remove(id);
+        reservationEntities.remove(id);
     }
 }

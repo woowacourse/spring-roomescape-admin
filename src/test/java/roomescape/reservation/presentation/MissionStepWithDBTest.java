@@ -12,7 +12,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.reservation.presentation.dto.ReservationInfo;
+import roomescape.reservation.presentation.dto.Reservation;
 
 @IsolatedAnnotationTest
 class MissionStepWithDBTest {
@@ -35,11 +35,11 @@ class MissionStepWithDBTest {
     void DB_조회_API_전환() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
 
-        List<ReservationInfo> reservations = RestAssured.given().log().all()
+        List<Reservation> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", ReservationInfo.class);
+                .jsonPath().getList(".", Reservation.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 

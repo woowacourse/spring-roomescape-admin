@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.domain.dao.ReservationsDao;
-import roomescape.reservation.presentation.dto.ReservationInfo;
+import roomescape.reservation.dao.ReservationEntity;
+import roomescape.reservation.dao.ReservationsDao;
+import roomescape.reservation.presentation.dto.Reservation;
 import roomescape.reservation.presentation.dto.ReservationRequest;
 
 @RestController
@@ -27,31 +27,31 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationInfo>> getReservationsDao() {
-        List<Reservation> reservations = reservationsDao.getReservations();
+    public ResponseEntity<List<Reservation>> getReservationsDao() {
+        List<ReservationEntity> reservationEntities = reservationsDao.getReservations();
 
-        List<ReservationInfo> reservationsInfo = reservations.stream()
-                .map(ReservationInfo::from)
+        List<Reservation> reservationsInfo = reservationEntities.stream()
+                .map(Reservation::from)
                 .toList();
 
         return ResponseEntity.ok(reservationsInfo);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationInfo> createReservation(
+    public ResponseEntity<Reservation> createReservation(
             @RequestBody ReservationRequest request
     ) {
-        Reservation reservation = request.to();
-        Long id = reservationsDao.saveReservation(reservation);
+        ReservationEntity reservationEntity = request.to();
+        Long id = reservationsDao.saveReservation(reservationEntity);
 
-        ReservationInfo reservationInfo = new ReservationInfo(
+        Reservation reservation = new Reservation(
                 id,
                 request.name(),
                 request.date(),
                 request.time()
         );
 
-        return ResponseEntity.ok(reservationInfo);
+        return ResponseEntity.ok(reservation);
     }
 
     @DeleteMapping("/{id}")

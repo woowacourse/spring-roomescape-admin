@@ -1,15 +1,15 @@
-package roomescape.reservation.domain;
+package roomescape.reservation.dao;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class Reservation {
+public class ReservationEntity {
 
     private final String name;
     private final LocalDateTime reservedAt;
 
-    public Reservation(String name, LocalDateTime reservedAt) {
+    public ReservationEntity(String name, LocalDateTime reservedAt) {
         this.name = name;
         this.reservedAt = reservedAt;
     }

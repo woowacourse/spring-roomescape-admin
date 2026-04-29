@@ -1,4 +1,4 @@
-package roomescape.reservation.domain.dao;
+package roomescape.reservation.dao;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.reservation.domain.Reservation;
 
 @Repository
 public class JdbcTemplateReservationDao implements ReservationsDao{
@@ -29,12 +28,12 @@ public class JdbcTemplateReservationDao implements ReservationsDao{
     }
 
     @Override
-    public List<Reservation> getReservations() {
+    public List<ReservationEntity> getReservations() {
         String sql = "SELECT name, date, time FROM reservation";
 
         return jdbcTemplate.query(
                 sql,
-                (rs, rowNum) -> new Reservation(
+                (rs, rowNum) -> new ReservationEntity(
                         rs.getString(NAME_COLUMN),
                         LocalDateTime.of(
                                 rs.getDate(DATE_COLUMN).toLocalDate(),
@@ -45,12 +44,12 @@ public class JdbcTemplateReservationDao implements ReservationsDao{
     }
 
     @Override
-    public Long saveReservation(Reservation reservation) {
+    public Long saveReservation(ReservationEntity reservationEntity) {
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)";
 
         jdbcTemplate.update(connection ->
-                        createPreparedStatement(reservation, connection, sql),
+                        createPreparedStatement(reservationEntity, connection, sql),
                 keyHolder
         );
 
@@ -58,7 +57,7 @@ public class JdbcTemplateReservationDao implements ReservationsDao{
     }
 
     private PreparedStatement createPreparedStatement(
-            Reservation reservation,
+            ReservationEntity reservationEntity,
             Connection connection,
             String sql
     ) throws SQLException {
@@ -67,9 +66,9 @@ public class JdbcTemplateReservationDao implements ReservationsDao{
                 Statement.RETURN_GENERATED_KEYS
         );
 
-        preparedStatement.setString(1, reservation.getName());
-        preparedStatement.setDate(2, Date.valueOf(reservation.getReservedDate()));
-        preparedStatement.setTime(3, Time.valueOf(reservation.getReservedTime()));
+        preparedStatement.setString(1, reservationEntity.getName());
+        preparedStatement.setDate(2, Date.valueOf(reservationEntity.getReservedDate()));
+        preparedStatement.setTime(3, Time.valueOf(reservationEntity.getReservedTime()));
 
         return preparedStatement;
     }

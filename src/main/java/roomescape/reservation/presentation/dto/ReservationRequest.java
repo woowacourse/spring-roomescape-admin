@@ -3,15 +3,15 @@ package roomescape.reservation.presentation.dto;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.dao.ReservationEntity;
 
 public record ReservationRequest(
         String name,
         LocalDate date,
         LocalTime time
 ) {
-    public Reservation to() {
-        return new Reservation(
+    public ReservationEntity to() {
+        return new ReservationEntity(
                 name,
                 LocalDateTime.of(date, time)
         );

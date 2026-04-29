@@ -7,7 +7,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.dao.InMemoryReservationsDao;
+import roomescape.reservation.dao.ReservationEntity;
+import roomescape.reservation.dao.ReservationsDao;
 
 class InMemoryReservationsDaoTest {
 
@@ -17,24 +19,24 @@ class InMemoryReservationsDaoTest {
     @Test
     void getReservations_empty() {
         //when
-        List<Reservation> reservations = reservationsDao.getReservations();
+        List<ReservationEntity> reservationEntities = reservationsDao.getReservations();
 
         //then
-        assertThat(reservations).isEmpty();
+        assertThat(reservationEntities).isEmpty();
     }
 
     @DisplayName("새로운 예약을 추가한다.")
     @Test
     void saveReservation() {
         //given
-        Reservation reservation1 = new Reservation("name1", LocalDateTime.now());
-        Reservation reservation2 = new Reservation("name2", LocalDateTime.now());
-        Reservation reservation3 = new Reservation("name3", LocalDateTime.now());
+        ReservationEntity reservationEntity1 = new ReservationEntity("name1", LocalDateTime.now());
+        ReservationEntity reservationEntity2 = new ReservationEntity("name2", LocalDateTime.now());
+        ReservationEntity reservationEntity3 = new ReservationEntity("name3", LocalDateTime.now());
 
         //when
-        Long index1 = reservationsDao.saveReservation(reservation1);
-        Long index2 = reservationsDao.saveReservation(reservation2);
-        Long index3 = reservationsDao.saveReservation(reservation3);
+        Long index1 = reservationsDao.saveReservation(reservationEntity1);
+        Long index2 = reservationsDao.saveReservation(reservationEntity2);
+        Long index3 = reservationsDao.saveReservation(reservationEntity3);
 
         //then
         assertThat(reservationsDao.getReservations().size()).isEqualTo(3);
@@ -47,8 +49,8 @@ class InMemoryReservationsDaoTest {
     @Test
     void deleteReservationById_success() {
         //given
-        Reservation reservation = new Reservation("name1", LocalDateTime.now());
-        Long id = reservationsDao.saveReservation(reservation);
+        ReservationEntity reservationEntity = new ReservationEntity("name1", LocalDateTime.now());
+        Long id = reservationsDao.saveReservation(reservationEntity);
 
         //when
         reservationsDao.deleteReservationById(id);

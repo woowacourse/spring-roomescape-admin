@@ -7,8 +7,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.reservation.dao.ReservationEntity;
 
-class ReservationTest {
+class ReservationEntityTest {
 
     @DisplayName("예약 일자를 조회한다.")
     @Test
@@ -19,13 +20,13 @@ class ReservationTest {
                 LocalTime.of(4, 23)
         );
 
-        Reservation reservation = new Reservation(
+        ReservationEntity reservationEntity = new ReservationEntity(
                 "name",
                 localDateTime
         );
 
         //when & then
-        assertThat(reservation.getReservedDate())
+        assertThat(reservationEntity.getReservedDate())
                 .isEqualTo(LocalDate.of(2025, 4, 28));
     }
 
@@ -38,13 +39,13 @@ class ReservationTest {
                 LocalTime.of(4, 23)
         );
 
-        Reservation reservation = new Reservation(
+        ReservationEntity reservationEntity = new ReservationEntity(
                 "name",
                 localDateTime
         );
 
         //when & then
-        assertThat(reservation.getReservedTime())
+        assertThat(reservationEntity.getReservedTime())
                 .isEqualTo(LocalTime.of(4, 23));
     }
 }

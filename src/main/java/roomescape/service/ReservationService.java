@@ -5,7 +5,6 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationRequest;
@@ -17,8 +16,8 @@ public class ReservationService {
     private final List<Reservation> reservations = new ArrayList<>();
     private final AtomicLong nextId = new AtomicLong(1);
 
-    public List<Reservation> getAllReservations() {
-        return reservations;
+    public List<Reservation> getReservations() {
+        return List.copyOf(reservations);
     }
 
     public Reservation add(ReservationRequest request) {
@@ -37,11 +36,11 @@ public class ReservationService {
     }
 
     public void delete(Long reservationId) {
-        Optional<Reservation> saved = reservations.stream()
+        Reservation saved = reservations.stream()
             .filter(reservation -> reservation.getId().equals(reservationId))
-            .findFirst();
+            .findFirst()
+            .orElseThrow(() -> new NoSuchElementException("존재하지 않는 예약 아이디 입니다. reservationId: " + reservationId));
 
-        reservations.remove(saved.orElseThrow(() ->
-            new NoSuchElementException("존재하지 않는 예약 아이디 입니다. reservationId: " + reservationId)));
+        reservations.remove(saved);
     }
 }

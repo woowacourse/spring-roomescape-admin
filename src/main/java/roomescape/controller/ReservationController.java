@@ -25,7 +25,7 @@ public class ReservationController {
 
     @GetMapping
     public List<ReservationResponse> getAllReservations() {
-        return reservationService.getAllReservations().stream()
+        return reservationService.getReservations().stream()
             .map(ReservationResponse::toDto)
             .toList();
     }

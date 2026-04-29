@@ -1,5 +1,7 @@
 package roomescape.domain;
 
+import org.springframework.util.StringUtils;
+
 public class ReservationTime {
 
     private final Long id;
@@ -24,6 +26,8 @@ public class ReservationTime {
     public static ReservationTime create(
             String startAt
     ) {
+        validateStartAt(startAt);
+
         return new ReservationTime(
                 null,
                 startAt
@@ -45,5 +49,11 @@ public class ReservationTime {
                 id,
                 this.startAt
         );
+    }
+
+    private static void validateStartAt(String startAt) {
+        if (!StringUtils.hasText(startAt)) {
+            throw new IllegalArgumentException("예약 시간엔 시간 정보가 존재해야 합니다.");
+        }
     }
 }

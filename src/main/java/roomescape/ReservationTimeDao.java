@@ -57,4 +57,12 @@ public class ReservationTimeDao {
 
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, reservationTimeId));
     }
+
+    public void delete(ReservationTime reservationTime) {
+        String sql = """
+                DELETE FROM reservation_time
+                WHERE id = ?""";
+
+        jdbcTemplate.update(sql, reservationTime.getId());
+    }
 }

@@ -28,6 +28,13 @@ public class Reservation {
                 dto.time());
     }
 
+    public static Reservation create(Long id, String name, LocalDate date, LocalTime time) {
+        return new Reservation(id,
+                name,
+                date,
+                time);
+    }
+
     public Long getId() {
         return id;
     }

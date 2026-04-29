@@ -3,14 +3,14 @@ package roomescape.repository;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class ListReservationRepository implements ReservationRepository {
     private static AtomicLong idCursor = new AtomicLong(1);
-    private static List<Reservation> reservations = new Vector<>();
+    private static List<Reservation> reservations = new ArrayList<>();
 
     @Override
     public Reservation save(Reservation reservation) {

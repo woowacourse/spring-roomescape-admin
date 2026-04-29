@@ -41,4 +41,15 @@ public class JdbcTimeRepositoryTest {
                 .extracting(Time::getStartAt)
                 .containsExactly(LocalTime.of(15, 00), LocalTime.of(16, 00));
     }
+
+    @Test
+    void 시간_삭제_레포지토리_테스트(){
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)","15:00");
+        Long id = jdbcTemplate.queryForObject("SELECT id FROM reservation_time LIMIT 1", Long.class);
+
+        repository.deleteById(id);
+        int rowCount = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM reservation_time", Integer.class);
+
+        assertThat(rowCount).isEqualTo(0);
+    }
 }

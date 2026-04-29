@@ -28,4 +28,8 @@ public class TimeService {
                 ))
                 .toList();
     }
+
+    public void deleteTime(Long id){
+        timeRepository.deleteById(id);
+    }
 }

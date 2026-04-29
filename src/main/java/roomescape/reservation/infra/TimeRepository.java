@@ -8,4 +8,6 @@ public interface TimeRepository {
     Time save(LocalTime startAt);
 
     List<Time> findAll();
+
+    void deleteById(Long id);
 }

@@ -39,4 +39,13 @@ public class JdbcTimeRepository implements TimeRepository {
 
         return template.query(sql, reservationRowMapper);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM reservation_time WHERE id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", id);
+
+        template.update(sql, params);
+    }
 }

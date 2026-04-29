@@ -2,22 +2,25 @@ package roomescape.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationRequest;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationRequest;
 
 @Repository
-public class ReservationDao {
+@Primary
+public class ReservationDao implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public List<Reservation> selectReservations() {
         final String sql = "SELECT\n"
                 + "    r.id as reservation_id,\n"
@@ -43,6 +46,7 @@ public class ReservationDao {
         });
     }
 
+    @Override
     public Reservation insertReservation(ReservationRequest request, ReservationTime time) {
         final String sql = "insert into reservation (name, date, time_id) values(?, ?, ?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -56,6 +60,7 @@ public class ReservationDao {
         return new Reservation(keyHolder.getKey().longValue(), request.getName(), request.getDate(), time);
     }
 
+    @Override
     public void deleteReservation(Long id) {
         final String sql = "delete from reservation where id = ?;";
         jdbcTemplate.update(sql, id);

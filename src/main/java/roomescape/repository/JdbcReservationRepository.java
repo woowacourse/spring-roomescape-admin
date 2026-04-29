@@ -11,7 +11,6 @@ import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {

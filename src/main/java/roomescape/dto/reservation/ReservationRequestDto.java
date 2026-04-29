@@ -1,4 +1,4 @@
-package roomescape.dto;
+package roomescape.dto.reservation;
 
 public record ReservationRequestDto(
         String name,

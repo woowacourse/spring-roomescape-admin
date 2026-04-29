@@ -1,11 +1,13 @@
 package roomescape.domain.reservations.application;
 
 import java.util.List;
+import org.springframework.stereotype.Service;
 import roomescape.domain.reservations.entity.ReservationTime;
 import roomescape.domain.reservations.infrastructure.ReservationTimeJdbcTemplateRepository;
 import roomescape.domain.reservations.presentation.dto.ReservationTimeRequest;
 import roomescape.domain.reservations.presentation.dto.ReservationTimeResponse;
 
+@Service
 public class ReservationTimeService {
 
     private final ReservationTimeJdbcTemplateRepository reservationTimeRepository;

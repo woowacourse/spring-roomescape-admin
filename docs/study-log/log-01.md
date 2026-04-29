@@ -4,6 +4,8 @@
 
 - ResponseEntity
 - ResponseEntity.build()?
+- 마틴 파울러의 '실용적 예외' 허용
+- CQS 원칙
 
 **시간**: MM/DD HH:MM ~ HH:MM (약 __분)
 **학습 범위**: (예: 1단계 MVC / 2단계 DB 연동 / 3단계 시간 관리)

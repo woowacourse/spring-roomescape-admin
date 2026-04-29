@@ -56,7 +56,10 @@ public class ReservationTest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.jsonPath().getList("", ReservationResponseDTO.class)).hasSize(1);
+        assertThat(response.jsonPath().getList("", ReservationResponseDTO.class))
+                .hasSize(1)
+                .extracting(ReservationResponseDTO::getName)
+                .containsExactly("brown");
     }
 
     @DisplayName("예약 ID로 예약을 삭제한다.")

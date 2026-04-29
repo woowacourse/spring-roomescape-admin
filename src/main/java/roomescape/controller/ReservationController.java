@@ -1,9 +1,12 @@
 package roomescape.controller;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,19 +53,22 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     @ResponseBody
-    public ReservationResponse create(@RequestBody ReservationRequest request) {
-        Long id = index.getAndIncrement();
+    public Long create(@RequestBody ReservationRequest request) {
+        KeyHolder keyholder = new GeneratedKeyHolder();
 
-        Reservation reservation = new Reservation(
-                id,
-                new Name(request.name()),
-                new ReservationDate(request.date()),
-                new ReservationTime(request.time())
-        );
+        jdbcTemplate.update(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
+                    new String[]{"id"});
 
-        reservations.add(reservation);
+            preparedStatement.setString(1, request.name());
+            preparedStatement.setString(2, request.date());
+            preparedStatement.setString(3, request.time());
 
-        return ReservationResponse.from(reservation);
+            return preparedStatement;
+        }, keyholder);
+
+        return keyholder.getKey().longValue();
     }
 
     @DeleteMapping("/reservations/{id}")

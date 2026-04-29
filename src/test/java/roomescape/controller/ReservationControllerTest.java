@@ -48,12 +48,9 @@ class ReservationControllerTest {
                 , "10:30"
         );
 
-        ReservationResponse response = reservationController.create(request);
+        Long reservationId = reservationController.create(request);
 
-        assertThat(response.id()).isEqualTo(1L);
-        assertThat(response.name()).isEqualTo("브라운");
-        assertThat(response.date()).isEqualTo("2026-04-29");
-        assertThat(response.time()).isEqualTo("10:30");
+        assertThat(reservationId.longValue()).isEqualTo(1L);
     }
 
     @Test
@@ -64,8 +61,7 @@ class ReservationControllerTest {
         assertThat(reservations).isEmpty();
     }
 
-    // TODO: POST 기능 만들고 이 부분을 주석 해제
-    /*@Test
+    @Test
     @DisplayName("예약이 생성된 상태에서 예약을 조회한다.")
     void findAllReservations_After_Create() {
         reservationController.create(new ReservationRequest("브라운", "2026-04-29", "10:30"));
@@ -83,7 +79,7 @@ class ReservationControllerTest {
         assertThat(reservations.get(1).name()).isEqualTo("리사");
         assertThat(reservations.get(1).date()).isEqualTo("2026-04-30");
         assertThat(reservations.get(1).time()).isEqualTo("10:40");
-    }*/
+    }
 
     // TODO: DELETE 기능 만들고 이 부분을 주석 해제
     /*@Test

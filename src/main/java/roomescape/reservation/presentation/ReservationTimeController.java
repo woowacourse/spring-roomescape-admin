@@ -13,35 +13,35 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.reservation.application.TimeService;
-import roomescape.reservation.presentation.dto.request.TimeSaveRequest;
-import roomescape.reservation.presentation.dto.response.TimeFindResponse;
-import roomescape.reservation.presentation.dto.response.TimeSaveResponse;
+import roomescape.reservation.application.ReservationTimeService;
+import roomescape.reservation.presentation.dto.request.ReservationTimeSaveRequest;
+import roomescape.reservation.presentation.dto.response.ReservationTimeFindResponse;
+import roomescape.reservation.presentation.dto.response.ReservationTimeSaveResponse;
 
 @RestController
 @RequestMapping("/times")
 @Validated
 @RequiredArgsConstructor
-public class TimeController {
-    private final TimeService timeService;
+public class ReservationTimeController {
+    private final ReservationTimeService reservationTimeService;
 
     @PostMapping
-    public ResponseEntity<TimeSaveResponse> saveTime(
-            @RequestBody @Valid TimeSaveRequest body) {
-        TimeSaveResponse response = timeService.saveTime(body);
+    public ResponseEntity<ReservationTimeSaveResponse> saveReservationTime(
+            @RequestBody @Valid ReservationTimeSaveRequest body) {
+        ReservationTimeSaveResponse response = reservationTimeService.saveReservationTime(body);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<TimeFindResponse>> findAllTimes() {
-        List<TimeFindResponse> responses = timeService.findAllTimes();
+    public ResponseEntity<List<ReservationTimeFindResponse>> findAllReservationTimes() {
+        List<ReservationTimeFindResponse> responses = reservationTimeService.findAllReservationTimes();
         return ResponseEntity.status(HttpStatus.OK).body(responses);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTime(@PathVariable Long id){
-        timeService.deleteTime(id);
+        reservationTimeService.deleteReservationTime(id);
         return ResponseEntity.ok().build();
     }
 }

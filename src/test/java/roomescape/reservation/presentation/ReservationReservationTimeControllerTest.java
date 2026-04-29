@@ -12,7 +12,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class TimeControllerTest {
+public class ReservationReservationTimeControllerTest {
     @Test
     void 시간_관리_API() {
         Map<String, String> params = new HashMap<>();

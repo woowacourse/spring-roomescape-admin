@@ -9,24 +9,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.reservation.domain.Time;
+import roomescape.reservation.domain.ReservationTime;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class JdbcTimeRepositoryTest {
+public class JdbcReservationReservationTimeRepositoryTest {
     @Autowired
-    private JdbcTimeRepository repository;
+    private JdbcReservationTimeRepository repository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Test
     void 시간_저장_레포지토리_테스트() {
-        Time savedTime = repository.save(LocalTime.of(15, 40));
+        ReservationTime savedReservationTime = repository.save(LocalTime.of(15, 40));
         Long id = jdbcTemplate.queryForObject("SELECT id FROM reservation_time LIMIT 1", Long.class);
 
-        assertThat(savedTime.getId()).isEqualTo(id);
-        assertThat(savedTime.getStartAt()).isEqualTo(LocalTime.of(15, 40));
+        assertThat(savedReservationTime.getId()).isEqualTo(id);
+        assertThat(savedReservationTime.getStartAt()).isEqualTo(LocalTime.of(15, 40));
     }
 
     @Test
@@ -34,11 +34,11 @@ public class JdbcTimeRepositoryTest {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "15:00");
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "16:00");
 
-        List<Time> times = repository.findAll();
+        List<ReservationTime> reservationTimes = repository.findAll();
 
-        assertThat(times).hasSize(2);
-        assertThat(times)
-                .extracting(Time::getStartAt)
+        assertThat(reservationTimes).hasSize(2);
+        assertThat(reservationTimes)
+                .extracting(ReservationTime::getStartAt)
                 .containsExactly(LocalTime.of(15, 00), LocalTime.of(16, 00));
     }
 

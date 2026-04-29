@@ -9,19 +9,19 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.reservation.domain.Time;
+import roomescape.reservation.domain.ReservationTime;
 
 @Repository
 @RequiredArgsConstructor
-public class JdbcTimeRepository implements TimeRepository {
+public class JdbcReservationTimeRepository implements ReservationTimeRepository {
     private final NamedParameterJdbcTemplate template;
-    private final RowMapper<Time> reservationRowMapper = (resultSet, rowNum) ->
-            new Time(
+    private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) ->
+            new ReservationTime(
                     resultSet.getLong("id"),
                     LocalTime.parse(resultSet.getString("start_at")));
 
     @Override
-    public Time save(LocalTime startAt) {
+    public ReservationTime save(LocalTime startAt) {
         String sql = "INSERT INTO reservation_time(start_at) VALUES (:start_at)";
 
         MapSqlParameterSource params = new MapSqlParameterSource()
@@ -30,14 +30,14 @@ public class JdbcTimeRepository implements TimeRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         template.update(sql, params, keyHolder);
 
-        return new Time(keyHolder.getKey().longValue(), startAt);
+        return new ReservationTime(keyHolder.getKey().longValue(), startAt);
     }
 
     @Override
-    public List<Time> findAll() {
+    public List<ReservationTime> findAll() {
         String sql = "SELECT id, start_at FROM reservation_time";
 
-        return template.query(sql, reservationRowMapper);
+        return template.query(sql, reservationTimeRowMapper);
     }
 
     @Override

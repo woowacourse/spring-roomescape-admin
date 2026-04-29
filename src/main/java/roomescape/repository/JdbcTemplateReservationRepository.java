@@ -27,8 +27,8 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate().toString());
-            ps.setString(3, reservation.getTime().toString());
+            ps.setString(2, reservation.getDate());
+            ps.setString(3, reservation.getTime());
             return ps;
         }, keyHolder);
 
@@ -38,7 +38,15 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
     @Override
     public List<Reservation> findAll() {
-        return List.of();
+        String sql = "select * from reservation";
+        return jdbcTemplate.query(sql,
+                (rs, rowNum) -> new Reservation(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        rs.getString("date"),
+                        rs.getString("time")
+                )
+        );
     }
 
     @Override

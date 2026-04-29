@@ -66,4 +66,9 @@ public class ReservationDAO {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
+    public int delete(Long id) {
+        String sql = "DELETE FROM reservation where id = ?";
+        return jdbcTemplate.update(sql, Long.valueOf(id));
+    }
+
 }

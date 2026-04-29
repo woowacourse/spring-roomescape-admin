@@ -19,8 +19,8 @@ import roomescape.dto.ReservationResponseDto;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(1);
+    private final List<Reservation> reservations = new ArrayList<>();
+    private final AtomicLong index = new AtomicLong(0);
 
     @GetMapping
     public ResponseEntity<List<ReservationResponseDto>> getAllReservation() {
@@ -38,8 +38,14 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteReservation(@PathVariable Long id) {
-        return "temp";
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        for (Reservation reservation : reservations) {
+            if (reservation.getId().equals(id)) {
+                reservations.remove(reservation);
+                return ResponseEntity.ok().build();
+            }
+        }
+        return ResponseEntity.notFound().build();
     }
 
 }

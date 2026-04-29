@@ -5,7 +5,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import roomescape.domain.Reservation;
 
-public record ReservationResponseDto(Long id, String name, LocalDate date, @JsonFormat(pattern = "HH:mm") LocalTime time) {
+public record ReservationResponseDto(
+        Long id,
+        String name,
+        LocalDate date,
+        @JsonFormat(pattern = "HH:mm")
+        LocalTime time
+) {
 
     public static ReservationResponseDto from(Reservation reservation) {
         if (reservation == null) return null;

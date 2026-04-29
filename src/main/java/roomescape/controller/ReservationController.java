@@ -26,12 +26,10 @@ public class ReservationController {
         return reservationDao.getReservations();
     }
 
-//    @PostMapping("/reservations")
-//    public Reservation createReservation(@RequestBody ReservationRequest request) {
-//        Reservation newReservation = new Reservation(index.getAndIncrement(), request.name(), request.date(), request.time());
-//        reservations.add(newReservation);
-//        return newReservation;
-//    }
+    @PostMapping("/reservations")
+    public ReservationResponse createReservation(@RequestBody ReservationRequest request) {
+        return reservationDao.createReservation(request);
+    }
 //
 //    @DeleteMapping("/reservations/{id}")
 //    public void deleteReservation(@PathVariable long id) {

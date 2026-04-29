@@ -7,20 +7,20 @@ import roomescape.dto.ReservationRequest;
 public class Reservation {
     private Long id;
     private String name;
-    private LocalDate date;
-    private LocalTime time;
+    private String date;
+    private String time;
 
     public Reservation() {
     }
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime reservationTime) {
+    public Reservation(Long id, String name, String date, String reservationTime) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = reservationTime;
     }
 
-    public Reservation(String name, LocalDate date, LocalTime reservationTime) {
+    public Reservation(String name, String date, String reservationTime) {
         this.name = name;
         this.date = date;
         this.time = reservationTime;
@@ -34,11 +34,11 @@ public class Reservation {
         return this.name;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
-    public LocalTime getTime() {
+    public String getTime() {
         return time;
     }
 }

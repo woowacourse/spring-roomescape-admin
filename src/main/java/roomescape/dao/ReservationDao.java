@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
+import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 
 @Component
@@ -34,19 +35,19 @@ public class ReservationDao {
         return reservations;
     }
 
-//    public ReservationResponse createReservation(ReservationRequest request) {
-//        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
-//
-//        KeyHolder keyHolder = new GeneratedKeyHolder();
-//
-//        jdbcTemplate.update(connection -> {
-//            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-//            ps.setString(1, request.name());
-//            ps.setString(2, request.date().toString());
-//            ps.setString(3, request.time().toString());
-//            return ps;
-//        }, keyHolder);
-//
-//        return new ReservationResponse(keyHolder.getKey(), )
-//    }
+    public ReservationResponse createReservation(ReservationRequest request) {
+        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, request.name());
+            ps.setString(2, request.date());
+            ps.setString(3, request.time());
+            return ps;
+        }, keyHolder);
+
+        return new ReservationResponse(keyHolder.getKey().longValue(), request.name(), request.date(), request.time());
+    }
 }

@@ -3,6 +3,9 @@ package roomescape.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -46,5 +49,17 @@ public class ReservationTimeDao {
 
         long generatedId = keyHolder.getKey().longValue();
         return ReservationTimeResponse.from(new ReservationTime(generatedId, request.startAt()));
+    }
+
+    public List<ReservationTimeResponse> findAllReservationTimes() {
+        String sql = "select * from reservation_time";
+        try {
+            List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, rowMapper);
+            return reservationTimes.stream()
+                    .map(ReservationTimeResponse::from)
+                    .collect(Collectors.toList());
+        } catch (EmptyResultDataAccessException exception) {
+            return null;
+        }
     }
 }

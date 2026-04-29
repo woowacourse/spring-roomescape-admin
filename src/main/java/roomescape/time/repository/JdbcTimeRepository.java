@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
@@ -34,7 +35,7 @@ public class JdbcTimeRepository implements TimeRepository {
   @Override
   public ReservationTime save(String startAt) {
     Number id = timeInsert.executeAndReturnKey(
-        new org.springframework.jdbc.core.namedparam.MapSqlParameterSource()
+        new MapSqlParameterSource()
             .addValue("start_at", startAt)
     );
 

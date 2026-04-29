@@ -15,22 +15,16 @@ public record ReservationResponse(
 
     public static ReservationResponse from(Reservation reservation) {
         return new ReservationResponse(
-                reservation.id(),
-                reservation.name(),
-                reservation.date(),
-                reservation.time()
+                reservation.getId(),
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
         );
     }
 
     public static List<ReservationResponse> from(List<Reservation> reservations) {
         return reservations.stream()
-                .map(reservation -> new ReservationResponse(
-                                reservation.id(),
-                                reservation.name(),
-                                reservation.date(),
-                                reservation.time()
-                        )
-                )
+                .map(ReservationResponse::from)
                 .toList();
     }
 }

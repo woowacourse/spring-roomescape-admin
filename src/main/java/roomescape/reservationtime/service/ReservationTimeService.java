@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import roomescape.reservationtime.domain.ReservationTime;
 import roomescape.reservationtime.dto.ReservationTimeCreateDto;
 import roomescape.reservationtime.dto.ReservationTimeDto;
+import roomescape.reservationtime.exception.ReservationTimeException;
 import roomescape.reservationtime.repository.ReservationTimeRepository;
 
 @RequiredArgsConstructor
@@ -15,7 +16,8 @@ public class ReservationTimeService {
     private final ReservationTimeRepository reservationTimeRepository;
 
     public ReservationTime findById(Long reservationTimeId) {
-        return reservationTimeRepository.findById(reservationTimeId);
+        return reservationTimeRepository.findById(reservationTimeId)
+                .orElseThrow(() -> new ReservationTimeException("[ERROR] 존재하지 않는 timeId 입니다."));
     }
 
     public List<ReservationTimeDto> findAllReservationTimes() {

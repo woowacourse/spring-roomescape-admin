@@ -11,12 +11,24 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
+    public ReservationTime(Long id, LocalTime startAt) {
+        this.id = id;
+        this.startAt = startAt;
+    }
+
     public Long getId() {
         return id;
     }
 
     public LocalTime getStartAt() {
         return startAt;
+    }
+
+    public ReservationTime toEntity(Long id) {
+        return new ReservationTime(
+                id,
+                this.startAt
+        );
     }
 
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.repository.RoomescapeRepository;
 import roomescape.service.dto.ReservationSaveServiceDto;
 
@@ -26,7 +27,7 @@ public class RoomescapeServiceImpl implements RoomescapeService {
         Reservation newReservation = new Reservation(
                 reservation.getName(),
                 reservation.getDate(),
-                reservation.getTime()
+                new ReservationTime(reservation.getTimeId(), null)
         );
         return roomescapeRepository.save(newReservation);
     }
@@ -34,5 +35,20 @@ public class RoomescapeServiceImpl implements RoomescapeService {
     @Override
     public boolean deleteById(long id) {
         return roomescapeRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ReservationTime> getReservationTimes() {
+        return roomescapeRepository.findReservationTimes();
+    }
+
+    @Override
+    public ReservationTime saveReservationTime(ReservationTime reservationTime) {
+        return roomescapeRepository.saveReservationTime(reservationTime);
+    }
+
+    @Override
+    public boolean deleteReservationTimeById(long id) {
+        return roomescapeRepository.deleteReservationTimeById(id);
     }
 }

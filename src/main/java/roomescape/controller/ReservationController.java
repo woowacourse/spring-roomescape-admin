@@ -42,10 +42,9 @@ public class ReservationController {
     public List<ReservationResponse> findAll() {
         List<ReservationResponse> reservationResponses = new ArrayList<>();
 
-        for (Reservation reservation : reservations) {
-            ReservationResponse reservationResponse = ReservationResponse.from(reservation);
-            reservationResponses.add(reservationResponse);
-        }
+        reservations.stream()
+                .map(ReservationResponse::from)
+                .toList();
 
         return reservationResponses;
     }

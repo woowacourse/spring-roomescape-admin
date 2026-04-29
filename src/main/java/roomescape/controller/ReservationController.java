@@ -1,5 +1,7 @@
 package roomescape.controller;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -28,9 +30,14 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponseDto>> getAllReservation() {
-        List<ReservationResponseDto> responseDtoList = reservations.stream()
-                .map(ReservationResponseDto::from)
-                .toList();
+        String sql = "SELECT * FROM reservation";
+        List<ReservationResponseDto> responseDtoList = jdbcTemplate.query(sql,(resultSet, rowNum) ->
+                new ReservationResponseDto(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getObject("date",LocalDate.class),
+                        resultSet.getObject("time", LocalTime.class)
+                ));
         return ResponseEntity.ok(responseDtoList);
     }
 

@@ -2,6 +2,7 @@ package roomescape.domain.reservations.infrastructure;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -28,6 +29,18 @@ public class ReservationTimeJdbcTemplateRepository implements ReservationTimeRep
         );
         Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
         return ReservationTime.of(id, reservation.getStartAt());
+    }
+
+    @Override
+    public Optional<ReservationTime> findById(Long id) {
+        String sql = "SELECT * FROM reservation_time WHERE id = ?";
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+                (rs, rowNum) -> ReservationTime.of(
+                        rs.getLong("id"),
+                        rs.getTime("start_at").toLocalTime()
+                ),
+                id
+        ));
     }
 
     @Override

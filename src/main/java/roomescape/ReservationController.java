@@ -39,7 +39,7 @@ public class ReservationController {
     public ResponseEntity<Void> update(@RequestBody Reservation newReservation, @PathVariable Long id) {
         Reservation reservation = queryingDAO.findReservationById(id);
         reservation.update(newReservation);
-        updatingDAO.update(id, reservation);
+        updatingDAO.save(id, reservation);
 
         return ResponseEntity.ok().build();
     }

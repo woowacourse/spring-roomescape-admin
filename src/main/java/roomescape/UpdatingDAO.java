@@ -16,7 +16,7 @@ public class UpdatingDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void update(Long id, Reservation reservation) {
+    public void save(Long id, Reservation reservation) {
         String sql = "update reservation SET name = ?, date = ?, time = ? where id = ?";
         jdbcTemplate.update(sql, reservation.getName(), reservation.getDate(), reservation.getTime(), id);
     }

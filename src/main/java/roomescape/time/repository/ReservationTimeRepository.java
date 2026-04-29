@@ -9,7 +9,7 @@ public interface ReservationTimeRepository {
 
     ReservationTime save(ReservationTime reservationTime);
 
-    List<ReservationTime> finaAll();
+    List<ReservationTime> findAll();
 
     Optional<ReservationTime> findById(long id);
 

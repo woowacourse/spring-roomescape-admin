@@ -21,7 +21,7 @@ public class ReservationTimeService {
         LocalTime startAt = reservationTimeRequest.startAt();
 
         if(reservationTimeRepository.existsByStartAt(startAt))
-            throw new IllegalArgumentException("[ERROR] 시간 중복 추가는 불가능합니다.");
+            throw new IllegalArgumentException("시간 중복 추가는 불가능합니다.");
 
         ReservationTime reservationTime = ReservationTime.createNew(startAt);
         return ReservationTimeResponse.from(reservationTimeRepository.save(reservationTime));
@@ -29,11 +29,11 @@ public class ReservationTimeService {
 
     public ReservationTime findById(long id) {
         return reservationTimeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 찾는 예약 시간이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("찾는 예약 시간이 없습니다."));
     }
 
     public List<ReservationTimeResponse> findAll() {
-        return reservationTimeRepository.finaAll().stream()
+        return reservationTimeRepository.findAll().stream()
                 .map(ReservationTimeResponse::from)
                 .toList();
     }

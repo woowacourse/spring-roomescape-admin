@@ -25,7 +25,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<ReservationTime> finaAll() {
+    public List<ReservationTime> findAll() {
         final String sql = "SELECT * FROM reservation_time";
         return jdbcTemplate.query(sql, reservationTimeRowMapper);
     }

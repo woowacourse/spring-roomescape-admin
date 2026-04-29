@@ -30,7 +30,7 @@ public class JdbcReservationTimeRepositoryTest {
     @DisplayName("예약 시간 전체 조회")
     void reservationTime_findAll_test() {
         //given & when
-        Optional<ReservationTime> reservationTime = jdbcReservationTimeRepository.finaAll()
+        Optional<ReservationTime> reservationTime = jdbcReservationTimeRepository.findAll()
                 .stream()
                 .findFirst();
         //then
@@ -54,9 +54,9 @@ public class JdbcReservationTimeRepositoryTest {
     @DisplayName("예약 시간 삭제")
     void reservationTime_delete_test() {
         // given
-        int beforeSize = jdbcReservationTimeRepository.finaAll().size();
+        int beforeSize = jdbcReservationTimeRepository.findAll().size();
 
-        ReservationTime reservationTime = jdbcReservationTimeRepository.finaAll()
+        ReservationTime reservationTime = jdbcReservationTimeRepository.findAll()
                 .stream()
                 .findFirst()
                 .orElseThrow();
@@ -65,7 +65,7 @@ public class JdbcReservationTimeRepositoryTest {
         jdbcReservationTimeRepository.deleteById(reservationTime.getId());
 
         // then
-        int afterSize = jdbcReservationTimeRepository.finaAll().size();
+        int afterSize = jdbcReservationTimeRepository.findAll().size();
 
         assertThat(afterSize).isEqualTo(beforeSize - 1);
     }

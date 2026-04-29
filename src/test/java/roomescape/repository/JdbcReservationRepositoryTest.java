@@ -41,7 +41,7 @@ public class JdbcReservationRepositoryTest {
         //given
         String name = "쿠다";
         String date = "2023-08-06";
-        ReservationTime reservationTime = jdbcReservationTimeRepository.finaAll()
+        ReservationTime reservationTime = jdbcReservationTimeRepository.findAll()
                 .stream()
                 .findFirst()
                 .orElseThrow();

@@ -20,11 +20,11 @@ import roomescape.dto.ReservationResponse;
 
 @RestController
 @RequestMapping("/reservations")
-public class RoomescapeApiController {
+public class ReservationApiController {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public RoomescapeApiController(JdbcTemplate jdbcTemplate) {
+    public ReservationApiController(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

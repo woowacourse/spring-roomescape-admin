@@ -32,7 +32,7 @@ public class ReservationRepository {
             rs.getLong("id"),
             rs.getString("name"),
             rs.getDate("date").toLocalDate(),
-            rs.getTime("startAt").toLocalTime()
+            rs.getTime("time").toLocalTime()
         );
 
     public Long save(Reservation reservation) {

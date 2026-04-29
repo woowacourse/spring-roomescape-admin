@@ -20,16 +20,16 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public List<Reservation> getAllReservations() {
-        return reservationService.getAllReservations();
+        return reservationService.findAllReservations();
     }
 
     @PostMapping("/reservations")
     public ReservationResponse addReservation(@RequestBody ReservationRequest reservationRequest) {
-        return reservationService.addReservation(reservationRequest);
+        return reservationService.saveReservation(reservationRequest);
     }
 
     @DeleteMapping("/reservations/{id}")
     public void deleteReservation(@PathVariable Long id) {
-        reservationService.deleteReservation(id);
+        reservationService.deleteById(id);
     }
 }

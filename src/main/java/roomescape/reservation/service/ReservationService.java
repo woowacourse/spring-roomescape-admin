@@ -14,17 +14,17 @@ import roomescape.reservation.repository.ReservationRepository;
 public class ReservationService {
     private final ReservationRepository reservationRepository;
 
-    public List<Reservation> getAllReservations() {
-        return reservationRepository.getAllReservations();
+    public List<Reservation> findAllReservations() {
+        return reservationRepository.findAllReservations();
     }
 
-    public ReservationResponse addReservation(ReservationRequest reservationRequest) {
+    public ReservationResponse saveReservation(ReservationRequest reservationRequest) {
         Reservation reservation = ReservationMapper.toEntity(reservationRequest);
-        Reservation createdReservation = reservationRepository.addReservation(reservation);
+        Reservation createdReservation = reservationRepository.saveReservation(reservation);
         return ReservationMapper.toResponse(createdReservation);
     }
 
-    public void deleteReservation(Long id) {
-        reservationRepository.deleteById(id);
+    public int deleteById(Long id) {
+        return reservationRepository.deleteById(id);
     }
 }

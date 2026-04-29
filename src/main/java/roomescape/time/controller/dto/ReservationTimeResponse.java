@@ -1,10 +1,11 @@
-package roomescape.time.dto;
+package roomescape.time.controller.dto;
 
+import java.time.LocalTime;
 import roomescape.time.entity.ReservationTime;
 
 public record ReservationTimeResponse(
         Long id,
-        String startAt
+        LocalTime startAt
 ) {
     public static ReservationTimeResponse from(ReservationTime reservationTime) {
         return new ReservationTimeResponse(reservationTime.getId(), reservationTime.getStartAt());

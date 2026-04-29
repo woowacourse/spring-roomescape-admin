@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class ReservationTimeController {
@@ -15,7 +16,7 @@ public class ReservationTimeController {
     }
 
     @PostMapping("/times")
-    public ResponseEntity<?> postTimes(@Valid ReservationTimeRequest request) {
+    public ResponseEntity<?> postTimes(@Valid @RequestBody ReservationTimeRequest request) {
         ReservationTime reservationTime = reservationTimeRepository.save(request);
         return ResponseEntity.ok().body(ReservationTimeResponse.from(reservationTime));
     }

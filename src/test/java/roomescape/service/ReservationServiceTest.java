@@ -23,17 +23,13 @@ public class ReservationServiceTest {
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
 
-    @BeforeEach
-    void setup() {
-        ReservationTime nonIdReservationTime = ReservationTime.create("11:00");
-        reservationTimeRepository.save(nonIdReservationTime);
-    }
-
     @Test
     @DisplayName("예약 저장")
     void save_test() {
         // given
-        ReservationRequestDto reservationRequestDto = new ReservationRequestDto("쿠다", "2023-08-06", 1L);
+        ReservationTime nonIdReservationTime = ReservationTime.create("10:00");
+        ReservationTime reservationTime = reservationTimeRepository.save(nonIdReservationTime);
+        ReservationRequestDto reservationRequestDto = new ReservationRequestDto("쿠다", "2023-08-06", reservationTime.getId());
 
         // when
         ReservationResponseDto result = reservationService.save(reservationRequestDto);

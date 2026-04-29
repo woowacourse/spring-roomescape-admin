@@ -9,8 +9,8 @@ public class ReservationController {
 
     private final ReservationRepository reservationRepository;
 
-    public ReservationController() {
-        this.reservationRepository = new ReservationRepository();
+    public ReservationController(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
     }
 
     @GetMapping("/reservations")
@@ -22,8 +22,8 @@ public class ReservationController {
     public Reservation addReservation(@RequestBody ReservationSaveDto reservationSaveDto) {
         return reservationRepository.save(
                 reservationSaveDto.name(),
-                reservationSaveDto.reservationDate(),
-                reservationSaveDto.reservationTime()
+                reservationSaveDto.date(),
+                reservationSaveDto.time()
         );
     }
 

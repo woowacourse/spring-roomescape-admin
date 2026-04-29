@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.controller.mapper.ReservationMapper;
 import roomescape.domain.Reservation;
-import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.service.ReservationService;
 import roomescape.service.command.ReservationCreateCommand;
 
@@ -36,7 +36,7 @@ public class ReservationController {
             @RequestBody ReservationCreateRequest createRequest
     ) {
         ReservationCreateCommand createCommand = mapper.mapCreateToCommand(createRequest);
-        Reservation createdReservation = service.create(createCommand);
+        Reservation createdReservation = service.createReservation(createCommand);
 
         ReservationResponse response = mapper.mapToResponse(createdReservation);
 
@@ -45,7 +45,7 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> findAll() {
-        List<ReservationResponse> responses = service.findAll()
+        List<ReservationResponse> responses = service.findAllReservations()
                 .stream()
                 .map(mapper::mapToResponse)
                 .toList();
@@ -57,7 +57,7 @@ public class ReservationController {
     public ResponseEntity<Void> delete(
             @PathVariable long id
     ) {
-        service.delete(id);
+        service.deleteReservation(id);
 
         return ResponseEntity.ok().build();
     }

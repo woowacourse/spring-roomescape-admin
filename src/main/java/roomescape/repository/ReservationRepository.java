@@ -43,6 +43,16 @@ public class ReservationRepository {
         return jdbcTemplate.query(findSql, RESERVATION_ROW_MAPPER);
     }
 
+    public boolean existsTimeId(long timeId) {
+        String countSql = "SELECT count(time_id)"
+                + " FROM reservation"
+                + " WHERE time_id = ?";
+
+        Integer timeIdCount = jdbcTemplate.queryForObject(countSql, Integer.class, timeId);
+
+        return timeIdCount != null && timeIdCount > 0;
+    }
+
     public void delete(long id) {
         String deleteSql = "DELETE FROM reservation"
                 + " WHERE id = ?";

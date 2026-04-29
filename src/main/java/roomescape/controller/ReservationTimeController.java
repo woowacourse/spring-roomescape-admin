@@ -9,22 +9,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import roomescape.controller.dto.ReservationTimeCreateRequest;
 import roomescape.controller.dto.ReservationTimeResponse;
 import roomescape.controller.mapper.ReservationTimeMapper;
 import roomescape.domain.ReservationTime;
-import roomescape.controller.dto.ReservationTimeCreateRequest;
-import roomescape.service.ReservationTimeService;
+import roomescape.service.ReservationService;
 import roomescape.service.command.ReservationTimeCreateCommand;
 
 @RestController
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private final ReservationTimeService service;
+    private final ReservationService service;
     private final ReservationTimeMapper mapper;
 
     public ReservationTimeController(
-            ReservationTimeService service,
+            ReservationService service,
             ReservationTimeMapper mapper
     ) {
         this.service = service;
@@ -36,7 +36,7 @@ public class ReservationTimeController {
             @RequestBody ReservationTimeCreateRequest createRequest
     ) {
         ReservationTimeCreateCommand createCommand = mapper.mapCreateToCommand(createRequest);
-        ReservationTime createdTime = service.create(createCommand);
+        ReservationTime createdTime = service.createTime(createCommand);
 
         ReservationTimeResponse response = mapper.mapToResponse(createdTime);
 
@@ -45,7 +45,7 @@ public class ReservationTimeController {
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> findAll() {
-        List<ReservationTimeResponse> responses = service.findAll()
+        List<ReservationTimeResponse> responses = service.findAllTimes()
                 .stream()
                 .map(mapper::mapToResponse)
                 .toList();
@@ -57,7 +57,7 @@ public class ReservationTimeController {
     public ResponseEntity<Void> delete(
             @PathVariable long id
     ) {
-        service.delete(id);
+        service.deleteTime(id);
 
         return ResponseEntity.ok().build();
     }

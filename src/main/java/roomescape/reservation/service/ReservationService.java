@@ -6,14 +6,19 @@ import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.CreateReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.repository.ReservationRepository;
+import roomescape.time.domain.ReservationTime;
+import roomescape.time.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository) {
+    public ReservationService(ReservationRepository reservationRepository,
+                              ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public List<ReservationResponse> findAll() {
@@ -23,9 +28,12 @@ public class ReservationService {
     }
 
     public ReservationResponse create(CreateReservationRequest createReservationRequest) {
+        ReservationTime reservationTime = reservationTimeRepository.findById(createReservationRequest.timeId())
+                .orElseThrow(() -> new IllegalStateException("존재하지 않는 예약 시간입니다."));
+
         Long id = reservationRepository.save(
                 new Reservation(null, createReservationRequest.name(), createReservationRequest.date(),
-                        createReservationRequest.time()));
+                        reservationTime));
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("예약 생성에 실패했습니다."));
         return ReservationResponse.from(reservation);

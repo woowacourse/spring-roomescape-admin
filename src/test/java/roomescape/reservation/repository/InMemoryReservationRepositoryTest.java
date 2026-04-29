@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.reservation.domain.Reservation;
+import roomescape.time.domain.ReservationTime;
 
 class InMemoryReservationRepositoryTest {
     private InMemoryReservationRepository inMemoryReservationRepository;
@@ -18,10 +19,10 @@ class InMemoryReservationRepositoryTest {
         inMemoryReservationRepository = new InMemoryReservationRepository();
         inMemoryReservationRepository.save(new Reservation(
                 inMemoryReservationRepository.generateId(), "한다", LocalDate.of(2023, 8, 5),
-                LocalTime.of(15, 40)));
+                new ReservationTime(1L, LocalTime.of(15, 40))));
         inMemoryReservationRepository.save(new Reservation(
                 inMemoryReservationRepository.generateId(), "판다", LocalDate.of(2023, 10, 5),
-                LocalTime.of(15, 40)));
+                new ReservationTime(2L, LocalTime.of(15, 40))));
     }
 
     @Test
@@ -34,7 +35,8 @@ class InMemoryReservationRepositoryTest {
     @DisplayName("예약을 추가한다.")
     void save() {
         //given & when
-        inMemoryReservationRepository.save(new Reservation(3L, "새로운사람", LocalDate.of(2023, 6, 5), LocalTime.of(12, 0)));
+        inMemoryReservationRepository.save(
+                new Reservation(3L, "새로운사람", LocalDate.of(2023, 6, 5), new ReservationTime(3L, LocalTime.of(12, 0))));
 
         //then
         assertThat(inMemoryReservationRepository.findAll().size()).isEqualTo(3);
@@ -44,7 +46,7 @@ class InMemoryReservationRepositoryTest {
     @DisplayName("예약 추가시 중복되는 아이디가 존재하면 예외가 발생한다.")
     void save_id_already_exists() {
         assertThatThrownBy(() -> inMemoryReservationRepository.save(
-                new Reservation(1L, "새로운사람", LocalDate.of(2023, 6, 5), LocalTime.of(12, 0))))
+                new Reservation(1L, "새로운사람", LocalDate.of(2023, 6, 5), new ReservationTime(3L, LocalTime.of(12, 0)))))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("중복된 예약 id가 존재합니다.");
     }

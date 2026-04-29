@@ -14,6 +14,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.reservation.dto.CreateReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.repository.JdbcTemplateReservationRepository;
+import roomescape.time.domain.ReservationTime;
+import roomescape.time.repository.JdbcTemplateReservationTimeRepository;
 
 @JdbcTest
 class ReservationServiceTest {
@@ -25,13 +27,18 @@ class ReservationServiceTest {
     @BeforeEach
     void setup() {
         jdbcTemplate.update("DELETE FROM reservation");
+        jdbcTemplate.update("DELETE FROM reservation_time");
         jdbcTemplate.update("ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.update("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
 
         JdbcTemplateReservationRepository reservationRepository = new JdbcTemplateReservationRepository(jdbcTemplate);
-        this.reservationService = new ReservationService(reservationRepository);
+        JdbcTemplateReservationTimeRepository reservationTimeRepository = new JdbcTemplateReservationTimeRepository(
+                jdbcTemplate);
+        this.reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
 
-        reservationService.create(new CreateReservationRequest("한다", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40)));
-        reservationService.create(new CreateReservationRequest("판다", LocalDate.of(2023, 10, 5), LocalTime.of(15, 40)));
+        Long timeId = reservationTimeRepository.save(new ReservationTime(null, LocalTime.of(15, 40)));
+        reservationService.create(new CreateReservationRequest("한다", LocalDate.of(2023, 8, 5), timeId));
+        reservationService.create(new CreateReservationRequest("판다", LocalDate.of(2023, 10, 5), timeId));
     }
 
     @Test
@@ -48,7 +55,7 @@ class ReservationServiceTest {
     @DisplayName("예약을 추가한다.")
     void create() {
         //given & when
-        reservationService.create(new CreateReservationRequest("브라운", LocalDate.of(2023, 1, 1), LocalTime.of(10, 0)));
+        reservationService.create(new CreateReservationRequest("브라운", LocalDate.of(2023, 1, 1), 1L));
 
         //then
         assertThat(reservationService.findAll().size()).isEqualTo(3);
@@ -59,7 +66,7 @@ class ReservationServiceTest {
     void delete() {
         //given
         ReservationResponse reservationResponse = reservationService.create(
-                new CreateReservationRequest("브라운", LocalDate.of(2023, 1, 1), LocalTime.of(10, 0)));
+                new CreateReservationRequest("브라운", LocalDate.of(2023, 1, 1), 1L));
         Long id = reservationResponse.id();
 
         //when

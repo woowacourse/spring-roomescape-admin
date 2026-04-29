@@ -7,13 +7,15 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.time.domain.ReservationTime;
 
 class ReservationTest {
     Reservation reservation;
 
     @BeforeEach
     void setup() {
-        reservation = new Reservation(1L, "한다", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40));
+        reservation = new Reservation(1L, "한다", LocalDate.of(2023, 8, 5),
+                new ReservationTime(1L, LocalTime.of(15, 40)));
     }
 
     @Test
@@ -56,13 +58,13 @@ class ReservationTest {
     }
 
     @Test
-    @DisplayName("예약시간을 가져온다.")
+    @DisplayName("예약시간 id를 가져온다.")
     void getTime() {
         //given
-        LocalTime expected = LocalTime.of(15, 40);
+        Long expected = 1L;
 
         //when
-        LocalTime actual = reservation.getTime();
+        Long actual = reservation.getTime().getId();
 
         //then
         assertEquals(expected, actual);

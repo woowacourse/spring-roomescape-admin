@@ -2,7 +2,6 @@ package roomescape.reservation.repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.Time;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -12,6 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
+import roomescape.time.domain.ReservationTime;
 
 @Repository
 public class JdbcTemplateReservationRepository implements ReservationRepository {
@@ -23,27 +23,45 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "SELECT * FROM reservation";
+        String sql = """
+                SELECT r.id, r.name, r.date,
+                       rt.id AS time_id, rt.start_at
+                FROM reservation r
+                INNER JOIN reservation_time rt ON r.time_id = rt.id
+                """;
+
         return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNumber) -> new Reservation(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         resultSet.getDate("date").toLocalDate(),
-                        resultSet.getTime("time").toLocalTime()
-                ));
+                        new ReservationTime(
+                                resultSet.getLong("time_id"),
+                                resultSet.getTime("start_at").toLocalTime()
+                        )));
     }
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        String sql = "SELECT * FROM reservation WHERE id = ?";
+        String sql = """
+                SELECT r.id, r.name, r.date,
+                       rt.id AS time_id, rt.start_at
+                FROM reservation r
+                INNER JOIN reservation_time rt ON r.time_id = rt.id
+                WHERE r.id = ?
+                """;
+
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
                     (resultSet, rowNumber) -> new Reservation(
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
                             resultSet.getDate("date").toLocalDate(),
-                            resultSet.getTime("time").toLocalTime()
+                            new ReservationTime(
+                                    resultSet.getLong("time_id"),
+                                    resultSet.getTime("start_at").toLocalTime()
+                            )
                     ), id));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -52,14 +70,14 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
     @Override
     public Long save(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
             preparedStatement.setString(1, reservation.getName());
             preparedStatement.setDate(2, Date.valueOf(reservation.getDate()));
-            preparedStatement.setTime(3, Time.valueOf(reservation.getTime()));
+            preparedStatement.setLong(3, reservation.getTime().getId());
             return preparedStatement;
         }, keyHolder);
 

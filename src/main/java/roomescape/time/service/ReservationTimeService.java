@@ -9,7 +9,7 @@ import roomescape.time.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationTimeService {
-    private ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
     public ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {
         this.reservationTimeRepository = reservationTimeRepository;

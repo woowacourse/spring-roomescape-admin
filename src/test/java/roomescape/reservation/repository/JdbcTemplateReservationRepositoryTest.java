@@ -11,10 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.reservation.domain.Reservation;
+import roomescape.time.domain.ReservationTime;
+import roomescape.time.repository.JdbcTemplateReservationTimeRepository;
 
 @JdbcTest
 class JdbcTemplateReservationRepositoryTest {
     private JdbcTemplateReservationRepository jdbcTemplateReservationRepository;
+    private JdbcTemplateReservationTimeRepository jdbcTemplateReservationTimeRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -22,16 +25,18 @@ class JdbcTemplateReservationRepositoryTest {
     @BeforeEach
     void setup() {
         jdbcTemplate.update("DELETE FROM reservation");
+        jdbcTemplate.update("DELETE FROM reservation_time");
         jdbcTemplate.update("ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.update("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
 
         jdbcTemplateReservationRepository = new JdbcTemplateReservationRepository(jdbcTemplate);
+        jdbcTemplateReservationTimeRepository = new JdbcTemplateReservationTimeRepository(jdbcTemplate);
 
-        jdbcTemplateReservationRepository.save(new Reservation(
-                null, "한다", LocalDate.of(2023, 8, 5),
-                LocalTime.of(15, 40)));
-        jdbcTemplateReservationRepository.save(new Reservation(
-                null, "판다", LocalDate.of(2023, 10, 5),
-                LocalTime.of(15, 40)));
+        Long timeId = jdbcTemplateReservationTimeRepository.save(new ReservationTime(null, LocalTime.of(15, 40)));
+        ReservationTime reservationTime = jdbcTemplateReservationTimeRepository.findById(timeId).get();
+
+        jdbcTemplateReservationRepository.save(new Reservation(null, "한다", LocalDate.of(2023, 8, 5), reservationTime));
+        jdbcTemplateReservationRepository.save(new Reservation(null, "판다", LocalDate.of(2023, 10, 5), reservationTime));
     }
 
     @Test
@@ -44,8 +49,9 @@ class JdbcTemplateReservationRepositoryTest {
     @DisplayName("예약을 추가한다.")
     void save() {
         //given & when
+        ReservationTime reservationTime = jdbcTemplateReservationTimeRepository.findById(1L).get();
         jdbcTemplateReservationRepository.save(
-                new Reservation(3L, "새로운사람", LocalDate.of(2023, 6, 5), LocalTime.of(12, 0)));
+                new Reservation(null, "새로운사람", LocalDate.of(2023, 6, 5), reservationTime));
 
         //then
         assertThat(jdbcTemplateReservationRepository.findAll().size()).isEqualTo(3);

@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.reservations.entity.Reservation;
+import roomescape.domain.reservations.entity.ReservationTime;
 
 @Repository
 public class ReservationJdbcTemplateRepository implements ReservationRepository {
@@ -27,7 +28,7 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
         Map<String, Object> params = Map.of(
                 "name", reservation.getName(),
                 "date", reservation.getDate().toString(),
-                "time", reservation.getTime().toString()
+                "time_id", reservation.getTime().getId()
         );
         Long id = simpleJdbcInsert.executeAndReturnKey(params).longValue();
         return Reservation.of(
@@ -40,15 +41,28 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
 
     @Override
     public Optional<Reservation> findById(Long id) {
-        String sql = "SELECT * FROM reservation WHERE id = ?";
+        String sql = """
+        SELECT r.id, r.name, r.date,
+               rt.id AS time_id, rt.start_at
+        FROM reservation r
+        JOIN reservation_time rt ON r.time_id = rt.id
+        WHERE r.id = ?
+        """;
         Reservation reservation = jdbcTemplate.queryForObject(
                 sql,
-                (rs, rowNum) -> Reservation.of(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getDate("date").toLocalDate(),
-                        rs.getTime("time").toLocalTime()
-                ),
+                (rs, rowNum) -> {
+                    ReservationTime time = ReservationTime.of(
+                            rs.getLong("time_id"),
+                            rs.getTime("start_at").toLocalTime()
+                    );
+
+                    return Reservation.of(
+                            rs.getLong("id"),
+                            rs.getString("name"),
+                            rs.getDate("date").toLocalDate(),
+                            time
+                    );
+                },
                 id
         );
         return Optional.ofNullable(reservation);
@@ -56,14 +70,26 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "SELECT * FROM reservation";
-        return jdbcTemplate.query(sql,
-                (rs, rowNum) -> Reservation.of(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getDate("date").toLocalDate(),
-                        rs.getTime("time").toLocalTime()
-                ));
+        String sql = """
+        SELECT r.id, r.name, r.date,
+               rt.id as time_id, rt.start_at
+        FROM reservation r
+        JOIN reservation_time rt ON r.time_id = rt.id
+        """;
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            ReservationTime time = ReservationTime.of(
+                    rs.getLong("time_id"),
+                    rs.getTime("start_at").toLocalTime()
+            );
+
+            return Reservation.of(
+                    rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getDate("date").toLocalDate(),
+                    time
+            );
+        });
     }
 
     @Override

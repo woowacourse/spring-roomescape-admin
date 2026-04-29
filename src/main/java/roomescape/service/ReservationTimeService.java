@@ -2,10 +2,12 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.ReservationTime;
 import roomescape.dao.ReservationTimeDao;
 
 @Service
+@Transactional
 public class ReservationTimeService {
 
     private final ReservationTimeDao reservationTimeDao;
@@ -14,6 +16,7 @@ public class ReservationTimeService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
+    @Transactional(readOnly = true)
     public List<ReservationTime> getRservationTimes() {
         return reservationTimeDao.findAllReservationTimes();
     }

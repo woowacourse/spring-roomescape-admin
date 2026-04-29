@@ -2,11 +2,13 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.dao.ReservationDao;
 import roomescape.ReservationReq;
 
 @Service
+@Transactional
 public class ReservationService {
 
     private final ReservationDao reservationDao;
@@ -20,6 +22,7 @@ public class ReservationService {
         return reservationDao.findReservationById(id);
     }
 
+    @Transactional(readOnly = true)
     public List<Reservation> getReservations() {
         return reservationDao.findAllReservations();
     }

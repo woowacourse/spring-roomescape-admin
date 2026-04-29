@@ -2,9 +2,8 @@ package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static roomescape.repository.rowmapper.RowMapperUtils.RESERVATION_ROW_MAPPER;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,10 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
@@ -80,7 +76,7 @@ class ReservationRepositoryTest {
                     + " FROM reservation r"
                     + " JOIN reservation_time rt"
                     + " ON r.time_id = rt.id";
-            List<Reservation> foundReservations = jdbcTemplate.query(selectSql, reservationRowMapper());
+            List<Reservation> foundReservations = jdbcTemplate.query(selectSql, RESERVATION_ROW_MAPPER);
 
             assertThat(foundReservations).hasSize(1);
             assertThat(foundReservations.getFirst()).isEqualTo(persistedReservation);
@@ -171,19 +167,5 @@ class ReservationRepositoryTest {
                 id.longValue(),
                 startAt
         );
-    }
-
-    private RowMapper<Reservation> reservationRowMapper() {
-        return (resultSet, rowNum) -> {
-            long timeId = resultSet.getLong("time_id");
-            String startAt = resultSet.getString("start_at");
-
-            return Reservation.retrieve(
-                    resultSet.getLong("id"),
-                    resultSet.getString("name"),
-                    resultSet.getString("date"),
-                    ReservationTime.retrieve(timeId, startAt)
-            );
-        };
     }
 }

@@ -6,7 +6,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-import roomescape.exception.ReservationNotFoundException;
+import roomescape.exception.ApiException;
+import roomescape.exception.ErrorCode;
 import roomescape.model.Reservation;
 import roomescape.model.ReservationTime;
 
@@ -54,7 +55,7 @@ public class ReservationDao {
         int affectedRows = jdbcTemplate.update(sql, id);
 
         if (affectedRows == 0) {
-            throw new ReservationNotFoundException(id);
+            throw new ApiException(ErrorCode.RESERVATION_NOT_FOUND, id);
         }
     }
 

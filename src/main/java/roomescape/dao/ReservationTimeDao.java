@@ -3,10 +3,12 @@ package roomescape.dao;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-import roomescape.exception.ReservationNotFoundException;
+import roomescape.exception.ApiException;
+import roomescape.exception.ErrorCode;
 import roomescape.model.ReservationTime;
 
 @Component
@@ -45,20 +47,24 @@ public class ReservationTimeDao {
         int affectedRows = jdbcTemplate.update(sql, id);
 
         if (affectedRows == 0) {
-            throw new ReservationNotFoundException(id);
+            throw new ApiException(ErrorCode.RESERVATION_TIME_NOT_FOUND, id);
         }
     }
 
     public ReservationTime findById(Long id) {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
 
-        return jdbcTemplate.queryForObject(
-                sql,
-                (rs, rowNum) -> new ReservationTime(
-                        rs.getLong("id"),
-                        rs.getString("start_at")
-                ),
-                id
-        );
+        try {
+            return jdbcTemplate.queryForObject(
+                    sql,
+                    (rs, rowNum) -> new ReservationTime(
+                            rs.getLong("id"),
+                            rs.getString("start_at")
+                    ),
+                    id
+            );
+        } catch (EmptyResultDataAccessException exception) {
+            throw new ApiException(ErrorCode.RESERVATION_TIME_NOT_FOUND, id);
+        }
     }
 }

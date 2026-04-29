@@ -1,6 +1,5 @@
 package roomescape;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,8 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class ReservationController {
 
-    private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(1);
+    private final List<Reservation> reservations = new ArrayList<>();
+    private final AtomicLong index = new AtomicLong(1);
 
     @GetMapping("/reservations")
     @ResponseBody

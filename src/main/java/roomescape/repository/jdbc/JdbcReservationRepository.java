@@ -1,32 +1,20 @@
 package roomescape.repository.jdbc;
 
+import static roomescape.repository.jdbc.RoomescapeMapper.RESERVATION_ROW_MAPPER;
+
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationRepository;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> {
-        ReservationTime time = new ReservationTime(
-                rs.getLong("time_id"),
-                rs.getTime("time_start").toLocalTime()
-        );
-        return new Reservation(
-                rs.getLong("res_id"),
-                rs.getString("res_name"),
-                rs.getDate("res_date").toLocalDate(),
-                time
-        );
-    };
 
     public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -56,11 +44,11 @@ public class JdbcReservationRepository implements ReservationRepository {
                 FROM reservation r
                 INNER JOIN reservation_time t ON r.time_id = t.id;
             """;
-        return jdbcTemplate.query(sql, reservationRowMapper);
+        return jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER);
     }
 
     @Override
     public void delete(Long id) {
-        jdbcTemplate.update("delete from reservation where id = ?", id);
+        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
     }
 }

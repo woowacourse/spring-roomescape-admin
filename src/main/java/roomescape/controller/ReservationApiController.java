@@ -43,8 +43,8 @@ public class ReservationApiController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getAllReservations() {
-        List<Reservation> reservations = reservationRepository.findAll();
-        List<ReservationResponse> response = reservations.stream()
+        List<ReservationResponse> response = reservationRepository.findAll()
+                .stream()
                 .map(ReservationResponse::from)
                 .toList();
         return ResponseEntity.ok(response);

@@ -27,10 +27,10 @@ public class ReservationInMemoryDatabase {
         return Collections.unmodifiableList(reservations);
     }
 
-    public Reservation insert(String name, LocalDate date, LocalTime time) {
-        Reservation reservation = new Reservation(autoIncrement.incrementAndGet(), name, date, time);
-        reservations.add(reservation);
-        return reservation;
+    public Reservation insert(Reservation reservation) {
+        Reservation entity = reservation.toEntity(autoIncrement.incrementAndGet());
+        reservations.add(entity);
+        return entity;
     }
 
     public void delete(Reservation reservation) {

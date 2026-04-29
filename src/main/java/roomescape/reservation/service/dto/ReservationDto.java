@@ -1,8 +1,8 @@
-package roomescape.reservation.web.dto;
+package roomescape.reservation.service.dto;
 
 import java.time.format.DateTimeFormatter;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservationtime.web.dto.ReservationTimeDto;
+import roomescape.reservationtime.service.dto.ReservationTimeDto;
 
 public record ReservationDto(Long id, String name, String date, ReservationTimeDto time) {
 

@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.repository.ReservationRepository;
-import roomescape.reservation.web.dto.ReservationCreateDto;
-import roomescape.reservation.web.dto.ReservationDto;
+import roomescape.reservation.service.dto.ReservationCreateDto;
+import roomescape.reservation.service.dto.ReservationDto;
 import roomescape.reservationtime.domain.ReservationTime;
 import roomescape.reservationtime.repository.ReservationTimeRepository;
 

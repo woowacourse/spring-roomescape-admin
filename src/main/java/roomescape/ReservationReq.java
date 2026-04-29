@@ -9,18 +9,4 @@ public record ReservationReq(
         String name,
         Long timeId
 ) {
-    @Override
-    public String name() {
-        return name;
-    }
-
-    @Override
-    public LocalDate date() {
-        return date;
-    }
-
-    @Override
-    public Long timeId() {
-        return timeId;
-    }
 }

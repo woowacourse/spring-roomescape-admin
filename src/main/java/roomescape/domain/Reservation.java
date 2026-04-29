@@ -10,11 +10,19 @@ public class Reservation {
     private final LocalDate date;
     private final LocalTime time;
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+    private Reservation(Long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
+    }
+
+    public static Reservation of (Long id, String name, LocalDate date, LocalTime time){
+        return new Reservation(id, name, date, time);
+    }
+
+    public static Reservation of (String name, LocalDate date, LocalTime time) {
+        return new Reservation(null, name, date, time);
     }
 
     public Long getId() {

@@ -24,6 +24,7 @@
 > 행위
 
 * reserve - 방탈출 예약을 할 수 있다.
+* cancelReservation - 방탈출 예약을 취소 할 수 있다.
 
 ### PlayingTime (방탈출 진행 시간)
 

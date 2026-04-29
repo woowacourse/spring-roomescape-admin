@@ -5,10 +5,10 @@ import java.util.List;
 
 public class Roomescape {
 
-    private final ReservationSchedule reservations;
+    private final Reservations reservations;
     private final PlayingTime playingTime;
 
-    public Roomescape(ReservationSchedule reservations) {
+    public Roomescape(Reservations reservations) {
         this.reservations = reservations;
         this.playingTime = PlayingTime.toDefaultPlayingTime();
     }
@@ -33,7 +33,16 @@ public class Roomescape {
         return new Reservation(customerName, reservationTime);
     }
 
-    public ReservationSchedule getReservations() {
+    public void cancelReservation(Long reservationId) {
+        List<Reservation> schedule = reservations.getSchedule();
+        Reservation toDelete = schedule.stream()
+                .filter(r -> r.getReservationId().equals(reservationId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 정보입니다."));
+        schedule.remove(toDelete);
+    }
+
+    public Reservations getReservations() {
         return reservations;
     }
 }

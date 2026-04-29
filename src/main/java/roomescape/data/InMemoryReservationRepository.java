@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Component;
 import roomescape.domain.Reservation;
+import roomescape.domain.Reservations;
 
 @Component
 public class InMemoryReservationRepository implements ReservationRepository {
@@ -23,7 +24,16 @@ public class InMemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> findAll() {
-        return new ArrayList<>(storage.values());
+    public Reservations findAll() {
+        return new Reservations(new ArrayList<>(storage.values()));
+    }
+
+    @Override
+    public void saveAll(Reservations reservations) {
+        storage.clear();
+        List<Reservation> schedule = reservations.getSchedule();
+        for (Reservation reservation : schedule) {
+            storage.put(reservation.getReservationId(), reservation);
+        }
     }
 }

@@ -1,11 +1,13 @@
 package roomescape.data;
 
-import java.util.List;
 import roomescape.domain.Reservation;
+import roomescape.domain.Reservations;
 
 public interface ReservationRepository {
 
     Reservation save(Reservation reservation);
 
-    List<Reservation> findAll();
+    Reservations findAll();
+
+    void saveAll(Reservations reservations);
 }

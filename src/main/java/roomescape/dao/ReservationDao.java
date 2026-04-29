@@ -2,7 +2,6 @@ package roomescape.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
-import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -23,8 +22,8 @@ public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationDao(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<Reservation> getAllReservation() {

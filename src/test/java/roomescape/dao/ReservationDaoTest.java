@@ -28,7 +28,7 @@ public class ReservationDaoTest {
                 "time VARCHAR(255))");
 
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
-        this.reservationDao = new ReservationDao(dataSource);
+        this.reservationDao = new ReservationDao(jdbcTemplate);
     }
 
     @AfterEach

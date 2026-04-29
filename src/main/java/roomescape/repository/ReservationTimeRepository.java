@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
+import roomescape.exception.EntityNotFoundException;
 import roomescape.exception.InUseTimeException;
 
 @Repository
@@ -66,7 +67,7 @@ public class ReservationTimeRepository {
 
     private void validateDeleted(int deletedCount) {
         if (deletedCount < 1) {
-            throw new IllegalArgumentException("존재하지 않는 시간 id입니다.");
+            throw new EntityNotFoundException("존재하지 않는 시간 id입니다.");
         }
     }
 }

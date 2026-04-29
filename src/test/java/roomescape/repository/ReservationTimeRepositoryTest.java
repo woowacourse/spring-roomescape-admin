@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.ReservationTime;
+import roomescape.exception.EntityNotFoundException;
 
 @JdbcTest
 class ReservationTimeRepositoryTest {
@@ -122,7 +123,7 @@ class ReservationTimeRepositoryTest {
         @Test
         void 존재하지_않는_ID라면_예외를_던진다() {
             assertThatThrownBy(() -> timeRepository.delete(NOT_EXIST_ID))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(EntityNotFoundException.class)
                     .hasMessage("존재하지 않는 시간 id입니다.");
         }
     }

@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.exception.EntityNotFoundException;
 
 @Repository
 public class ReservationRepository {
@@ -49,7 +50,7 @@ public class ReservationRepository {
 
         int updatedRows = jdbcTemplate.update(deleteSql, id);
         if (updatedRows < 1) {
-            throw new IllegalArgumentException("존재하지 않는 예약 id입니다.");
+            throw new EntityNotFoundException("존재하지 않는 예약 id입니다.");
         }
     }
 }

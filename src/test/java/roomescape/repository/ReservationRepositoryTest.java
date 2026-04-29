@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.exception.EntityNotFoundException;
 
 @JdbcTest
 class ReservationRepositoryTest {
@@ -133,7 +134,7 @@ class ReservationRepositoryTest {
         @Test
         void 존재하지_않는_ID라면_예외를_던진다() {
             assertThatThrownBy(() -> reservationRepository.delete(NOT_EXIST_ID))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(EntityNotFoundException.class)
                     .hasMessage("존재하지 않는 예약 id입니다.");
         }
     }

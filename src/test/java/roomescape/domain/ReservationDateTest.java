@@ -8,12 +8,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-class DateTest {
+class ReservationDateTest {
 
     @Test
     @DisplayName("날짜가 null이면 예외를 발생한다.")
     void throwException_When_DateIsNull() {
-        assertThatThrownBy(() -> new Date(null))
+        assertThatThrownBy(() -> new ReservationDate(null))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -25,7 +25,7 @@ class DateTest {
     })
     @DisplayName("날짜가 정상 형태가 아닌 경우 예외를 발생한다.")
     void throwException_When_DateIllegalFormat(String input) {
-        assertThatThrownBy(() -> new Date(input))
+        assertThatThrownBy(() -> new ReservationDate(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -37,7 +37,7 @@ class DateTest {
     })
     @DisplayName("날짜의 월이 정상 범위를 넘어가는 경우 예외를 발생한다.")
     void throwException_When_MonthOutOfRange(String input) {
-        assertThatThrownBy(() -> new Date(input))
+        assertThatThrownBy(() -> new ReservationDate(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -49,14 +49,14 @@ class DateTest {
     })
     @DisplayName("날짜의 일이 정상 범위를 넘어가는 경우 예외를 발생한다.")
     void throwException_When_DateOutOfRange(String input) {
-        assertThatThrownBy(() -> new Date(input))
+        assertThatThrownBy(() -> new ReservationDate(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     @DisplayName("날짜 형식의 문제가 없는 경우 정상적으로 생성된다.")
     void makeDate_When_LegalFormat() {
-        assertThatCode(() -> new Date("2024-01-01"))
+        assertThatCode(() -> new ReservationDate("2024-01-01"))
                 .doesNotThrowAnyException();
     }
 }

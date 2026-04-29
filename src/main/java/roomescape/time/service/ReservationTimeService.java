@@ -19,10 +19,6 @@ public class ReservationTimeService {
 
     public ReservationTimeResponse save(ReservationTimeRequest reservationTimeRequest) {
         LocalTime startAt = reservationTimeRequest.startAt();
-
-        if(reservationTimeRepository.existsByStartAt(startAt))
-            throw new IllegalArgumentException("시간 중복 추가는 불가능합니다.");
-
         ReservationTime reservationTime = ReservationTime.createNew(startAt);
         return ReservationTimeResponse.from(reservationTimeRepository.save(reservationTime));
     }

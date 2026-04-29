@@ -70,14 +70,4 @@ public class JdbcReservationTimeRepositoryTest {
         assertThat(afterSize).isEqualTo(beforeSize - 1);
     }
 
-    @Test
-    @DisplayName("예약 시간 중복")
-    void reservationTime_duplicate_test() {
-        //given & when
-        boolean result = jdbcReservationTimeRepository.existsByStartAt(LocalTime.parse("10:00"));
-
-        //then
-        assertThat(result).isTrue();
-    }
-
 }

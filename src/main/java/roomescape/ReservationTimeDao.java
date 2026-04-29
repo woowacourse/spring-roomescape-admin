@@ -1,6 +1,7 @@
 package roomescape;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -27,16 +28,6 @@ public class ReservationTimeDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Optional<ReservationTime> findById(Long reservationTimeId) {
-        String sql = """
-                SELECT id, 
-                       start_at
-                FROM reservation_time
-                WHERE id = ?""";
-
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, reservationTimeId));
-    }
-
     public ReservationTime save(ReservationTime reservationTime) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("start_at", reservationTime.getStartAt());
@@ -47,5 +38,23 @@ public class ReservationTimeDao {
                 id.longValue(),
                 reservationTime.getStartAt()
         );
+    }
+
+    public List<ReservationTime> findAllReservationTimes() {
+        String sql = """
+                SELECT id, 
+                       start_at
+                FROM reservation_time""";
+        return jdbcTemplate.query(sql, ROW_MAPPER);
+    }
+
+    public Optional<ReservationTime> findById(Long reservationTimeId) {
+        String sql = """
+                SELECT id, 
+                       start_at
+                FROM reservation_time
+                WHERE id = ?""";
+
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, reservationTimeId));
     }
 }

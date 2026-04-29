@@ -22,7 +22,7 @@ public class ReservationDao {
                     resultSet.getDate("date").toLocalDate(),
                     new ReservationTime(
                             resultSet.getLong("id"),
-                            resultSet.getTime("time").toLocalTime()
+                            resultSet.getTime("start_at").toLocalTime()
                     )
             );
 
@@ -37,7 +37,7 @@ public class ReservationDao {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", reservation.getName());
         parameters.put("date", reservation.getDate());
-        parameters.put("time", reservation.getTime());
+        parameters.put("time_id", reservation.getTime().getId());
 
         Number id = simpleJdbcInsert.executeAndReturnKey(parameters);
 
@@ -51,23 +51,29 @@ public class ReservationDao {
 
     public List<Reservation> findAllReservations() {
         String sql = """
-                SELECT id, 
-                       name, 
-                       date,
-                       time 
-                FROM reservation""";
+                SELECT r.id, 
+                       r.name, 
+                       r.date,
+                       rt.id ,
+                       rt.start_at
+                FROM reservation AS r
+                INNER JOIN reservation_time AS rt 
+                ON r.time_id = rt.id""";
 
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
     public Optional<Reservation> findById(Long reservationId) {
         String sql = """
-                SELECT id, 
-                       name, 
-                       date,
-                       time 
-                FROM reservation
-                WHERE id = ?""";
+                SELECT r.id, 
+                       r.name, 
+                       r.date,
+                       rt.id ,
+                       rt.start_at
+                FROM reservation AS r
+                INNER JOIN reservation_time AS rt 
+                ON r.time_id = rt.id
+                WHERE r.id = ?""";
 
         return Optional.ofNullable(jdbcTemplate.queryForObject(sql, ROW_MAPPER, reservationId));
     }

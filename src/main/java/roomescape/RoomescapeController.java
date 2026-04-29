@@ -25,7 +25,7 @@ public class RoomescapeController {
 
     @PostMapping()
     public ResponseEntity<Reservation> createReservation(@RequestBody CreateReservationRequest request) {
-        ReservationTime reservationTime = reservationTimeDao.findById(request.reservationTimeId())
+        ReservationTime reservationTime = reservationTimeDao.findById(request.timeId())
                 .orElseThrow(IllegalArgumentException::new);
         Reservation reservation = Reservation.createWithoutId(request.name(), request.date(), reservationTime);
         Reservation savedReservation = reservationDao.save(reservation);

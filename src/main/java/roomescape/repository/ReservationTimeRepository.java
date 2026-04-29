@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import org.springframework.stereotype.Repository;
+import roomescape.domain.ReservationTime;
 import roomescape.request.ReservationTimeRequest;
 import roomescape.response.ReservationTimeResponse;
 
@@ -13,4 +14,6 @@ public interface ReservationTimeRepository {
     List<ReservationTimeResponse> findAllReservationTimes();
 
     void deleteTime(Long id);
+
+    ReservationTime findById(Long id);
 }

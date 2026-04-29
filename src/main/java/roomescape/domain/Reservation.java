@@ -6,4 +6,8 @@ public record Reservation(long id, String name, LocalDate date, ReservationTime 
     public boolean hasId(Long id) {
         return this.id == id;
     }
+
+    public long timeId() {
+        return time.getId();
+    }
 }

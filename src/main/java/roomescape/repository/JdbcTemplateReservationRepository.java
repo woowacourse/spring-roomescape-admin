@@ -6,8 +6,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.request.ReservationRequest;
-import roomescape.response.ReservationResponse;
 import roomescape.response.ReservationTimeResponse;
 
 import java.sql.PreparedStatement;
@@ -43,28 +41,28 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
     }
 
     @Override
-    public ReservationResponse addReservation(ReservationRequest request) {
+    public Reservation addReservation(Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
                 conn -> {
                     PreparedStatement preparedStatement = conn.prepareStatement(
                             "INSERT INTO reservation(name, date, time_id) " +
                                     "VALUES (?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
-                    preparedStatement.setString(1, request.name());
-                    preparedStatement.setDate(2, java.sql.Date.valueOf(request.date()));
-                    preparedStatement.setLong(3, request.timeId());
+                    preparedStatement.setString(1, reservation.name());
+                    preparedStatement.setDate(2, java.sql.Date.valueOf(reservation.date()));
+                    preparedStatement.setLong(3, reservation.timeId());
                     return preparedStatement;
                 },
                 keyHolder);
         ReservationTimeResponse reservationTimeResponse = jdbcTemplate.queryForObject(
                 "SELECT id, start_at FROM reservation_time WHERE id = ?",
                 (rs, row) -> new ReservationTimeResponse(rs.getLong("id"), rs.getTime("start_at").toLocalTime()),
-                request.timeId());
-        return new ReservationResponse(
+                reservation.timeId());
+        return new Reservation(
                 Objects.requireNonNull(keyHolder.getKey()).longValue(),
-                request.name(),
-                request.date(),
-                reservationTimeResponse);
+                reservation.name(),
+                reservation.date(),
+                reservation.time());
     }
 
     @Override

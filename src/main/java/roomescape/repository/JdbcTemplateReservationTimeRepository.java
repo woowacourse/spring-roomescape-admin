@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.domain.ReservationTime;
 import roomescape.request.ReservationTimeRequest;
 import roomescape.response.ReservationTimeResponse;
 
@@ -46,5 +47,15 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
     @Override
     public void deleteTime(Long id) {
         jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ? ", id);
+    }
+
+    @Override
+    public ReservationTime findById(Long id) {
+        return jdbcTemplate.queryForObject(
+                "SELECT id, start_at FROM reservation_time WHERE id = ?",
+                (rs, rowNum) -> new ReservationTime(
+                        rs.getLong("id"),
+                        rs.getTime("start_at").toLocalTime()
+                ), id);
     }
 }

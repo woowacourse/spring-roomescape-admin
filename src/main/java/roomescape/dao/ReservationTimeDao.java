@@ -36,7 +36,7 @@ public class ReservationTimeDao {
         return jdbcTemplate.query(sql,
                 (rs, rowNum) -> new ReservationTime(
                         rs.getLong("id"),
-                        rs.getString("startAt")
+                        rs.getString("start_at")
                 ));
     }
 
@@ -47,5 +47,18 @@ public class ReservationTimeDao {
         if (affectedRows == 0) {
             throw new ReservationNotFoundException(id);
         }
+    }
+
+    public ReservationTime findById(Long id) {
+        String sql = "SELECT * FROM reservation_time WHERE id = ?";
+
+        return jdbcTemplate.queryForObject(
+                sql,
+                (rs, rowNum) -> new ReservationTime(
+                        rs.getLong("id"),
+                        rs.getString("start_at")
+                ),
+                id
+        );
     }
 }

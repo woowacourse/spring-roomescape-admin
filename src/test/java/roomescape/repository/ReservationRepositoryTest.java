@@ -14,6 +14,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import roomescape.dao.ReservationDao;
 import roomescape.exception.ReservationNotFoundException;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 class ReservationRepositoryTest {
 
@@ -54,8 +55,11 @@ class ReservationRepositoryTest {
 
     @Test
     void 예약을_저장하면_1부터_시작하는_ID가_부여된다() {
-        Reservation first = reservationRepository.save("브라운", "2023-08-05", "15:40");
-        Reservation second = reservationRepository.save("코니", "2023-08-06", "16:00");
+        ReservationTime firstTime = createReservationTime("15:40");
+        ReservationTime secondTime = createReservationTime("16:00");
+
+        Reservation first = reservationRepository.save("브라운", "2023-08-05", firstTime);
+        Reservation second = reservationRepository.save("코니", "2023-08-06", secondTime);
 
         assertThat(first.id()).isEqualTo(1L);
         assertThat(second.id()).isEqualTo(2L);
@@ -63,8 +67,11 @@ class ReservationRepositoryTest {
 
     @Test
     void 저장된_예약을_전체_조회할_수_있다() {
-        reservationRepository.save("브라운", "2023-08-05", "15:40");
-        reservationRepository.save("코니", "2023-08-06", "16:00");
+        ReservationTime firstTime = createReservationTime("15:40");
+        ReservationTime secondTime = createReservationTime("16:00");
+
+        reservationRepository.save("브라운", "2023-08-05", firstTime);
+        reservationRepository.save("코니", "2023-08-06", secondTime);
 
         List<Reservation> reservations = reservationRepository.findAll();
 
@@ -76,7 +83,8 @@ class ReservationRepositoryTest {
 
     @Test
     void 존재하는_ID로_예약을_삭제할_수_있다() {
-        Reservation reservation = reservationRepository.save("브라운", "2023-08-05", "15:40");
+        ReservationTime reservationTime = createReservationTime("15:40");
+        Reservation reservation = reservationRepository.save("브라운", "2023-08-05", reservationTime);
 
         reservationRepository.delete(reservation.id());
 
@@ -88,5 +96,15 @@ class ReservationRepositoryTest {
         assertThatThrownBy(() -> reservationRepository.delete(1L))
                 .isInstanceOf(ReservationNotFoundException.class)
                 .hasMessage("Reservation not found: 1");
+    }
+
+    private ReservationTime createReservationTime(String startAt) {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", startAt);
+        Long id = jdbcTemplate.queryForObject(
+                "SELECT id FROM reservation_time WHERE start_at = ? ORDER BY id DESC LIMIT 1",
+                Long.class,
+                startAt
+        );
+        return new ReservationTime(id, startAt);
     }
 }

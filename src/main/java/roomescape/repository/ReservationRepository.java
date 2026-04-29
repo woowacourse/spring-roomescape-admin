@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 import roomescape.dao.ReservationDao;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 @Repository
 public class ReservationRepository {
@@ -17,7 +18,7 @@ public class ReservationRepository {
         return reservationDao.findAll();
     }
 
-    public Reservation save(String name, String date, String time) {
+    public Reservation save(String name, String date, ReservationTime time) {
         return reservationDao.save(name, date, time);
     }
 

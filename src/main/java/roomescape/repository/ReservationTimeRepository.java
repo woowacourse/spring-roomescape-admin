@@ -25,4 +25,8 @@ public class ReservationTimeRepository {
     public void delete(Long id) {
         reservationTimeDao.delete(id);
     }
+
+    public ReservationTime findById(Long id) {
+        return reservationTimeDao.findById(id);
+    }
 }

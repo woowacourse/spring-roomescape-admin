@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import roomescape.exception.ReservationNotFoundException;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 class ReservationDaoTest {
 
@@ -52,18 +53,22 @@ class ReservationDaoTest {
 
     @Test
     void 예약을_저장할_수_있다() {
-        Reservation saved = reservationDao.save("브라운", "2023-08-05", "15:40");
+        ReservationTime reservationTime = createReservationTime("15:40");
+        Reservation saved = reservationDao.save("브라운", "2023-08-05", reservationTime);
 
         assertThat(saved.id()).isNotNull();
         assertThat(saved.name()).isEqualTo("브라운");
         assertThat(saved.date()).isEqualTo("2023-08-05");
-        assertThat(saved.time()).isEqualTo("15:40");
+        assertThat(saved.time().startAt()).isEqualTo("15:40");
     }
 
     @Test
     void 저장된_예약을_전체_조회할_수_있다() {
-        reservationDao.save("브라운", "2023-08-05", "15:40");
-        reservationDao.save("코니", "2023-08-06", "16:00");
+        ReservationTime firstTime = createReservationTime("15:40");
+        ReservationTime secondTime = createReservationTime("16:00");
+
+        reservationDao.save("브라운", "2023-08-05", firstTime);
+        reservationDao.save("코니", "2023-08-06", secondTime);
 
         List<Reservation> reservations = reservationDao.findAll();
 
@@ -75,7 +80,8 @@ class ReservationDaoTest {
 
     @Test
     void 존재하는_ID로_예약을_삭제할_수_있다() {
-        Reservation saved = reservationDao.save("브라운", "2023-08-05", "15:40");
+        ReservationTime reservationTime = createReservationTime("15:40");
+        Reservation saved = reservationDao.save("브라운", "2023-08-05", reservationTime);
 
         reservationDao.delete(saved.id());
 
@@ -87,5 +93,15 @@ class ReservationDaoTest {
         assertThatThrownBy(() -> reservationDao.delete(1L))
                 .isInstanceOf(ReservationNotFoundException.class)
                 .hasMessage("Reservation not found: 1");
+    }
+
+    private ReservationTime createReservationTime(String startAt) {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", startAt);
+        Long id = jdbcTemplate.queryForObject(
+                "SELECT id FROM reservation_time WHERE start_at = ? ORDER BY id DESC LIMIT 1",
+                Long.class,
+                startAt
+        );
+        return new ReservationTime(id, startAt);
     }
 }

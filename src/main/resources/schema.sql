@@ -1,16 +1,8 @@
-CREATE TABLE IF NOT EXISTS reservation (
-    id      BIGINT       NOT NULL AUTO_INCREMENT,
-    name    VARCHAR(255) NOT NULL,
-    date    VARCHAR(255) NOT NULL,
-    time    VARCHAR(255) NOT NULL,
-    PRIMARY KEY (id)
-);
-
 CREATE TABLE IF NOT EXISTS reservation_time (
-    id       BIGINT       NOT NULL AUTO_INCREMENT,
-    start_at VARCHAR(255) NOT NULL,
+                                                id       BIGINT       NOT NULL AUTO_INCREMENT,
+                                                start_at VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
-);
+    );
 
 MERGE INTO reservation_time(start_at) KEY (start_at) VALUES
     ('10:00'), ('10:10'), ('10:20'), ('10:30'), ('10:40'), ('10:50'),
@@ -24,3 +16,12 @@ MERGE INTO reservation_time(start_at) KEY (start_at) VALUES
     ('18:00'), ('18:10'), ('18:20'), ('18:30'), ('18:40'), ('18:50'),
     ('19:00'), ('19:10'), ('19:20'), ('19:30'), ('19:40'), ('19:50'),
     ('20:00'), ('20:10'), ('20:20'), ('20:30');
+
+CREATE TABLE IF NOT EXISTS reservation (
+    id      BIGINT       NOT NULL AUTO_INCREMENT,
+    name    VARCHAR(255) NOT NULL,
+    date    VARCHAR(255) NOT NULL,
+    time_id BIGINT,
+    PRIMARY KEY (id),
+    FOREIGN KEY (time_id) REFERENCES reservation_time (id)
+);

@@ -31,9 +31,9 @@ public class ReservationService {
             date,
             time);
 
-        repository.save(reservation);
+        Long savedId = repository.save(reservation);
 
-        return reservation;
+        return reservation.withId(savedId);
     }
 
     public void deleteById(long reservationId) {

@@ -1,9 +1,14 @@
 package roomescape.repository;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.entity.Reservation;
 
@@ -30,12 +35,19 @@ public class ReservationRepository {
             rs.getTime("time").toLocalTime()
         );
 
-    public void save(Reservation reservation) {
-        jdbcTemplate.update(
-            "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
-            reservation.getName(),
-            reservation.getDate(),
-            reservation.getTime());
+    public Long save(Reservation reservation) {
+        final String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, reservation.getName());
+            ps.setDate(2, Date.valueOf(reservation.getDate()));
+            ps.setTime(3, Time.valueOf(reservation.getTime()));
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 
     public void deleteById(long reservationId) {

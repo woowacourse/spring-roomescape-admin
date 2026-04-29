@@ -32,4 +32,8 @@ public class Reservation {
     public LocalTime getTime() {
         return time;
     }
+
+    public Reservation withId(Long savedId) {
+        return new Reservation(savedId, name, date, time);
+    }
 }

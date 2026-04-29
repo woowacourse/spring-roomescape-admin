@@ -40,11 +40,6 @@ public class ReservationTimeTest {
 
     @Test
     void 예약과_시간_연결() {
-        Map<String, Object> reservation = new HashMap<>();
-        reservation.put("name", "브라운");
-        reservation.put("date", "2023-08-05");
-        reservation.put("timeId", 1);
-
         Map<String, Object> reservationTime = new HashMap<>();
         reservationTime.put("id", 1);
         reservationTime.put("startAt", "10:00");
@@ -55,6 +50,11 @@ public class ReservationTimeTest {
                 .when().post("/times")
                 .then().log().all()
                 .statusCode(200);
+
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

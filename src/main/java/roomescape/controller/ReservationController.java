@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
+import roomescape.dto.ReservationTimeResponseDto;
 import roomescape.entity.Reservation;
 
 import javax.sql.DataSource;
@@ -27,54 +27,73 @@ import javax.sql.DataSource;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private static final String TABLE_NAME = "reservation";
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ReservationController(final DataSource dataSource) {
         this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
         this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(TABLE_NAME)
-                .usingColumns("name", "date", "time")
-                .usingGeneratedKeyColumns("id");
+            .withTableName("reservation")
+            .usingColumns("name", "date", "time_id")
+            .usingGeneratedKeyColumns("id");
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponseDto>> getReservations() {
         final List<ReservationResponseDto> reservationResponseDtos = jdbcTemplate.query(
-                        String.format("SELECT id, name, date, time FROM %s", TABLE_NAME),
-                        (resultSet, rowNum) -> new Reservation(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name"),
-                                resultSet.getDate("date").toLocalDate(),
-                                resultSet.getTime("time").toLocalTime()))
-                .stream()
-                .map(ReservationResponseDto::from)
-                .toList();
+            """
+                SELECT
+                r.id as reservation_id,
+                r.name as name,
+                r.date as date_value,
+                t.id as time_id,
+                t.start_at as time_value
+                FROM reservation as r
+                INNER JOIN reservation_time as t
+                ON r.time_id = t.id""",
+            (resultSet, rowNum) -> new ReservationResponseDto(
+                resultSet.getLong("reservation_id"),
+                resultSet.getString("name"),
+                resultSet.getDate("date_value").toLocalDate(),
+                new ReservationTimeResponseDto(
+                    resultSet.getLong("time_id"),
+                    resultSet.getTime("time_value").toLocalTime())
+            ));
 
         return new ResponseEntity<>(reservationResponseDtos, HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponseDto> add(@RequestBody final ReservationRequestDto reservationRequestDto) {
+    public ResponseEntity<ReservationResponseDto> add(
+        @RequestBody final ReservationRequestDto reservationRequestDto) {
         final Map<String, Object> args = Map.of(
-                "name", reservationRequestDto.name(),
-                "date", reservationRequestDto.date(),
-                "time", reservationRequestDto.time());
+            "name", reservationRequestDto.name(),
+            "date", reservationRequestDto.date(),
+            "time_id", reservationRequestDto.timeId());
 
         final long generatedKey = simpleJdbcInsert.executeAndReturnKey(args).longValue();
         final Reservation reservation = new Reservation(
-                generatedKey,
-                reservationRequestDto.name(),
-                reservationRequestDto.date(),
-                reservationRequestDto.time());
+            generatedKey,
+            reservationRequestDto.name(),
+            reservationRequestDto.date(),
+            reservationRequestDto.timeId());
+        final String sql = "SELECT start_at FROM reservation_time WHERE id = :id";
+        final SqlParameterSource parameters = new MapSqlParameterSource("id",
+            reservationRequestDto.timeId());
 
-        return new ResponseEntity<>(ReservationResponseDto.from(reservation), HttpStatus.OK);
+        final ReservationTimeResponseDto reservationTimeResponseDto =
+            jdbcTemplate.queryForObject(sql, parameters,
+                (resultSet, rowNum) -> new ReservationTimeResponseDto(
+                    reservationRequestDto.timeId(),
+                    resultSet.getTime("start_at").toLocalTime()
+                ));
+
+        return new ResponseEntity<>(ReservationResponseDto.from(reservation, reservationTimeResponseDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable final long id) {
-        final String sql = String.format("DELETE FROM %s WHERE id = :id", TABLE_NAME);
+        final String sql = "DELETE FROM reservations WHERE id = :id";
         final SqlParameterSource parameters = new MapSqlParameterSource("id", id);
 
         jdbcTemplate.update(sql, parameters);

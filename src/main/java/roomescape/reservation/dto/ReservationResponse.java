@@ -1,8 +1,9 @@
 package roomescape.reservation.dto;
 
 import roomescape.reservation.Reservation;
+import roomescape.time.ReservationTime;
 
-public record ReservationResponse(Long id, String name, String date, String time) {
+public record ReservationResponse(Long id, String name, String date, ReservationTime time) {
 
     public static ReservationResponse from(Reservation reservation) {
         return new ReservationResponse(

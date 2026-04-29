@@ -1,6 +1,7 @@
 package roomescape.reservation;
 
 import java.sql.PreparedStatement;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +10,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.time.ReservationTime;
 
 @Repository
 public class ReservationRepository {
@@ -18,7 +20,10 @@ public class ReservationRepository {
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getString("date"),
-            resultSet.getString("time")
+            new ReservationTime(
+                    resultSet.getLong("time_id"),
+                    resultSet.getObject("start_at", LocalTime.class)
+            )
     );
 
     public ReservationRepository(JdbcTemplate jdbcTemplate) {
@@ -26,13 +31,13 @@ public class ReservationRepository {
     }
 
     public Reservation save(Reservation reservation) {
-        String sql = "INSERT INTO reservation(name, date, time) VALUES (?,?,?)";
+        String sql = "INSERT INTO reservation(name, date, time_id) VALUES (?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement psmt = con.prepareStatement(sql, new String[]{"id"});
             psmt.setString(1, reservation.getName());
             psmt.setString(2, reservation.getDate());
-            psmt.setString(3, reservation.getTime());
+            psmt.setLong(3, reservation.getTime().getId());
 
             return psmt;
         }, keyHolder);
@@ -42,12 +47,15 @@ public class ReservationRepository {
     }
 
     public List<Reservation> findAll() {
-        String sql = "SELECT * FROM reservation";
+        String sql = "SELECT r.id, r.name, r.date, t.id as time_id, t.start_at " +
+                "FROM reservation r INNER JOIN reservation_time t ON r.time_id = t.id";
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
     public Optional<Reservation> findById(Long id) {
-        String sql = "SELECT * FROM reservation WHERE id = ?";
+        String sql = "SELECT r.id, r.name, r.date, t.id as time_id, t.start_at " +
+                "FROM reservation r INNER JOIN reservation_time t ON r.time_id = t.id "+
+                "WHERE r.id = ?";
         List<Reservation> reservations = jdbcTemplate.query(sql, reservationRowMapper, id);
         return reservations.stream().findFirst();
     }

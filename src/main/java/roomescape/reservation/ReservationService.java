@@ -6,21 +6,27 @@ import org.springframework.stereotype.Service;
 import roomescape.exception.ReservationNotFoundException;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
+import roomescape.time.ReservationTime;
+import roomescape.time.ReservationTimeRepository;
 
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository) {
+    public ReservationService(ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public ReservationResponse create(ReservationRequest reservationRequest) {
+        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequest.timeId()).orElseThrow(); // 예외 처리
+
         Reservation reservation = new Reservation(
                 reservationRequest.name(),
                 reservationRequest.date(),
-                reservationRequest.time()
+                reservationTime
         );
         Reservation saved = reservationRepository.save(reservation);
         return ReservationResponse.from(saved);

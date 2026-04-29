@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.entity.Reservation;
 
-@Repository
 public interface ReservationRepository {
 
     Reservation save(Reservation reservation);

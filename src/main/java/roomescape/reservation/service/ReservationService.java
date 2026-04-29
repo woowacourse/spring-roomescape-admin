@@ -15,12 +15,12 @@ import roomescape.time.service.ReservationTimeService;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final ReservationTimeService reservationTimeService;
 
+    @Transactional
     public ReservationResponse save(ReservationRequest reservationRequest) {
         ReservationTime reservationTime = reservationTimeService.getById(reservationRequest.timeId());
 
@@ -44,6 +44,7 @@ public class ReservationService {
                 .toList();
     }
 
+    @Transactional
     public void deleteById(long id) {
         if (!reservationRepository.existsById(id)) {
             throw new IllegalArgumentException("삭제할 예약이 존재하지 않습니다.");

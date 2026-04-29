@@ -1,7 +1,6 @@
 package roomescape.reservationtime.repository;
 
 import java.sql.PreparedStatement;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
                 "SELECT id, start_at FROM reservation_time WHERE id = ?",
                 (rs, rowNum) -> ReservationTime.builder()
                         .id(rs.getLong("id"))
-                        .startAt(LocalTime.parse(rs.getString("start_at")))
+                        .startAt(rs.getTime("start_at").toLocalTime())
                         .build(),
                 id
         );

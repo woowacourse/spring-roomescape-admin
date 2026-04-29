@@ -1,6 +1,7 @@
 package roomescape;
 
 import java.sql.PreparedStatement;
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -23,7 +24,7 @@ public class ReservationTimeDao {
                 (resultSet, rowNum) -> {
                     ReservationTime reservationTime = new ReservationTime(
                             resultSet.getLong("id"),
-                            resultSet.getTime("start_at").toLocalTime()
+                            LocalTime.parse(resultSet.getString("start_at"))
                     );
                     return reservationTime;
                 });

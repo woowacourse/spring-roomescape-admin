@@ -1,6 +1,8 @@
 package roomescape;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -17,23 +19,62 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAllReservations() {
-        String sql = "select id, name, date, time from reservation";
+        String sql = "SELECT\n"
+                + "    r.id as reservation_id,\n"
+                + "    r.name,\n"
+                + "    r.date,\n"
+                + "    t.id as time_id,\n"
+                + "    t.start_at as time_value\n"
+                + "FROM reservation as r\n"
+                + "INNER JOIN reservation_time as t\n"
+                + "  ON r.time_id = t.id";
         List<Reservation> reservations = jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> {
                     Reservation reservation = new Reservation(
-                            resultSet.getLong("id"),
+                            resultSet.getLong("reservation_id"),
                             resultSet.getString("name"),
                             resultSet.getDate("date").toLocalDate(),
-                            resultSet.getTime("time").toLocalTime()
+                            new ReservationTime(
+                                    resultSet.getLong("time_id"),
+                                    resultSet.getTime("time_value").toLocalTime()
+                            )
                     );
                     return reservation;
                 });
         return reservations;
     }
 
-    public Long insertWithKeyHolder(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
+    public Reservation findReservationById(Long id) {
+        String sql = "SELECT\n"
+                + "    r.id as reservation_id,\n"
+                + "    r.name,\n"
+                + "    r.date,\n"
+                + "    t.id as time_id,\n"
+                + "    t.start_at as time_value\n"
+                + "FROM reservation as r\n"
+                + "INNER JOIN reservation_time as t\n"
+                + "  ON r.time_id = t.id\n"
+                + "WHERE r.id = ?";
+        Reservation reservation = jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) -> {
+                    Reservation newReservation = new Reservation(
+                            resultSet.getLong("reservation_id"),
+                            resultSet.getString("name"),
+                            LocalDate.parse(resultSet.getString("date")),
+                            new ReservationTime(
+                                    resultSet.getLong("time_id"),
+                                    LocalTime.parse(resultSet.getString("start_at"))
+                            )
+                    );
+                    return newReservation;
+                }, id);
+        return reservation;
+    }
+
+    public Long insertWithKeyHolder(ReservationReq reservationReq) {
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -41,9 +82,9 @@ public class ReservationDao {
                     sql,
                     new String[]{"id"}
             );
-            ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate().toString());
-            ps.setString(3, reservation.getTime().toString());
+            ps.setString(1, reservationReq.name());
+            ps.setString(2, reservationReq.date().toString());
+            ps.setLong(3, reservationReq.timeId());
             return ps;
         }, keyHolder);
         Long id = keyHolder.getKey().longValue();

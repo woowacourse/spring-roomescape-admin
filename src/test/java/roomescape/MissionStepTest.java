@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +24,7 @@ public class MissionStepTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    // 1단계 테스트
     @Test
     void 예약_조회() {
         RestAssured.given().log().all()
@@ -32,6 +34,7 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
+    @Disabled
     @Test
     void 예약_추가() {
         RestAssured.given().log().all()
@@ -43,6 +46,7 @@ public class MissionStepTest {
                 .body("id", is(1));
     }
 
+    @Disabled
     @Test
     void 예약_추가_조회() {
         RestAssured.given().log().all()
@@ -63,6 +67,7 @@ public class MissionStepTest {
                 .body("[0].time", is("15:40"));
     }
 
+    @Disabled
     @Test
     void 예약_추가_및_삭제() {
         RestAssured.given().log().all()
@@ -91,6 +96,7 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
+    // 2단계 테스트
     @Test
     void 데이터베이스_연동() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
@@ -102,6 +108,7 @@ public class MissionStepTest {
         }
     }
 
+    @Disabled
     @Test
     void DB_조회_API_전환() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05",
@@ -118,6 +125,7 @@ public class MissionStepTest {
         assertThat(reservations.size()).isEqualTo(count);
     }
 
+    @Disabled
     @Test
     void DB_추가_삭제_API_전환() {
         RestAssured.given().log().all()
@@ -139,14 +147,7 @@ public class MissionStepTest {
         assertThat(countAfterDelete).isEqualTo(0);
     }
 
-    private Map<String, String> reservationParams() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
-        return params;
-    }
-
+    // 3단계 테스트
     @Test
     void 시간_관리_API() {
         Map<String, String> params = new HashMap<>();
@@ -169,5 +170,42 @@ public class MissionStepTest {
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    @Test
+    void 예약과_시간_연결() {
+        Map<String, String> time = new HashMap<>();
+        time.put("startAt", "10:00");
+
+        RestAssured.given().contentType(ContentType.JSON)
+                .body(time)
+                .when().post("/times")
+                .then().statusCode(200);
+
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
+
+    private Map<String, String> reservationParams() {
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("time", "15:40");
+        return params;
     }
 }

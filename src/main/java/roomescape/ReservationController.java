@@ -24,9 +24,9 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
-        Long id = reservationDao.insertWithKeyHolder(reservation);
-        Reservation savedReservation = Reservation.withId(id, reservation);
+    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationReq reservationReq) {
+        Long id = reservationDao.insertWithKeyHolder(reservationReq);
+        Reservation savedReservation = reservationDao.findReservationById(id);
         return ResponseEntity.ok().body(savedReservation);
     }
 

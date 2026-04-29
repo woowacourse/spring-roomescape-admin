@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.ReservationTime;
 import roomescape.domain.ReservationTimeCommand;
+import roomescape.exception.ErrorMessage;
+import roomescape.exception.NotFoundResourceException;
 import roomescape.repository.ReservationTimeRepository;
 
 @Service
@@ -24,7 +26,11 @@ public class ReservationTimeService {
         return reservationTimeRepository.addReservationTime(reservationTimeCommand);
     }
 
-    public int deleteReservationTime(long id) {
-        return reservationTimeRepository.deleteReservationTime(id);
+    public void deleteReservationTime(long id) {
+        int deletedCount = reservationTimeRepository.deleteReservationTime(id);
+
+        if(deletedCount == 0) {
+            throw new NotFoundResourceException(ErrorMessage.RESERVATION_TIME_NOT_FOUND);
+        }
     }
 }

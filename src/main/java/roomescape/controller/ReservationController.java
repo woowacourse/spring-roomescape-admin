@@ -43,11 +43,8 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("id") long id) {
-        int deletedCount = roomReservationService.deleteReservation(id);
+        roomReservationService.deleteReservation(id);
 
-        if(deletedCount == 0) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

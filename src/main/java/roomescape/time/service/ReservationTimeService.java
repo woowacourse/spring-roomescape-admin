@@ -2,12 +2,14 @@ package roomescape.time.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.time.dto.ReservationTimeRequestDto;
 import roomescape.time.dto.ReservationTimeResponseDto;
 import roomescape.time.entity.ReservationTime;
 import roomescape.time.repository.ReservationTimeRepository;
 
 @Service
+@Transactional
 public class ReservationTimeService {
 
     private final ReservationTimeRepository reservationTimeRepository;

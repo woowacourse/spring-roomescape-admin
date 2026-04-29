@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-import roomescape.Reservation;
+import roomescape.dto.ReservationRequestDto;
+import roomescape.entity.Reservation;
 
 @Controller
 public class ReservationController {
@@ -32,6 +33,7 @@ public class ReservationController {
         return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> new Reservation(
+                        resultSet.getLong("id"),
                         resultSet.getString("name"),
                         resultSet.getObject("date", LocalDate.class),
                         resultSet.getObject("time", LocalTime.class)
@@ -41,18 +43,23 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
+    public ResponseEntity<Reservation> create(@RequestBody ReservationRequestDto reservationRequestDto) {
         String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement pstmt = connection.prepareStatement(sql, new String[]{"id"});
-            pstmt.setString(1, reservation.getName());
-            pstmt.setObject(2, reservation.getDate());
-            pstmt.setObject(3, reservation.getTime());
+            pstmt.setString(1, reservationRequestDto.name());
+            pstmt.setObject(2, reservationRequestDto.date());
+            pstmt.setObject(3, reservationRequestDto.time());
             return pstmt;
         }, keyHolder);
 
-        reservation.setId(Objects.requireNonNull(keyHolder.getKey()).longValue());
+        Reservation reservation = new Reservation(
+                Objects.requireNonNull(keyHolder.getKey()).longValue(),
+                reservationRequestDto.name(),
+                reservationRequestDto.date(),
+                reservationRequestDto.time()
+        );
         return ResponseEntity.ok(reservation);
     }
 

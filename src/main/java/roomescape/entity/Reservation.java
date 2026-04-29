@@ -1,16 +1,18 @@
-package roomescape;
+package roomescape.entity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class Reservation {
 
-    private Long id;
+    private final Long id;
     private final String name;
     private final LocalDate date;
     private final LocalTime time;
 
-    public Reservation(String name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+        this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
@@ -18,10 +20,6 @@ public class Reservation {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -34,6 +32,20 @@ public class Reservation {
 
     public LocalTime getTime() {
         return time;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Reservation that)) {
+            return false;
+        }
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name)
+                && Objects.equals(date, that.date) && Objects.equals(time, that.time);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, date, time);
     }
 
     @Override

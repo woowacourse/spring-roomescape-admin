@@ -33,9 +33,11 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public Optional<ReservationTime> findById(Long id) {
-        final String sql = "SELECT * FROM reservation_time WHERE id = ?";
+        String sql = "SELECT * FROM reservation_time WHERE id = ?";
+
         return jdbcTemplate.query(sql, reservationTimeRowMapper, id)
-                .stream().findFirst();
+                .stream()
+                .findFirst();
     }
 
     @Override

@@ -40,14 +40,81 @@
 - 컨텍스트가 재생성되면서 `ReservationController` 빈도 새로 만들어지니까 `index`도 0부터 다시 시작.
 - *"@DirtiesContext가 정확히 뭘 하는가, 왜 BEFORE_EACH_TEST_METHOD인가, 이거 없으면 어떻게 되나"*.
 
-<details>
+</details>
 
 ### AtomicLong
 <details>
 - 주요 개념 : `AtomicLong`은 **멀티스레드 환경에서 long 값을 안전하게 증가/감소/교체할 수 있게 만든 원자적(atomic) 클래스**
 - 멀티스레드라는 개념이 등장. 콘솔환경과 웹환경 차이 관점으로 학습해보기.
 
+</details>
+
+
+### @DirtiesContext
+<details>
+
+- `@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)`가 붙어 있어서 매 테스트 전에 스프링 컨텍스트를 새로 만들어진다.
+- 그래서 `예약_조회` 테스트가 먼저 실행되고 `예약_추가_및_삭제`가 실행돼도, 두 번째 테스트의 첫 POST가 `id=1`로 시작할 수 있는 것임
+- 컨텍스트가 재생성되면서 `ReservationController` 빈도 새로 만들어지니까 `index`도 0부터 다시 시작.
+- *"@DirtiesContext가 정확히 뭘 하는가, 왜 BEFORE_EACH_TEST_METHOD인가, 이거 없으면 어떻게 되나"*.
+
+</details>
+
+### AtomicLong
+<details>
+- 주요 개념 : `AtomicLong`은 **멀티스레드 환경에서 long 값을 안전하게 증가/감소/교체할 수 있게 만든 원자적(atomic) 클래스**
+- 멀티스레드라는 개념이 등장. 콘솔환경과 웹환경 차이 관점으로 학습해보기.
+
+</details>
+
+### runtimeOnly 쓴 이유
+<details>
+- H2 드라이버는 컴파일 타임엔 코드가 직접 부르지 않는다.(JdbcTemplate이 알아서 부름). 런타임에만 클래스패스에 있으면 된다.
+- *"implementation vs runtimeOnly vs testImplementation 차이"*
+</details>
+
+
+
+### main/resources/schema.sql 동작원리
+<details>
+- 이 파일이 클래스패스 루트에 있으면 스프링부트가 **앱 시작 시 자동으로 실행**
+- “동작 원리”
+
+</details>
+
+
+### DB 관련
+<details>
+
+- “아 메서드 시그니처 이렇게 생겼네” 정도로 사용법만 인지함.
+- `JdbcTemplate` 이 뭐고 어디서 어떻게 동작하는지, 무슨 필요성에 의해 개발되었는지.
+- `Connection` ,`DataSource` 의 관계와 어떻게 동작하는지, 무슨 필요성에 의해 개발되었고 최신 현재는 주로 어떤걸로 해당 기능을 구현하고있는지, 익숙한 JPA와 의 관계는 ?
+- `RowMapper` ,`PreparedStatement` , `ResultSet`의 관계와 어떻게 동작하는지, 무슨 필요성에 의해 개발되었고 최신 현재는 주로 어떤걸로 해당 기능을 구현하고있는지. 익숙한 JPA와 의 관계는 ?
+- `KeyHolder` ,`GeneratedKeyHolder` 의 관계와 어떻게 동작하는지, 무슨 필요성에 의해 개발되었고 최신 현재는 주로 어떤걸로 해당 기능을 구현하고있는지, 익숙한 JPA와 의 관계는 ?
+    - **`prepareStatement(sql, new String[]{"id"})`**
+        - 두 번째 인자가 *"이 INSERT 후에 어떤 컬럼의 생성된 값을 돌려받고 싶다"* 를 알린다.그리고 id 컬럼명을 명시적으로 넘겨서, KeyHolder가 그 키를 받는다.
+        - `Statement.RETURN_GENERATED_KEYS` 상수를 써도 되는데, 컬럼명 배열로 주면 *어떤 컬럼인지 명시적*이라 안전하다.
+        - *"PreparedStatementCreator 람다 → KeyHolder 채워짐 → getKey()"*
+        - *"jdbcTemplate.update의 PreparedStatementCreator 오버로드는 정확히 어떻게 동작하나" 더해서 이런 부분까지 학습할지 고려. 과거의 기술이라서 굳이 현재 동작원리까지 알아야하는 생각이 들김함. 우선순위를 메겨도 좋을듯*
+- `*KeyHolder` or `SimpleJdbcInsert`*
+    - **`KeyHolder`**
+        - JDBC 표준 방식 (`Statement.RETURN_GENERATED_KEYS`)에 가까움
+        - 람다로 `Connection`에서 `PreparedStatement` 만들어서 `KeyHolder`에 키를 받는다.
+        - **`keyHolder.getKey().longValue()`**
+            - `getKey()`는 `Number`를 돌려즌다. DB나 드라이버에 따라 Long, Integer, BigInteger 등 다양해서 추상화한것.
+    - **`SimpleJdbcInsert`**
+        - Spring이 한 겹 더 감싼 헬퍼
+        - *컬럼명이 자바 필드명과 다르면* Map을 손수 만들어 넘겨야 해
+    - **`KeyHolder` 선택이유**
+        - 추상화로 가려진 DB 기능들을 조금 더 살펴보기 위해 선택.
+        - *"DB가 어떻게 키를 돌려주는가"* 가 좀 더 노출됨.
+        - 계층 분리를 할때 DAO 개념도 같이 학습하기에 더 잘맞음.
+
+</details>
+
+
+### 
 <details>
 
 
-
+</details>

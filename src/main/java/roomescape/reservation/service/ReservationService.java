@@ -15,7 +15,7 @@ import roomescape.reservationtime.repository.ReservationTimeRepository;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
     public List<ReservationDto> findAllReservations() {
         List<Reservation> result = reservationRepository.findAll();
@@ -26,7 +26,7 @@ public class ReservationService {
     }
 
     public ReservationDto saveReservation(ReservationCreateDto request) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId());
+        ReservationTime reservationTime = reservationTimeService.findById(request.timeId());
         Reservation reservation = request.toEntity(reservationTime);
 
         Long saveId = reservationRepository.save(reservation);

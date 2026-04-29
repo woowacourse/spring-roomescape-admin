@@ -1,4 +1,4 @@
-package roomescape.reservation.dao;
+package roomescape.reservation.repository;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
-import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,8 +13,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JdbcTemplateReservationDao implements ReservationsDao{
+public class JdbcTemplateReservationRepository implements ReservationsRepository {
 
+    private final static String ID_COLUMN = "id";
     private final static String NAME_COLUMN = "name";
     private final static String DATE_COLUMN = "date";
     private final static String TIME_COLUMN = "time";
@@ -23,37 +23,37 @@ public class JdbcTemplateReservationDao implements ReservationsDao{
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public JdbcTemplateReservationDao(JdbcTemplate jdbcTemplate) {
+    public JdbcTemplateReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public List<ReservationEntity> getReservations() {
-        String sql = "SELECT name, date, time FROM reservation";
+        String sql = "SELECT * FROM reservation";
 
         return jdbcTemplate.query(
                 sql,
                 (rs, rowNum) -> new ReservationEntity(
+                        rs.getLong(ID_COLUMN),
                         rs.getString(NAME_COLUMN),
-                        LocalDateTime.of(
-                                rs.getDate(DATE_COLUMN).toLocalDate(),
-                                rs.getTime(TIME_COLUMN).toLocalTime()
-                        )
+                        rs.getDate(DATE_COLUMN).toLocalDate(),
+                        rs.getTime(TIME_COLUMN).toLocalTime()
                 )
         );
     }
 
     @Override
-    public Long saveReservation(ReservationEntity reservationEntity) {
+    public ReservationEntity saveReservation(ReservationEntity entity) {
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)";
 
         jdbcTemplate.update(connection ->
-                        createPreparedStatement(reservationEntity, connection, sql),
+                        createPreparedStatement(entity, connection, sql),
                 keyHolder
         );
 
-        return keyHolder.getKey().longValue();
+        long id = keyHolder.getKey().longValue();
+        return entity.updateId(id);
     }
 
     private PreparedStatement createPreparedStatement(
@@ -66,9 +66,9 @@ public class JdbcTemplateReservationDao implements ReservationsDao{
                 Statement.RETURN_GENERATED_KEYS
         );
 
-        preparedStatement.setString(1, reservationEntity.getName());
-        preparedStatement.setDate(2, Date.valueOf(reservationEntity.getReservedDate()));
-        preparedStatement.setTime(3, Time.valueOf(reservationEntity.getReservedTime()));
+        preparedStatement.setString(1, reservationEntity.name());
+        preparedStatement.setDate(2, Date.valueOf(reservationEntity.date()));
+        preparedStatement.setTime(3, Time.valueOf(reservationEntity.time()));
 
         return preparedStatement;
     }
@@ -76,6 +76,10 @@ public class JdbcTemplateReservationDao implements ReservationsDao{
     @Override
     public void deleteReservationById(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        int affectedRows = jdbcTemplate.update(sql, id);
+
+        if (affectedRows == 0) {
+            throw new IllegalArgumentException("해당 예약은 존재하지 않습니다.");
+        }
     }
 }

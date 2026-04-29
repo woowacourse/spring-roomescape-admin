@@ -15,7 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.reservation.presentation.dto.Reservation;
 
 @IsolatedAnnotationTest
-class MissionStepWithDBTest {
+class ReservationControllerWithDBTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

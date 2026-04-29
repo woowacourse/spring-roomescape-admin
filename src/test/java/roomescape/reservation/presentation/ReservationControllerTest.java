@@ -10,7 +10,7 @@ import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 
 @IsolatedAnnotationTest
-public class MissionStepTest {
+public class ReservationControllerTest {
 
     @Test
     void 예약_조회() {

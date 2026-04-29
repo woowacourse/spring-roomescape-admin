@@ -2,7 +2,7 @@ package roomescape.reservation.presentation.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import roomescape.reservation.dao.ReservationEntity;
+import roomescape.reservation.repository.ReservationEntity;
 
 public record Reservation(
         Long id,
@@ -12,10 +12,10 @@ public record Reservation(
 ) {
     public static Reservation from(ReservationEntity reservationEntity) {
         return new Reservation(
-                null,
-                reservationEntity.getName(),
-                reservationEntity.getReservedDate(),
-                reservationEntity.getReservedTime()
+                reservationEntity.id(),
+                reservationEntity.name(),
+                reservationEntity.date(),
+                reservationEntity.time()
         );
     }
 }

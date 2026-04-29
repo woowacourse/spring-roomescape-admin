@@ -1,16 +1,16 @@
-package roomescape.reservation.dao;
+package roomescape.reservation.repository;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class InMemoryReservationsDao implements ReservationsDao {
+public class InMemoryReservationsRepository implements ReservationsRepository {
 
     private final Map<Long, ReservationEntity> reservationEntities;
     private final AtomicLong index;
 
-    public InMemoryReservationsDao() {
+    public InMemoryReservationsRepository() {
         this.reservationEntities = new HashMap<>();
         this.index =  new AtomicLong(0);
     }
@@ -23,10 +23,13 @@ public class InMemoryReservationsDao implements ReservationsDao {
     }
 
     @Override
-    public Long saveReservation(ReservationEntity reservationEntity) {
-        long now = index.incrementAndGet();
-        reservationEntities.put(now, reservationEntity);
-        return now;
+    public ReservationEntity saveReservation(ReservationEntity entity) {
+        long id = index.incrementAndGet();
+
+        ReservationEntity entityWithId = entity.updateId(id);
+        reservationEntities.put(id, entityWithId);
+
+        return entityWithId;
     }
 
     @Override

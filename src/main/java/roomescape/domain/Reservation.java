@@ -4,16 +4,16 @@ public class Reservation {
     private Long id;
     private String name;
     private String date;
-    private long timeId;
+    private Time reservationTime;
 
     public Reservation() {
     }
 
-    public Reservation(Long id, String name, String date, Long timeId) {
+    public Reservation(Long id, String name, String date, Time reservationTime) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.timeId = timeId;
+        this.reservationTime = reservationTime;
     }
 
     public long getId() {
@@ -28,7 +28,7 @@ public class Reservation {
         return date;
     }
 
-    public Long getTimeId() {
-        return timeId;
+    public Time getReservationTime() {
+        return reservationTime;
     }
 }

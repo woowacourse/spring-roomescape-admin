@@ -8,8 +8,15 @@
 |-------------|-----------------------------------|
 | reservation | 방탈출 예약 정보. 예약자 이름과 방문 날짜, 시각을 포함. |
 | name        | 예약자 이름. (10자 이내)                  |
-| date        | 방문 날짜.                            |
-| time        | 방문 시각.                            |
+| date        | 예약 날짜.                            |
+| time        | 예약 시각. 시간은 슬롯으로 관리된다.             |
+
+### 예약 시간
+
+| 용어               | 설명                       |
+|------------------|--------------------------|
+| reservation time | 예약 시간                    |
+| start at         | 시간을 슬롯으로 관리할 때 슬롯의 시작 시간 |
 
 # 💻 기능 요구 사항
 
@@ -73,3 +80,66 @@ Content-Type: application/json
 - [x] 1단계에서 만든 조회·추가·삭제 API를 모두 JdbcTemplate기반으로 전환한다
     - [x] 기존의 List<Reservation>, AtomicLong은 제거한다
     - [x] 예약 추가 시 DB가 생성한 id를 응답에 담는다
+
+### 단계3 - 시간 관리
+
+#### 관리자가 매번 예약 시간을 텍스트로 직접 입력해 번거롭고 실수가 나는 상황이다. 정해진 시간 슬롯을 관리자가 선택해서 쓸 수 있도록 시간 관리 기능을 추가하고 예약과 시간을 연결한다.
+
+- [x] 레벨1에서 학습했던 JUnit만 활용한 단위 테스트에 집중한다.
+    - [x] 새로운 테스트 도구나 기법(Spring Boot Test, Mock, RestAssured 추가 활용 등)을 도입하지 않는다.
+    - [x] 요구사항에서 RestAssured가 주어진 경우 그대로 사용하되, 그 위에 새 테스트 기법을 쌓지 않는다.
+
+- [ ] 시간 관리 API
+
+| 기능    | 메서드 / URL            | 요청 본문       | 응답                     |
+|-------|----------------------|-------------|------------------------|
+| 시간 추가 | `POST /times`        | `{startAt}` | `{id, startAt}`        |
+| 시간 조회 | `GET /times`         |             | `[{id, startAt}, ...]` |
+| 시간 삭제 | `DELETE /times/{id}` |             | `200 OK`               |
+
+- [ ] Reservation 클래스의 time 필드를 String → ReservationTime 객체로 변경
+    - [ ] 예약 추가 요청 본문: time → timeId
+    - [ ] 예약 조회 응답: time을 객체로 ({id, startAt})
+
+<details>
+
+<summary>예약 추가 요청·응답 예시</summary>
+
+```
+POST /reservations HTTP/1.1
+Content-Type: application/json
+
+{
+    "date": "2023-08-05",
+    "name": "브라운",
+    "timeId": 1
+}
+```
+
+```
+HTTP/1.1 200
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "브라운",
+    "date": "2023-08-05",
+    "time": {
+        "id": 1,
+        "startAt": "10:00"
+    }
+}
+```
+
+</details>
+
+# 📝API 명세
+
+| 기능    | 메서드 / URL                   | 요청 본문                   | 응답                                 |
+|-------|-----------------------------|-------------------------|------------------------------------|
+| 예약 추가 | `POST /reservations`        | `{name, date, time_id}` | `{id, name, date, time_id}`        |
+| 예약 조회 | `GET /reservations`         |                         | `[{id, name, date, time_id}, ...]` |
+| 예약 삭제 | `DELETE /reservations/{id}` |                         | `200 OK`                           |
+| 시간 추가 | `POST /times`               | `{startAt}`             | `{id, startAt}`                    |
+| 시간 조회 | `GET /times`                |                         | `[{id, startAt}, ...]`             |
+| 시간 삭제 | `DELETE /times/{id}`        |                         | `200 OK`                           |

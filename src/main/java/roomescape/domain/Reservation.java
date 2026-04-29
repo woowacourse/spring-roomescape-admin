@@ -8,6 +8,6 @@ public record Reservation(long id, String name, LocalDate date, ReservationTime 
     }
 
     public long timeId() {
-        return time.getId();
+        return time.id();
     }
 }

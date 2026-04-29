@@ -24,6 +24,12 @@ public class ReservationRepository {
             join reservation_time rt on r.time_id = rt.id
             order by r.id
             """;
+    private static final String COUNT_BY_TIME_ID_SQL =
+        """
+            select count(*)
+            from reservation
+            where time_id = ?
+            """;
     private static final String DELETE_BY_ID_SQL = "delete from reservation where id = ?";
 
     private final JdbcTemplate jdbcTemplate;
@@ -66,5 +72,13 @@ public class ReservationRepository {
             throw new IllegalStateException("생성 키를 조회할 수 없습니다.");
         }
         return keyHolder.getKey().longValue();
+    }
+
+    public int countByTimeId(Long timeId) {
+        Integer count = jdbcTemplate.queryForObject(COUNT_BY_TIME_ID_SQL, Integer.class, timeId);
+        if (count == null) {
+            return 0;
+        }
+        return count;
     }
 }

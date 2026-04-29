@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.domain.Reservation;
 
-@Repository
 public class InMemoryReservationRepository implements ReservationRepository {
 
     private final AtomicLong id = new AtomicLong(0);

@@ -1,10 +1,11 @@
 package roomescape;
 
-import java.util.ArrayList;
+import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,9 +22,6 @@ public class ReservationController {
     public ReservationController(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
-    private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(0);
 
     @GetMapping
     public ResponseEntity<List<Reservation>> get() {
@@ -43,29 +41,39 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Reservation> create(@RequestBody ReservationCreateDto reservationCreateDto) {
-        String name = reservationCreateDto.getName();
-        String date = reservationCreateDto.getDate();
-        String time = reservationCreateDto.getTime();
 
-        reservations.add(new Reservation(index.incrementAndGet(), name, date, time));
+        String sql = "insert into reservation(name, date, time) values (?, ?, ?)";
 
-        Reservation create = reservations.stream()
-                .filter(reservation -> reservation.getId() == index.get())
-                .findAny()
-                .orElseThrow(() ->
-                        new IllegalArgumentException("요청한 번호를 찾을 수 없습니다."));
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement pstmt = connection.prepareStatement(
+                    sql,
+                    new String[]{"id"});
 
-        return ResponseEntity.ok(create);
+            pstmt.setString(1, reservationCreateDto.getName());
+            pstmt.setString(2, reservationCreateDto.getDate());
+            pstmt.setString(3, reservationCreateDto.getTime());
+            return pstmt;
+        }, keyHolder);
+
+        Reservation reservation = jdbcTemplate.queryForObject(
+                "select id, name, date, time from reservation where id = ?",
+                (resultSet, rowNum) -> {
+                    return new Reservation(
+                            resultSet.getLong("id"),
+                            resultSet.getString("name"),
+                            resultSet.getString("date"),
+                            resultSet.getString("time"));
+                },
+                keyHolder.getKey().longValue());
+        return ResponseEntity.ok(reservation);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Reservation delete = reservations.stream()
-                .filter(reservation -> reservation.getId() == id)
-                .findAny()
-                .orElseThrow(() ->
-                        new IllegalArgumentException("요청한 번호를 찾을 수 없습니다."));
-        reservations.remove(delete);
+
+        String sql = "delete from reservation where id = ?";
+        jdbcTemplate.update(sql, id);
         return ResponseEntity.ok().build();
     }
 }

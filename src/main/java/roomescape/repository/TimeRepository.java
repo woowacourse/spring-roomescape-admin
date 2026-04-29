@@ -4,56 +4,53 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.Reservation;
+
+import roomescape.domain.Time;
 
 import java.sql.PreparedStatement;
 import java.util.List;
 
 @Repository
-public class ReservationRepository {
+public class TimeRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationRepository(JdbcTemplate jdbcTemplate) {
+    public TimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Reservation> findAllReservations() {
-        String sql = "select id, name, date, time_id from reservation";
+    public List<Time> findAllTimes() {
+        String sql = "SELECT id, start_at FROM reservation_time";
         return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> {
-                    Reservation reservation = new Reservation(
+                    Time time = new Time(
                             resultSet.getLong("id"),
-                            resultSet.getString("name"),
-                            resultSet.getString("date"),
-                            resultSet.getLong("time_id")
+                            resultSet.getString("start_at")
                     );
-                    return reservation;
+                    return time;
                 });
     }
 
 
-    public Reservation add(Reservation reservation) {
-        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+    public Time add(Time time) {
+        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     sql,
                     new String[]{"id"});
-            ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate());
-            ps.setLong(3, reservation.getTimeId());
+            ps.setString(1, time.getStartAt());
             return ps;
         }, keyHolder);
 
         long id = keyHolder.getKey().longValue();
 
-        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTimeId());
+        return new Time(id, time.getStartAt());
     }
 
     public void remove(Long id) {
-        String sql = "delete from reservation where id = ?";
+        String sql = "delete from reservation_time where id = ?";
         jdbcTemplate.update(sql, Long.valueOf(id));
     }
 

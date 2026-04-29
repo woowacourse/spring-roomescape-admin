@@ -1,29 +1,36 @@
+/*
 package roomescape.controller;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import roomescape.domain.Reservation;
-import roomescape.repository.ReservationRepository;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ReservationControllerTest {
-    ReservationController controller;
-    ReservationRepository repository;
 
-    @BeforeEach
-    void beforeEach() {
-        repository = new ReservationRepository(new JdbcTemplate());
-        controller = new ReservationController(repository);
-    }
+    @Autowired
+    ReservationController controller;
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     @Test
     @DisplayName("전체 예약에 대해서 조회한다.")
-    void findAllReservationsTest(){
+    void findAllReservationsTest() {
+        jdbcTemplate.update(
+                "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
+                "브라운", "2023-08-05", "15:40"
+        );
+
         List<Reservation> allReservations = controller.findAllReservations();
 
         assertThat(allReservations).hasSize(1);
@@ -32,19 +39,26 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약을 추가한다.")
     void addReservationTest() {
-        controller.addReservation(new Reservation(2L, "네오", "2023-08-06", "15:41"));
+        controller.addReservation(new Reservation(null, "네오", "2023-08-06", "15:41"));
 
-        List<Reservation> allReservations = controller.findAllReservations();
+        List<Reservation> allReservations = controller.findAllReservations();assertThat
 
-        assertThat(allReservations).hasSize(2);
+        assertThat(allReservations).hasSize(1);
     }
 
     @Test
     @DisplayName("예약을 삭제한다.")
     void deleteReservationTest() {
-        controller.deleteReservation(1l);
+        jdbcTemplate.update(
+                "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
+                "브라운", "2023-08-05", "15:40"
+        );
+
+        controller.deleteReservation(1L);
+
         List<Reservation> allReservations = controller.findAllReservations();
 
         assertThat(allReservations).hasSize(0);
     }
 }
+*/

@@ -5,15 +5,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Builder
 public class ReservationTime {
     @Setter
     private Long id;
-    private LocalDateTime startAt;
+    private LocalTime startAt;
 
-    public static ReservationTime create(Long id, LocalDateTime startAt){
+    public static ReservationTime create(Long id, LocalTime startAt){
         return ReservationTime.builder()
                 .id(id)
                 .startAt(startAt)

@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.util.DateAndTimeConverter;
 
 import java.sql.PreparedStatement;
@@ -18,15 +19,21 @@ public class ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<Reservation> reservationRowMapper =
-            (resultSet, rowNumber) -> Reservation.create(
-                    resultSet.getLong("id"),
-                    resultSet.getString("name"),
-                    DateAndTimeConverter.parseToDate(resultSet.getString("date")),
-                    DateAndTimeConverter.parseToTime(resultSet.getString("startAt"))
-            );
+            (resultSet, rowNumber) -> {
+                ReservationTime reservationTime = ReservationTime.create(
+                        resultSet.getLong("time_id"),
+                        DateAndTimeConverter.parseToTime(resultSet.getString("time_value"))
+                );
+
+                return Reservation.create(
+                        resultSet.getLong("reservation_id"),
+                        resultSet.getString("name"),
+                        DateAndTimeConverter.parseToDate(resultSet.getString("date")),
+                        reservationTime);
+            };
 
     public Long save(Reservation reservation) {
-        String insertSql = "INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)";
+        String insertSql = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -34,7 +41,7 @@ public class ReservationRepository {
 
             preparedStatement.setString(1, reservation.getName());
             preparedStatement.setString(2, DateAndTimeConverter.formatDate(reservation.getDate()));
-            preparedStatement.setString(3, DateAndTimeConverter.formatTime(reservation.getTime()));
+            preparedStatement.setLong(3, reservation.getTime().getId());
 
             return preparedStatement;
         }, keyHolder);
@@ -43,7 +50,11 @@ public class ReservationRepository {
     }
 
     public List<Reservation> getAll() {
-        String selectAllSql = "SELECT id, name, date, time FROM reservation";
+        String selectAllSql = "SELECT r.id as reservation_id, r.name, r.date, " +
+                "t.id as time_id, t.start_at as time_value " +
+                "FROM reservation as r " +
+                "INNER JOIN reservation_time as t " +
+                "ON r.time_id = t.id";
 
         return jdbcTemplate.query(selectAllSql, reservationRowMapper);
     }

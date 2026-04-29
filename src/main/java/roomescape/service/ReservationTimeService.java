@@ -20,7 +20,7 @@ public class ReservationTimeService {
     public ReservationTimeResponse save(ReservationTimeRequest reservationTimeRequest) {
         ReservationTime reservationTime = ReservationTime.create(
                 null,
-                DateAndTimeConverter.parseToLocalDateTime(reservationTimeRequest.startAt())
+                DateAndTimeConverter.parseToTime(reservationTimeRequest.startAt())
         );
 
         return new ReservationTimeResponse(
@@ -34,12 +34,12 @@ public class ReservationTimeService {
                 .stream()
                 .map(reservationTime -> new ReservationTimeResponse(
                         reservationTime.getId(),
-                        DateAndTimeConverter.formatDateAndTime(reservationTime.getStartAt()))
+                        DateAndTimeConverter.formatTime(reservationTime.getStartAt()))
                 ).toList();
     }
 
     @Transactional
-    public void delete(Long id){
+    public void delete(Long id) {
         reservationTimeRepository.delete(id);
     }
 }

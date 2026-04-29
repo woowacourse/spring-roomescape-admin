@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Builder
 @Getter
@@ -14,12 +13,10 @@ public class Reservation {
     private Long id;
     private String name;
     private LocalDate date;
-    private LocalTime time;
+    private ReservationTime time;
 
-    public static Reservation create(Long id, String name, LocalDate date, LocalTime time) {
+    public static Reservation create(Long id, String name, LocalDate date, ReservationTime time) {
         validateName(name);
-        validateDate(date);
-        validateTime(time);
 
         return Reservation.builder()
                 .id(id)
@@ -36,18 +33,6 @@ public class Reservation {
 
         if (name.isBlank()) {
             throw new IllegalArgumentException("[ERROR] 이름 형식이 올바르지 않습니다.");
-        }
-    }
-
-    private static void validateDate(LocalDate date) {
-        if (date == null) {
-            throw new IllegalArgumentException("[ERROR] 날짜는 필수 값입니다.");
-        }
-    }
-
-    private static void validateTime(LocalTime time) {
-        if (time == null) {
-            throw new IllegalArgumentException("[ERROR] 시간은 필수 값입니다.");
         }
     }
 }

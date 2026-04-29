@@ -23,20 +23,27 @@ class JdbcReservationRepositoryTest {
 
     @Test
     void 예약_저장_레포지토리_테스트() {
-        Reservation savedReservation = repository.save("브라운", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40));
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "15:40");
+        Long timeId = jdbcTemplate.queryForObject("SELECT id FROM reservation_time LIMIT 1", Long.class);
+
+        Reservation savedReservation = repository.save("브라운", LocalDate.of(2023, 8, 5), timeId);
         Long id = jdbcTemplate.queryForObject("SELECT id FROM reservation LIMIT 1", Long.class);
 
         assertThat(savedReservation.getId()).isEqualTo(id);
         assertThat(savedReservation.getName()).isEqualTo("브라운");
         assertThat(savedReservation.getDate()).isEqualTo(LocalDate.of(2023, 8, 5));
-        assertThat(savedReservation.getTime()).isEqualTo(LocalTime.of(15, 40));
+        assertThat(savedReservation.getTime().getId()).isEqualTo(timeId);
+        assertThat(savedReservation.getTime().getStartAt()).isEqualTo(LocalTime.of(15, 40));
     }
 
     @Test
     void 전체_예약_조회_레포지토리_테스트() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05",
-                "15:40");
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "코니", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "16:00");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05",
+                1L);
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "코니", "2023-08-05",
+                2L);
 
         List<Reservation> reservations = repository.findAll();
 
@@ -48,14 +55,18 @@ class JdbcReservationRepositoryTest {
                 .extracting(Reservation::getDate)
                 .containsExactly(LocalDate.of(2023, 8, 5), LocalDate.of(2023, 8, 5));
         assertThat(reservations)
-                .extracting(Reservation::getTime)
-                .containsExactly(LocalTime.of(15, 40), LocalTime.of(15, 40));
+                .extracting(reservation -> reservation.getTime().getId())
+                .containsExactly(1L, 2L);
+        assertThat(reservations)
+                .extracting(reservation -> reservation.getTime().getStartAt())
+                .containsExactly(LocalTime.of(15, 40), LocalTime.of(16, 0));
     }
 
     @Test
     void 예약_삭제_레포지토리_테스트(){
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05",
-                "15:40");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05",
+                1L);
         Long id = jdbcTemplate.queryForObject("SELECT id FROM reservation LIMIT 1", Long.class);
 
         repository.deleteById(id);

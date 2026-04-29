@@ -8,6 +8,7 @@ import roomescape.reservation.presentation.dto.request.ReservationSaveRequest;
 import roomescape.reservation.presentation.dto.response.ReservationFindResponse;
 import roomescape.reservation.presentation.dto.response.ReservationSaveResponse;
 import org.springframework.stereotype.Service;
+import roomescape.reservation.presentation.dto.response.dto.TimeInformation;
 
 @Service
 @RequiredArgsConstructor
@@ -15,10 +16,10 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
 
     public ReservationSaveResponse saveReservation(ReservationSaveRequest body) {
-        Reservation reservation = reservationRepository.save(body.name(), body.date(), body.time());
+        Reservation reservation = reservationRepository.save(body.name(), body.date(), body.timeId());
 
         return new ReservationSaveResponse(reservation.getId(), reservation.getName(), reservation.getDate(),
-                reservation.getTime());
+                new TimeInformation(reservation.getTime().getId(), reservation.getTime().getStartAt()));
     }
 
     public List<ReservationFindResponse> findAllReservations() {
@@ -27,7 +28,10 @@ public class ReservationService {
                         reservation.getId(),
                         reservation.getName(),
                         reservation.getDate(),
-                        reservation.getTime()
+                        new TimeInformation(
+                                reservation.getTime().getId(),
+                                reservation.getTime().getStartAt()
+                        )
                 ))
                 .toList();
     }

@@ -11,6 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.domain.ReservationTime;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,26 +22,41 @@ public class JdbcReservationRepository implements ReservationRepository {
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     LocalDate.parse(resultSet.getString("date")),
-                    LocalTime.parse(resultSet.getString("time")));
+                    new ReservationTime(
+                            resultSet.getLong("time_id"),
+                            LocalTime.parse(resultSet.getString("start_at"))
+                    ));
 
     @Override
-    public Reservation save(String name, LocalDate date, LocalTime time) {
-        String sql = "INSERT INTO reservation(name, date, time) VALUES (:name, :date, :time)";
+    public Reservation save(String name, LocalDate date, Long timeId) {
+        String insertReservationSql = "INSERT INTO reservation(name, date, time_id) VALUES (:name, :date, :timeId)";
+        String selectReservationTimeByIdSql = "SELECT start_at FROM reservation_time WHERE id = :timeId";
 
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", name)
                 .addValue("date", date.toString())
-                .addValue("time", time.toString());
+                .addValue("timeId", timeId);
+
+        String startAt = template.queryForObject(selectReservationTimeByIdSql, params, String.class);
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        template.update(sql, params, keyHolder);
+        template.update(insertReservationSql, params, keyHolder);
 
-        return new Reservation(keyHolder.getKey().longValue(), name, date, time);
+        return new Reservation(
+                keyHolder.getKey().longValue(),
+                name,
+                date,
+                new ReservationTime(timeId, LocalTime.parse(startAt))
+        );
     }
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "SELECT id, name, date, time FROM reservation";
+        String sql = """
+                SELECT reservation.id, reservation.name, reservation.date, reservation.time_id, reservation_time.start_at
+                FROM reservation
+                INNER JOIN reservation_time ON reservation.time_id = reservation_time.id
+                """;
 
         return template.query(sql, reservationRowMapper);
     }

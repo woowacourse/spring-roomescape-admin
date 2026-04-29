@@ -1,9 +1,6 @@
 package roomescape;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,30 +14,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(0L);
+    private final ReservationDao reservationDao;
+
+    public ReservationController(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
 
     @PostMapping
     public ResponseEntity<Reservation> addReservation(@RequestBody Reservation reservation) {
-        Reservation newReservation = Reservation.toEntity(index.incrementAndGet(), reservation);
-        reservations.add(newReservation);
-
+        Reservation newReservation = reservationDao.insert(reservation);
         return new ResponseEntity<>(newReservation, HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<List<Reservation>> getReservations() {
+        List<Reservation> reservations = reservationDao.findAllReservations();
         return new ResponseEntity<>(reservations, HttpStatus.OK);
     }
 
     @DeleteMapping("/{reservation-id}")
-    public ResponseEntity<Void> addReservation(@PathVariable("reservation-id") Long reservationId) {
-        Reservation reservation = reservations.stream()
-                .filter(findReservation -> Objects.equals(findReservation.getId(), reservationId))
-                .findFirst()
-                .orElseThrow(RuntimeException::new);
-        reservations.remove(reservation);
-
+    public ResponseEntity<Void> deleteReservation(@PathVariable("reservation-id") Long reservationId) {
+        reservationDao.delete(reservationId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

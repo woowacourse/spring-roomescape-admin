@@ -1,6 +1,5 @@
 package roomescape.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +9,6 @@ import java.time.LocalTime;
 
 @Builder
 @Getter
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Reservation {
     @Setter
     private Long id;

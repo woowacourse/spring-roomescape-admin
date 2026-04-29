@@ -2,11 +2,11 @@ package roomescape.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.mapper.ReservationMapper;
 import roomescape.util.DateAndTimeConverter;
 
 import java.sql.PreparedStatement;
@@ -16,6 +16,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
+
+    private final RowMapper<Reservation> reservationRowMapper =
+            (resultSet, rowNumber) -> Reservation.create(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                    DateAndTimeConverter.parseToDate(resultSet.getString("date")),
+                    DateAndTimeConverter.parseToTime(resultSet.getString("time"))
+            );
 
     public Long save(Reservation reservation) {
         String insertSql = "INSERT INTO reservation(name, date, time) VALUES (?, ?, ?)";
@@ -37,7 +45,7 @@ public class ReservationRepository {
     public List<Reservation> getAll() {
         String selectAllSql = "SELECT id, name, date, time FROM reservation";
 
-        return jdbcTemplate.query(selectAllSql, new ReservationMapper());
+        return jdbcTemplate.query(selectAllSql, reservationRowMapper);
     }
 
     public void deleteById(Long id) {

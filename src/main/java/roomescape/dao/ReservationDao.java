@@ -32,7 +32,7 @@ public class ReservationDao {
     }
 
     public List<Reservation> getAllReservation() {
-        String sql = "SELECT r.id as id, r.name as name, r.date as date, t.id as timeId, t.start_at as startAt FROM reservation AS r JOIN reservation_time AS t ON reservation.time_id = reservation_time.id";
+        String sql = "SELECT r.id as id, r.name as name, r.date as date, t.id as timeId, t.start_at as startAt FROM reservation AS r JOIN reservation_time AS t ON r.time_id = t.id";
         return jdbcTemplate.query(sql, MAPPER);
     }
 

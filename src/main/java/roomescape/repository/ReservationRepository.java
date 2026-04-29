@@ -28,13 +28,15 @@ public class ReservationRepository {
     );
 
     public Reservation findById(long id) {
-        return jdbcTemplate.queryForObject("""
+        return jdbcTemplate.query("""
                         SELECT id, name, date, time 
                         FROM reservation 
                         WHERE id = ?
                    """,
                 reservationRowMapper,
-                id);
+                id).stream()
+                .findFirst()
+                .orElse(null);
     }
 
     public long save(Reservation reservation) {

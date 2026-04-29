@@ -29,10 +29,16 @@ public class ReservationService {
     }
 
     public void removeReservation(long id) {
-        reservations.remove((int) id - 1);
+        reservations.stream()
+                .filter(reservation -> reservation.id() == id)
+                .findAny()
+                .ifPresent(reservations::remove);
     }
 
     public Reservation findReservation(long reservationId) {
-        return reservations.get((int) reservationId - 1);
+        return reservations.stream()
+                .filter(reservation -> reservation.id() == reservationId)
+                .findAny()
+                .orElseThrow();
     }
 }

@@ -39,17 +39,17 @@
 ### 요구사항
 1단계 메모리 저장은 서버 재시작 시 예약 데이터가 모두 사라진다. 예약 CRUD를 H2 데이터베이스로 전환한다.
 
-- [ ] 의존성 추가하기
+- [x] 의존성 추가하기
 ```
 spring.h2.console.enabled=true
 spring.h2.console.path=/h2-console
 spring.datasource.url=jdbc:h2:mem:database
 ```
-- [ ] 테이블 스키마 생성
-- [ ] 구현 전환
+- [x] 테이블 스키마 생성
+- [x] JdbcTemplate 기반 구현 전환
   - 조회, 추가, 삭제 API를 모두 JdbcTemplate 기반으로 전환한다
   - 기존 `List<Reservation>`, `AtomicLong`은 제거한다
 
-- [ ] 데이터베이스_연동 테스트가 통과하는가?
-- [ ] DB_조회_API_전환 테스트가 통과하는가?
-- [ ] DB_추가_삭제_API_전환 테스트가 통과하는가?
+- [x] 데이터베이스_연동 테스트가 통과하는가?
+- [x] DB_조회_API_전환 테스트가 통과하는가?
+- [x] DB_추가_삭제_API_전환 테스트가 통과하는가?

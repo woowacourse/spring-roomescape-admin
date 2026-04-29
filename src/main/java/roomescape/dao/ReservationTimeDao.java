@@ -25,7 +25,7 @@ public class ReservationTimeDao {
             ps.setString(1, reservationTime.getStartAt());
             return ps;
         }, keyHolder);
-        return ReservationTime.withId(keyHolder.getKey().longValue(), reservationTime);
+        return new ReservationTime(keyHolder.getKey().longValue(), reservationTime.getStartAt());
     }
 
     public List<ReservationTime> select() {

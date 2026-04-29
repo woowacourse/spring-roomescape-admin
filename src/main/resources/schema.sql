@@ -1,3 +1,11 @@
+CREATE TABLE IF NOT EXISTS reservation_time
+(
+    id       BIGINT NOT NULL AUTO_INCREMENT,
+    start_at TIME   NOT NULL,
+
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE IF NOT EXISTS reservation
 (
     id      BIGINT       NOT NULL AUTO_INCREMENT,
@@ -7,12 +15,4 @@ CREATE TABLE IF NOT EXISTS reservation
 
     PRIMARY KEY (id),
     FOREIGN KEY (time_id) REFERENCES reservation_time (id)
-);
-
-CREATE TABLE IF NOT EXISTS reservation_time
-(
-    id       BIGINT NOT NULL AUTO_INCREMENT,
-    start_at TIME   NOT NULL,
-
-    PRIMARY KEY (id)
 );

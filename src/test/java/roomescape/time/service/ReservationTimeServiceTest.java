@@ -1,0 +1,80 @@
+package roomescape.time.service;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.time.LocalTime;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.time.dto.CreateReservationTimeRequest;
+import roomescape.time.dto.ReservationTimeResponse;
+import roomescape.time.repository.JdbcTemplateReservationTimeRepository;
+
+@JdbcTest
+class ReservationTimeServiceTest {
+    private ReservationTimeService reservationTimeService;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void setup() {
+        jdbcTemplate.update("DELETE FROM reservation_time");
+        jdbcTemplate.update("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
+
+        JdbcTemplateReservationTimeRepository reservationTimeRepository = new JdbcTemplateReservationTimeRepository(
+                jdbcTemplate);
+        this.reservationTimeService = new ReservationTimeService(reservationTimeRepository);
+
+        reservationTimeService.create(new CreateReservationTimeRequest(LocalTime.of(15, 40)));
+        reservationTimeService.create(new CreateReservationTimeRequest(LocalTime.of(16, 0)));
+    }
+
+    @Test
+    @DisplayName("모든 예약 시간 정보를 조회한다.")
+    void findAll() {
+        //given & when
+        List<ReservationTimeResponse> result = reservationTimeService.findAll();
+
+        //then
+        assertThat(result.size()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("예약 시간을 추가한다.")
+    void create() {
+        //given & when
+        reservationTimeService.create(new CreateReservationTimeRequest(LocalTime.of(12, 0)));
+
+        //then
+        assertThat(reservationTimeService.findAll().size()).isEqualTo(3);
+    }
+
+    @Test
+    @DisplayName("예약 시간을 삭제한다.")
+    void delete() {
+        //given
+        ReservationTimeResponse response = reservationTimeService.create(
+                new CreateReservationTimeRequest(LocalTime.of(12, 0)));
+        Long id = response.id();
+
+        //when
+        reservationTimeService.delete(id);
+
+        //then
+        assertThat(reservationTimeService.findAll().size()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 예약 시간 삭제 시 예외가 발생한다.")
+    void deleteNotExist() {
+        assertThatThrownBy(() -> reservationTimeService.delete(999L))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("존재하지 않는 예약입니다.");
+    }
+}

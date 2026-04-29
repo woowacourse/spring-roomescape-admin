@@ -1,4 +1,4 @@
-package roomescape.reservationTime.domain;
+package roomescape.time.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

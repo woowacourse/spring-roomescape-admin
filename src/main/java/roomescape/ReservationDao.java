@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ReservationDao {
+
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationDao(JdbcTemplate jdbcTemplate) {
@@ -32,7 +33,7 @@ public class ReservationDao {
     }
 
     public Long insertWithKeyHolder(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time) values (?, ?,?)";
+        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {

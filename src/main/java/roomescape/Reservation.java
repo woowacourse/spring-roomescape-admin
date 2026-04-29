@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Reservation {
+
     private final Long id;
     private final String name;
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -19,7 +20,7 @@ public class Reservation {
         this.time = time;
     }
 
-    public static Reservation withId(Long id, Reservation reservation){
+    public static Reservation withId(Long id, Reservation reservation) {
         return new Reservation(
                 id,
                 reservation.name,

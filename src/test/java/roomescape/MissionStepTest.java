@@ -120,6 +120,7 @@ public class MissionStepTest {
 
     @Test
     void 시간_관리_API() {
+        jdbcTemplate.update("DELETE FROM reservation_time;");
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 

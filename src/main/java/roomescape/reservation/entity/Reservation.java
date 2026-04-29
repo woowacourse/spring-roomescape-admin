@@ -10,15 +10,23 @@ public class Reservation {
     private final LocalDate date;
     private final ReservationTime time;
 
-    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
+    private Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public static Reservation create(String name, LocalDate date, ReservationTime time) {
+    public static Reservation createNew(String name, LocalDate date, ReservationTime time) {
         return new Reservation(null, name, date, time);
+    }
+
+    public static Reservation of(Long id, String name, LocalDate date, ReservationTime time) {
+        return new Reservation(id, name, date, time);
+    }
+
+    public Reservation withId(Long id) {
+        return new Reservation(id, this.name, this.date, this.time);
     }
 
     public Long getId() {
@@ -35,15 +43,6 @@ public class Reservation {
 
     public ReservationTime getTime() {
         return time;
-    }
-
-    public Reservation toEntity(Long id) {
-        return new Reservation(
-                id,
-                name,
-                date,
-                time
-        );
     }
 
 }

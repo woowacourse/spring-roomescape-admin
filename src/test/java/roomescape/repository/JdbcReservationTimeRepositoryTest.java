@@ -22,7 +22,7 @@ public class JdbcReservationTimeRepositoryTest {
 
     @BeforeEach
     void setup() {
-        ReservationTime nonIdReservationTime = ReservationTime.create(LocalTime.parse("10:00"));
+        ReservationTime nonIdReservationTime = ReservationTime.createNew(LocalTime.parse("10:00"));
         jdbcReservationTimeRepository.save(nonIdReservationTime);
     }
 
@@ -41,7 +41,7 @@ public class JdbcReservationTimeRepositoryTest {
     @DisplayName("예약 시간 저장")
     void reservationTime_save_test() {
         //given
-        ReservationTime nonIdReservationTime = ReservationTime.create(LocalTime.parse("11:00"));
+        ReservationTime nonIdReservationTime = ReservationTime.createNew(LocalTime.parse("11:00"));
 
         //when
         ReservationTime reservationTime = jdbcReservationTimeRepository.save(nonIdReservationTime);

@@ -25,7 +25,7 @@ public class ReservationService {
 
     public ReservationResponse save(ReservationRequest reservationRequest) {
         ReservationTime reservationTime = reservationTimeService.findById(reservationRequest.timeId());
-        Reservation reservation = Reservation.create(
+        Reservation reservation = Reservation.createNew(
                 reservationRequest.name(),
                 reservationRequest.date(),
                 reservationTime

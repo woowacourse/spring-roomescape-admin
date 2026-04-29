@@ -15,7 +15,7 @@ import roomescape.time.entity.ReservationTime;
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
 
     private static final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) ->
-            new ReservationTime(
+            ReservationTime.of(
                     resultSet.getLong("id"),
                     resultSet.getTime("start_at").toLocalTime()
             );
@@ -71,7 +71,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         }, keyHolder);
 
         Long id = keyHolder.getKey().longValue();
-        return reservationTime.toEntity(id);
+        return reservationTime.withId(id);
     }
 
 }

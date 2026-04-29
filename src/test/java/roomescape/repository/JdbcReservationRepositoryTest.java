@@ -28,9 +28,9 @@ public class JdbcReservationRepositoryTest {
 
     @BeforeEach
     void setup() {
-        ReservationTime nonIdReservationTime = ReservationTime.create(LocalTime.parse("10:00"));
+        ReservationTime nonIdReservationTime = ReservationTime.createNew(LocalTime.parse("10:00"));
         ReservationTime reservationTime = jdbcReservationTimeRepository.save(nonIdReservationTime);
-        Reservation reservation = Reservation.create("쿠다", LocalDate.parse("2023-08-06"), reservationTime);
+        Reservation reservation = Reservation.createNew("쿠다", LocalDate.parse("2023-08-06"), reservationTime);
 
         jdbcReservationRepository.save(reservation);
     }
@@ -46,7 +46,7 @@ public class JdbcReservationRepositoryTest {
                 .findFirst()
                 .orElseThrow();
 
-        Reservation reservation = Reservation.create(name, LocalDate.parse(date), reservationTime);
+        Reservation reservation = Reservation.createNew(name, LocalDate.parse(date), reservationTime);
         //when
         Reservation result = jdbcReservationRepository.save(reservation);
 

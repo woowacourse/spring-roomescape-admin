@@ -7,13 +7,19 @@ public class ReservationTime {
     private Long id;
     private final LocalTime startAt;
 
-    public ReservationTime(Long id, LocalTime startAt) {
+    private ReservationTime(Long id, LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
     }
 
-    public static ReservationTime create(LocalTime startAt) {
+    public static ReservationTime createNew(LocalTime startAt) {
         return new ReservationTime(null, startAt);
+    }
+
+    public static ReservationTime of(Long id, LocalTime startAt) { return  new ReservationTime(id, startAt); }
+
+    public ReservationTime withId(Long id) {
+        return new ReservationTime(id, startAt);
     }
 
     public Long getId() {
@@ -24,8 +30,5 @@ public class ReservationTime {
         return startAt;
     }
 
-    public ReservationTime toEntity(Long id) {
-        return new ReservationTime(id, startAt);
-    }
 
 }

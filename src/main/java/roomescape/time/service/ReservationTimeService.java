@@ -23,7 +23,7 @@ public class ReservationTimeService {
         if(existsByStartAt(reservationTimeRequest.startAt()))
             throw new IllegalArgumentException("[ERROR] 시간 중복 추가는 불가능합니다.");
 
-        ReservationTime reservationTime = ReservationTime.create(reservationTimeRequest.startAt());
+        ReservationTime reservationTime = ReservationTime.createNew(reservationTimeRequest.startAt());
         return ReservationTimeResponse.from(reservationTimeRepository.save(reservationTime));
     }
 

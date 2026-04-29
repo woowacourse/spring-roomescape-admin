@@ -27,7 +27,7 @@ public class ReservationTimeServiceTest {
 
     @BeforeEach
     void setup() {
-        ReservationTime nonIdReservationTime = ReservationTime.create(LocalTime.parse("10:00"));
+        ReservationTime nonIdReservationTime = ReservationTime.createNew(LocalTime.parse("10:00"));
         reservationTimeRepository.save(nonIdReservationTime);
     }
 

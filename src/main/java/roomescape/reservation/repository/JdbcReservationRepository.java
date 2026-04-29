@@ -15,12 +15,12 @@ import roomescape.time.entity.ReservationTime;
 public class JdbcReservationRepository implements ReservationRepository {
 
     private static final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
-        ReservationTime reservationTime = new ReservationTime(
+        ReservationTime reservationTime = ReservationTime.of(
                 resultSet.getLong("time_id"),
                 resultSet.getTime("start_at").toLocalTime()
         );
 
-        return new Reservation(
+        return Reservation.of(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getDate("date").toLocalDate(),
@@ -65,7 +65,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
         long id = keyHolder.getKey().longValue();
 
-        return reservation.toEntity(id);
+        return reservation.withId(id);
     }
 
     @Override

@@ -28,7 +28,7 @@ public class ReservationServiceTest {
     @DisplayName("예약 저장")
     void save_test() {
         // given
-        ReservationTime nonIdReservationTime = ReservationTime.create(LocalTime.parse("10:00"));
+        ReservationTime nonIdReservationTime = ReservationTime.createNew(LocalTime.parse("10:00"));
         ReservationTime reservationTime = reservationTimeRepository.save(nonIdReservationTime);
         ReservationRequest reservationRequest = new ReservationRequest("쿠다", LocalDate.parse("2023-08-06"), reservationTime.getId());
 

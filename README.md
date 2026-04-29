@@ -64,23 +64,23 @@ spring.datasource.url=jdbc:h2:mem:database
 정해진 시간 슬롯을 관리자가 선택해서 쓸 수 있도록 시간 관리 기능을 추가하고 예약과 시간을 연결한다.
 
 ### 시간 관리 기능 추가
-- [ ] reservation_time 테이블을 추가한다
-- [ ] 시간 추가
+- [x] reservation_time 테이블을 추가한다
+- [x] 시간 추가
   - 메서드/URL: `POST /step3/times`
   - 요청 본문: `{startAt}`
   - 응답: `{id, startAt}`
-- [ ] 시간 조회
+- [x] 시간 조회
   - 메서드/URL: `GET /step3/times`
   - 요청 본문: -
   - 응답: `[{id, startAt}, ...]`
-- [ ] 시간 삭제
+- [x] 시간 삭제
   - 메서드/URL: `DELETE /step3/times/{id}`
   - 요청 본문: -
   - 응답: `200 OK`
 
 ### 예약과 시간 연결
-- [ ] reservation 테이블의 `time` 컬럼을 `time_id`로 변경
+- [x] reservation 테이블의 `time` 컬럼을 `time_id`로 변경
   - 기존 테스트 깨지는 걸 방지하기 위해 reservation_v2로 생성
-- [ ] `Reservation` 클래스의 `time` 필드를 `ReservationTime` 객체로 변경
-- [ ] 예약 추가 본문: `time` -> `timeId`로 변경
-- [ ] 예약 조회 응답: `time`을 객체로 변경
+- [x] `Reservation` 클래스의 `time` 필드를 `ReservationTime` 객체로 변경
+- [x] 예약 추가 본문: `time` -> `timeId`로 변경
+- [x] 예약 조회 응답: `time`을 객체로 변경

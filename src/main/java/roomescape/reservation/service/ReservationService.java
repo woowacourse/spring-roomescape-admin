@@ -4,6 +4,9 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.dto.ReservationResponse;
+import roomescape.reservation.mapper.ReservationMapper;
 import roomescape.reservation.repository.ReservationRepository;
 
 @Service
@@ -13,5 +16,15 @@ public class ReservationService {
 
     public List<Reservation> getAllReservations() {
         return reservationRepository.getAllReservations();
+    }
+
+    public ReservationResponse addReservation(ReservationRequest reservationRequest) {
+        Reservation reservation = ReservationMapper.toEntity(reservationRequest);
+        Reservation createdReservation = reservationRepository.addReservation(reservation);
+        return ReservationMapper.toResponse(createdReservation);
+    }
+
+    public void deleteReservation(Long id) {
+        reservationRepository.deleteById(id);
     }
 }

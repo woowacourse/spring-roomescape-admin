@@ -36,7 +36,7 @@ public class ReservationTimeService {
 
     @Transactional
     public void deleteById(long id) {
-        if(!reservationTimeRepository.existsById(id)){
+        if (!reservationTimeRepository.existsById(id)) {
             throw new IllegalArgumentException("삭제할 예약 시간이 존재하지 않습니다.");
         }
         reservationTimeRepository.deleteById(id);

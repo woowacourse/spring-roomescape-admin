@@ -26,9 +26,13 @@ public class MissionStepTest {
 
     @LocalServerPort
     int port;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private ReservationController reservationController;
 
     @BeforeEach
-    void setup(){
+    void setup() {
         RestAssured.port = port;
     }
 
@@ -84,9 +88,6 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(0));
     }
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Test
     void 데이터베이스_연동() {
@@ -154,9 +155,6 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(1));
     }
-
-    @Autowired
-    private ReservationController reservationController;
 
     @Test
     void 계층화_리팩터링() {

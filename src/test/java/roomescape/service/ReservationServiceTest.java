@@ -8,9 +8,6 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 import roomescape.reservation.controller.dto.ReservationRequest;
 import roomescape.reservation.controller.dto.ReservationResponse;
 import roomescape.reservation.service.ReservationService;
@@ -18,8 +15,6 @@ import roomescape.service.stub.StubReservationRepository;
 import roomescape.service.stub.StubReservationTimeRepository;
 import roomescape.time.controller.dto.ReservationTimeRequest;
 import roomescape.time.controller.dto.ReservationTimeResponse;
-import roomescape.time.entity.ReservationTime;
-import roomescape.time.repository.ReservationTimeRepository;
 import roomescape.time.service.ReservationTimeService;
 
 public class ReservationServiceTest {
@@ -28,9 +23,9 @@ public class ReservationServiceTest {
     private ReservationTimeService reservationTimeService;
 
     @BeforeEach
-    void setup(){
+    void setup() {
         reservationTimeService = new ReservationTimeService(new StubReservationTimeRepository());
-        reservationService = new ReservationService(new StubReservationRepository(),reservationTimeService);
+        reservationService = new ReservationService(new StubReservationRepository(), reservationTimeService);
     }
 
     @Test

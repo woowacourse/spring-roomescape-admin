@@ -20,7 +20,7 @@ public class ReservationRequestValidationTest {
     int port;
 
     @BeforeEach
-    void setup(){
+    void setup() {
         RestAssured.port = port;
     }
 

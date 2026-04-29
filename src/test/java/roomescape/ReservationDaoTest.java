@@ -16,7 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 class ReservationDaoTest {
 
-    private ReservationDao dao;
+    private JdbcTemplate jdbcTemplate;
+    private ReservationDao reservationDao;
 
     @BeforeEach
     void setup() {
@@ -26,52 +27,67 @@ class ReservationDaoTest {
         dataSource.setUsername("sa");
         dataSource.setPassword("");
 
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.execute("DROP TABLE IF EXISTS reservation");
 
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
         populator.addScript(new ClassPathResource("schema.sql"));
         populator.execute(dataSource);
 
-        this.dao = new ReservationDao(jdbcTemplate);
+        this.reservationDao = new ReservationDao(jdbcTemplate);
+    }
+
+    private ReservationTime findTimeByStartAt(String startAt) {
+        String sql = "SELECT id, start_at FROM reservation_time WHERE start_at = ?;";
+        return jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) -> {
+                    ReservationTime reservationTime = new ReservationTime(
+                            resultSet.getLong("id"),
+                            resultSet.getString("start_at"));
+                    return reservationTime;
+                }, startAt);
     }
 
     @Test
     void 예약_추가_테스트() {
         // given
-        Reservation reservation = new Reservation(null, "브라운", "2023-08-05", "15:40");
+        ReservationTime time = findTimeByStartAt("15:40");
+        Reservation reservation = new Reservation(null, "브라운", "2023-08-05", time);
 
         // when
-        Long id = dao.insert(reservation);
+        Long id = reservationDao.insert(reservation);
 
         // then
-        List<Reservation> reservations = dao.findAll();
-        Reservation savedReservation = dao.findBy(id);
+        List<Reservation> reservations = reservationDao.findAll();
+        Reservation savedReservation = reservationDao.findBy(id);
         assertAll(
                 () -> assertThat(id).isNotNull(),
                 () -> assertThat(reservations).hasSize(1),
                 () -> assertThat(savedReservation.getName()).isEqualTo(reservation.getName()),
                 () -> assertThat(savedReservation.getDate()).isEqualTo(reservation.getDate()),
-                () -> assertThat(savedReservation.getTime()).isEqualTo(reservation.getTime()));
+                () -> assertThat(savedReservation.getTime().getStartAt()).isEqualTo(reservation.getTime().getStartAt()));
     }
 
     @Test
     void 예약_삭제_테스트() {
         // given
-        Reservation reservation1 = new Reservation(null, "브라운", "2023-08-05", "15:40");
-        Reservation reservation2 = new Reservation(null, "구구", "2023-08-06", "12:00");
-        Long id1 = dao.insert(reservation1);
-        Long id2 = dao.insert(reservation2);
+        ReservationTime time1 = findTimeByStartAt("15:40");
+        ReservationTime time2 = findTimeByStartAt("12:00");
+        Reservation reservation1 = new Reservation(null, "브라운", "2023-08-05", time1);
+        Reservation reservation2 = new Reservation(null, "구구", "2023-08-06", time2);
+        Long id1 = reservationDao.insert(reservation1);
+        Long id2 = reservationDao.insert(reservation2);
 
         // when
-        int deletedCount = dao.delete(id1);
+        int deletedCount = reservationDao.delete(id1);
 
         // then
-        List<Reservation> reservations = dao.findAll();
+        List<Reservation> reservations = reservationDao.findAll();
         assertAll(
                 () -> assertThat(deletedCount).isEqualTo(1),
                 () -> assertThat(reservations).hasSize(1),
-                () -> assertThatThrownBy(() -> dao.findBy(id1))
+                () -> assertThatThrownBy(() -> reservationDao.findBy(id1))
                         .isInstanceOf(EmptyResultDataAccessException.class));
     }
 }

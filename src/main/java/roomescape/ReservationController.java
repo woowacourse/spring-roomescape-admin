@@ -10,9 +10,11 @@ import java.util.List;
 public class ReservationController {
 
     private ReservationDao reservationDao;
+    private ReservationTimeDao reservationTimeDao;
 
-    public ReservationController(ReservationDao reservationDao) {
+    public ReservationController(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
         this.reservationDao = reservationDao;
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     @GetMapping("/reservations")
@@ -21,7 +23,13 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
+    public ResponseEntity<Reservation> create(@RequestBody ReservationRequest request) {
+        ReservationTime time = reservationTimeDao.findBy(request.getTimeId());
+        Reservation reservation = new Reservation(
+                null,
+                request.getName(),
+                request.getDate(),
+                time);
         Long id = reservationDao.insert(reservation);
         return ResponseEntity.ok().body(reservationDao.findBy(id));
     }

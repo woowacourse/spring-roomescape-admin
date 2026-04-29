@@ -32,12 +32,12 @@ public class ReservationController {
     public List<ReservationResponse> findAll() {
         return jdbcTemplate.query(
                 "SELECT id, name, date, time FROM reservation ORDER BY id",
-                (rs, rowNum) -> {
+                (resultSet, rowNum) -> {
                     Reservation reservation = new Reservation(
-                            rs.getLong("id"),
-                            new Name(rs.getString("name")),
-                            new ReservationDate(rs.getString("date")),
-                            new ReservationTime(rs.getString("time"))
+                            resultSet.getLong("id"),
+                            new Name(resultSet.getString("name")),
+                            new ReservationDate(resultSet.getString("date")),
+                            new ReservationTime(resultSet.getString("time"))
                     );
 
                     return ReservationResponse.from(reservation);
@@ -62,7 +62,13 @@ public class ReservationController {
             return preparedStatement;
         }, keyholder);
 
-        return keyholder.getKey().longValue();
+        Number key = keyholder.getKey();
+
+        if (key == null) {
+            throw new IllegalStateException("[ERROR] 예약 ID가 생성되지 않았습니다.");
+        }
+
+        return key.longValue();
     }
 
     @DeleteMapping("/reservations/{id}")

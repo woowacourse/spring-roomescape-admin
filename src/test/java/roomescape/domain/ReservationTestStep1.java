@@ -7,7 +7,7 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class ReservationTest {
+class ReservationTestStep1 {
 
     @Test
     void 예약_추가_시_예약이_생성된다() {

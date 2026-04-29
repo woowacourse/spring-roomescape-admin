@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import roomescape.dao.ReservationDAO;
 import roomescape.domain.Reservation;
 
 @Controller
@@ -22,13 +24,14 @@ public class ReservationController {
     private List<Reservation> reservations = new ArrayList<>();
     private AtomicLong index = new AtomicLong(INITIAL_VALUE);
 
+    @Autowired
+    private ReservationDAO reservationDAO;
+
     @ResponseBody
     @PostMapping("/reservations")
-    public Reservation create(@RequestBody Reservation reservation) {
-        Reservation createdReservation = Reservation.toEntity(reservation, index.getAndIncrement());
-        reservations.add(createdReservation);
-
-        return createdReservation;
+    public ResponseEntity<Void> create(@RequestBody Reservation reservation) {
+        reservationDAO.insert(reservation);
+        return ResponseEntity.ok().build();
     }
 
     @ResponseBody

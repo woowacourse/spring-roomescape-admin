@@ -14,39 +14,41 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationException(
+    public ResponseEntity<ErrorResponse> handleValidationException(
             MethodArgumentNotValidException e
     ) {
-        Map<String, String> errors = new HashMap<>();
+        Map<String, Object> errors = new HashMap<>();
 
         e.getBindingResult().getFieldErrors()
                 .forEach(error ->
                         errors.put(error.getField(), error.getDefaultMessage())
                 );
 
-        return ResponseEntity.badRequest().body(errors);
+        return ResponseEntity
+                .badRequest()
+                .body(ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), e.getMessage(), errors));
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorMessage> handleRuntimeException(
-            RuntimeException e
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<ErrorResponse> handleRuntimeException(
+            BaseException e
     ) {
         log.warn("IllegalArgumentException 발생: {}", e.getMessage(), e);
 
         return ResponseEntity
                 .badRequest()
-                .body(new ErrorMessage(e.getMessage()));
+                .body(ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), e.getMessage(), null));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorMessage> handleException(
+    public ResponseEntity<ErrorResponse> handleException(
             Exception e
     ) {
         log.error("Unexpected Exception 발생", e);
 
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorMessage("서버 에러가 발생했습니다."));
+                .body(ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), null));
     }
 
 }

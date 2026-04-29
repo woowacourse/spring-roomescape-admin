@@ -18,7 +18,7 @@ public record ReservationRequest(
 
     private static void validateNotBlank(String target, String fieldName) {
         if (target == null || target.isBlank()) {
-            throw new IllegalArgumentException(fieldName + "은(는) 필수값이며 공백일 수 없습니다.");
+            throw new IllegalArgumentException(fieldName + "은(는) 요청 시 필수값이며 공백일 수 없습니다.");
         }
     }
 

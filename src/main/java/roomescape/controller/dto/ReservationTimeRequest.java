@@ -14,7 +14,7 @@ public record ReservationTimeRequest(
 
     private static void validateStartAtNotBlank(String startAt) {
         if (startAt == null || startAt.isBlank()) {
-            throw new IllegalArgumentException("startAt은 필수값이며 공백일 수 없습니다.");
+            throw new IllegalArgumentException("startAt은 요청 시 필수값이며 공백일 수 없습니다.");
         }
     }
 

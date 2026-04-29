@@ -24,15 +24,16 @@ class JdbcReservationRepositoryTest {
     @Test
     void 예약_저장_레포지토리_테스트() {
         Reservation savedReservation = repository.save("브라운", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40));
+        Long id = jdbcTemplate.queryForObject("SELECT id FROM reservation LIMIT 1", Long.class);
 
-        assertThat(savedReservation.getId()).isEqualTo(1L);
+        assertThat(savedReservation.getId()).isEqualTo(id);
         assertThat(savedReservation.getName()).isEqualTo("브라운");
         assertThat(savedReservation.getDate()).isEqualTo(LocalDate.of(2023, 8, 5));
         assertThat(savedReservation.getTime()).isEqualTo(LocalTime.of(15, 40));
     }
 
     @Test
-    void 전체_예약을_조회한다() {
+    void 전체_예약_조회_레포지토리_테스트() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05",
                 "15:40");
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "코니", "2023-08-05", "15:40");
@@ -49,5 +50,17 @@ class JdbcReservationRepositoryTest {
         assertThat(reservations)
                 .extracting(Reservation::getTime)
                 .containsExactly(LocalTime.of(15, 40), LocalTime.of(15, 40));
+    }
+
+    @Test
+    void 예약_삭제_레포지토리_테스트(){
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05",
+                "15:40");
+        Long id = jdbcTemplate.queryForObject("SELECT id FROM reservation LIMIT 1", Long.class);
+
+        repository.deleteById(id);
+        int rowCount = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM reservation", Integer.class);
+
+        assertThat(rowCount).isEqualTo(0);
     }
 }

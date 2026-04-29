@@ -20,12 +20,12 @@ public class ReservationTimeService {
     public ReservationTimeResponse save(ReservationTimeRequest reservationTimeRequest) {
         ReservationTime reservationTime = ReservationTime.create(
                 null,
-                DateAndTimeConverter.parseToLocalDateTime(reservationTimeRequest.time())
+                DateAndTimeConverter.parseToLocalDateTime(reservationTimeRequest.startAt())
         );
 
         return new ReservationTimeResponse(
                 reservationTimeRepository.save(reservationTime),
-                reservationTimeRequest.time()
+                reservationTimeRequest.startAt()
         );
     }
 

@@ -2,6 +2,6 @@ package roomescape.dto;
 
 public record ReservationTimeResponse(
         Long id,
-        String time
+        String startAt
 ) {
 }

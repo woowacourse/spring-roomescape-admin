@@ -16,8 +16,8 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest createReservationRequest) {
-        return ResponseEntity.ok(reservationService.save(createReservationRequest));
+    public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
+        return ResponseEntity.ok(reservationService.save(reservationRequest));
     }
 
     @GetMapping

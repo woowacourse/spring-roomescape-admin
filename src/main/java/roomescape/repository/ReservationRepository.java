@@ -22,7 +22,7 @@ public class ReservationRepository {
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     DateAndTimeConverter.parseToDate(resultSet.getString("date")),
-                    DateAndTimeConverter.parseToTime(resultSet.getString("time"))
+                    DateAndTimeConverter.parseToTime(resultSet.getString("startAt"))
             );
 
     public Long save(Reservation reservation) {

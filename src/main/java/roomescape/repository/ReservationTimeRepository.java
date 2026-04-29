@@ -20,7 +20,7 @@ public class ReservationTimeRepository {
     private final RowMapper<ReservationTime> reservationTimeRowMapper =
             (resultSet, rowNumber) -> ReservationTime.create(
                     resultSet.getLong("id"),
-                    DateAndTimeConverter.parseToLocalDateTime(resultSet.getString("time"))
+                    DateAndTimeConverter.parseToLocalDateTime(resultSet.getString("start_at"))
             );
 
     public Long save(ReservationTime reservationTime) {
@@ -28,7 +28,7 @@ public class ReservationTimeRepository {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(insertSql);
+            PreparedStatement preparedStatement = connection.prepareStatement(insertSql,new String[]{"id"});
             preparedStatement.setString(1, DateAndTimeConverter.formatDateAndTime(reservationTime.getStartAt()));
 
             return preparedStatement;
@@ -38,7 +38,7 @@ public class ReservationTimeRepository {
     }
 
     public List<ReservationTime> getAll() {
-        String selectAllSql = "SELECT id, time FROM reservation_time";
+        String selectAllSql = "SELECT id, start_at FROM reservation_time";
 
         return jdbcTemplate.query(selectAllSql, reservationTimeRowMapper);
     }

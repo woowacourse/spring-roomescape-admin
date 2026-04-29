@@ -9,50 +9,33 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.servcie.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationApiController {
 
-    private final ReservationRepository reservationRepository;
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationService reservationService;
 
-    public ReservationApiController(
-            ReservationRepository reservationRepository,
-            ReservationTimeRepository reservationTimeRepository
-    ) {
-        this.reservationRepository = reservationRepository;
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationApiController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> reserve(@RequestBody ReservationRequest request) {
-        ReservationTime time = reservationTimeRepository.findById(request.timeId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간 정보입니다."));
-
-        Reservation reservation = new Reservation(request.name(), request.date(), time);
-        Reservation saved = reservationRepository.save(reservation);
-        return ResponseEntity.ok(ReservationResponse.from(saved));
+        return ResponseEntity.ok(reservationService.reserve(request));
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> getAllReservations() {
-        List<ReservationResponse> response = reservationRepository.findAll()
-                .stream()
-                .map(ReservationResponse::from)
-                .toList();
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(reservationService.getAllReservations());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> cancelReservation(@PathVariable Long id) {
-        reservationRepository.delete(id);
+        reservationService.cancelAllReservation(id);
         return ResponseEntity.ok().build();
     }
 }

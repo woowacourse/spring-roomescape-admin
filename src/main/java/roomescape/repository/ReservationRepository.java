@@ -1,41 +1,27 @@
 package roomescape.repository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.stereotype.Repository;
-import roomescape.exception.ReservationNotFoundException;
+import roomescape.dao.ReservationDao;
 import roomescape.model.Reservation;
 
 @Repository
 public class ReservationRepository {
-    private final List<Reservation> reservations;
-    private final AtomicLong idGenerator = new AtomicLong();
+    private final ReservationDao reservationDao;
 
-    public ReservationRepository() {
-        this.reservations = new ArrayList<>();
-        this.idGenerator.set(1L);
+    public ReservationRepository(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
     }
 
     public List<Reservation> findAll() {
-        return reservations;
+        return reservationDao.findAll();
     }
 
     public Reservation save(String name, String date, String time) {
-        Reservation reservation = new Reservation(idGenerator.getAndIncrement(), name, date, time);
-        reservations.add(reservation);
-        return reservation;
+        return reservationDao.save(name, date, time);
     }
 
     public void delete(Long id) {
-        reservations.remove(findById(id));
+        reservationDao.delete(id);
     }
-
-    private Reservation findById(Long id) {
-        return reservations.stream()
-                .filter(reservation -> reservation.id().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new ReservationNotFoundException(id));
-    }
-
 }

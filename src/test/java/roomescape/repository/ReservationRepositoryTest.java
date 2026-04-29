@@ -1,21 +1,55 @@
 package roomescape.repository;
 
-import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import roomescape.exception.ReservationNotFoundException;
-import roomescape.model.Reservation;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Properties;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import roomescape.dao.ReservationDao;
+import roomescape.exception.ReservationNotFoundException;
+import roomescape.model.Reservation;
+
 class ReservationRepositoryTest {
 
+    private static final String TEST_PROPERTIES = "application-test.properties";
+
     private ReservationRepository reservationRepository;
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
-    void setUp() {
-        reservationRepository = new ReservationRepository();
+    void setup() {
+        Properties properties = loadTestProperties();
+
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(properties.getProperty("spring.datasource.driver-class-name"));
+        dataSource.setUrl(properties.getProperty("spring.datasource.url"));
+        dataSource.setUsername(properties.getProperty("spring.datasource.username"));
+        dataSource.setPassword(properties.getProperty("spring.datasource.password"));
+
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        ReservationDao reservationDao = new ReservationDao(jdbcTemplate);
+        reservationRepository = new ReservationRepository(reservationDao);
+
+        jdbcTemplate.execute("RUNSCRIPT FROM 'classpath:reset-test.sql'");
+    }
+
+    private Properties loadTestProperties() {
+        Properties properties = new Properties();
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(TEST_PROPERTIES)) {
+            if (inputStream == null) {
+                throw new IllegalStateException("Test properties not found: " + TEST_PROPERTIES);
+            }
+            properties.load(inputStream);
+            return properties;
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to load test properties: " + TEST_PROPERTIES, e);
+        }
     }
 
     @Test

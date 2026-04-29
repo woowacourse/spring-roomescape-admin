@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.dao.QueryingDAO;
 import roomescape.dao.UpdatingDAO;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ReservationCreateResponse;
+import roomescape.dto.TimeCreateRequest;
+import roomescape.dto.TimeCreateResponse;
 
 @Controller
 public class ReservationController {
@@ -29,11 +32,13 @@ public class ReservationController {
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> read() {
         QueryingDAO dao = new QueryingDAO(jdbcTemplate);
-        return ResponseEntity.ok(dao.findAllCustomers());
+        return ResponseEntity.ok(dao.findAllReservations());
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<ReservationCreateResponse> create(@RequestBody ReservationCreateRequest request) {
+    public ResponseEntity<ReservationCreateResponse> create(
+            @RequestBody ReservationCreateRequest request
+    ) {
         UpdatingDAO dao = new UpdatingDAO(jdbcTemplate);
         Reservation newReservation = new Reservation(request.name(), request.date(), request.time());
         Long id = dao.insertWithKeyHolder(newReservation);
@@ -50,5 +55,31 @@ public class ReservationController {
         UpdatingDAO dao = new UpdatingDAO(jdbcTemplate);
         dao.delete(Long.valueOf(id));
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/times")
+    public ResponseEntity<TimeCreateResponse> createTime(
+            @RequestBody TimeCreateRequest request
+    ){
+        ReservationTime reservationTime = new ReservationTime(request.startAt());
+        UpdatingDAO dao = new UpdatingDAO(jdbcTemplate);
+        Long id = dao.insertWithKeyHolder(reservationTime);
+        return ResponseEntity.ok(new TimeCreateResponse(id,reservationTime.getStartAt()));
+    }
+
+    @GetMapping("/times")
+    public ResponseEntity<List<ReservationTime>> readAll() {
+        QueryingDAO dao = new QueryingDAO(jdbcTemplate);
+        return ResponseEntity.ok(dao.findAllTimes());
+
+    }
+
+    @DeleteMapping("/times/{id}")
+    public ResponseEntity<Void> deleteTime(
+            @PathVariable("id") Long id
+    ) {
+        UpdatingDAO dao = new UpdatingDAO(jdbcTemplate);
+        dao.deleteTime(Long.valueOf(id));
+        return  ResponseEntity.ok().build();
     }
 }

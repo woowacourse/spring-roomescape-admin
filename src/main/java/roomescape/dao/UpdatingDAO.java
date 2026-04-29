@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class UpdatingDAO {
@@ -32,8 +33,18 @@ public class UpdatingDAO {
         jdbcTemplate.update(sql, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
+    public void insert(ReservationTime reservationTime) {
+        String sql = "insert into reservation_time (start_at) values (?)";
+        jdbcTemplate.update(sql, reservationTime.getStartAt());
+    }
+
     public int delete(Long id) {
         String sql = "delete from reservation where id = ?";
+        return jdbcTemplate.update(sql, Long.valueOf(id));
+    }
+
+    public int deleteTime(Long id) {
+        String sql = "delete from reservation_time where id = ?";
         return jdbcTemplate.update(sql, Long.valueOf(id));
     }
 
@@ -51,7 +62,20 @@ public class UpdatingDAO {
             return ps;
         }, keyHolder);
 
-        Long id = keyHolder.getKey().longValue();
+        return keyHolder.getKey().longValue();
+    }
+
+    public Long insertWithKeyHolder(ReservationTime reservationTime) {
+        String sql = "insert into reservation_time (start_at) values (?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    "insert into reservation_time (start_at) values (?)",
+                    new String[]{"id"});
+            ps.setString(1, reservationTime.getStartAt());
+            return ps;
+        }, keyHolder);
         return keyHolder.getKey().longValue();
     }
 }

@@ -10,6 +10,10 @@ public class Reservation {
     private LocalDate date;
     private LocalTime time;
 
+
+    public Reservation() {
+    }
+    
     public Reservation(Long id, String name, LocalDate date, LocalTime time) {
         this.id = id;
         this.name = name;
@@ -23,8 +27,12 @@ public class Reservation {
         this.time = time;
     }
 
-    public Reservation toEntity(Reservation reservation, Long id) {
+    public static Reservation toEntity(Reservation reservation, Long id) {
         return new Reservation(id, reservation.name, reservation.date, reservation.time);
+    }
+
+    public Long getId() {
+        return id;
     }
 
 }

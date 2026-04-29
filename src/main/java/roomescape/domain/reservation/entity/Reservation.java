@@ -1,7 +1,6 @@
 package roomescape.domain.reservation.entity;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,5 +16,5 @@ public class Reservation {
 
     private LocalDate date;
 
-    private LocalTime time;
+    private ReservationTime time;
 }

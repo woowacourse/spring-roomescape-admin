@@ -1,21 +1,11 @@
 package roomescape.domain.reservation.response;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import roomescape.domain.reservation.entity.Reservation;
 
 public record ReservationResponse(
         Long id,
         String name,
         LocalDate date,
-        LocalTime time
+        ReservationTimeResponse time
 ) {
-    public static ReservationResponse from(Reservation reservation) {
-        return new ReservationResponse(
-                reservation.getId(),
-                reservation.getName(),
-                reservation.getDate(),
-                reservation.getTime()
-        );
-    }
 }

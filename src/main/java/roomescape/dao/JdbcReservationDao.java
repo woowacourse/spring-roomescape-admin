@@ -28,7 +28,13 @@ public class JdbcReservationDao implements ReservationDao{
 
     @Override
     public List<Reservation> selectAll() {
-        return List.of();
+        String sql = "select * from reservation";
+        return jdbcTemplate.query(sql, (resultSet, rowNum) -> new Reservation(
+                resultSet.getLong("id"),
+                resultSet.getString("name"),
+                resultSet.getDate("date").toLocalDate(),
+                resultSet.getTime("time").toLocalTime()
+        ));
     }
 
     @Override

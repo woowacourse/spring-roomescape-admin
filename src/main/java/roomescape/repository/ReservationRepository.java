@@ -24,7 +24,8 @@ public class ReservationRepository {
     }
 
     public Reservation create(Reservation reservation) {
-        String createSql = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
+        String createSql = "INSERT INTO reservation(name, date, time_id)"
+                + " VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -44,14 +45,16 @@ public class ReservationRepository {
 
     public List<Reservation> findAll() {
         String findSql = "SELECT r.*, rt.start_at"
-                + " FROM reservation r JOIN reservation_time rt"
+                + " FROM reservation r"
+                + " JOIN reservation_time rt"
                 + " ON r.time_id = rt.id";
 
         return jdbcTemplate.query(findSql, reservationRowMapper());
     }
 
     public void delete(long id) {
-        String deleteSql = "DELETE FROM reservation WHERE id = ?";
+        String deleteSql = "DELETE FROM reservation"
+                + " WHERE id = ?";
 
         int updatedRows = jdbcTemplate.update(deleteSql, id);
         if (updatedRows < 1) {

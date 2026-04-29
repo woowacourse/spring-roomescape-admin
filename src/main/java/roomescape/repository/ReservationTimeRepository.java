@@ -38,13 +38,16 @@ public class ReservationTimeRepository {
     }
 
     public List<ReservationTime> findAll() {
-        String findSql = "SELECT * FROM reservation_time";
+        String findSql = "SELECT *"
+                + " FROM reservation_time";
 
         return jdbcTemplate.query(findSql, reservationTimeRowMapper());
     }
 
     public ReservationTime findById(long id) {
-        String findSql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+        String findSql = "SELECT id, start_at"
+                + " FROM reservation_time"
+                + " WHERE id = ?";
 
         return jdbcTemplate.queryForObject(
                 findSql,
@@ -54,7 +57,8 @@ public class ReservationTimeRepository {
     }
 
     public void delete(long id) {
-        String deleteSql = "DELETE FROM reservation_time WHERE id = ?";
+        String deleteSql = "DELETE FROM reservation_time"
+                + " WHERE id = ?";
 
         int deletedRows = jdbcTemplate.update(deleteSql, id);
         if (deletedRows < 1) {

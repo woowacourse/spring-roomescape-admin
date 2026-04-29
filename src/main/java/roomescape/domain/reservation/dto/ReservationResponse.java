@@ -7,7 +7,7 @@ public record ReservationResponse(
     Long id,
     String name,
     LocalDate date,
-    ReservationsTimeResponse time
+    ReservationTimePayload time
 ) {
 
     public static ReservationResponse from(Reservation reservation) {
@@ -15,7 +15,7 @@ public record ReservationResponse(
             reservation.getId(),
             reservation.getName(),
             reservation.getDate(),
-            ReservationsTimeResponse.from(reservation.getTime())
+            ReservationTimePayload.from(reservation.getTime())
         );
     }
 }

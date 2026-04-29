@@ -72,7 +72,7 @@ public class ReservationRepository {
             return Reservation.retrieve(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
-                    resultSet.getObject("date", LocalDate.class),
+                    resultSet.getString("date"),
                     ReservationTime.retrieve(timeId, startAt)
             );
         };

@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.Test;
 import roomescape.reservation.Reservation;
 import roomescape.reservationTime.ReservationTime;
+import roomescape.reservationTime.dto.ReservationTimeResponse;
 
 class ReservationResponseTest {
 
@@ -20,7 +21,7 @@ class ReservationResponseTest {
         assertThat(response.id()).isEqualTo(1L);
         assertThat(response.name()).isEqualTo("브라운");
         assertThat(response.date()).isEqualTo(LocalDate.of(2023, 8, 5));
-        assertThat(response.time()).isEqualTo(time);
+        assertThat(response.time()).isEqualTo(ReservationTimeResponse.from(time));
     }
 
     @Test
@@ -33,6 +34,6 @@ class ReservationResponseTest {
         assertThat(response.id()).isEqualTo(reservation.getId());
         assertThat(response.name()).isEqualTo(reservation.getName());
         assertThat(response.date()).isEqualTo(reservation.getDate());
-        assertThat(response.time()).isEqualTo(reservation.getTime());
+        assertThat(response.time()).isEqualTo(ReservationTimeResponse.from(reservation.getTime()));
     }
 }

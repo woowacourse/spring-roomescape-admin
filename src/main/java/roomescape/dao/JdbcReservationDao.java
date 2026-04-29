@@ -6,6 +6,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.exception.ErrorCode;
 import roomescape.exception.PersistenceException;
 import roomescape.exception.ReservationException;
@@ -16,12 +17,19 @@ import java.util.List;
 @Repository
 public class JdbcReservationDao implements ReservationDao {
     private static final String FIND_ALL_SQL = """
-            SELECT *
-            FROM reservation
+            SELECT
+                r.id AS reservation_id,
+                r.name,
+                r.date,
+                t.id AS time_id,
+                t.start_at
+            FROM reservation r
+            INNER JOIN reservation_time t
+                ON r.time_id = t.id
             """;
 
     private static final String INSERT_SQL = """
-            INSERT INTO reservation (name, date, time)
+            INSERT INTO reservation (name, date, time_id)
             VALUES (?, ?, ?)
             """;
 
@@ -30,13 +38,19 @@ public class JdbcReservationDao implements ReservationDao {
             WHERE id = ?
             """;
 
-    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) ->
-            new Reservation(
-                    resultSet.getLong("id"),
-                    resultSet.getString("name"),
-                    resultSet.getString("date"),
-                    resultSet.getString("time")
-            );
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
+        ReservationTime reservationTime = new ReservationTime(
+                resultSet.getLong("time_id"),
+                resultSet.getString("start_at")
+        );
+
+        return new Reservation(
+                resultSet.getLong("reservation_id"),
+                resultSet.getString("name"),
+                resultSet.getString("date"),
+                reservationTime
+        );
+    };
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -50,7 +64,7 @@ public class JdbcReservationDao implements ReservationDao {
     }
 
     @Override
-    public Reservation create(String name, String date, String time) {
+    public Reservation create(String name, String date, ReservationTime time) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         int rowCount = insert(name, date, time, keyHolder);
@@ -69,7 +83,7 @@ public class JdbcReservationDao implements ReservationDao {
         }
     }
 
-    private int insert(String name, String date, String time, KeyHolder keyHolder) {
+    private int insert(String name, String date, ReservationTime time, KeyHolder keyHolder) {
         return jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     INSERT_SQL,
@@ -77,7 +91,7 @@ public class JdbcReservationDao implements ReservationDao {
             );
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, date);
-            preparedStatement.setString(3, time);
+            preparedStatement.setLong(3, time.getId());
             return preparedStatement;
         }, keyHolder);
     }

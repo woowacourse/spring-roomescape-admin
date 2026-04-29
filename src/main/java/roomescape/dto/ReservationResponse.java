@@ -1,4 +1,4 @@
 package roomescape.dto;
 
-public record ReservationResponse(String name, String date, String time) {
+public record ReservationResponse(long id, String name, String date, String time) {
 }

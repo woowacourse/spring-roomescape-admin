@@ -11,27 +11,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.Reservation;
+import roomescape.dto.ReservationRequest;
+import roomescape.service.ReservationService;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private List<Reservation> reservations = new ArrayList<>();
-    private AtomicLong index = new AtomicLong(1);
+    private final ReservationService reservationService;
+
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     @GetMapping
     public List<Reservation> reservations() {
-        return reservations;
+        return reservationService.allReservations();
     }
 
     @PostMapping
-    public Reservation createReservation(@RequestBody Reservation reservation) {
-        reservations.add(reservation);
-        return reservation;
+    public void newReservation(@RequestBody ReservationRequest reservationRequest) {
+        reservationService.saveReservation(reservationRequest);
     }
 
     @DeleteMapping("/{id}")
     public void deleteReservation(@PathVariable long id) {
-        reservations.remove((int)id);
+        reservationService.removeReservation(id);
     }
 }

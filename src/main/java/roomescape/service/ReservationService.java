@@ -15,16 +15,16 @@ public class ReservationService {
         this.reservationDAO = reservationDAO;
     }
 
-    public List<Reservation> findAllReservations(){
+    public List<Reservation> findAllReservations() {
         return reservationDAO.findAllReservations();
     }
 
-    public Reservation create(ReservationRequest reservationRequest){
+    public Reservation create(ReservationRequest reservationRequest) {
         Long id = reservationDAO.insertWithKeyHolder(reservationRequest);
         return reservationDAO.findReservationById(id);
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         reservationDAO.delete(id);
     }
 }

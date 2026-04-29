@@ -29,7 +29,7 @@ public class Reservation {
         return time;
     }
 
-    public Long getTimeId(){
+    public Long getTimeId() {
         return time.getId();
     }
 }

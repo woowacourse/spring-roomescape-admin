@@ -20,43 +20,44 @@ import roomescape.service.command.ReservationTimeCreateCommand;
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private final ReservationTimeService reservationTimeService;
-    private final ReservationTimeMapper reservationTimeMapper;
+    private final ReservationTimeService service;
+    private final ReservationTimeMapper mapper;
 
     public ReservationTimeController(
-            ReservationTimeService reservationTimeService,
-            ReservationTimeMapper reservationTimeMapper
+            ReservationTimeService service,
+            ReservationTimeMapper mapper
     ) {
-        this.reservationTimeService = reservationTimeService;
-        this.reservationTimeMapper = reservationTimeMapper;
+        this.service = service;
+        this.mapper = mapper;
     }
 
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> create(
             @RequestBody ReservationTimeCreateRequest createRequest
     ) {
-        ReservationTimeCreateCommand createCommand = reservationTimeMapper.mapCreateToCommand(createRequest);
-        ReservationTime createdReservationTime = reservationTimeService.create(createCommand);
-        ReservationTimeResponse timeResponse = reservationTimeMapper.mapToResponse(createdReservationTime);
+        ReservationTimeCreateCommand createCommand = mapper.mapCreateToCommand(createRequest);
+        ReservationTime createdTime = service.create(createCommand);
 
-        return ResponseEntity.ok(timeResponse);
+        ReservationTimeResponse response = mapper.mapToResponse(createdTime);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> findAll() {
-        List<ReservationTimeResponse> reservationTimes = reservationTimeService.findAll()
+        List<ReservationTimeResponse> responses = service.findAll()
                 .stream()
-                .map(reservationTimeMapper::mapToResponse)
+                .map(mapper::mapToResponse)
                 .toList();
 
-        return ResponseEntity.ok(reservationTimes);
+        return ResponseEntity.ok(responses);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @PathVariable long id
     ) {
-        reservationTimeService.delete(id);
+        service.delete(id);
 
         return ResponseEntity.ok().build();
     }

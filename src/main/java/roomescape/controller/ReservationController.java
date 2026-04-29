@@ -20,43 +20,44 @@ import roomescape.service.command.ReservationCreateCommand;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationService reservationService;
-    private final ReservationMapper reservationMapper;
+    private final ReservationService service;
+    private final ReservationMapper mapper;
 
     public ReservationController(
-            ReservationService reservationService,
-            ReservationMapper reservationMapper
+            ReservationService service,
+            ReservationMapper mapper
     ) {
-        this.reservationService = reservationService;
-        this.reservationMapper = reservationMapper;
+        this.service = service;
+        this.mapper = mapper;
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponse> create(
             @RequestBody ReservationCreateRequest createRequest
     ) {
-        ReservationCreateCommand createCommand = reservationMapper.mapCreateToCommand(createRequest);
-        Reservation createdReservation = reservationService.create(createCommand);
-        ReservationResponse reservationResponse = reservationMapper.mapToResponse(createdReservation);
+        ReservationCreateCommand createCommand = mapper.mapCreateToCommand(createRequest);
+        Reservation createdReservation = service.create(createCommand);
 
-        return ResponseEntity.ok(reservationResponse);
+        ReservationResponse response = mapper.mapToResponse(createdReservation);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> findAll() {
-        List<ReservationResponse> reservations = reservationService.findAll()
+        List<ReservationResponse> responses = service.findAll()
                 .stream()
-                .map(reservationMapper::mapToResponse)
+                .map(mapper::mapToResponse)
                 .toList();
 
-        return ResponseEntity.ok(reservations);
+        return ResponseEntity.ok(responses);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @PathVariable long id
     ) {
-        reservationService.delete(id);
+        service.delete(id);
 
         return ResponseEntity.ok().build();
     }

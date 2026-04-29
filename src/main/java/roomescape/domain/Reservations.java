@@ -1,10 +1,12 @@
 package roomescape.domain;
 
+import roomescape.exception.BusinessException;
+import roomescape.exception.ErrorCode;
+
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Reservations {
-    private static final String NOT_EXIST_RESERVATION = "존재하지 않는 예약입니다.";
     private final List<Reservation> reservations;
     private final AtomicLong index = new AtomicLong(1);
 
@@ -27,7 +29,7 @@ public class Reservations {
         boolean removed = reservations.removeIf(reservation -> reservation.getId().equals(id));
 
         if(!removed){
-            throw new IllegalArgumentException(NOT_EXIST_RESERVATION);
+            throw new BusinessException(ErrorCode.RESERVATION_NOT_FOUND);
         }
     }
 

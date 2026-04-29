@@ -55,4 +55,16 @@ public class ReservationTimeController {
         jdbcTemplate.update(sql, id);
         return ResponseEntity.ok().build();
     }
+
+    public ReservationTime findById(Long timeId) {
+        String sql = "SELECT * FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) -> new ReservationTime(
+                        resultSet.getLong("id"),
+                        resultSet.getObject("start_at", LocalTime.class)
+                ),
+                timeId
+        );
+    }
 }

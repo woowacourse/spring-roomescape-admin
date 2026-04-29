@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.entity.Reservation;
+import roomescape.entity.ReservationTime;
 
 @RestController
 public class ReservationController {
@@ -28,12 +29,28 @@ public class ReservationController {
         String sql = "SELECT * FROM reservation";
         return jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) -> new Reservation(
+                (resultSet, rowNum) -> {
+                    long timeId = resultSet.getLong("time_id");
+                    ReservationTime time = findById(timeId);
+                    return new Reservation(
+                            resultSet.getLong("id"),
+                            resultSet.getString("name"),
+                            resultSet.getObject("date", LocalDate.class),
+                            time
+                    );
+                }
+        );
+    }
+
+    private ReservationTime findById(Long timeId) {
+        String sql = "SELECT * FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) -> new ReservationTime(
                         resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getObject("date", LocalDate.class),
-                        resultSet.getObject("time", LocalTime.class)
-                )
+                        resultSet.getObject("start_at", LocalTime.class)
+                ),
+                timeId
         );
     }
 
@@ -46,11 +63,13 @@ public class ReservationController {
                 .executeAndReturnKey(new BeanPropertySqlParameterSource(reservationRequestDto))
                 .longValue();
 
+        ReservationTime time = findById(reservationRequestDto.timeId());
+
         Reservation reservation = new Reservation(
                 generatedKey,
                 reservationRequestDto.name(),
                 reservationRequestDto.date(),
-                reservationRequestDto.time()
+                time
         );
         return ResponseEntity.ok(reservation);
     }

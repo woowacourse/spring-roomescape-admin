@@ -1,9 +1,7 @@
 package roomescape.controller;
 
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -23,10 +21,6 @@ import roomescape.dto.ReservationResponse;
 
 @Controller
 public class ReservationController {
-    // TODO: 하나씩 수정하기 위한 잔여 코드 => 필히 삭제해줘야 함.
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
-
     private JdbcTemplate jdbcTemplate;
 
     public ReservationController(JdbcTemplate jdbcTemplate) {
@@ -74,6 +68,6 @@ public class ReservationController {
     @DeleteMapping("/reservations/{id}")
     @ResponseBody
     public void delete(@PathVariable Long id) {
-        reservations.removeIf(reservation -> reservation.getId().equals(id));
+        jdbcTemplate.update("DELETE FROM RESERVATION WHERE id = ?", id);
     }
 }

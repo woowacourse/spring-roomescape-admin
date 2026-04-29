@@ -81,8 +81,7 @@ class ReservationControllerTest {
         assertThat(reservations.get(1).time()).isEqualTo("10:40");
     }
 
-    // TODO: DELETE 기능 만들고 이 부분을 주석 해제
-    /*@Test
+    @Test
     @DisplayName("예약이 존재하는 상황에서 예약을 삭제한다.")
     void deleteReservation_After_Create() {
         reservationController.create(new ReservationRequest("브라운", "2026-04-29", "10:30"));
@@ -95,5 +94,5 @@ class ReservationControllerTest {
         assertThat(reservations).hasSize(1);
         assertThat(reservations.get(0).id()).isEqualTo(2L);
         assertThat(reservations.get(0).name()).isEqualTo("리사");
-    }*/
+    }
 }

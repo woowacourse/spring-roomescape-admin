@@ -79,6 +79,9 @@
 - 예약 추가 시 DB가 생성한 id를 응답에 담는다
 
 #### 더 알아보아야 할 것
+
 - jakson 직렬화와 역직렬화
 - 직렬화와 역직렬화 과정에서 JSON 형태와 객체의 형태가 다를 때 jakson에게 원하는 대로 알려주는 방법
-- 테스트 하는 과정에서 JdbcTemplate이라는 것을 어떻게 
+- 테스트 하는 과정에서 JdbcTemplate이라는 것을 어떻게
+- jdbc:h2:mem:test;DB_CLOSE_DELAY=-1 여기서 DB_CLOSE_DELAY=-1을 어떻게 처리하는가?
+- keyholder는 어떻게 동작하는걸까?

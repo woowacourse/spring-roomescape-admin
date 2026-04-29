@@ -1,45 +1,58 @@
 package roomescape;
 
+import java.sql.PreparedStatement;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 public class ReservationController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(0);
+    private final JdbcTemplate jdbcTemplate;
+    public ReservationController(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @GetMapping("/reservations")
     public List<Reservation> list() {
-        return reservations;
+        String sql = "SELECT id, name, date, time FROM reservation";
+        RowMapper<Reservation> rowMapper = (rs, rowNum) -> new Reservation(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getString("date"),
+                rs.getString("time")
+        );
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     @PostMapping("/reservations")
     public Reservation create(@RequestBody Reservation request) {
+        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, request.getName());
+            ps.setString(2, request.getDate());
+            ps.setString(3, request.getTime());
+            return ps;
+        }, keyHolder);
 
-
-        Reservation reservation = new Reservation(
-                index.incrementAndGet(),
-                request.getName(),
-                request.getDate(),
-                request.getTime()
-        );
-        reservations.add(reservation);
-        return reservation;
+        Long id = keyHolder.getKey().longValue();
+        return new Reservation(id, request.getName(), request.getDate(), request.getTime());
     }
 
     @DeleteMapping("/reservations/{id}")
     public void delete(@PathVariable Long id) {
-        reservations.removeIf(r -> r.getId().equals(id));
+        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
     }
 
 }

@@ -10,11 +10,15 @@ class ReservationEntityTest {
     @DisplayName("ID를 설정하면 기존과는 다른 인스턴스를 반환한다")
     void initializeId_return_another_instance() {
         Long testId = 1L;
+        ReservationTimeEntity timeEntity = new ReservationTimeEntity(
+                9999L,
+                "18:00"
+        );
         ReservationEntity noIdEntity = new ReservationEntity(
                 null,
                 "라티",
                 "2026-08-06",
-                "17:49"
+                timeEntity
         );
         int prevHashCode = noIdEntity.hashCode();
 

@@ -2,19 +2,39 @@ package roomescape.repository;
 
 import org.springframework.stereotype.Component;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @Component
 public class ReservationEntityMapper {
-    public ReservationEntity toEntity(Reservation domain) {
-        return new ReservationEntity(domain.id(), domain.name(), domain.date(), domain.time());
+
+    private final ReservationTimeEntityMapper timeEntityMapper;
+
+    public ReservationEntityMapper(ReservationTimeEntityMapper timeEntityMapper) {
+        this.timeEntityMapper = timeEntityMapper;
     }
 
-    public Reservation toDomain(ReservationEntity entity) {
+    public ReservationEntity toReservationEntity(Reservation reservation) {
+        return new ReservationEntity(
+                reservation.id(),
+                reservation.name(),
+                reservation.date(),
+                convertReservationTimeFromReservationEntityObject(reservation));
+    }
+
+    private ReservationTimeEntity convertReservationTimeFromReservationEntityObject(Reservation reservation) {
+        return timeEntityMapper.toReservationTimeEntity(reservation.time());
+    }
+
+    public Reservation toReservation(ReservationEntity entity) {
         return new Reservation(
                 entity.id(),
                 entity.name(),
                 entity.date(),
-                entity.time()
+                convertReservationTimeEntityToDomainObject(entity)
         );
+    }
+
+    private ReservationTime convertReservationTimeEntityToDomainObject(ReservationEntity entity) {
+        return timeEntityMapper.toReservationTime(entity.timeEntity());
     }
 }

@@ -20,12 +20,20 @@ public class Reservation {
         this.time = time;
     }
 
-    public static Reservation toEntity(Reservation reservation, Long id) {
-        return new Reservation(id, reservation.name, reservation.date, reservation.time);
-    }
-
     public Long getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDate() {
+        return date.toString();
+    }
+
+    public String getTime() {
+        return time.toString();
     }
 
 }

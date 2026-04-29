@@ -18,7 +18,7 @@
 
 * playingTime:PlayingTime
     * 방탈출 게임은 진행 시간을 가지고 있다.
-* timetable:Timetable
+* reservations:ReservationSchedule
   * 방탈출 게임은 시간표를 통해 예약 일정을 처리할 수 있다.
 
 > 행위

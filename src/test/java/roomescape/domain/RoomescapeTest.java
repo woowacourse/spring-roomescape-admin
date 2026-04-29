@@ -22,10 +22,13 @@ class RoomescapeTest {
         String customerName = "이프";
 
         // when
-        roomescape.reserve(customerName, reservationTime);
+        Reservation reservation = roomescape.reserve(customerName, reservationTime);
 
         // then
-        assertThat(emptySchedule.getSchedule()).hasSize(1);
+        assertThat(reservation)
+                .extracting(Reservation::getCustomerName, Reservation::getReservationTime)
+                .containsExactly(customerName, reservationTime);
+
     }
 
     @ParameterizedTest
@@ -62,9 +65,11 @@ class RoomescapeTest {
         ReservationTime reservationTime = new ReservationTime(fixedTime.plusMinutes(60));
 
         // when
-        roomescape.reserve(customerName, reservationTime);
+        Reservation reservation = roomescape.reserve(customerName, reservationTime);
 
         // then
-        assertThat(conflictSchedule.getSchedule()).hasSize(2);
+        assertThat(reservation)
+                .extracting(Reservation::getCustomerName, Reservation::getReservationTime)
+                .containsExactly(customerName, reservationTime);
     }
 }

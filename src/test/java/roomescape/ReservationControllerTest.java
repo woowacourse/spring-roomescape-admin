@@ -5,6 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,7 +21,18 @@ public class ReservationControllerTest {
 
     @BeforeEach
     void setUp() {
-        controller = new ReservationController();
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("org.h2.Driver");
+        dataSource.setUrl("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1");
+        dataSource.setUsername("sa");
+        dataSource.setPassword("");
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+
+        jdbcTemplate.execute("CREATE TABLE reservation(id BIGINT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), date DATE, time TIME)");
+
+        controller = new ReservationController(new ReservationDAO(jdbcTemplate));
+
         reservation = new Reservation("user1", LocalDate.of(2026, 4, 28),
                 LocalTime.of(15, 0, 0));
         createResponse = controller.create(reservation);
@@ -51,7 +64,10 @@ public class ReservationControllerTest {
         int beforeSize = reservations.size();
 
         ResponseEntity<List<Reservation>> deleteResponse = controller.delete(id);
-        int afterSize = reservations.size();
+
+        ResponseEntity<List<Reservation>> readAfterResponse = controller.read();
+        List<Reservation> afterReservations = readAfterResponse.getBody();
+        int afterSize = afterReservations.size();
 
         assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(beforeSize).isEqualTo(afterSize + 1);

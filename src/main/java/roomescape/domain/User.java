@@ -2,10 +2,14 @@ package roomescape.domain;
 
 public class User {
     private final Long id;
-    private final String userName;
+    private final String name;
 
-    public User(Long id, String userName) {
+    public User(Long id, String name) {
         this.id = id;
-        this.userName = userName;
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 }

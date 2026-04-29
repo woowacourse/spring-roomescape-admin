@@ -22,6 +22,7 @@ public class ReservationTimeService {
         );
     }
 
+    @Transactional(readOnly = true)
     public List<ReservationTime> findAllReservationTimes() {
         return reservationTimeDao.findAll();
     }

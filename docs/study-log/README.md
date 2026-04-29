@@ -1,4 +1,4 @@
-# 레벨 1 요구사항 정리
+# 1단계 요구사항 정리
 
 방탈출 카페 관리자가 전화·현장 예약을 직접 등록·관리하는 상황에 필요한 예약 관리 API를 만든다
 
@@ -52,7 +52,7 @@
 - 요청: X
 - 응답: `200 OK`
 
-# 더 알아봐야 할 것
+#### 더 알아봐야 할 것
 
 - AtomicLong vs Long의 차이
 - Reservation에서 AtomicLong을 써야하나?? Long을 써야하나?
@@ -67,3 +67,14 @@
 - 정적 펙토리 메서드의 사용의 근거 = 기존에는 new ReservationResponse()로 해서 인자를 넣어서 해주었지만, 이렇게 하는 경우에는 ReservationResponse의 생성은
   Controller에서 맡게 됨.
 - Reservation이 id 값을 가지고 있어도 되는가? DB 종속되게 코드가 작성된 게 아닐까?
+
+# 2단계 요구사항 정리
+
+1단계에서 H2 Database를 붙인다.
+
+## 요구사항 정리
+
+- 애플리케이션의 List<Reservation>, AtomicLong을 제거한다.
+- 1단계에서 만든 조회, 추가, 삭제 API를 JdbcTemplate기반으로 전환한다.
+- 예약 추가 시 DB가 생성한 id를 응답에 담는다
+- 

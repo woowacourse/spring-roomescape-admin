@@ -1,19 +1,13 @@
 package roomescape.domain;
 
 public class Reservation {
-    Long id;
-    Name name;
-    ReservationDate date;
-    ReservationTime time;
+    private final Long id;
+    private final Name name;
+    private final ReservationDate date;
+    private final ReservationTime time;
 
     public Reservation(Long id, Name name, ReservationDate date, ReservationTime time) {
         this.id = id;
-        this.name = name;
-        this.date = date;
-        this.time = time;
-    }
-
-    public Reservation(Name name, ReservationDate date, ReservationTime time) {
         this.name = name;
         this.date = date;
         this.time = time;

@@ -42,8 +42,6 @@ public class ReservationController {
     @GetMapping("/reservations")
     @ResponseBody
     public List<ReservationResponse> findAll() {
-        List<ReservationResponse> reservationResponses = new ArrayList<>();
-
         return reservations.stream()
                 .map(ReservationResponse::from)
                 .toList();

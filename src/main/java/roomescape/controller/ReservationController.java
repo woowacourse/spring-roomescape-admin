@@ -31,9 +31,11 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> newReservation(@RequestBody ReservationRequest reservationRequest) {
+    public ResponseEntity<ReservationResponse> newReservation(@RequestBody ReservationRequest reservationRequest) {
         long reservationId = reservationService.saveReservation(reservationRequest);
-        return ResponseEntity.ok(reservationService.findReservation(reservationId));
+        ReservationResponse reservationResponse = ReservationMapper.toResponse(
+                reservationService.findReservation(reservationId));
+        return ResponseEntity.ok(reservationResponse);
     }
 
     @DeleteMapping("/{id}")

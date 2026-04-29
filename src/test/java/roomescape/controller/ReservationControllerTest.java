@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,7 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.domain.Reservation;
+import roomescape.domain.Time;
 import roomescape.dto.ReservationRequest;
+import roomescape.repository.TimeRepository; // 추가
 
 import java.util.List;
 
@@ -24,10 +27,15 @@ class ReservationControllerTest {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    TimeRepository timeRepository;
+
+    private Long savedTimeId;
+
     @BeforeEach
     void setUp() {
-        // FK 의존: 예약은 시간이 있어야 추가 가능
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
+        Time time = timeRepository.add(new Time(null, "10:00"));
+        savedTimeId = time.getId();
     }
 
     @Test
@@ -35,7 +43,7 @@ class ReservationControllerTest {
     void findAllReservationsTest() {
         jdbcTemplate.update(
                 "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
-                "브라운", "2023-08-05", 1L
+                "브라운", "2023-08-05", savedTimeId
         );
 
         List<Reservation> allReservations = controller.findAllReservations();
@@ -47,11 +55,11 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약을 추가한다.")
     void addReservationTest() {
-        ReservationRequest request = new ReservationRequest("네오", "2023-08-06", 1L);
+        ReservationRequest request = new ReservationRequest("네오", "2023-08-06", savedTimeId);
 
         controller.addReservation(request);
-
         List<Reservation> allReservations = controller.findAllReservations();
+
         assertThat(allReservations).hasSize(1);
     }
 
@@ -60,12 +68,19 @@ class ReservationControllerTest {
     void deleteReservationTest() {
         jdbcTemplate.update(
                 "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
-                "브라운", "2023-08-05", 1L
+                "브라운", "2023-08-05", savedTimeId
         );
 
-        controller.deleteReservation(1L);
+        Long savedReservationId = controller.findAllReservations().get(0).getId();
+        controller.deleteReservation(savedReservationId);
 
         List<Reservation> allReservations = controller.findAllReservations();
         assertThat(allReservations).hasSize(0);
+    }
+
+    @AfterEach
+    void afterEach() {
+        jdbcTemplate.update("DELETE FROM reservation");
+        jdbcTemplate.update("DELETE FROM reservation_time");
     }
 }

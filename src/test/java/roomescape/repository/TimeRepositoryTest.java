@@ -1,5 +1,7 @@
 package roomescape.repository;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ class TimeRepositoryTest {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+
 
     @Test
     @DisplayName("전체 시간을 조회한다.")
@@ -50,5 +53,11 @@ class TimeRepositoryTest {
 
         List<Time> times = timeRepository.findAllTimes();
         assertThat(times).hasSize(0);
+    }
+
+    @AfterEach
+    void afterEach() {
+        jdbcTemplate.update("DELETE FROM reservation");
+        jdbcTemplate.update("DELETE FROM reservation_time");
     }
 }

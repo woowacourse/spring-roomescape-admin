@@ -4,7 +4,7 @@ import roomescape.domain.ReservationTime;
 
 import java.time.LocalDate;
 
-public record ReservationCreate(
+public record ReservationCreateCommand(
         String name,
         LocalDate date,
         ReservationTime time

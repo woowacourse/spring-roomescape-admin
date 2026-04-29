@@ -1,6 +1,6 @@
 package roomescape.controller.dto.response;
 
-import roomescape.domain.ReservationTime;
+import roomescape.service.dto.response.ReservationTimeResult;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -10,15 +10,15 @@ public record ReservationTimeResponse(
         LocalTime startAt
 ) {
 
-    public static ReservationTimeResponse from(ReservationTime time) {
+    public static ReservationTimeResponse from(ReservationTimeResult result) {
         return new ReservationTimeResponse(
-                time.getId(),
-                time.getStartAt()
+                result.id(),
+                result.startAt()
         );
     }
 
-    public static List<ReservationTimeResponse> from(List<ReservationTime> times) {
-        return times.stream()
+    public static List<ReservationTimeResponse> from(List<ReservationTimeResult> results) {
+        return results.stream()
                 .map(ReservationTimeResponse::from)
                 .toList();
     }

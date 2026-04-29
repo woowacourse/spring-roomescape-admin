@@ -1,7 +1,6 @@
 package roomescape.controller.dto.request;
 
-import roomescape.domain.ReservationTime;
-import roomescape.domain.dto.ReservationCreate;
+import roomescape.service.dto.request.ReservationCreateData;
 
 import java.time.LocalDate;
 
@@ -10,7 +9,7 @@ public record ReservationCreateRequest(
         LocalDate date,
         Long timeId
 ) {
-    public ReservationCreate toData(final ReservationTime time) {
-        return new ReservationCreate(name, date, time);
+    public ReservationCreateData toData() {
+        return new ReservationCreateData(name, date, timeId);
     }
 }

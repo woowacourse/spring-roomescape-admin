@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -8,6 +9,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,8 +27,6 @@ import roomescape.dto.ReservationResponseDto;
 @RequiredArgsConstructor
 public class ReservationController {
 
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(0);
     private final JdbcTemplate jdbcTemplate;
 
     @GetMapping
@@ -44,21 +45,31 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationResponseDto> createReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
         String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, reservationRequestDto.name(), reservationRequestDto.date(), reservationRequestDto.time());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        Reservation newReservation = reservationRequestDto.toEntity();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, reservationRequestDto.name());
+            ps.setObject(2, reservationRequestDto.date());
+            ps.setObject(3, reservationRequestDto.time());
+            return ps;
+        }, keyHolder);
+
+        Long id = keyHolder.getKey().longValue();
+
+        Reservation newReservation = reservationRequestDto.toEntity(id);
         return ResponseEntity.ok(ReservationResponseDto.from(newReservation));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        for (Reservation reservation : reservations) {
-            if (reservation.getId().equals(id)) {
-                reservations.remove(reservation);
-                return ResponseEntity.ok().build();
-            }
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        int affectedRows = jdbcTemplate.update(sql, id);
+
+        if (affectedRows == 0) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().build();
     }
 
 }

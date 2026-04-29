@@ -22,7 +22,7 @@ import roomescape.reservation.controller.ReservationController;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class MissionStepTest {
+class MissionStepTest {
 
     @LocalServerPort
     int port;

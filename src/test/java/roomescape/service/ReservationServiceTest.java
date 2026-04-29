@@ -17,7 +17,7 @@ import roomescape.time.controller.dto.ReservationTimeRequest;
 import roomescape.time.controller.dto.ReservationTimeResponse;
 import roomescape.time.service.ReservationTimeService;
 
-public class ReservationServiceTest {
+class ReservationServiceTest {
 
     private ReservationService reservationService;
     private ReservationTimeService reservationTimeService;

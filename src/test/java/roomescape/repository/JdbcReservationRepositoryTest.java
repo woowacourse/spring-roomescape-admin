@@ -18,7 +18,7 @@ import roomescape.time.entity.ReservationTime;
 import roomescape.time.repository.JdbcReservationTimeRepository;
 
 @JdbcTest
-public class JdbcReservationRepositoryTest {
+class JdbcReservationRepositoryTest {
 
     private JdbcReservationRepository jdbcReservationRepository;
     private JdbcReservationTimeRepository jdbcReservationTimeRepository;

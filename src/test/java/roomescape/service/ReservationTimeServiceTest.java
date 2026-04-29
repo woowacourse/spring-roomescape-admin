@@ -14,7 +14,7 @@ import roomescape.time.entity.ReservationTime;
 import roomescape.time.service.ReservationTimeService;
 
 
-public class ReservationTimeServiceTest {
+class ReservationTimeServiceTest {
 
     private ReservationTimeService reservationTimeService;
 

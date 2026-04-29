@@ -31,6 +31,13 @@ public class TimeRepository {
                 });
     }
 
+    public Time findById(Long id) {
+        String sql = "SELECT id, start_at FROM reservation_time WHERE id = (?)";
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Time(
+                rs.getLong("id"),
+                rs.getString("start_at")
+        ), id);
+    }
 
     public Time add(Time time) {
         String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
@@ -53,5 +60,4 @@ public class TimeRepository {
         String sql = "delete from reservation_time where id = ?";
         jdbcTemplate.update(sql, Long.valueOf(id));
     }
-
 }

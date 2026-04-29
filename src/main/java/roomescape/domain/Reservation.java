@@ -9,6 +9,12 @@ public class Reservation {
     public Reservation() {
     }
 
+    public Reservation(String name, String date, Time reservationTime) {
+        this.name = name;
+        this.date = date;
+        this.reservationTime = reservationTime;
+    }
+
     public Reservation(Long id, String name, String date, Time reservationTime) {
         this.id = id;
         this.name = name;

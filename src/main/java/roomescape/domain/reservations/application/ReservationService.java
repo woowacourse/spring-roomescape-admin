@@ -27,7 +27,6 @@ public class ReservationService {
     @Transactional
     public ReservationResponse saveReservation(ReservationRequest request) {
         validateSaveRequest(request);
-
         ReservationTime time = reservationTimeRepository.findById(request.timeId())
                 .orElseThrow(IllegalArgumentException::new);
         Reservation reservation = Reservation.of(

@@ -20,7 +20,6 @@ public class ReservationTimeService {
     @Transactional
     public ReservationTimeResponse saveTime(ReservationTimeRequest request) {
         validateSaveRequest(request);
-
         ReservationTime reservationTime = ReservationTime.of(
                 null,
                 request.startAt()

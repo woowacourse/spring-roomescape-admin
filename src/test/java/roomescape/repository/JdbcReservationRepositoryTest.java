@@ -10,24 +10,26 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.repository.JdbcReservationRepository;
 import roomescape.time.entity.ReservationTime;
 import roomescape.time.repository.JdbcReservationTimeRepository;
 
-@SpringBootTest
-@Transactional
+@JdbcTest
 public class JdbcReservationRepositoryTest {
 
-    @Autowired
     private JdbcReservationRepository jdbcReservationRepository;
-    @Autowired
     private JdbcReservationTimeRepository jdbcReservationTimeRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setup() {
+        jdbcReservationRepository = new JdbcReservationRepository(jdbcTemplate);
+        jdbcReservationTimeRepository = new JdbcReservationTimeRepository(jdbcTemplate);
         ReservationTime nonIdReservationTime = ReservationTime.createNew(LocalTime.parse("10:00"));
         ReservationTime reservationTime = jdbcReservationTimeRepository.save(nonIdReservationTime);
         Reservation reservation = Reservation.createNew("쿠다", LocalDate.parse("2023-08-06"), reservationTime);

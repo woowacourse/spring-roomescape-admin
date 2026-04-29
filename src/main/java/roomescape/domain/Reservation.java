@@ -23,7 +23,10 @@ public class Reservation {
         this.time = time;
     }
 
-    public void bindId(Long id) {
+    public void bindId(long id) {
+        if(this.id != null) {
+            throw new RuntimeException("ID는 수정할 수 없습니다.");
+        }
         this.id = id;
     }
 

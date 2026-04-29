@@ -1,5 +1,6 @@
 package roomescape.domain;
 
+import java.util.Objects;
 import org.springframework.util.StringUtils;
 
 public class Reservation {
@@ -96,5 +97,20 @@ public class Reservation {
         if (time == null) {
             throw new IllegalArgumentException("예약엔 시간이 존재해야 합니다.");
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Reservation that = (Reservation) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name)
+                && Objects.equals(date, that.date) && Objects.equals(time, that.time);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, date, time);
     }
 }

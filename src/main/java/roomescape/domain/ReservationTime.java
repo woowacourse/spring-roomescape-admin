@@ -1,5 +1,6 @@
 package roomescape.domain;
 
+import java.util.Objects;
 import org.springframework.util.StringUtils;
 
 public class ReservationTime {
@@ -55,5 +56,19 @@ public class ReservationTime {
         if (!StringUtils.hasText(startAt)) {
             throw new IllegalArgumentException("예약 시간엔 시간 정보가 존재해야 합니다.");
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ReservationTime that = (ReservationTime) o;
+        return Objects.equals(id, that.id) && Objects.equals(startAt, that.startAt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, startAt);
     }
 }

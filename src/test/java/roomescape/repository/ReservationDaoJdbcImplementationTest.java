@@ -6,18 +6,38 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.domain.Reservation;
 
-class ReservationRepositoryTest {
+@JdbcTest
+@Import(ReservationEntityMapper.class)
+class ReservationDaoJdbcImplementationTest {
 
     private static final String TESTER_NAME = "라티";
-    private static final String TEST_DATE = "2026-24-28";
+    private static final String TEST_DATE = "2026-04-28";
     private static final String TEST_TIME = "18:00";
 
-    ReservationEntityMapper mapper = new ReservationEntityMapper();
-    ReservationRepository reservationRepository = new ReservationRepository(mapper);
+    private final JdbcTemplate jdbcTemplate;
+    private final ReservationEntityMapper mapper;
+
+    private ReservationDaoJdbcImplementation reservationDaoJdbcImplementation;
+
+    @Autowired
+    ReservationDaoJdbcImplementationTest(JdbcTemplate jdbcTemplate, ReservationEntityMapper mapper) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.mapper = mapper;
+    }
+
+    @BeforeEach
+    void setUp() {
+        reservationDaoJdbcImplementation = new ReservationDaoJdbcImplementation(jdbcTemplate, mapper);
+    }
 
     @Test
     @DisplayName("저장을 하고, ID가 있는 Reservation를 반환한다")
@@ -26,11 +46,10 @@ class ReservationRepositoryTest {
         Reservation reservation = Reservation.constructWithNoId(TESTER_NAME, TEST_DATE, TEST_TIME);
 
         //when
-        Reservation result = reservationRepository.save(reservation);
+        Reservation result = reservationDaoJdbcImplementation.save(reservation);
 
         //then
         Assertions.assertNotNull(result.id());
-        clearRepository(result);
     }
 
     @Test
@@ -39,20 +58,19 @@ class ReservationRepositoryTest {
         Reservation reservation1 = Reservation.constructWithNoId(TESTER_NAME, TEST_DATE, TEST_TIME);
         Reservation reservation2 = Reservation.constructWithNoId(TESTER_NAME, TEST_DATE, TEST_TIME);
         Reservation reservation3 = Reservation.constructWithNoId(TESTER_NAME, TEST_DATE, TEST_TIME);
-        Reservation saved1 = reservationRepository.save(reservation1);
-        Reservation saved2 = reservationRepository.save(reservation2);
-        Reservation saved3 = reservationRepository.save(reservation3);
+        reservationDaoJdbcImplementation.save(reservation1);
+        reservationDaoJdbcImplementation.save(reservation2);
+        reservationDaoJdbcImplementation.save(reservation3);
 
-        List<Reservation> result = reservationRepository.findAll();
+        List<Reservation> result = reservationDaoJdbcImplementation.findAll();
 
         Assertions.assertEquals(3, result.size());
-        clearRepository(saved1, saved2, saved3);
     }
 
     @Test
     @DisplayName("찾기는 비어 있어도 오류가 발생시키지 않고, 빈 리스트를 반환한다.")
     void findAll_success_when_repository_is_empty() {
-        List<Reservation> result = reservationRepository.findAll();
+        List<Reservation> result = reservationDaoJdbcImplementation.findAll();
 
         assertTrue(result.isEmpty());
     }
@@ -63,21 +81,19 @@ class ReservationRepositoryTest {
         Reservation reservation1 = Reservation.constructWithNoId(TESTER_NAME, TEST_DATE, TEST_TIME);
         Reservation reservation2 = Reservation.constructWithNoId(TESTER_NAME, TEST_DATE, TEST_TIME);
         Reservation reservation3 = Reservation.constructWithNoId(TESTER_NAME, TEST_DATE, TEST_TIME);
-        Reservation deleteTarget = reservationRepository.save(reservation1);
-        Reservation saved = reservationRepository.save(reservation2);
-        Reservation saved2 = reservationRepository.save(reservation3);
+        Reservation deleteTarget = reservationDaoJdbcImplementation.save(reservation1);
+        reservationDaoJdbcImplementation.save(reservation2);
+        reservationDaoJdbcImplementation.save(reservation3);
 
         Long deleteTargetId = deleteTarget.id();
-        reservationRepository.delete(deleteTargetId);
+        reservationDaoJdbcImplementation.delete(deleteTargetId);
 
         Optional<Reservation> deleteTargetFromReservations = findDeleteTargetFromStorage(deleteTargetId);
         Assertions.assertTrue(deleteTargetFromReservations.isEmpty());
-
-        clearRepository(saved, saved2);
     }
 
     private Optional<Reservation> findDeleteTargetFromStorage(Long deleteTargetId) {
-        List<Reservation> leftReservation = reservationRepository.findAll();
+        List<Reservation> leftReservation = reservationDaoJdbcImplementation.findAll();
         return leftReservation.stream()
                 .filter(reservation -> reservation.id().equals(deleteTargetId))
                 .findAny();
@@ -87,14 +103,8 @@ class ReservationRepositoryTest {
     @DisplayName("삭제 대상이 없으면 오류를 발생시킨다")
     void delete_throw_exception_when_target_is_not_exist() {
         assertThatThrownBy(
-                () -> reservationRepository.delete(1L)
+                () -> reservationDaoJdbcImplementation.delete(1L)
         ).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("삭제 대상이 존재하지 않습니다");
-    }
-
-    private void clearRepository(Reservation... reservations) {
-        for (Reservation reservation : reservations) {
-            reservationRepository.delete(reservation.id());
-        }
     }
 }

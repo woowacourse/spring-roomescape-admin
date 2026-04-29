@@ -7,7 +7,7 @@ public class Reservation {
     private String date;
     private String time;
 
-    public Reservation() {
+    public Reservation() { // Jackson이 Json -> Reservation으로 변환하는 과정에서 필요.
     }
 
     public Reservation(Long id, String name, String date, String time) {

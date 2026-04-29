@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
@@ -43,10 +44,8 @@ public class ReservationTimeDAO {
     }
 
     public ReservationTimeResponse create(ReservationTime reservationTime) {
-//        MapSqlParameterSource parameters = new MapSqlParameterSource()
-//                .addValue("start_at", reservationTime.getStartAt());
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("start_at", reservationTime.getStartAt());
+        MapSqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("start_at", reservationTime.getStartAt());
 
         Long id = (long) simpleJdbcInsert.executeAndReturnKey(parameters);
         return ReservationTimeResponse.from(id, reservationTime.getStartAt());

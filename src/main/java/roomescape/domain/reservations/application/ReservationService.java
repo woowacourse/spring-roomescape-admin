@@ -8,8 +8,6 @@ import roomescape.domain.reservations.infrastructure.ReservationJdbcTemplateRepo
 import roomescape.domain.reservations.infrastructure.ReservationTimeJdbcTemplateRepository;
 import roomescape.domain.reservations.presentation.dto.ReservationRequest;
 import roomescape.domain.reservations.presentation.dto.ReservationResponse;
-import roomescape.domain.reservations.presentation.dto.ReservationTimeRequest;
-import roomescape.domain.reservations.presentation.dto.ReservationTimeResponse;
 
 @Service
 public class ReservationService {

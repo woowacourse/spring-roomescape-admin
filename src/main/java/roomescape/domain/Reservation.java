@@ -3,6 +3,7 @@ package roomescape.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,16 +12,19 @@ import java.time.LocalTime;
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Reservation {
+    @Setter
+    private Long id;
     private String name;
     private LocalDate date;
     private LocalTime time;
 
-    public static Reservation create(String name, LocalDate date, LocalTime time) {
+    public static Reservation create(Long id, String name, LocalDate date, LocalTime time) {
         validateName(name);
         validateDate(date);
         validateTime(time);
 
         return Reservation.builder()
+                .id(id)
                 .name(name)
                 .date(date)
                 .time(time)

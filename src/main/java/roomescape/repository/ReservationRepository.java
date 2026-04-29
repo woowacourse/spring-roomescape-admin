@@ -34,15 +34,6 @@ public class ReservationRepository {
         return keyHolder.getKeyAs(Long.class);
     }
 
-    public Long getId(Reservation reservation) {
-        String selectSql = "SELECT id FROM reservation WHERE name = ? " +
-                "AND date = ? AND time = ?";
-
-        return jdbcTemplate.queryForObject(selectSql, Long.class,
-                reservation.getName(), reservation.getDate(), reservation.getTime()
-        );
-    }
-
     public List<Reservation> getAll() {
         String selectAllSql = "SELECT id, name, date, time FROM reservation";
 

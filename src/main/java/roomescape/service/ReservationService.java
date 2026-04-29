@@ -19,6 +19,7 @@ public class ReservationService {
     @Transactional
     public ReservationResponse save(CreateReservationRequest createReservationRequest) {
         Reservation reservation = Reservation.create(
+                null,
                 createReservationRequest.name(),
                 DateAndTimeConverter.parseToDate(createReservationRequest.date()),
                 DateAndTimeConverter.parseToTime(createReservationRequest.time())
@@ -36,7 +37,7 @@ public class ReservationService {
         return reservationRepository.getAll()
                 .stream()
                 .map(reservation -> new ReservationResponse(
-                        reservationRepository.getId(reservation),
+                        reservation.getId(),
                         reservation.getName(),
                         DateAndTimeConverter.formatDate(reservation.getDate()),
                         DateAndTimeConverter.formatTime(reservation.getTime())

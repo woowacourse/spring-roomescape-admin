@@ -40,6 +40,11 @@ public class ReservationTimeRepository {
         return jdbcTemplate.query(query, rowMapper);
     }
 
+    public ReservationTime findById(Long id) {
+        String query = "select * from reservation_time where id = ?";
+        return jdbcTemplate.queryForObject(query, rowMapper, id);
+    }
+
 
     public void deleteById(Long id) {
         String query = "delete from reservation_time where id = ?";

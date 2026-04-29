@@ -12,7 +12,7 @@ public class Reservation {
     private LocalTime time;
 
     public Reservation(Long id,
-            String name,
+                       String name,
                        LocalDate date,
                        LocalTime time) {
         this.id = id;

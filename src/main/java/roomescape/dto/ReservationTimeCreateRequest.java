@@ -7,7 +7,7 @@ import java.time.LocalTime;
 public record ReservationTimeCreateRequest(
         LocalTime startAt
 ) {
-    public ReservationTime toEntity(Long id) {
-        return new ReservationTime(id, startAt);
+    public ReservationTime toEntity() {
+        return new ReservationTime(null, startAt);
     }
 }

@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
@@ -10,7 +11,6 @@ import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/reservations")
@@ -28,7 +28,8 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponseDto> postReservation(@RequestBody ReservationRequestDto reservationRequestDto) {
+    public ResponseEntity<ReservationResponseDto> postReservation(
+            @RequestBody @Valid ReservationRequestDto reservationRequestDto) {
         ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequestDto.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 시간의 id가 존재하지 않습니다."));
 

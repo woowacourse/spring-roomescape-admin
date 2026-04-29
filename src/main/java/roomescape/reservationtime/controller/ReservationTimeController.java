@@ -1,5 +1,6 @@
 package roomescape.reservationtime.controller;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ public class ReservationTimeController {
 
     @PostMapping
     public ResponseEntity<ReservationTimeDto> createReservationTime(
-            @RequestBody ReservationTimeCreateDto request
+            @Valid @RequestBody ReservationTimeCreateDto request
     ) {
         return ResponseEntity.ok(reservationTimeService.saveReservationTime(request));
     }

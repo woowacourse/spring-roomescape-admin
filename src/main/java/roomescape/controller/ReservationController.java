@@ -26,19 +26,21 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public List<Reservation> readAll() {
-        String sql = "SELECT * FROM reservation";
+        String sql = "" +
+                "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value " +
+                "FROM reservation AS r " +
+                "INNER JOIN reservation_time AS t " +
+                "ON r.time_id = t.id";
+
         return jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) -> {
-                    long timeId = resultSet.getLong("time_id");
-                    ReservationTime time = findById(timeId);
-                    return new Reservation(
-                            resultSet.getLong("id"),
-                            resultSet.getString("name"),
-                            resultSet.getObject("date", LocalDate.class),
-                            time
-                    );
-                }
+                (resultSet, rowNum) -> new Reservation(
+                        resultSet.getLong("reservation_id"),
+                        resultSet.getString("name"),
+                        resultSet.getObject("date", LocalDate.class),
+                        new ReservationTime(resultSet.getLong("time_id"),
+                                resultSet.getObject("time_value", LocalTime.class))
+                )
         );
     }
 

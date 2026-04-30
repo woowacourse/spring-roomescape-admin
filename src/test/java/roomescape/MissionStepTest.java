@@ -35,7 +35,7 @@ public class MissionStepTest {
                 .statusCode(200);
     }
 
-
+    //1단계
     @Test
     void 예약_조회() {
         RestAssured.given().log().all()
@@ -78,6 +78,7 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
+    //2단계
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -135,6 +136,7 @@ public class MissionStepTest {
         assertThat(countAfterDelete).isEqualTo(0);
     }
 
+    //3단계
     @Test
     void 시간_관리_API() {
         RestAssured.given().log().all()
@@ -170,6 +172,7 @@ public class MissionStepTest {
                 .body("size()", is(1));
     }
 
+    //4단계
     @Autowired
     private ReservationController reservationController;
 

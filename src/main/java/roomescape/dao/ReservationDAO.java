@@ -20,7 +20,7 @@ public class ReservationDAO {
     }
 
     public List<Reservation> findAllReservations() {
-        String sql = "select r.id AS reservation_id, r.name, r.date, t.id AS time_id , t.start_at from reservation r inner join reservation_time t on r.time_id = t.id";
+        String sql = "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id , t.start_at FROM reservation r INNER JOIN reservation_time t ON r.time_id = t.id";
 
         return jdbcTemplate.query(sql,
                 (rs, rowNum) -> {
@@ -34,7 +34,7 @@ public class ReservationDAO {
     }
 
     public Reservation findReservationById(Long id) {
-        String sql = "select r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at from reservation r inner join reservation_time t on r.time_id = t.id where r.id = ?";
+        String sql = "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at FROM reservation r INNER JOIN reservation_time t ON r.time_id = t.id WHERE r.id = ?";
 
         return jdbcTemplate.queryForObject(sql,
                 (rs, rowNum) -> {
@@ -49,7 +49,7 @@ public class ReservationDAO {
     }
 
     public Long insertWithKeyHolder(ReservationRequest reservationRequest) {
-        String sql = "insert into reservation (name,date,time_id) values(?,?,?)";
+        String sql = "INSERT INTO reservation (name,date,time_id) VALUES(?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
@@ -63,7 +63,7 @@ public class ReservationDAO {
     }
 
     public void delete(Long id) {
-        String sql = "delete from reservation where id = ?";
+        String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 }

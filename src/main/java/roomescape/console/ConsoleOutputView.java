@@ -1,0 +1,25 @@
+package roomescape.console;
+
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
+
+import java.util.List;
+
+public class ConsoleOutputView {
+
+    public static void printTime(ReservationTime reservationTime) {
+        System.out.println(reservationTime);
+    }
+
+    public static void printTimeList(List<ReservationTime> reservationTimes) {
+        System.out.println(reservationTimes);
+    }
+
+    public static void printReservation(Reservation reservation) {
+        System.out.println(reservation);
+    }
+
+    public static void printReservationList(List<Reservation> reservations) {
+        System.out.println(reservations);
+    }
+}

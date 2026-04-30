@@ -28,7 +28,7 @@ public class RoomReservationService {
     @Transactional
     public Reservation addReservation(ReservationCommand reservationCommand) {
         ReservationTime reservationTime = reservationTimeRepository.getReservationTime(reservationCommand.timeId())
-                .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.RESERVATION_TIME_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundResourceException(ErrorMessage.INVALID_RESERVATION_TIME_ID));
 
         return reservationRepository.addReservation(reservationCommand, reservationTime);
     }

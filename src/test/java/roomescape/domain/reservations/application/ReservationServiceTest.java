@@ -75,7 +75,7 @@ class ReservationServiceTest {
         // given
         ReservationRequest request = new ReservationRequest(
                 "브라운",
-                LocalDate.of(2026, 4, 29),
+                LocalDate.now(),
                 999L
         );
 
@@ -99,7 +99,7 @@ class ReservationServiceTest {
         ReservationTime time = createReservationTime();
         ReservationRequest request = new ReservationRequest(
                 null,
-                LocalDate.of(2026, 4, 29),
+                LocalDate.now(),
                 time.getId()
         );
 
@@ -115,7 +115,7 @@ class ReservationServiceTest {
         ReservationTime time = createReservationTime();
         ReservationRequest request = new ReservationRequest(
                 " ",
-                LocalDate.of(2026, 4, 29),
+                LocalDate.now(),
                 time.getId()
         );
 
@@ -146,7 +146,7 @@ class ReservationServiceTest {
         // given
         ReservationRequest request = new ReservationRequest(
                 "브라운",
-                LocalDate.of(2026, 4, 29),
+                LocalDate.now(),
                 null
         );
 
@@ -162,7 +162,7 @@ class ReservationServiceTest {
         ReservationTime time = createReservationTime();
         ReservationResponse savedReservation = saveReservation(
                 "브라운",
-                LocalDate.of(2026, 4, 29),
+                LocalDate.now(),
                 time
         );
 
@@ -194,7 +194,7 @@ class ReservationServiceTest {
         ReservationTime time = createReservationTime();
         ReservationResponse savedReservation = saveReservation(
                 "브라운",
-                LocalDate.of(2026, 4, 29),
+                LocalDate.now(),
                 time
         );
 

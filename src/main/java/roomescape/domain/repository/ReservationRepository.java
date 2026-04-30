@@ -64,7 +64,7 @@ public class ReservationRepository {
         String deleteSql = "DELETE FROM reservation WHERE id = ?";
 
         int executeCount = jdbcTemplate.update(deleteSql, id);
-        if(executeCount == 0){
+        if (executeCount == 0) {
             throw new IllegalArgumentException("존재하지 않는 예약입니다.");
         }
     }

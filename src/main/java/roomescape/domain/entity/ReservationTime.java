@@ -13,7 +13,7 @@ public class ReservationTime {
     private Long id;
     private LocalTime startAt;
 
-    public static ReservationTime create(Long id, LocalTime startAt){
+    public static ReservationTime create(Long id, LocalTime startAt) {
         return ReservationTime.builder()
                 .id(id)
                 .startAt(startAt)

@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.entity.Reservation;
 import roomescape.domain.entity.ReservationTime;
 
 import java.sql.PreparedStatement;
@@ -61,7 +60,7 @@ public class ReservationTimeRepository {
         String deleteSql = "DELETE FROM reservation_time WHERE id = ?";
 
         int executeCount = jdbcTemplate.update(deleteSql, id);
-        if(executeCount == 0){
+        if (executeCount == 0) {
             throw new IllegalArgumentException("존재하지 않는 시간대입니다.");
         }
     }

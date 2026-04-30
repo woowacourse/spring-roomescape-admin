@@ -3,6 +3,8 @@ package roomescape.domain.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
+import roomescape.domain.entity.Reservation;
+import roomescape.domain.entity.ReservationTime;
 
 import java.time.LocalDate;
 
@@ -17,4 +19,7 @@ public record ReservationRequest(
         @NotNull(message = "time id는 필수 값입니다.")
         Long timeId
 ) {
+    public Reservation toEntity(Long id, ReservationTime time) {
+        return Reservation.create(id, name, date, time);
+    }
 }

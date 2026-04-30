@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -44,23 +46,19 @@ class ReservationTimeDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    void delete(Long id) {
+    int delete(Long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
-        int affectedRows = jdbcTemplate.update(sql, id);
-
-        if (affectedRows == 0) {
-            throw new ApiException(ErrorCode.RESERVATION_TIME_NOT_FOUND, id);
-
-        }
+        return jdbcTemplate.update(sql, id);
     }
 
-    ReservationTime findById(Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
 
         try {
-            return jdbcTemplate.queryForObject(sql, rowMapper, id);
+            ReservationTime time = jdbcTemplate.queryForObject(sql, rowMapper, id);
+            return Optional.ofNullable(time);
         } catch (EmptyResultDataAccessException exception) {
-            throw new ApiException(ErrorCode.RESERVATION_TIME_NOT_FOUND, id);
+            return Optional.empty();
         }
     }
 }

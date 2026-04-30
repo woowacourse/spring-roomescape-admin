@@ -2,6 +2,8 @@ package roomescape.reservationtime;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,11 +22,11 @@ class ReservationTimeRepository {
         return reservationTimeDao.save(startAt);
     }
 
-    void delete(Long id) {
-        reservationTimeDao.delete(id);
+    int delete(Long id) {
+        return reservationTimeDao.delete(id);
     }
 
-    ReservationTime findById(Long id) {
+    Optional<ReservationTime> findById(Long id) {
         return reservationTimeDao.findById(id);
     }
 }

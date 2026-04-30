@@ -1,6 +1,5 @@
 package roomescape.time.service;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import roomescape.time.dto.ReservationTimeRequestDto;
 import roomescape.time.dto.ReservationTimeResponseDto;

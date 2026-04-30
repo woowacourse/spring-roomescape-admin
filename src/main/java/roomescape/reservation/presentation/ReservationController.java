@@ -18,10 +18,6 @@ import roomescape.reservation.presentation.dto.request.ReservationSaveRequest;
 import roomescape.reservation.presentation.dto.response.ReservationFindResponse;
 import roomescape.reservation.presentation.dto.response.ReservationSaveResponse;
 
-/**
- * TODO: 예외 처리 핸들러 추가
- * TODO: 예외 코드 테스트 수정
- */
 @RestController
 @RequestMapping("/reservations")
 @Validated

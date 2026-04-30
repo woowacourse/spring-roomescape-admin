@@ -36,9 +36,6 @@ public class ReservationService {
                 .toList();
     }
 
-    /**
-     * TODO: 삭제 실패시 예외처리
-     */
     public void deleteReservation(Long id) {
         reservationRepository.deleteById(id);
     }

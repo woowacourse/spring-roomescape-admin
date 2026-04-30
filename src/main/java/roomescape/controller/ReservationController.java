@@ -17,43 +17,30 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.ReservationService;
 
 @RestController
 public class ReservationController {
 
-    private final ReservationRepository reservationRepository;
-    private final ReservationTimeRepository reservationTimeRepository;
-    public ReservationController(
-            ReservationRepository reservationRepository,
-            ReservationTimeRepository reservationTimeRepository
-    ) {
-        this.reservationRepository = reservationRepository;
-        this.reservationTimeRepository = reservationTimeRepository;
+    private final ReservationService reservationService;
+
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping("/reservations")
     public List<Reservation> list() {
-        return reservationRepository.findAll();
+        return reservationService.findAll();
     }
 
     @PostMapping("/reservations")
     public Reservation create(@RequestBody ReservationRequest request) {
-        ReservationTime time = reservationTimeRepository.findById(request.getTimeId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다: " + request.getTimeId()));
-
-        return reservationRepository.save(
-                request.getName(),
-                request.getDate(),
-                request.getTimeId(),
-                time
-        );
+        return reservationService.create(request);
     }
 
     @DeleteMapping("/reservations/{id}")
     public void delete(@PathVariable Long id) {
-        reservationRepository.deleteById(id);
+        reservationService.delete(id);
     }
-
-
 
 }

@@ -44,20 +44,20 @@ public class ReservationRepository {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public Reservation save(String name, String date, Long timeId, ReservationTime time) {
+    public Reservation save(Reservation reservation) {
         String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, name);
-            ps.setString(2, date);
-            ps.setLong(3, timeId);
+            ps.setString(1, reservation.getName());
+            ps.setString(2, reservation.getDate());
+            ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
 
         Long id = keyHolder.getKey().longValue();
-        return new Reservation(id, name, date, time);
+        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     public void deleteById(Long id) {

@@ -10,28 +10,29 @@ import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
 import java.util.List;
+import roomescape.service.ReservationTimeService;
 
 @RestController
 public class ReservationTimeController {
 
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @GetMapping("/times")
     public List<ReservationTime> list() {
-        return reservationTimeRepository.findAll();
+        return reservationTimeService.findAll();
     }
 
     @PostMapping("/times")
     public ReservationTime create(@RequestBody ReservationTime request) {
-        return reservationTimeRepository.save(request);
+        return reservationTimeService.create(request);
     }
 
     @DeleteMapping("/times/{id}")
     public void delete(@PathVariable Long id) {
-        reservationTimeRepository.deleteById(id);
+        reservationTimeService.delete(id);
     }
 }

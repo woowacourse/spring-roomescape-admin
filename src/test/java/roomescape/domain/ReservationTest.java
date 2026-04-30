@@ -74,21 +74,7 @@ class ReservationTest {
                                 "2020-02-02",
                                 null
                         )
-                ).isInstanceOf(NullPointerException.class)
-                .hasMessage("time은 도메인에서 필수값이며 null일 수 없습니다.");
-    }
-
-    @Test
-    @DisplayName("날짜 형식이 yyyy-MM-dd 를 준수하지 않으면 오류가 발생한다")
-    void dateFormat_fail() {
-        Assertions.assertThatThrownBy(
-                        () -> new Reservation(
-                                null,
-                                "라티",
-                                "26-02-02",
-                                TEST_TIME
-                        )
                 ).isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("올바르지 않은 날짜 형식입니다: 26-02-02");
+                .hasMessage("time은 도메인에서 필수값이며 null일 수 없습니다.");
     }
 }

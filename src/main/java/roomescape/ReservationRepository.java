@@ -21,17 +21,22 @@ public class ReservationRepository {
 
     public List<Reservation> findAll() {
         return jdbcTemplate.query(
-                "SELECT id, name, date, time FROM reservation",
-                ((rs, rowNum) -> new Reservation(
+                "SELECT r.id, r.name, r.date, t.id AS time_id, t.start_at AS start_at " +
+                        "FROM reservation r " +
+                        "JOIN reservation_time t ON r.time_id = t.id ",
+                (rs, rowNum) -> new Reservation(
                         rs.getLong("id"),
                         rs.getString("name"),
                         LocalDate.parse(rs.getString("date")),
-                        LocalTime.parse(rs.getString("time"))
-                ))
+                        new ReservationTime(
+                                rs.getLong("time_id"),
+                                LocalTime.parse(rs.getString("start_at"))
+                        )
+                )
         );
     }
 
-    public Reservation save(String name, LocalDate reservationDate, LocalTime reservationTime) {
+    public Reservation save(String name, LocalDate reservationDate, Long timeId) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
@@ -39,7 +44,7 @@ public class ReservationRepository {
         long savedId = simpleJdbcInsert.executeAndReturnKey(Map.of(
                 "name", name,
                 "date", reservationDate.toString(),
-                "time", reservationTime.toString()
+                "time_id", timeId
         )).longValue();
 
         return findById(savedId);
@@ -54,12 +59,18 @@ public class ReservationRepository {
 
     private Reservation findById(Long id) {
         return jdbcTemplate.queryForObject(
-                "SELECT id, name, date, time FROM reservation WHERE id = ?",
+                "SELECT r.id, r.name, r.date, t.id AS time_id, t.start_at AS start_at " +
+                        "FROM reservation r " +
+                        "JOIN reservation_time t ON r.time_id = t.id " +
+                        "WHERE r.id = ?",
                 (rs, rowNum) -> new Reservation(
                         rs.getLong("id"),
                         rs.getString("name"),
                         LocalDate.parse(rs.getString("date")),
-                        LocalTime.parse(rs.getString("time"))
+                        new ReservationTime(
+                                rs.getLong("time_id"),
+                                LocalTime.parse(rs.getString("start_at"))
+                        )
                 ),
                 id
         );

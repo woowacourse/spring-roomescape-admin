@@ -17,7 +17,7 @@ public class ReservationTest {
         Long id = 1L;
         String name = "name";
         LocalDate reservationDate = LocalDate.now();
-        LocalTime reservationTime = LocalTime.now();
+        ReservationTime reservationTime = new ReservationTime(2L, LocalTime.now());
 
         // when
         Reservation reservation = new Reservation(id, name, reservationDate, reservationTime);
@@ -30,8 +30,9 @@ public class ReservationTest {
     @DisplayName("같은 id를 가진 Reservation은 같은 객체이다.")
     void reservations_with_same_id_are_equal() {
         // given
-        Reservation reservation1 = new Reservation(1L, "홍길동", LocalDate.of(2024, 1, 1), LocalTime.of(10, 0));
-        Reservation reservation2 = new Reservation(1L, "김철수", LocalDate.of(2024, 1, 2), LocalTime.of(11, 0));
+        ReservationTime reservationTime = new ReservationTime(2L, LocalTime.now());
+        Reservation reservation1 = new Reservation(1L, "홍길동", LocalDate.of(2024, 1, 1), reservationTime);
+        Reservation reservation2 = new Reservation(1L, "김철수", LocalDate.of(2024, 1, 2), reservationTime);
 
         // when & then
         assertThat(reservation1).isEqualTo(reservation2);

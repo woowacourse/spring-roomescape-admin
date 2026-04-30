@@ -23,7 +23,7 @@ public class ReservationController {
         return reservationRepository.save(
                 reservationSaveDto.name(),
                 reservationSaveDto.date(),
-                reservationSaveDto.time()
+                reservationSaveDto.timeId()
         );
     }
 

@@ -15,9 +15,7 @@ public class ReservationTimeController {
 
     @PostMapping("/times")
     public ReservationTime addReservationTime(@RequestBody ReservationTimeSaveDto reservationTimeSaveDto) {
-        return reservationTimeRepository.save(
-                reservationTimeSaveDto.startAt()
-        );
+        return reservationTimeRepository.save(reservationTimeSaveDto.startAt());
     }
 
     @GetMapping("/times")

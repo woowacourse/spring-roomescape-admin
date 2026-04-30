@@ -1,4 +1,4 @@
-package roomescape.reservation;
+package roomescape.reservationtime;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -8,26 +8,24 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ReservationRepository {
+public class ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long insert(Reservation reservation) {
+    public Long insert(ReservationTime reservationTime) {
 
-        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
+        String sql = "insert into reservation_time (start_at) values (?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     sql,
                     new String[]{"id"});
-            ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate());
-            ps.setLong(3, reservation.getTimeId());
+            ps.setString(1, reservationTime.getStartAt());
             return ps;
         }, keyHolder);
 
@@ -35,22 +33,24 @@ public class ReservationRepository {
     }
 
     public int delete(Long id) {
-        String sql = "delete from reservation where id = ?";
+        String sql = "delete from reservation_time where id = ?";
         return jdbcTemplate.update(sql, Long.valueOf(id));
     }
 
-    public List<Reservation> findAllReservations() {
-        String sql = "select id, name, date, time from reservation";
+    public List<ReservationTime> findAllReservationTimes() {
+        String sql = "select id, start_at from reservation_time";
         return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> {
-                    Reservation reservation = new Reservation(
+                    ReservationTime reservationTime = new ReservationTime(
                             resultSet.getLong("id"),
-                            resultSet.getString("name"),
-                            resultSet.getString("date"),
-                            resultSet.getLong("time_id")
+                            resultSet.getString("start_at")
                     );
-                    return reservation;
+                    return reservationTime;
                 });
+    }
+
+    public static ReservationTime toEntity(ReservationTime reservationTime, Long id) {
+        return new ReservationTime(id, reservationTime.getStartAt());
     }
 }

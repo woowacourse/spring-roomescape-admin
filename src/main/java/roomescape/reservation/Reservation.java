@@ -4,13 +4,13 @@ public class Reservation {
     private long id;
     private String name;
     private String date;
-    private String time;
+    private Long time_id;
 
-    public Reservation(long id, String name, String date, String time) {
+    public Reservation(long id, String name, String date, Long time_id) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.time = time;
+        this.time_id = time_id;
     }
 
     public long getId() {
@@ -25,11 +25,11 @@ public class Reservation {
         return date;
     }
 
-    public String getTime() {
-        return time;
+    public Long getTimeId() {
+        return time_id;
     }
 
     public static Reservation toEntity(Reservation reservation, Long id) {
-        return new Reservation(id, reservation.name, reservation.date, reservation.time);
+        return new Reservation(id, reservation.name, reservation.date, reservation.time_id);
     }
 }

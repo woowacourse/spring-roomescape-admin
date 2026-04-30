@@ -21,7 +21,6 @@ public class ReservationController {
 
     @PostMapping
     public Reservation create(@RequestBody Reservation reservation) {
-        System.out.println("reservation = " + reservation);
         Long id = reservationRepository.insert(reservation);
         return Reservation.toEntity(reservation, id);
     }

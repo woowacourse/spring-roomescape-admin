@@ -11,17 +11,22 @@ import org.junit.jupiter.api.Test;
 import roomescape.domain.reservation.domain.Reservation;
 import roomescape.domain.reservation.dto.request.ReservationCreateRequestDTO;
 import roomescape.domain.reservation.dto.response.ReservationResponseDTO;
-import roomescape.domain.reservation.repository.InMemoryReservationRepository;
+import roomescape.domain.reservation.repository.FakeReservationRepository;
 import roomescape.domain.reservation.repository.ReservationRepository;
+import roomescape.domain.time.domain.Time;
+import roomescape.domain.time.repository.FakeTimeRepository;
+import roomescape.domain.time.repository.TimeRepository;
 
 class ReservationServiceTest {
 
     private final ReservationService reservationService;
     private final ReservationRepository reservationRepository;
+    private final TimeRepository timeRepository;
 
     ReservationServiceTest() {
-        this.reservationRepository = new InMemoryReservationRepository();
-        this.reservationService = new ReservationService(reservationRepository);
+        this.reservationRepository = new FakeReservationRepository();
+        this.timeRepository = new FakeTimeRepository();
+        this.reservationService = new ReservationService(reservationRepository, timeRepository);
     }
 
     @Nested
@@ -32,11 +37,11 @@ class ReservationServiceTest {
 
             // given
             LocalDate date = LocalDate.of(2026, 4, 30);
-            LocalTime time = LocalTime.of(10, 0);
+            Time time = new Time(1L, LocalTime.of(10, 0));
 
             reservationRepository.save(new Reservation("제이콥", date, time));
-            reservationRepository.save(new Reservation("라이", date.plusDays(1), time.plusHours(1)));
-            reservationRepository.save(new Reservation("티모", date.plusDays(2), time.plusHours(2)));
+            reservationRepository.save(new Reservation("라이", date.plusDays(1), new Time(2L, LocalTime.of(11, 0))));
+            reservationRepository.save(new Reservation("티모", date.plusDays(2), new Time(3L, LocalTime.of(12, 0))));
 
             // when
             List<ReservationResponseDTO> actual = reservationService.getReservations();
@@ -45,10 +50,14 @@ class ReservationServiceTest {
             assertAll(
                 () -> assertEquals(3, actual.size()),
                 () -> assertEquals(new ReservationResponseDTO(1L, "제이콥", date, time), actual.get(0)),
-                () -> assertEquals(new ReservationResponseDTO(2L, "라이", date.plusDays(1), time.plusHours(1)),
-                    actual.get(1)),
-                () -> assertEquals(new ReservationResponseDTO(3L, "티모", date.plusDays(2), time.plusHours(2)),
-                    actual.get(2))
+                () -> assertEquals(
+                    new ReservationResponseDTO(2L, "라이", date.plusDays(1), new Time(2L, LocalTime.of(11, 0))),
+                    actual.get(1)
+                ),
+                () -> assertEquals(
+                    new ReservationResponseDTO(3L, "티모", date.plusDays(2), new Time(3L, LocalTime.of(12, 0))),
+                    actual.get(2)
+                )
             );
         }
     }
@@ -63,8 +72,9 @@ class ReservationServiceTest {
             ReservationCreateRequestDTO request = new ReservationCreateRequestDTO(
                 "보예",
                 LocalDate.of(2026, 5, 1),
-                LocalTime.of(15, 30)
+                1L
             );
+            timeRepository.save(new Time(LocalTime.of(15, 30)));
 
             // when
             ReservationResponseDTO actual = reservationService.saveReservation(request);
@@ -74,7 +84,7 @@ class ReservationServiceTest {
                 () -> assertEquals(1L, actual.id()),
                 () -> assertEquals("보예", actual.name()),
                 () -> assertEquals(LocalDate.of(2026, 5, 1), actual.date()),
-                () -> assertEquals(LocalTime.of(15, 30), actual.time()),
+                () -> assertEquals(new Time(1L, LocalTime.of(15, 30)), actual.time()),
                 () -> assertEquals(List.of(actual), reservationService.getReservations())
             );
         }
@@ -88,9 +98,10 @@ class ReservationServiceTest {
 
             // given
             Reservation savedReservation = reservationRepository.save(
-                new Reservation("제이슨", LocalDate.of(2026, 5, 2), LocalTime.of(12, 0))
+                new Reservation("제이슨", LocalDate.of(2026, 5, 2), new Time(1L, LocalTime.of(12, 0)))
             );
-            reservationRepository.save(new Reservation("시오", LocalDate.of(2026, 5, 3), LocalTime.of(13, 0)));
+            reservationRepository.save(
+                new Reservation("시오", LocalDate.of(2026, 5, 3), new Time(2L, LocalTime.of(13, 0))));
 
             // when
             reservationService.deleteReservationById(savedReservation.getId());

@@ -58,6 +58,18 @@ public class JdbcTimeRepository implements TimeRepository {
     }
 
     @Override
+    public Time findTimeById(Long id) {
+        return jdbcTemplate.queryForObject(
+            "SELECT id, start_at FROM reservation_time WHERE id = ?",
+            (rs, rowNum) -> new Time(
+                rs.getLong("id"),
+                LocalTime.parse(rs.getString("start_at"))
+            ),
+            id
+        );
+    }
+
+    @Override
     public void deleteTimeById(Long id) {
         jdbcTemplate.update(
             "DELETE FROM reservation_time WHERE id = ?",

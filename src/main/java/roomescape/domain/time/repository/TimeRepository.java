@@ -9,5 +9,7 @@ public interface TimeRepository {
 
     List<Time> findAllTimes();
 
+    Time findTimeById(Long id);
+
     void deleteTimeById(Long id);
 }

@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.reservation.domain.Reservation;
 
-public class InMemoryReservationRepository implements ReservationRepository {
+public class FakeReservationRepository implements ReservationRepository {
 
     private final AtomicLong id = new AtomicLong(0);
 

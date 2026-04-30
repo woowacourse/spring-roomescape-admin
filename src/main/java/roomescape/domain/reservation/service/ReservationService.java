@@ -7,15 +7,19 @@ import roomescape.domain.reservation.domain.Reservation;
 import roomescape.domain.reservation.dto.request.ReservationCreateRequestDTO;
 import roomescape.domain.reservation.dto.response.ReservationResponseDTO;
 import roomescape.domain.reservation.repository.ReservationRepository;
+import roomescape.domain.time.domain.Time;
+import roomescape.domain.time.repository.TimeRepository;
 
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final TimeRepository timeRepository;
 
     @Autowired
-    public ReservationService(ReservationRepository reservationRepository) {
+    public ReservationService(ReservationRepository reservationRepository, TimeRepository timeRepository) {
         this.reservationRepository = reservationRepository;
+        this.timeRepository = timeRepository;
     }
 
     public List<ReservationResponseDTO> getReservations() {
@@ -42,10 +46,8 @@ public class ReservationService {
     }
 
     private Reservation createReservation(ReservationCreateRequestDTO requestDTO) {
-        if (requestDTO.timeId() != null) {
-            return new Reservation(requestDTO.name(), requestDTO.date(), requestDTO.timeId());
-        }
-        return new Reservation(requestDTO.name(), requestDTO.date(), requestDTO.time());
+        Time time = timeRepository.findTimeById(requestDTO.timeId());
+        return new Reservation(requestDTO.name(), requestDTO.date(), time);
     }
 
     public void deleteReservationById(Long id) {

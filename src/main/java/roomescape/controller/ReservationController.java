@@ -36,6 +36,7 @@ public class ReservationController {
                 createReservationRequest.date(),
                 createReservationRequest.timeId()
         );
+
         return ResponseEntity.ok().body(createdReservation);
     }
 

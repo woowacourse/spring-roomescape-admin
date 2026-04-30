@@ -2,6 +2,7 @@ package roomescape;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +26,19 @@ class MissionStepTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @BeforeEach
+    void 예약_시간_생성() {
+        Map<String, String> reservationTimeParams = new HashMap<>();
+        reservationTimeParams.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservationTimeParams)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+    }
+
     @Test
     void 예약_조회() {
         RestAssured.given().log().all()
@@ -36,14 +50,14 @@ class MissionStepTest {
 
     @Test
     void 예약_추가_및_삭제() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        Map<String, Object> reservationParams = new HashMap<>();
+        reservationParams.put("name", "브라운");
+        reservationParams.put("date", "2023-08-05");
+        reservationParams.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservationParams)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
@@ -80,7 +94,7 @@ class MissionStepTest {
 
     @Test
     void DB_조회_API_전환() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", 1);
 
         List<Reservation> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -95,10 +109,10 @@ class MissionStepTest {
 
     @Test
     void DB_추가_삭제_API_전환() {
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        params.put("timeId", 1);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -121,16 +135,6 @@ class MissionStepTest {
 
     @Test
     void 시간_관리_API() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
-
         RestAssured.given().log().all()
                 .when().get("/times")
                 .then().log().all()
@@ -141,6 +145,27 @@ class MissionStepTest {
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(200);
+    }
+
+    @Test
+    void 예약과_시간_연결() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 
 }

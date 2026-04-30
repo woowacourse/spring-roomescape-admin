@@ -3,19 +3,17 @@ package roomescape.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import roomescape.domain.ReservationTime;
 
 public class ReservationRequestDTO {
     private final String name;
     private final LocalDate date;
-    private final ReservationTime time;
+    private final Long timeId;
 
     @JsonCreator
-    public ReservationRequestDTO(@JsonProperty("name") String name, @JsonProperty("date") LocalDate date, @JsonProperty("time") ReservationTime time) {
+    public ReservationRequestDTO(@JsonProperty("name") String name, @JsonProperty("date") LocalDate date, @JsonProperty("timeId") Long timeId) {
         this.name = name;
         this.date = date;
-        this.time = time;
+        this.timeId = timeId;
     }
 
     public String getName() {
@@ -26,7 +24,7 @@ public class ReservationRequestDTO {
         return date;
     }
 
-    public ReservationTime getTime() {
-        return time;
+    public Long getTimeId() {
+        return timeId;
     }
 }

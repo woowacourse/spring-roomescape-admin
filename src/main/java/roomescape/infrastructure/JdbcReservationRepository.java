@@ -46,8 +46,7 @@ public class JdbcReservationRepository implements ReservationRepository {
                 """;
         return jdbcTemplate.query(sql, (rs, rowNum) -> new Reservation(
                 rs.getLong("id"),
-                new User(rs.getLong("id"), rs.getString("name")),
-                LocalDate.parse(rs.getString("date")),
+                new User(rs.getLong("id"), rs.getString("name")), LocalDate.parse(rs.getString("date")),
                 new ReservationTime(rs.getLong("time_id"), LocalTime.parse(rs.getString("start_at")))
         ));
     }

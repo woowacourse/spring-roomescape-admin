@@ -12,25 +12,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.domain.User;
 import roomescape.domain.repository.ReservationRepository;
+import roomescape.domain.repository.ReservationTimeRepository;
 import roomescape.dto.ReservationRequestDTO;
 import roomescape.dto.ReservationResponseDTO;
 
 @Controller
 public class ReservationController {
-    private final ReservationRepository repository;
+    private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationController(ReservationRepository repository) {
-        this.repository = repository;
+    public ReservationController(ReservationRepository reservationRepository,
+                                 ReservationTimeRepository reservationTimeRepository) {
+        this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/reservations")
     public ReservationResponseDTO create(@RequestBody ReservationRequestDTO requestDTO) {
-        Reservation reservation = new Reservation(null, new User(null, requestDTO.getName()), requestDTO.getDate(), requestDTO.getTime());
-        Long id = repository.save(reservation);
+        ReservationTime time = reservationTimeRepository.findById(requestDTO.getTimeId());
+        Reservation reservation = new Reservation(null, new User(null, requestDTO.getName()), requestDTO.getDate(), time);
+        Long id = reservationRepository.save(reservation);
         return ReservationResponseDTO.from(
                 new Reservation(id, reservation.getUser(), reservation.getDate(), reservation.getTime()));
     }
@@ -38,7 +44,7 @@ public class ReservationController {
     @ResponseBody
     @GetMapping("/reservations")
     public List<ReservationResponseDTO> read() {
-        return repository.findAll().stream()
+        return reservationRepository.findAll().stream()
                 .map(ReservationResponseDTO::from)
                 .collect(Collectors.toList());
     }
@@ -47,6 +53,6 @@ public class ReservationController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/reservations/{id}")
     public void delete(@PathVariable Long id) {
-        repository.delete(id);
+        reservationRepository.delete(id);
     }
 }

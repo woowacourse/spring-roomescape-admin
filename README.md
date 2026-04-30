@@ -51,6 +51,10 @@
 
 예약 관련 HTTP 요청을 처리한다.
 
+#### ReservationTimeController
+
+시간 관련 HTTP 요청을 처리한다.
+
 ---
 
 ## API 명세
@@ -58,7 +62,7 @@
 | 기능 | 메서드 / URL | 요청 본문 | 응답 |
 |------|-------------|-----------|------|
 | 예약 전체 조회 | `GET /reservations` | — | `[{id, name, date, time}, ...]` |
-| 예약 추가 | `POST /reservations` | `{name, date, time}` | `{id, name, date, time}` |
+| 예약 추가 | `POST /reservations` | `{name, date, timeId}` | `{id, name, date, time}` |
 | 예약 삭제 | `DELETE /reservations/{id}` | — | `204 No Content` |
 
 ---
@@ -192,3 +196,18 @@ HTTP/1.1 204 No Content
 - [x] 예약자 이름, 날짜, 시간으로 예약을 생성한다.
 - [x] 생성된 예약 정보를 조회한다.
 - [x] 예약 ID로 예약을 삭제한다.
+
+### ReservationTimeTest
+
+- [x] 시간 추가, 조회, 삭제 API가 정상 동작한다.
+- [x] 예약과 시간이 올바르게 연결된다.
+
+### DBTest
+
+- [x] H2 데이터베이스 연결 및 테이블 생성을 확인한다.
+- [x] DB에서 예약 목록을 조회한다.
+- [x] DB에 예약을 추가하고 삭제한다.
+
+### LayerSeparationTest
+
+- [x] 컨트롤러에 JdbcTemplate이 직접 주입되지 않는다.

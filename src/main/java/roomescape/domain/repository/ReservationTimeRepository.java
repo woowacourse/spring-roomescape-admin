@@ -1,6 +1,7 @@
 package roomescape.domain.repository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -38,12 +39,12 @@ public class ReservationTimeRepository {
     }
 
     public ReservationTime getById(Long id) {
-        jdbcTemplate.queryForList("SELECT * FROM reservation_time")
-                .forEach(System.out::println);
-
         String selectSql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
-
-        return jdbcTemplate.queryForObject(selectSql, reservationTimeRowMapper, id);
+        try {
+            return jdbcTemplate.queryForObject(selectSql, reservationTimeRowMapper, id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("존재하지 않는 시간대입니다.");
+        }
     }
 
     public List<ReservationTime> getAll() {

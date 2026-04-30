@@ -24,14 +24,14 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(DateTimeParseException.class)
     public ResponseEntity<CustomErrorResponse> handleDateTimeParseException() {
-        CustomErrorResponse errorResponse = new CustomErrorResponse(HttpStatus.BAD_REQUEST, "날짜 및 시간 형식이 잘못되었습니다.");
+        CustomErrorResponse errorResponse = new CustomErrorResponse(HttpStatus.BAD_REQUEST, "날짜 및 시간 형식이 올바르지 않습니다.");
         return ResponseEntity.badRequest()
                 .body(errorResponse);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<CustomErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
-        CustomErrorResponse errorResponse = new CustomErrorResponse(HttpStatus.CONFLICT, e.getMessage());
+        CustomErrorResponse errorResponse = new CustomErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
 
         return ResponseEntity.badRequest()
                 .body(errorResponse);

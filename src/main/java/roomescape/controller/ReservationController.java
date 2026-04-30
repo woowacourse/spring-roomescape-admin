@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import java.sql.PreparedStatement;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,68 +12,48 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
+import roomescape.controller.dto.ReservationRequest;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
+import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 @RestController
 public class ReservationController {
 
-    private final JdbcTemplate jdbcTemplate;
-    public ReservationController(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
+    public ReservationController(
+            ReservationRepository reservationRepository,
+            ReservationTimeRepository reservationTimeRepository
+    ) {
+        this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @GetMapping("/reservations")
     public List<Reservation> list() {
-        String sql = """
-                SELECT
-                    r.id AS reservation_id,
-                    r.name AS reservation_name,
-                    r.date AS reservation_date,
-                    t.id AS time_id,
-                    t.start_at AS time_start_at
-                FROM reservation r
-                INNER JOIN reservation_time t ON r.time_id = t.id
-                """;
-
-        RowMapper<Reservation> rowMapper = (rs, rowNum) -> new Reservation(
-                rs.getLong("reservation_id"),
-                rs.getString("reservation_name"),
-                rs.getString("reservation_date"),
-                new ReservationTime(
-                        rs.getLong("time_id"),
-                        rs.getString("time_start_at")
-                )
-        );
-        return jdbcTemplate.query(sql, rowMapper);
+        return reservationRepository.findAll();
     }
 
     @PostMapping("/reservations")
     public Reservation create(@RequestBody ReservationRequest request) {
-        String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        ReservationTime time = reservationTimeRepository.findById(request.getTimeId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다: " + request.getTimeId()));
 
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, request.getName());
-            ps.setString(2, request.getDate());
-            ps.setLong(3, request.getTimeId());
-            return ps;
-        }, keyHolder);
-
-        Long id = keyHolder.getKey().longValue();
-
-        ReservationTime time = jdbcTemplate.queryForObject(
-                "SELECT id, start_at FROM reservation_time WHERE id = ?",
-                (rs, rowNum) -> new ReservationTime(rs.getLong("id"), rs.getString("start_at")),
-                request.getTimeId()
+        return reservationRepository.save(
+                request.getName(),
+                request.getDate(),
+                request.getTimeId(),
+                time
         );
-
-
-        return new Reservation(id, request.getName(), request.getDate(), time);
     }
 
     @DeleteMapping("/reservations/{id}")
     public void delete(@PathVariable Long id) {
-        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
+        reservationRepository.deleteById(id);
     }
+
+
 
 }

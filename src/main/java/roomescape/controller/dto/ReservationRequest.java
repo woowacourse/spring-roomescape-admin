@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller.dto;
 
 public class ReservationRequest {
     private String name;

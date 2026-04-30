@@ -40,13 +40,17 @@ public class ReservationController {
             @RequestBody ReservationCreateRequest request
     ) {
         UpdatingDAO dao = new UpdatingDAO(jdbcTemplate);
-        Reservation newReservation = new Reservation(request.name(), request.date(), request.time());
+        QueryingDAO queryingDAO = new QueryingDAO(jdbcTemplate);
+        ReservationTime reservationTime = queryingDAO.findTimeById(request.timeId());
+        Reservation newReservation = new Reservation(request.name(), request.date(), reservationTime);
+
         Long id = dao.insertWithKeyHolder(newReservation);
+        TimeCreateResponse timeResponse = new TimeCreateResponse(reservationTime.getId(), reservationTime.getStartAt());
         ReservationCreateResponse response = new ReservationCreateResponse(
                 id,
                 newReservation.getName(),
                 newReservation.getDate(),
-                newReservation.getTime());
+                timeResponse);
         return ResponseEntity.ok(response);
     }
 
@@ -61,10 +65,9 @@ public class ReservationController {
     public ResponseEntity<TimeCreateResponse> createTime(
             @RequestBody TimeCreateRequest request
     ){
-        ReservationTime reservationTime = new ReservationTime(request.startAt());
         UpdatingDAO dao = new UpdatingDAO(jdbcTemplate);
-        Long id = dao.insertWithKeyHolder(reservationTime);
-        return ResponseEntity.ok(new TimeCreateResponse(id,reservationTime.getStartAt()));
+        Long id = dao.insertWithKeyHolder(request.startAt());
+        return ResponseEntity.ok(new TimeCreateResponse(id,request.startAt()));
     }
 
     @GetMapping("/times")

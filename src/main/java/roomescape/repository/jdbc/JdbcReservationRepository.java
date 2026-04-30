@@ -4,6 +4,7 @@ import static roomescape.repository.jdbc.RoomescapeMapper.RESERVATION_ROW_MAPPER
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -12,6 +13,7 @@ import roomescape.domain.Reservation;
 import roomescape.repository.ReservationRepository;
 
 @Repository
+@Profile("!console")
 public class JdbcReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;

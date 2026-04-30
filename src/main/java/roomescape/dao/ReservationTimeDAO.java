@@ -16,7 +16,7 @@ public class ReservationTimeDAO {
     }
 
     public ReservationTime insert(ReservationTime reservationTime) {
-        jdbcTemplate.update("insert into reservation_time (start_at) values ?", reservationTime.getStartAt());
+        jdbcTemplate.update("insert into reservation_time (start_at) values (?)", reservationTime.getStartAt());
 
         Long id = jdbcTemplate.queryForObject("select max(id) from reservation_time", Long.class);
         return ReservationTime.of(id, reservationTime.getStartAt());

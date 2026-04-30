@@ -2,6 +2,7 @@ package roomescape.controller;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import roomescape.dao.ReservationDAO;
 import roomescape.domain.Reservation;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 
 @Controller
 public class ReservationController {
@@ -22,16 +25,17 @@ public class ReservationController {
 
     @ResponseBody
     @PostMapping("/reservations")
-    public ResponseEntity<Void> create(@RequestBody Reservation reservation) {
-        reservationDAO.insert(reservation);
-        return ResponseEntity.ok().build();
+    public ReservationResponse create(@RequestBody ReservationRequest request) {
+        Reservation reservation = reservationDAO.insert(request.getName(), request.getDate(), request.getTimeId());
+        return ReservationResponse.from(reservation);
     }
 
     @ResponseBody
     @GetMapping("/reservations")
-    public List<Reservation> findAll() {
-        List<Reservation> reservations = reservationDAO.findAll();
-        return reservations;
+    public List<ReservationResponse> findAll() {
+        return reservationDAO.findAll().stream()
+                .map(ReservationResponse::from)
+                .collect(Collectors.toList());
     }
 
     @DeleteMapping("/reservations/{id}")

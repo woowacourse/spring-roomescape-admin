@@ -13,7 +13,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationRequest;
 
 @Repository
 public class ReservationDao {
@@ -37,7 +36,7 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Reservation insert(ReservationRequest request) {
+    public Reservation insert(Reservation reservation) {
         String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -47,16 +46,16 @@ public class ReservationDao {
                 PreparedStatement statement = connection.prepareStatement(
                         sql, new String[]{"id"}
                 );
-                statement.setString(1, request.name());
-                statement.setString(2, request.date());
-                statement.setLong(3, request.timeId());
+                statement.setString(1, reservation.getName());
+                statement.setString(2, reservation.getDate());
+                statement.setLong(3, reservation.getTime().getId());
 
                 return statement;
             }
         }, keyHolder);
 
         long generatedId = keyHolder.getKey().longValue();
-        return new Reservation(generatedId, request.name(), request.date(), new ReservationTime(request.timeId(), null));
+        return new Reservation(generatedId, reservation.getName(), reservation.getDate(), new ReservationTime(reservation.getTime().getId(), null));
     }
 
     public List<Reservation> select() {

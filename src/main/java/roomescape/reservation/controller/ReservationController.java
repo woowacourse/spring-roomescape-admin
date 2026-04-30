@@ -12,36 +12,37 @@ import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.payload.ReservationRequest;
 import roomescape.reservation.payload.ReservationResponse;
-import roomescape.reservation.repository.ReservationRepository;
+import roomescape.reservation.service.ReservationService;
 
 @Controller
 public class ReservationController {
 
-    private final ReservationRepository reservationRepository;
+    private final ReservationService reservationService;
 
-    public ReservationController(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<?> postReservation(@Valid @RequestBody ReservationRequest request) {
-        Reservation reservation = reservationRepository.save(request);
+        Reservation reservation = reservationService.save(request);
         return ResponseEntity.ok().body(ReservationResponse.from(reservation));
     }
 
     @GetMapping("/reservations")
     public ResponseEntity<?> getAllReservations() {
-        List<ReservationResponse> reservations = reservationRepository.findAll()
+        List<ReservationResponse> reservations = reservationService.findAll()
                 .stream()
                 .map(ReservationResponse::from)
                 .toList();
+
         return ResponseEntity.ok().body(reservations);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<?> deleteReservation(@PathVariable Long id) {
-        reservationRepository.deleteById(id);
-        return ResponseEntity.ok().build(); // 요구사항에 맞춰서 noContent대신 ok를 return한다.
+        reservationService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
 }

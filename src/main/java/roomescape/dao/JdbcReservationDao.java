@@ -13,7 +13,6 @@ import roomescape.dto.ReservationRequest;
 
 @Repository
 @Primary
-@Profile
 public class JdbcReservationDao implements ReservationDao {
     private final JdbcTemplate jdbcTemplate;
     public JdbcReservationDao(JdbcTemplate jdbcTemplate) {
@@ -34,18 +33,12 @@ public class JdbcReservationDao implements ReservationDao {
             on r.time_id = t.id;
             """;
         return jdbcTemplate.query(sql,
-                (resultSet, rowNum) -> {
-                    ReservationTime time = new ReservationTime(
-                            resultSet.getLong("time_id"),
-                            resultSet.getString("time_value")
-                    );
-                    return new Reservation(
-                            resultSet.getLong("reservation_id"),
-                            resultSet.getString("name"),
-                            resultSet.getString("date"),
-                            time
-                    );
-                });
+                (resultSet, rowNum) -> new Reservation(
+                        resultSet.getLong("reservation_id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("date"),
+                        new ReservationTime(resultSet.getLong("time_id"), resultSet.getString("time_value")))
+                );
     }
 
     @Override

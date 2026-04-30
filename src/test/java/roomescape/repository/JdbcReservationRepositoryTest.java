@@ -75,4 +75,20 @@ class JdbcReservationRepositoryTest {
         // then
         assertThat(repository.findAll()).isEmpty();
     }
+
+    @Test
+    void 아이디로_특정_데이터_조회_테스트() {
+        ReservationTime time = timeRepository.createReservationTime(new ReservationTime(null, LocalTime.parse("16:00")));
+        Reservation test = new Reservation(null, "브라운", "2026-04-29", time);
+        Long id = repository.createReservation(test);
+
+        // when
+        Reservation target = repository.findById(id);
+
+        // then
+        assertThat(target.getId()).isEqualTo(id);
+        assertThat(target.getName()).isEqualTo(test.getName());
+        assertThat(target.getDate()).isEqualTo(test.getDate());
+        assertThat(target.getTime()).isEqualTo(test.getTime());
+    }
 }

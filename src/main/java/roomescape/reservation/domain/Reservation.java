@@ -19,4 +19,13 @@ public class Reservation {
     public Long getTimeId() {
         return time.getId();
     }
+
+    public Reservation withId(Long generatedId) {
+        return Reservation.builder()
+                .id(generatedId)
+                .name(this.name)
+                .date(this.date)
+                .time(this.time)
+                .build();
+    }
 }

@@ -31,15 +31,7 @@ public class ReservationService {
         validateDuplicateReservation(request);
         Reservation reservation = request.toEntity(reservationTime);
 
-        Long saveId = reservationRepository.save(reservation);
-        Reservation saved = Reservation.builder()
-                .id(saveId)
-                .name(reservation.getName())
-                .date(reservation.getDate())
-                .time(reservationTime)
-                .build();
-
-        return ReservationResponse.from(saved);
+        return ReservationResponse.from(reservationRepository.save(reservation));
     }
 
     public void deleteReservation(Long id) {

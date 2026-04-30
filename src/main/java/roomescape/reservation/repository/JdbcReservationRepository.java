@@ -42,11 +42,10 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Long save(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         String formattedDate = reservation.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
                     "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
@@ -57,7 +56,7 @@ public class JdbcReservationRepository implements ReservationRepository {
             return ps;
         }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+        return reservation.withId(keyHolder.getKey().longValue());
     }
 
     @Override
@@ -68,7 +67,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     @Override
     public Boolean existsByDateAndTime(LocalDate date, Long timeId) {
         String formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        
+
         return jdbcTemplate.queryForObject(
                 "SELECT EXISTS(SELECT 1 FROM reservation WHERE date = ? AND time_id = ?)",
                 Boolean.class,

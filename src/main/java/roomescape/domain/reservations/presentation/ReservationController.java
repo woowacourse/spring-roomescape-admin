@@ -30,8 +30,8 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public List<Reservation> getReservations() {
-        return ResponseEntity.ok(service.getReservations()).getBody();
+    public ResponseEntity<List<Reservation>> getReservations() {
+        return ResponseEntity.ok(service.getReservations());
     }
 
     @DeleteMapping("/reservations/{id}")

@@ -20,6 +20,8 @@ import roomescape.domain.reservations.presentation.dto.ReservationResponse;
 
 class ReservationServiceTest {
 
+    private static final LocalDate TODAY = LocalDate.now();
+
     private ReservationRepository reservationRepository;
     private ReservationTimeRepository reservationTimeRepository;
     private ReservationService reservationService;
@@ -40,7 +42,7 @@ class ReservationServiceTest {
     private ReservationRequest createReservationRequest(ReservationTime time) {
         return new ReservationRequest(
                 "브라운",
-                LocalDate.now(),
+                TODAY,
                 time.getId()
         );
     }
@@ -64,7 +66,7 @@ class ReservationServiceTest {
         assertThat(savedReservation.time().id()).isEqualTo(time.getId());
         assertThat(savedReservation.time().startAt()).isEqualTo(time.getStartAt().toString());
         assertThat(savedReservation.name()).isEqualTo("브라운");
-        assertThat(savedReservation.date()).isEqualTo(LocalDate.now().toString());
+        assertThat(savedReservation.date()).isEqualTo(TODAY.toString());
         assertThat(savedReservation.time().id()).isEqualTo(time.getId());
 
     }
@@ -75,7 +77,7 @@ class ReservationServiceTest {
         // given
         ReservationRequest request = new ReservationRequest(
                 "브라운",
-                LocalDate.now(),
+                TODAY,
                 999L
         );
 
@@ -99,7 +101,7 @@ class ReservationServiceTest {
         ReservationTime time = createReservationTime();
         ReservationRequest request = new ReservationRequest(
                 null,
-                LocalDate.now(),
+                TODAY,
                 time.getId()
         );
 
@@ -115,7 +117,7 @@ class ReservationServiceTest {
         ReservationTime time = createReservationTime();
         ReservationRequest request = new ReservationRequest(
                 " ",
-                LocalDate.now(),
+                TODAY,
                 time.getId()
         );
 
@@ -146,7 +148,7 @@ class ReservationServiceTest {
         // given
         ReservationRequest request = new ReservationRequest(
                 "브라운",
-                LocalDate.now(),
+                TODAY,
                 null
         );
 
@@ -162,7 +164,7 @@ class ReservationServiceTest {
         ReservationTime time = createReservationTime();
         ReservationResponse savedReservation = saveReservation(
                 "브라운",
-                LocalDate.now(),
+                TODAY,
                 time
         );
 
@@ -173,7 +175,7 @@ class ReservationServiceTest {
         assertThat(reservations).hasSize(1);
         assertThat(reservations.get(0).getId()).isEqualTo(savedReservation.id());
         assertThat(reservations.get(0).getName()).isEqualTo("브라운");
-        assertThat(reservations.get(0).getDate()).isEqualTo(LocalDate.of(2026, 4, 29));
+        assertThat(reservations.get(0).getDate()).isEqualTo(TODAY);
         assertThat(reservations.get(0).getTime()).isEqualTo(time);
     }
 
@@ -194,7 +196,7 @@ class ReservationServiceTest {
         ReservationTime time = createReservationTime();
         ReservationResponse savedReservation = saveReservation(
                 "브라운",
-                LocalDate.now(),
+                TODAY,
                 time
         );
 

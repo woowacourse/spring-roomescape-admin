@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReservationController {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationController(ReservationRepository reservationRepository) {
+    public ReservationController(ReservationRepository reservationRepository,
+                                 ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @GetMapping("/reservations")
@@ -32,7 +35,8 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> createReservation(@RequestBody ReservationRequest request) {
-        Reservation reservation = new Reservation(request.getName(), request.getDate(), request.getTime());
+        ReservationTime time = reservationTimeRepository.findById(request.getTimeId());
+        Reservation reservation = new Reservation(request.getName(), request.getDate(), time);
 
         Reservation savedReservation = reservationRepository.save(reservation);
 

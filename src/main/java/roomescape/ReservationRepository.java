@@ -23,24 +23,45 @@ public class ReservationRepository {
     }
 
     public List<Reservation> findAll() {
-        String sql = "SELECT id, name, date, time FROM reservation";
+        String sql = """
+                SELECT r.id as reservation_id,
+                       r.name,
+                       r.date,
+                       t.id as time_id,
+                       t.start_at
+                FROM reservation as r
+                INNER JOIN reservation_time as t ON r.time_id = t.id
+                """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> new Reservation(
-                rs.getLong("id"),
+                rs.getLong("reservation_id"),
                 rs.getString("name"),
                 LocalDate.parse(rs.getString("date")),
-                LocalTime.parse(rs.getString("time"))
+                new ReservationTime(
+                        rs.getLong("time_id"),
+                        LocalTime.parse(rs.getString("start_at")))
         ));
     }
 
     public Reservation findById(Long id) {
-        String sql = "SELECT id, name, date, time FROM reservation WHERE id = ?";
+        String sql = """
+                SELECT r.id as reservation_id,
+                       r.name,
+                       r.date,
+                       t.id as time_id,
+                       t.start_at
+                FROM reservation as r
+                INNER JOIN reservation_time as t ON r.time_id = t.id
+                WHERE r.id = ?
+                """;
 
         return jdbcTemplate.queryForObject(sql, (rs, ronNum) -> new Reservation(
-                rs.getLong("id"),
+                rs.getLong("reservation_id"),
                 rs.getString("name"),
                 LocalDate.parse(rs.getString("date")),
-                LocalTime.parse(rs.getString("time"))
+                new ReservationTime(
+                        rs.getLong("time_id"),
+                        LocalTime.parse(rs.getString("start_at")))
         ), id);
     }
 
@@ -48,7 +69,7 @@ public class ReservationRepository {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("name", reservation.getName());
         parameters.put("date", reservation.getDate().toString());
-        parameters.put("time", reservation.getTime().toString());
+        parameters.put("time_id", reservation.getTime().getId());
 
         Number key = simpleJdbcInsert.executeAndReturnKey(parameters);
 

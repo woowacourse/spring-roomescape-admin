@@ -1,14 +1,13 @@
 package roomescape;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class ReservationRequest {
 
     private String name;
     private LocalDate date;
-    private LocalTime time;
-    
+    private Long timeId;
+
     public String getName() {
         return name;
     }
@@ -17,7 +16,7 @@ public class ReservationRequest {
         return date;
     }
 
-    public LocalTime getTime() {
-        return time;
+    public Long getTimeId() {
+        return timeId;
     }
 }

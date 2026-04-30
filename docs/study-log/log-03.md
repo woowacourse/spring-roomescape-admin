@@ -15,8 +15,8 @@
   - 단순하게 구현한 뒤, 구현한 내용 중 블랙박스 처럼 남아있는 지점을 '기초 지식 테스트'로 테스트를 진행함.
 - 실제로 어떻게 학습했는지 디테일한 과정을 써보세요.
   1. 단순하게 구현하기: ReservationTime 추가 및 Reservation과의 FK 연관 관계 구현
-  2. 구현 내용에서 기초 지식 테스트 받기: Jdbc가 막힌 것에 대한 질문을 던짐 (JdbcTemplate이 어떻게 LocalTime으로 바꿀까?)
-     * 과정에서 발생하는 타입 변환에 의문을 가짐.
+  2. 구현 내용에서 기초 지식 테스트 받기: JdbcTemplate이 어떻게 LocalTime으로 바꿀까?
+     * 바뀌는 과정에서 발생하는 타입 변환에 의문을 가짐.
   3. 가설 기반 질문: spring framework가 처리해주고 있을 것이다.
      * `java.sql.ResultSet` 객체를 뜯어보고 interface라서 구현체가 어딘가 있겠다는 생각으로 java.sql library root를 탐색했다.
      * 하지만 java.sql 라이브러리에는 하나의 프로토콜처럼 interface만 존재했다.

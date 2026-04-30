@@ -34,9 +34,7 @@ public class ReservationRepository {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
-            PreparedStatement pstmt = connection.prepareStatement(
-                    sql,
-                    new String[]{"id"});
+            PreparedStatement pstmt = connection.prepareStatement(sql, new String[]{"id"});
 
             pstmt.setString(1, dto.getName());
             pstmt.setString(2, dto.getDate());

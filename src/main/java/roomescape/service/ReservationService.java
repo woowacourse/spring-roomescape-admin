@@ -9,6 +9,8 @@ import roomescape.domain.Name;
 import roomescape.domain.Reservation;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.response.ReservationResponse;
+import roomescape.dto.response.ReservationTimeResponse;
 
 @Service
 public class ReservationService {
@@ -20,11 +22,15 @@ public class ReservationService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public List<Reservation> findAllReservations() {
-        return reservationDao.findAll();
+    public List<ReservationResponse> findAllReservations() {
+        List<Reservation> reservations = reservationDao.findAll();
+
+        return reservations.stream()
+                .map(this::convertToResponse)
+                .toList();
     }
 
-    public Reservation createReservation(ReservationRequest request) {
+    public ReservationResponse createReservation(ReservationRequest request) {
         ReservationTime reservationTime = reservationTimeDao.findById(request.timeId());
 
         Long generatedId = reservationDao.insertReservation(
@@ -33,15 +39,33 @@ public class ReservationService {
                 request.timeId()
         );
 
-        return new Reservation(
+        Reservation newReservation = new Reservation(
                 generatedId,
                 Name.parse(request.name()),
                 LocalDate.parse(request.date()),
                 reservationTime
         );
+
+        return convertToResponse(newReservation);
     }
 
     public void deleteReservation(Long id) {
         reservationDao.deleteById(id);
+    }
+
+    private ReservationResponse convertToResponse(Reservation reservation) {
+        return new ReservationResponse(
+                reservation.getId(),
+                reservation.getName().toString(),
+                reservation.getDate().toString(),
+                convertToResponse(reservation.getTime())
+        );
+    }
+
+    private ReservationTimeResponse convertToResponse(ReservationTime reservationTime) {
+        return new ReservationTimeResponse(
+                reservationTime.getId(),
+                reservationTime.getStartAt().toString()
+        );
     }
 }

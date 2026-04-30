@@ -5,25 +5,34 @@ import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.mapper.ReservationMapper;
 import roomescape.reservation.repository.dao.ReservationDao;
+import roomescape.reservation.repository.entity.ReservationEntity;
+import roomescape.time.repository.dao.ReservationTimeDao;
+import roomescape.time.repository.entity.ReservationTimeEntity;
 
 @Repository
 public class ReservationRepository {
 
     private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationRepository(ReservationDao reservationDao) {
+    public ReservationRepository(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
         this.reservationDao = reservationDao;
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     public List<Reservation> findAll() {
         return reservationDao.selectAll().stream()
-                .map(ReservationMapper::toReservation)
-                .toList();
+                .map(reservation ->
+                        ReservationMapper.toReservation(reservation,
+                                reservationTimeDao.findById(reservation.getTimeId()))
+                ).toList();
     }
 
     public Reservation save(Reservation reservation) {
         Long id = reservationDao.insert(reservation);
-        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+        ReservationEntity reservationEntity = ReservationMapper.toReservationEntity(id, reservation);
+        ReservationTimeEntity reservationTimeEntity = reservationTimeDao.findById(reservation.getTimeId());
+        return ReservationMapper.toReservation(reservationEntity, reservationTimeEntity);
     }
 
     public void delete(Long id) {

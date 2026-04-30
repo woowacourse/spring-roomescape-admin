@@ -9,10 +9,12 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import util.TestDataInitializer;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class MissionStep3Test {
+
     @Test
     void 시간_관리_API() {
         Map<String, String> params = new HashMap<>();
@@ -39,6 +41,8 @@ class MissionStep3Test {
 
     @Test
     void 예약과_시간_연결() {
+        TestDataInitializer.initializeReservationTime();
+
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");

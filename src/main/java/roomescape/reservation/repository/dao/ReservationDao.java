@@ -2,8 +2,6 @@ package roomescape.reservation.repository.dao;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -21,7 +19,7 @@ public class ReservationDao {
                     rs.getLong("id"),
                     rs.getString("name"),
                     LocalDate.parse(rs.getString("date")),
-                    LocalTime.parse(rs.getString("time"), DateTimeFormatter.ofPattern("HH:mm"))
+                    rs.getLong("time_id")
             );
     private final JdbcTemplate jdbcTemplate;
 
@@ -35,13 +33,13 @@ public class ReservationDao {
     }
 
     public Long insert(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time) values (?,?,?);";
+        String sql = "insert into reservation (name, date, time_id) values (?,?,?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement pstm = connection.prepareStatement(sql, new String[]{"id"});
             pstm.setString(1, reservation.getName());
             pstm.setString(2, String.valueOf(reservation.getDate()));
-            pstm.setString(3, String.valueOf(reservation.getTime()));
+            pstm.setString(3, String.valueOf(reservation.getTimeId()));
             return pstm;
         }, keyHolder);
 

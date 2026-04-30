@@ -7,6 +7,11 @@ public class ReservationTime {
     private final Long id;
     private final LocalTime startTime;
 
+    public ReservationTime(LocalTime startTime) {
+        this.id = null;
+        this.startTime = startTime;
+    }
+
     public ReservationTime(Long id, LocalTime startTime) {
         this.id = id;
         this.startTime = startTime;

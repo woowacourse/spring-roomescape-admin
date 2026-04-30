@@ -21,8 +21,8 @@ public class ReservationTimeResponse {
         );
     }
 
-    public static ReservationTimeResponse of(Long id, ReservationTimeRequest request) {
-        return new ReservationTimeResponse(id, request.toString());
+    public static ReservationTimeResponse of(ReservationTime reservationTime) {
+        return new ReservationTimeResponse(reservationTime.getId(), reservationTime.getStartTime().toString());
     }
 
     public Long getId() {

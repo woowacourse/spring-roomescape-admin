@@ -19,9 +19,10 @@ public class ReservationTimeService {
     }
 
     @Transactional
-    public ReservationTimeResponse create(ReservationTimeRequest request) {
-        Long id = repository.create(request.getStartAt());
-        return ReservationTimeResponse.of(id, request);
+    public ReservationTimeResponse create(ReservationTime reservationTime) {
+        Long id = repository.create(reservationTime);
+        ReservationTime newReservation = new ReservationTime(id, reservationTime.getStartTime());
+        return ReservationTimeResponse.of(newReservation);
     }
 
     @Transactional

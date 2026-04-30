@@ -19,14 +19,14 @@ public class ReservationTimeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long create(LocalTime startAt) {
+    public Long create(ReservationTime reservationTime) {
         String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(
                 connection -> {
                     PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-                    ps.setObject(1, startAt);
+                    ps.setObject(1, reservationTime.getStartTime());
                     return ps;
                 }, keyHolder);
         return keyHolder.getKey().longValue();

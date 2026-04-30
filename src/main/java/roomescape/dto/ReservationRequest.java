@@ -1,4 +1,7 @@
-package roomescape;
+package roomescape.dto;
+
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 public record ReservationRequest(
         String date,

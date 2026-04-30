@@ -2,12 +2,13 @@
 
 ## Logs
 
-| log    | link                                          |
-|--------|-----------------------------------------------|
-| log-01 | [추측은 조금만](docs/study-log/log-01.md)           |
-| log-02 | [증요한 개념은 한 단계 더 깊게](docs/study-log/log-02.md) |
-| log-03 | [의문 구분하기](docs/study-log/log-03.md)           |
-| log-04 | [의문 나누고 해결하기](docs/study-log/log-04.md)       |
+| log    | link                                             |
+|--------|--------------------------------------------------|
+| log-01 | [추측은 조금만](docs/study-log/log-01.md)              |
+| log-02 | [증요한 개념은 한 단계 더 깊게](docs/study-log/log-02.md)    |
+| log-03 | [의문 구분하기](docs/study-log/log-03.md)              |
+| log-04 | [의문 나누고 해결하기](docs/study-log/log-04.md)          |
+| log-05 | [요구사항을 넘어서는 의문은 기록해두자](docs/study-log/log-05.md) |
 
 ## Learning Method Evolution
 

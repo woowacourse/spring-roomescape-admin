@@ -89,7 +89,7 @@ Content-Type: application/json
     - [x] 새로운 테스트 도구나 기법(Spring Boot Test, Mock, RestAssured 추가 활용 등)을 도입하지 않는다.
     - [x] 요구사항에서 RestAssured가 주어진 경우 그대로 사용하되, 그 위에 새 테스트 기법을 쌓지 않는다.
 
-- [ ] 시간 관리 API
+- [x] 시간 관리 API
 
 | 기능    | 메서드 / URL            | 요청 본문       | 응답                     |
 |-------|----------------------|-------------|------------------------|
@@ -97,9 +97,9 @@ Content-Type: application/json
 | 시간 조회 | `GET /times`         |             | `[{id, startAt}, ...]` |
 | 시간 삭제 | `DELETE /times/{id}` |             | `200 OK`               |
 
-- [ ] Reservation 클래스의 time 필드를 String → ReservationTime 객체로 변경
-    - [ ] 예약 추가 요청 본문: time → timeId
-    - [ ] 예약 조회 응답: time을 객체로 ({id, startAt})
+- [x] Reservation 클래스의 time 필드를 String → ReservationTime 객체로 변경
+    - [x] 예약 추가 요청 본문: time → timeId
+    - [x] 예약 조회 응답: time을 객체로 ({id, startAt})
 
 <details>
 
@@ -132,6 +132,10 @@ Content-Type: application/json
 ```
 
 </details>
+
+### 단계4 - 계층 분리
+
+#### ReservationController에 웹 요청 처리·비즈니스 로직·DB 접근이 모두 몰려 응집도는 낮고 결합도는 높은 상황이다. 레이어드 아키텍처로 레이어별 책임에 따라 코드를 분리한다.
 
 # 📝API 명세
 

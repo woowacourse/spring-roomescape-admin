@@ -7,17 +7,17 @@ public class Reservation {
     private final Long id;
     private final String name;
     private final LocalDate date;
-    private final Long timeId;
+    private final ReservationTime time;
 
-    private Reservation(Long id, String name, LocalDate date, Long timeId) {
+    private Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.timeId = timeId;
+        this.time = time;
     }
 
-    public static Reservation of(Long id, String name, LocalDate date, Long timeId) {
-        return new Reservation(id, name, date, timeId);
+    public static Reservation of(Long id, String name, LocalDate date, ReservationTime time) {
+        return new Reservation(id, name, date, time);
     }
 
     public Long getId() {
@@ -32,8 +32,8 @@ public class Reservation {
         return date;
     }
 
-    public Long getTimeId() {
-        return timeId;
+    public ReservationTime getTime() {
+        return time;
     }
 
 }

@@ -49,7 +49,7 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
         JOIN reservation_time rt ON r.time_id = rt.id
         WHERE r.id = ?
         """;
-        Reservation reservation = jdbcTemplate.queryForObject(
+        List<Reservation> reservation = jdbcTemplate.query(
                 sql,
                 (rs, rowNum) -> {
                     ReservationTime time = ReservationTime.of(
@@ -66,7 +66,9 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
                 },
                 id
         );
-        return Optional.ofNullable(reservation);
+
+        return reservation.stream()
+                .findFirst();
     }
 
     @Override

@@ -35,13 +35,15 @@ public class ReservationTimeJdbcTemplateRepository implements ReservationTimeRep
     @Override
     public Optional<ReservationTime> findById(Long id) {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
+        List<ReservationTime> reservationTime = jdbcTemplate.query(sql,
                 (rs, rowNum) -> ReservationTime.of(
                         rs.getLong("id"),
                         rs.getTime("start_at").toLocalTime()
                 ),
                 id
-        ));
+        );
+        return reservationTime.stream()
+                .findFirst();
     }
 
     @Override

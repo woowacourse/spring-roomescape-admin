@@ -27,6 +27,7 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
+    @Transactional
     public void deleteReservation(Long id) {
         reservationRepository.delete(id);
     }

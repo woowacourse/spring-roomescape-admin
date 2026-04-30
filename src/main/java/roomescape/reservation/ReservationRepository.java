@@ -54,7 +54,7 @@ public class ReservationRepository {
 
     public Optional<Reservation> findById(Long id) {
         String sql = "SELECT r.id, r.name, r.date, t.id as time_id, t.start_at " +
-                "FROM reservation r INNER JOIN reservation_time t ON r.time_id = t.id "+
+                "FROM reservation r INNER JOIN reservation_time t ON r.time_id = t.id " +
                 "WHERE r.id = ?";
         List<Reservation> reservations = jdbcTemplate.query(sql, reservationRowMapper, id);
         return reservations.stream().findFirst();

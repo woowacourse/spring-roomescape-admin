@@ -3,26 +3,26 @@ package roomescape.reservation;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import roomescape.exception.ReservationNotFoundException;
-import roomescape.exception.ReservationTimeNotFoundException;
+import roomescape.exception.ErrorCode;
+import roomescape.exception.RoomescapeException;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.time.ReservationTime;
-import roomescape.time.ReservationTimeRepository;
+import roomescape.time.ReservationTimeService;
 
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationService(ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
+    public ReservationService(ReservationRepository reservationRepository, ReservationTimeService reservationTimeService) {
         this.reservationRepository = reservationRepository;
-        this.reservationTimeRepository = reservationTimeRepository;
+        this.reservationTimeService = reservationTimeService;
     }
 
     public ReservationResponse create(ReservationRequest reservationRequest) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequest.timeId()).orElseThrow(ReservationTimeNotFoundException::new); // 예외 처리
+        ReservationTime reservationTime = reservationTimeService.findById(reservationRequest.timeId());
 
         Reservation reservation = new Reservation(
                 reservationRequest.name(),
@@ -40,7 +40,7 @@ public class ReservationService {
     }
 
     public void delete(Long id) {
-        reservationRepository.findById(id).orElseThrow(ReservationNotFoundException::new);
+        reservationRepository.findById(id).orElseThrow(() -> new RoomescapeException(ErrorCode.RESERVATION_NOT_FOUND));
         reservationRepository.deleteById(id);
     }
 }

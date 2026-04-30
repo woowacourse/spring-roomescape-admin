@@ -2,7 +2,6 @@ package roomescape;
 
 import static org.hamcrest.Matchers.is;
 
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 

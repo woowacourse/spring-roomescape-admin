@@ -3,7 +3,8 @@ package roomescape.time;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import roomescape.exception.ReservationTimeNotFoundException;
+import roomescape.exception.ErrorCode;
+import roomescape.exception.RoomescapeException;
 import roomescape.time.dto.ReservationTimeRequest;
 import roomescape.time.dto.ReservationTimeResponse;
 
@@ -32,7 +33,11 @@ public class ReservationTimeService {
     }
 
     public void delete(Long id) {
-        reservationTimeRepository.findById(id).orElseThrow(ReservationTimeNotFoundException::new); // 예외 처리
+        findById(id);
         reservationTimeRepository.deleteById(id);
+    }
+
+    public ReservationTime findById(Long id) {
+        return reservationTimeRepository.findById(id).orElseThrow(() -> new RoomescapeException(ErrorCode.RESERVATION_TIME_NOT_FOUND));
     }
 }

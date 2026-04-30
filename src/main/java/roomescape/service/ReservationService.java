@@ -24,13 +24,9 @@ public class ReservationService {
         return reservationDao.findAll();
     }
 
-    public Reservation create(ReservationRequest request) {
-        ReservationTime time = reservationTimeDao.findBy(request.getTimeId());
-        Reservation reservation = new Reservation(
-                null,
-                request.getName(),
-                request.getDate(),
-                time);
+    public Reservation create(String name, String date, Long timeId) {
+        ReservationTime time = reservationTimeDao.findBy(timeId);
+        Reservation reservation = new Reservation(null, name, date, time);
         Long id = reservationDao.insert(reservation);
         return reservationDao.findBy(id);
     }

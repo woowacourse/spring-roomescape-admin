@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.mission;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -14,7 +14,7 @@ import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class MissionStepTest {
+class MissionStep1Test {
 
     @BeforeEach
     void 예약_시간_생성() {

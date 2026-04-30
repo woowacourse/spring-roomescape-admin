@@ -31,7 +31,7 @@ public class ReservationsService {
 
     @Transactional
     public Reservation register(ReservationRequest request) {
-        ReservationEntity entity = request.to();
+        ReservationEntity entity = request.toReservationEntity();
         ReservationEntity entityWithId =
                 reservationsRepository.saveReservation(entity);
 

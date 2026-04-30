@@ -9,7 +9,7 @@ public record ReservationRequest(
         LocalDate date,
         Long timeId
 ) {
-    public ReservationEntity to() {
+    public ReservationEntity toReservationEntity() {
         return ReservationEntity.of(
                 name,
                 Date.valueOf(date),

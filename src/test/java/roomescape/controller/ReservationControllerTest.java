@@ -93,17 +93,21 @@ class ReservationControllerTest {
         assertThat(reservations.get(0).id()).isEqualTo(1L);
         assertThat(reservations.get(0).name()).isEqualTo("브라운");
         assertThat(reservations.get(0).date()).isEqualTo("2026-04-29");
-        assertThat(reservations.get(0).time()).isEqualTo("10:30");
+        assertThat(reservations.get(0).time().id()).isEqualTo(1L);
+        assertThat(reservations.get(0).time().startAt()).isEqualTo("10:00");
 
         assertThat(reservations.get(1).id()).isEqualTo(2L);
         assertThat(reservations.get(1).name()).isEqualTo("리사");
         assertThat(reservations.get(1).date()).isEqualTo("2026-04-30");
-        assertThat(reservations.get(1).time()).isEqualTo("10:40");
+        assertThat(reservations.get(1).time().id()).isEqualTo(2L);
+        assertThat(reservations.get(1).time().startAt()).isEqualTo("11:00");
     }
 
     @Test
     @DisplayName("예약이 존재하는 상황에서 예약을 삭제한다.")
     void deleteReservation_After_Create() {
+        reservationController.createTime(new TimeRequest("10:00"));
+        reservationController.createTime(new TimeRequest("11:00"));
         reservationController.create(new ReservationRequest("브라운", "2026-04-29", 1L));
         reservationController.create(new ReservationRequest("리사", "2026-04-30", 2L));
 

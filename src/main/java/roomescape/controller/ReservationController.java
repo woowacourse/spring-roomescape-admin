@@ -32,14 +32,26 @@ public class ReservationController {
     @GetMapping("/reservations")
     @ResponseBody
     public List<ReservationResponse> findAll() {
-        return jdbcTemplate.query(
-                "SELECT id, name, date, time FROM reservation ORDER BY id",
+        return jdbcTemplate.query("""
+                        SELECT r.id AS reservation_id,
+                               r.name,
+                               r.date,
+                               t.id AS time_id,
+                               t.start_at
+                        FROM reservation r
+                        INNER JOIN reservation_time t
+                            ON r.time_id = t.id
+                        ORDER BY r.id
+                        """,
                 (resultSet, rowNum) -> {
                     Reservation reservation = new Reservation(
-                            resultSet.getLong("id"),
+                            resultSet.getLong("reservation_id"),
                             new Name(resultSet.getString("name")),
                             new ReservationDate(resultSet.getString("date")),
-                            new ReservationTime(1L, "10:00")
+                            new ReservationTime(
+                                    resultSet.getLong("time_id"),
+                                    resultSet.getString("start_at")
+                            )
                     );
 
                     return ReservationResponse.from(reservation);

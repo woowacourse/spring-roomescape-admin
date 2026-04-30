@@ -1,16 +1,18 @@
 package roomescape.reservation;
 
+import roomescape.reservationtime.ReservationTime;
+
 public class Reservation {
-    private long id;
+    private Long id;
     private String name;
     private String date;
-    private Long time_id;
+    private ReservationTime reservationTime;
 
-    public Reservation(long id, String name, String date, Long time_id) {
+    public Reservation(Long id, String name, String date, ReservationTime reservationTime) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.time_id = time_id;
+        this.reservationTime = reservationTime;
     }
 
     public long getId() {
@@ -25,11 +27,11 @@ public class Reservation {
         return date;
     }
 
-    public Long getTimeId() {
-        return time_id;
+    public ReservationTime getReservationTime() {
+        return reservationTime;
     }
 
     public static Reservation toEntity(Reservation reservation, Long id) {
-        return new Reservation(id, reservation.name, reservation.date, reservation.time_id);
+        return new Reservation(id, reservation.name, reservation.date, reservation.getReservationTime());
     }
 }

@@ -1,12 +1,12 @@
 package roomescape.reservationtime;
 
 public class ReservationTime {
-    private long id;
-    private String start_at;
+    private Long id;
+    private String startAt;
 
-    public ReservationTime(long id, String start_at) {
+    public ReservationTime(Long id, String startAt) {
         this.id = id;
-        this.start_at = start_at;
+        this.startAt = startAt;
     }
 
     public long getId() {
@@ -14,10 +14,10 @@ public class ReservationTime {
     }
 
     public String getStartAt() {
-        return start_at;
+        return startAt;
     }
 
     public static ReservationTime toEntity(ReservationTime reservationTime, Long id) {
-        return new ReservationTime(id, reservationTime.start_at);
+        return new ReservationTime(id, reservationTime.startAt);
     }
 }

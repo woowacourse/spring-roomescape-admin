@@ -18,8 +18,6 @@ import roomescape.domain.ReservationDate;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.dto.TimeRequest;
-import roomescape.dto.TimeResponse;
 
 @Controller
 public class ReservationController {
@@ -94,58 +92,6 @@ public class ReservationController {
     @ResponseBody
     public void delete(@PathVariable Long id) {
         jdbcTemplate.update("DELETE FROM RESERVATION WHERE id = ?", id);
-    }
-
-    @PostMapping("/times")
-    @ResponseBody
-    public TimeResponse createTime(@RequestBody TimeRequest request) {
-        KeyHolder keyholder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(
-                connection -> {
-                    PreparedStatement preparedStatement = connection.prepareStatement(
-                            "INSERT INTO reservation_time (start_at) VALUES (?)",
-                            new String[]{"id"});
-
-                    preparedStatement.setString(1, request.startAt());
-
-                    return preparedStatement;
-                }, keyholder);
-
-        Number key = keyholder.getKey();
-        if (key == null) {
-            throw new IllegalStateException("[ERROR] 예약 ID가 생성되지 않았습니다.");
-        }
-
-        return new TimeResponse(key.longValue(), request.startAt());
-    }
-
-    @GetMapping("/times")
-    @ResponseBody
-    public List<TimeResponse> findAllTime() {
-        return jdbcTemplate.query(
-                "SELECT id, start_at FROM reservation_time ORDER BY id",
-                (resultSet, rowNum) -> {
-                    ReservationTime reservationTime = new ReservationTime(
-                            resultSet.getLong("id"),
-                            resultSet.getString("start_at")
-                    );
-
-                    return TimeResponse.from(reservationTime);
-                }
-        );
-    }
-
-    @DeleteMapping("/times/{id}")
-    @ResponseBody
-    public void deleteTime(@PathVariable Long id) {
-        int deleteCount = jdbcTemplate.update(
-                "DELETE FROM reservation_time WHERE id = ?", id
-        );
-
-        if (deleteCount == 0) {
-            throw new IllegalArgumentException("[ERROR] 존재하지 않는 시간입니다.");
-        }
     }
 
     private ReservationTime findTimeById(Long id) {

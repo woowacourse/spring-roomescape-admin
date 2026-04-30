@@ -1,7 +1,6 @@
 package roomescape.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,8 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.dto.TimeRequest;
-import roomescape.dto.TimeResponse;
 
 class ReservationControllerTest {
     ReservationController reservationController;
@@ -55,7 +52,7 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약을 생성한다.")
     void makeReservation() {
-        reservationController.createTime(new TimeRequest("10:00"));
+        insertTime("10:00");
         ReservationRequest request = new ReservationRequest(
                 "브라운",
                 "2026-04-29",
@@ -82,8 +79,8 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약이 생성된 상태에서 예약을 조회한다.")
     void findAllReservations_After_Create() {
-        reservationController.createTime(new TimeRequest("10:00"));
-        reservationController.createTime(new TimeRequest("11:00"));
+        insertTime("10:00");
+        insertTime("11:00");
         reservationController.create(new ReservationRequest("브라운", "2026-04-29", 1L));
         reservationController.create(new ReservationRequest("리사", "2026-04-30", 2L));
 
@@ -106,8 +103,8 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약이 존재하는 상황에서 예약을 삭제한다.")
     void deleteReservation_After_Create() {
-        reservationController.createTime(new TimeRequest("10:00"));
-        reservationController.createTime(new TimeRequest("11:00"));
+        insertTime("10:00");
+        insertTime("11:00");
         reservationController.create(new ReservationRequest("브라운", "2026-04-29", 1L));
         reservationController.create(new ReservationRequest("리사", "2026-04-30", 2L));
 
@@ -120,61 +117,7 @@ class ReservationControllerTest {
         assertThat(reservations.get(0).name()).isEqualTo("리사");
     }
 
-    @Test
-    @DisplayName("시간을 추가한다.")
-    void createTime() {
-        TimeRequest timeRequest = new TimeRequest("10:00");
-
-        TimeResponse timeResponse = reservationController.createTime(timeRequest);
-
-        assertThat(timeResponse.id()).isEqualTo(1L);
-        assertThat(timeResponse.startAt()).isEqualTo("10:00");
-    }
-
-    @Test
-    @DisplayName("시간이 생성된 상태에서 시간을 조회한다.")
-    void findAllTimes_After_Create() {
-        reservationController.createTime(new TimeRequest("10:00"));
-        reservationController.createTime(new TimeRequest("11:00"));
-
-        List<TimeResponse> timeResponses = reservationController.findAllTime();
-
-        assertThat(timeResponses).hasSize(2);
-
-        assertThat(timeResponses.get(0).id()).isEqualTo(1L);
-        assertThat(timeResponses.get(0).startAt()).isEqualTo("10:00");
-
-        assertThat(timeResponses.get(1).id()).isEqualTo(2L);
-        assertThat(timeResponses.get(1).startAt()).isEqualTo("11:00");
-    }
-
-    @Test
-    @DisplayName("아무 시간도 없는 상태에서 시간을 조회한다.")
-    void findAllTimes_Before_Create() {
-        List<TimeResponse> times = reservationController.findAllTime();
-
-        assertThat(times).isEmpty();
-    }
-
-    @Test
-    @DisplayName("시간을 삭제한다.")
-    void deleteTime_After_Create() {
-        reservationController.createTime(new TimeRequest("10:00"));
-        reservationController.createTime(new TimeRequest("11:00"));
-
-        reservationController.deleteTime(1L);
-
-        List<TimeResponse> times = reservationController.findAllTime();
-
-        assertThat(times).hasSize(1);
-        assertThat(times.get(0).id()).isEqualTo(2L);
-        assertThat(times.get(0).startAt()).isEqualTo("11:00");
-    }
-
-    @Test
-    @DisplayName("존재하지 않는 시간을 삭제하면 예외가 발생한다.")
-    void deleteTime_NotFound() {
-        assertThatThrownBy(() -> reservationController.deleteTime(1L))
-                .isInstanceOf(IllegalArgumentException.class);
+    private void insertTime(String startAt) {
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", startAt);
     }
 }

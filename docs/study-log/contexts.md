@@ -14,6 +14,9 @@
 - [ ] developmentOnly
 - [ ] var in java
 - [ ] 컴파일 타임 타입 추론(Local-Variable Type Inference)
-- [ ] 
-- [ ] 
+
+### 3단계: 시간 관리
+
+- [ ] N+1 쿼리
+- [ ] DB 에서 JOIN vs Repository 에서 조립
 - [ ] 

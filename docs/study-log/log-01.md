@@ -1,7 +1,8 @@
 ## 학습 로그 #01
 
-**시간**: 04/29 18:45 ~ 19:10 (약 25분)
-**학습 범위**: 1단계 MVC - `ResponseEntity`
+### **시간**: 04/29 18:45 ~ 19:10 (약 25분)
+
+### **학습 범위**: 1단계 MVC - `ResponseEntity`, `ResponseEntity.build()`
 
 ### 1. 막힌 것의 종류
 
@@ -13,6 +14,8 @@
 - [x] 아는 코드고 잘 돌아가지만 제대로 이해하지 못했다
 
 ### 2. 이번 타임의 학습 전략
+
+### `ResponseEntity`
 
 `P` ResponseEntity 도입 목적과 필요성은?
 
@@ -73,6 +76,23 @@ classDiagram
 ```
 
 `R` 고마워요 제미나이! 스프링 공식문서도 함 찾아봐야..
+
+---
+
+### `ResponseEntity.build()`
+
+`P` 헤더와 상태 코드는 있되 본문이 없는 응답을 보내기 위함?
+
+```java
+/**
+ * Build the response entity with no body.
+ * @return the response entity
+ * @see BodyBuilder#body(Object)
+ */
+<T> ResponseEntity<T> build();
+```
+
+> 그렇다.
 
 ### 3. 전략 평가
 

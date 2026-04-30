@@ -45,3 +45,13 @@ Content-Type: application/json
 | 시간 추가 | POST /times        | `{startAt}` | `{id, startAt}`        |
 | 시간 조회 | GET /times         | -           | `[{id, startAt}, ...]` |
 | 시간 삭제 | DELETE /times/{id} | -           | `200 OK`               |
+
+## 4단계: 계층 분리
+레이어별 책임과 역할에 따라 클래스를 분리하고, 분리한 클래스를 Spring Bean으로 등록한다.
+
+| 레이어            | 책임            |
+|------------------|-----------------|
+| Controller       | 웹 요청·응답     |
+| Service          | 비즈니스 플로우  |
+| DAO (Repository) | DB 접근          |
+| Domain           | 비즈니스 규칙    |

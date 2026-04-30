@@ -55,6 +55,11 @@ class ReservationsServiceTest {
                         )
                 ));
 
+        given(timesRepository.getTimeEntityById(1L))
+                .willReturn(TimeEntity.of(LocalTime.of(10,0)));
+        given(timesRepository.getTimeEntityById(2L))
+                .willReturn(TimeEntity.of(LocalTime.of(11,0)));
+
         // when
         List<Reservation> reservations = reservationsService.getReservations();
 
@@ -62,6 +67,8 @@ class ReservationsServiceTest {
         assertThat(reservations).hasSize(2);
 
         verify(reservationsRepository).getReservations();
+        verify(timesRepository).getTimeEntityById(1L);
+        verify(timesRepository).getTimeEntityById(2L);
     }
 
     @DisplayName("새로운 예약을 등록한다.")
@@ -99,7 +106,7 @@ class ReservationsServiceTest {
         assertThat(reservation.id()).isEqualTo(1L);
         assertThat(reservation.name()).isEqualTo("브라운");
         assertThat(reservation.date()).isEqualTo(LocalDate.of(2026, 4, 29));
-        assertThat(reservation.time().startAt()).isEqualTo(Time.valueOf(LocalTime.of(10, 0)));
+        assertThat(reservation.timeInfo().startAt()).isEqualTo(LocalTime.of(10, 0));
 
         verify(reservationsRepository).saveReservation(any(ReservationEntity.class));
         verify(timesRepository).getTimeEntityById(1L);

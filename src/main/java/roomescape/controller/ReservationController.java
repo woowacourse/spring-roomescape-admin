@@ -28,14 +28,15 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<List<Reservation>> read() {
+    public ResponseEntity<List<Reservation>> readReservations() {
         List<Reservation> reservations = reservationDAO.findAll();
         return ResponseEntity.ok().body(reservations);
     }
 
     @PostMapping("/reservations")
     @ResponseBody
-    public ResponseEntity<Reservation> create(@RequestBody CreateReservationRequest createReservationRequest) {
+    public ResponseEntity<Reservation> createReservation(
+            @RequestBody CreateReservationRequest createReservationRequest) {
         ReservationTime reservationTime = reservationTimeDAO.findById(createReservationRequest.timeId());
         Reservation newReservation = new Reservation(
                 null,
@@ -51,8 +52,28 @@ public class ReservationController {
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationDAO.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/times")
+    public ResponseEntity<List<ReservationTime>> readTimes() {
+        List<ReservationTime> reservationTimes = reservationTimeDAO.findAll();
+        return ResponseEntity.ok().body(reservationTimes);
+    }
+
+    @PostMapping("/times")
+    @ResponseBody
+    public ResponseEntity<ReservationTime> createTime(@RequestBody ReservationTime reservationTime) {
+        Long newReservationTimeId = reservationTimeDAO.save(reservationTime);
+        ReservationTime createdReservationTime = reservationTimeDAO.findById(newReservationTimeId);
+        return ResponseEntity.ok().body(createdReservationTime);
+    }
+
+    @DeleteMapping("/times/{id}")
+    public ResponseEntity<Void> deleteTime(@PathVariable Long id) {
+        reservationTimeDAO.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }

@@ -32,7 +32,8 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResultResponse> createReservations(@RequestBody CreateReservationRequest createReservationRequest) {
+    public ResponseEntity<ReservationResultResponse> createReservations(
+            @RequestBody CreateReservationRequest createReservationRequest) {
         ReservationResultResponse reservedRoomId = reservationService.reserve(
                 ReservationMapper.toReservation(createReservationRequest));
         return ResponseEntity.of(Optional.of(reservedRoomId));
@@ -41,6 +42,6 @@ public class ReservationController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservations(@PathVariable Long id) {
         reservationService.cancelReservation(id);
-         return ResponseEntity.ok(null);
+        return ResponseEntity.ok(null);
     }
 }

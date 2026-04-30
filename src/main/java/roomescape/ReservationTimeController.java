@@ -13,30 +13,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/times")
 public class ReservationTimeController {
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @PostMapping
     public ResponseEntity<ReservationTime> create(@RequestBody ReservationTimeCreateDto reservationTimeCreateDto) {
-        String time = reservationTimeCreateDto.getStartAt();
-        ReservationTime created = reservationTimeRepository.save(time);
+        ReservationTime reservationTime = reservationTimeService.save(reservationTimeCreateDto);
 
-        return ResponseEntity.ok(created);
+        return ResponseEntity.ok(reservationTime);
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTime>> findAll() {
-        List<ReservationTime> find = reservationTimeRepository.findAll();
+        List<ReservationTime> find = reservationTimeService.findAll();
 
         return ResponseEntity.ok(find);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        reservationTimeRepository.delete(id);
+        reservationTimeService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }

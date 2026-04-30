@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 
 public class MemoryReservationRepository implements ReservationRepository {
@@ -32,5 +32,12 @@ public class MemoryReservationRepository implements ReservationRepository {
         if (removed == null) {
             throw new NoSuchElementException("존재하지 않는 예약 아이디 입니다. reservationId: " + reservationId);
         }
+    }
+
+    @Override
+    public Optional<Reservation> findByReservationTimeId(long reservationTimeId) {
+        return reservations.values().stream()
+            .filter(r -> r.getTimeId() == reservationTimeId)
+            .findFirst();
     }
 }

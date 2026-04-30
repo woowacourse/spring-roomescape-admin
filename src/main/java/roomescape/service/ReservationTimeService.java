@@ -6,15 +6,18 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
+import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationTimeService {
 
     private final ReservationTimeRepository repository;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationTimeService(ReservationTimeRepository repository) {
+    public ReservationTimeService(ReservationTimeRepository repository, ReservationRepository reservationRepository) {
         this.repository = repository;
+        this.reservationRepository = reservationRepository;
     }
 
     public List<ReservationTime> getAll() {
@@ -38,6 +41,10 @@ public class ReservationTimeService {
     }
 
     public void deleteById(long id) {
+        reservationRepository.findByReservationTimeId(id)
+            .ifPresent(r -> {
+                new IllegalArgumentException("해당 시간을 사용하는 예약이 존재합니다. timeId: " + id);
+            });
         repository.deleteById(id);
     }
 }

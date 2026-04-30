@@ -31,7 +31,8 @@ public class RoomescapeConsoleApplication {
             ));
         final ReservationTimeController reservationTimeController = new ReservationTimeController(
             new ReservationTimeService(
-                reservationTimeRepository
+                reservationTimeRepository,
+                reservationRepository
             ));
 
         new RoomescapeConsoleApplication(view, reservationController, reservationTimeController).run();

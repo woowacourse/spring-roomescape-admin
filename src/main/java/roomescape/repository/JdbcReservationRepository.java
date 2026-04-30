@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -69,5 +70,24 @@ public class JdbcReservationRepository implements ReservationRepository {
         if (update == 0) {
             throw new NoSuchElementException("존재하지 않는 예약 아이디 입니다. reservationId: " + reservationId);
         }
+    }
+
+    @Override
+    public Optional<Reservation> findByReservationTimeId(long reservationTimeId) {
+        List<Reservation> result = jdbcTemplate.query(
+            "SELECT "
+                + "r.id as reservation_id, "
+                + "r.name, "
+                + "r.date, "
+                + "t.id as time_id, "
+                + "t.start_at as time_value "
+                + "FROM reservation as r "
+                + "INNER JOIN reservation_time as t "
+                + "ON r.time_id = t.id "
+                + "WHERE r.time_id = ? "
+                + "LIMIT 1",
+            reservationRowMapper,
+            reservationTimeId);
+        return result.stream().findFirst();
     }
 }

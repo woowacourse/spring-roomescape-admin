@@ -21,15 +21,15 @@ public class ReservationDao {
     }
 
     public List<Reservation> getReservations() {
-        String sql = "SELECT r.id, r.name, r.date, t.id, t.start_at FROM reservation AS r INNER JOIN reservation_time AS t ON reservation.time_id = reservation_time.id";
+        String sql = "SELECT r.id AS r_id, r.name, r.date, t.id AS t_id, t.start_at FROM reservation AS r INNER JOIN reservation_time AS t ON r.time_id = t.id";
 
         List<Reservation> reservations = jdbcTemplate.query(sql,
                 (resultSet, rowNum) -> {
-                    ReservationTime time = new ReservationTime(resultSet.getLong("t.id"), resultSet.getString("t.start_at"));
+                    ReservationTime time = new ReservationTime(resultSet.getLong("t_id"), resultSet.getString("start_at"));
                     return new Reservation(
-                            resultSet.getLong("r.id"),
-                            resultSet.getString("r.name"),
-                            resultSet.getString("r.date"),
+                            resultSet.getLong("r_id"),
+                            resultSet.getString("name"),
+                            resultSet.getString("date"),
                             time
                     );
                 });

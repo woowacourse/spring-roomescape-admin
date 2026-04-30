@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.dto;
 
 public class ReservationTimeCreateDto {
     private final String startAt;

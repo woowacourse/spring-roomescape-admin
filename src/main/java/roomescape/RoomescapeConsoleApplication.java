@@ -1,12 +1,5 @@
 package roomescape;
 
-import static roomescape.view.InputMenu.RESERVATION_ADD;
-import static roomescape.view.InputMenu.RESERVATION_DELETE;
-import static roomescape.view.InputMenu.RESERVATION_GET_ALL;
-import static roomescape.view.InputMenu.TIMES_ADD;
-import static roomescape.view.InputMenu.TIMES_DELETE;
-import static roomescape.view.InputMenu.TIMES_GET_ALL;
-
 import java.util.List;
 import roomescape.controller.ReservationController;
 import roomescape.controller.ReservationTimeController;
@@ -64,38 +57,54 @@ public class RoomescapeConsoleApplication {
             try {
                 menu = view.askMenu();
                 doService(menu);
-            } catch (IllegalArgumentException e) {
+            } catch (RuntimeException e) {
                 OutputView.printErrorMessage(e.getMessage());
+            } catch (Exception e) {
+                OutputView.printErrorMessage("알 수 서버 에러가 발생했습니다.");
             }
         }
     }
 
     private void doService(InputMenu menu) {
-        if (menu == TIMES_GET_ALL) {
-            List<ReservationTimeResponse> reservationTimes = reservationTimeController.getAllReservationTimes();
-            view.printReservationTimes(reservationTimes);
-
-        } else if (menu == TIMES_ADD) {
-            ReservationTimeRequest request = view.askReservationTimeRequest();
-            ReservationTimeResponse reservationTimeResponse = reservationTimeController.addReservationTime(request);
-            view.printReservationTime(reservationTimeResponse);
-
-        } else if (menu == TIMES_DELETE) {
-            long reservationTimeId = view.askReservationTimeId();
-            reservationTimeController.deleteReservationTime(reservationTimeId);
-
-        } else if (menu == RESERVATION_GET_ALL) {
-            List<ReservationResponse> reservations = reservationController.getAllReservations();
-            view.printReservations(reservations);
-
-        } else if (menu == RESERVATION_ADD) {
-            ReservationRequest request = view.askReservationRequest();
-            ReservationResponse reservationResponse = reservationController.addReservation(request);
-            view.printReservation(reservationResponse);
-
-        } else if (menu == RESERVATION_DELETE) {
-            long reservationId = view.askReservationId();
-            reservationController.deleteReservation(reservationId);
+        switch (menu) {
+            case TIMES_GET_ALL -> runGetAllReservationTimeController();
+            case TIMES_ADD -> runAddReservationTimeController();
+            case TIMES_DELETE -> runDeleteReservationTimeController();
+            case RESERVATION_GET_ALL -> runGetAllReservationController();
+            case RESERVATION_ADD -> runAddReservationController();
+            case RESERVATION_DELETE -> runDeleteReservationController();
         }
+    }
+
+    private void runGetAllReservationTimeController() {
+        List<ReservationTimeResponse> reservationTimes = reservationTimeController.getAllReservationTimes();
+        view.printReservationTimes(reservationTimes);
+    }
+
+    private void runAddReservationTimeController() {
+        ReservationTimeRequest request = view.askReservationTimeRequest();
+        ReservationTimeResponse reservationTimeResponse = reservationTimeController.addReservationTime(request);
+        view.printReservationTime(reservationTimeResponse);
+    }
+
+    private void runDeleteReservationTimeController() {
+        long reservationTimeId = view.askReservationTimeId();
+        reservationTimeController.deleteReservationTime(reservationTimeId);
+    }
+
+    private void runGetAllReservationController() {
+        List<ReservationResponse> reservations = reservationController.getAllReservations();
+        view.printReservations(reservations);
+    }
+
+    private void runAddReservationController() {
+        ReservationRequest request = view.askReservationRequest();
+        ReservationResponse reservationResponse = reservationController.addReservation(request);
+        view.printReservation(reservationResponse);
+    }
+
+    private void runDeleteReservationController() {
+        long reservationId = view.askReservationId();
+        reservationController.deleteReservation(reservationId);
     }
 }

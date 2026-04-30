@@ -16,7 +16,7 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
     JdbcTemplate jdbcTemplate;
 
     @Override
-    public ReservationTime findById(Long timeId) { // timeId
+    public ReservationTime findById(Long timeId) {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
         return jdbcTemplate.queryForObject(
                 sql,

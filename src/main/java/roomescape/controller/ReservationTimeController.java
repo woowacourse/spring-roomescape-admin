@@ -11,17 +11,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationTimeRequestDto;
 import roomescape.entity.ReservationTime;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.ReservationTimeService;
 
 @RestController
 public class ReservationTimeController {
 
     @Autowired
-    ReservationTimeRepository repository;
+    ReservationTimeService reservationTimeService;
 
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTime>> readAll() {
-        return ResponseEntity.ok(repository.findAll());
+        return ResponseEntity.ok(reservationTimeService.findAll());
     }
 
     @PostMapping("/times")
@@ -29,12 +29,12 @@ public class ReservationTimeController {
             @RequestBody ReservationTimeRequestDto reservationTimeRequestDto
     ) {
         ReservationTime reservationTime = new ReservationTime(reservationTimeRequestDto.startAt());
-        return ResponseEntity.ok(repository.save(reservationTime));
+        return ResponseEntity.ok(reservationTimeService.save(reservationTime));
     }
 
     @DeleteMapping("times/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        repository.delete(id);
+        reservationTimeService.delete(id);
         return ResponseEntity.ok().build();
     }
 }

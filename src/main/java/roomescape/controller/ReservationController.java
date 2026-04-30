@@ -11,52 +11,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
-import roomescape.entity.Reservation;
-import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.ReservationService;
 
 @RestController
 public class ReservationController {
 
     @Autowired
-    ReservationRepository reservationRepository;
-
-    @Autowired
-    ReservationTimeRepository reservationTimeRepository;
+    ReservationService reservationService;
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponseDto>> readAll() {
-        List<Reservation> reservations = reservationRepository.findAll();
-        return ResponseEntity.ok(
-                reservations.stream()
-                        .map(reservation -> new ReservationResponseDto(
-                                reservation.getId(),
-                                reservation.getName(),
-                                reservation.getDate(),
-                                reservation.getTime())
-                        )
-                        .toList()
-        );
+        return ResponseEntity.ok(reservationService.readAll());
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<ReservationResponseDto> create(@RequestBody ReservationRequestDto reservationRequestDto) {
-        Reservation reservation = reservationRepository.save(new Reservation(
-                reservationRequestDto.name(),
-                reservationRequestDto.date(),
-                reservationTimeRepository.findById(reservationRequestDto.timeId())
-        ));
-        return ResponseEntity.ok(new ReservationResponseDto(
-                reservation.getId(),
-                reservation.getName(),
-                reservation.getDate(),
-                reservation.getTime()
-        ));
+        return ResponseEntity.ok(reservationService.reserve(reservationRequestDto));
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> cancel(@PathVariable Long id) {
-        reservationRepository.delete(id);
+        reservationService.cancel(id);
         return ResponseEntity.ok().build();
     }
 }

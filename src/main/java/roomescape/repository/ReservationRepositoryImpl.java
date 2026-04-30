@@ -27,15 +27,14 @@ public class ReservationRepositoryImpl implements ReservationRepository {
 
         return jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) -> {
-                    return new Reservation(
-                            resultSet.getLong("reservation_id"),
-                            resultSet.getString("name"),
-                            resultSet.getObject("date", LocalDate.class),
-                            new ReservationTime(resultSet.getLong("time_id"),
-                                    resultSet.getObject("time_value", LocalTime.class))
-                    );
-                });
+                (resultSet, rowNum) -> new Reservation(
+                        resultSet.getLong("reservation_id"),
+                        resultSet.getString("name"),
+                        resultSet.getObject("date", LocalDate.class),
+                        new ReservationTime(resultSet.getLong("time_id"),
+                                resultSet.getObject("time_value", LocalTime.class))
+                )
+        );
     }
 
     @Override

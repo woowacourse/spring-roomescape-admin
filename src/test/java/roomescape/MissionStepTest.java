@@ -125,6 +125,7 @@ public class MissionStepTest {
     @Test
     void 시간_관리_API() {
         jdbcTemplate.update("DELETE FROM reservation_time;");
+        jdbcTemplate.update("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1;");
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 

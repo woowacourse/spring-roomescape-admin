@@ -7,28 +7,28 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@RequestMapping("/times")
 public class ReservationTimeController {
 
-    private ReservationTimeDao reservationTimeDao;
+    private ReservationTimeService service;
 
-    public ReservationTimeController(ReservationTimeDao reservationTimeDao) {
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationTimeController(ReservationTimeService service) {
+        this.service = service;
     }
 
-    @GetMapping("/times")
+    @GetMapping
     public ResponseEntity<List<ReservationTime>> read() {
-        return ResponseEntity.ok().body(reservationTimeDao.findAll());
+        return ResponseEntity.ok().body(service.findAll());
     }
 
-    @PostMapping("/times")
+    @PostMapping
     public ResponseEntity<ReservationTime> create(@RequestBody ReservationTime reservationTime) {
-        Long id = reservationTimeDao.insert(reservationTime);
-        return ResponseEntity.ok().body(reservationTimeDao.findBy(id));
+        return ResponseEntity.ok().body(service.createReservationTime(reservationTime));
     }
 
-    @DeleteMapping("/times/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        reservationTimeDao.delete(id);
+        service.deleteReservationTime(id);
         return ResponseEntity.ok().build();
     }
 }

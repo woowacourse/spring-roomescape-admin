@@ -31,8 +31,8 @@ public class ReservationService {
     }
 
     public void deleteReservation(Long id) {
-        int deleteCount = reservationDao.delete(id);
-        if (deleteCount != 1) {
+        int deletedCount = reservationDao.delete(id);
+        if (deletedCount != 1) {
             throw new IllegalArgumentException("[ERROR] 삭제 요청 실패");
         }
     }

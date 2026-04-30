@@ -6,16 +6,17 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
     private final JdbcTemplate template;
 
     public JdbcReservationRepository(DataSource dataSource) {
@@ -24,14 +25,14 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Long createReservation(Reservation reservation) {
-        String sql = "INSERT INTO reservation(name, date, time) VALUES (?, ?, ?);";
+        String sql = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         template.update(conn -> {
             PreparedStatement ps = conn.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.getName().value());
             ps.setString(2, dateFormatter.format(reservation.getDate()));
-            ps.setString(3, timeFormatter.format(reservation.getTime()));
+            ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
 
@@ -48,11 +49,20 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "SELECT id, name, date, time FROM reservation;";
+        String sql = "SELECT id, name, date, time_id FROM reservation;";
 
         List<Reservation> reservations = template.query(sql, reservationRowMapper());
 
         return reservations;
+    }
+
+    @Override
+    public Reservation findById(Long id) {
+        String sql = "SELECT id, name, date, time_id FROM reservation WHERE id = ?;";
+
+        Reservation reservation = template.queryForObject(sql, reservationRowMapper(), id);
+
+        return reservation;
     }
 
     private RowMapper<Reservation> reservationRowMapper() {
@@ -61,7 +71,7 @@ public class JdbcReservationRepository implements ReservationRepository {
                     rs.getLong("id"),
                     rs.getString("name"),
                     rs.getString("date"),
-                    rs.getString("time"));
+                    new ReservationTime(rs.getLong("time_id"), (LocalTime) null));
             return reservation;
         });
     }

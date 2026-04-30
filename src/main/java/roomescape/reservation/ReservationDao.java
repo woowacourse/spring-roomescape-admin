@@ -54,13 +54,9 @@ class ReservationDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    void delete(Long id) {
+    int delete(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
-        int affectedRows = jdbcTemplate.update(sql, id);
-
-        if (affectedRows == 0) {
-            throw new ApiException(ErrorCode.RESERVATION_NOT_FOUND, id);
-        }
+        return jdbcTemplate.update(sql, id);
     }
 
 }

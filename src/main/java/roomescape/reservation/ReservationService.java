@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.exception.ApiException;
+import roomescape.exception.ErrorCode;
 import roomescape.reservationtime.ReservationTime;
 import roomescape.reservationtime.ReservationTimeService;
 
@@ -29,6 +31,10 @@ public class ReservationService {
 
     @Transactional
     public void deleteReservation(Long id) {
-        reservationRepository.delete(id);
+        int affectedRow = reservationRepository.delete(id);
+
+        if (affectedRow == 0) {
+            throw new ApiException(ErrorCode.RESERVATION_NOT_FOUND, id);
+        }
     }
 }

@@ -21,7 +21,6 @@ class ReservationRepository {
         return reservationDao.save(name, date, time);
     }
 
-    void delete(Long id) {
-        reservationDao.delete(id);
+    int delete(Long id) {return reservationDao.delete(id);
     }
 }

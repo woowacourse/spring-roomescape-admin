@@ -6,26 +6,26 @@ public class Reservation {
     private Long id;
     private Name name;
     private LocalDate date;
-    private Long timeId;
+    private ReservationTime time;
 
     public Reservation() {
     }
 
-    public Reservation(Long id, Name name, LocalDate date, Long timeId) {
+    public Reservation(Long id, Name name, LocalDate date, ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
-        this.timeId = timeId;
+        this.time = time;
     }
 
-    public Reservation(Name name, LocalDate date, Long timeId) {
+    public Reservation(Name name, LocalDate date, ReservationTime time) {
         this.name = name;
         this.date = date;
-        this.timeId = timeId;
+        this.time = time;
     }
 
     public static Reservation toEntity(Reservation reservation, Long id) {
-        return new Reservation(id, reservation.name, reservation.date, reservation.timeId);
+        return new Reservation(id, reservation.name, reservation.date, reservation.time);
     }
 
     public Long getId() {
@@ -40,7 +40,7 @@ public class Reservation {
         return date;
     }
 
-    public Long getTimeId() {
-        return timeId;
+    public ReservationTime getTime() {
+        return time;
     }
 }

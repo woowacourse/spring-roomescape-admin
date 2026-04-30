@@ -15,8 +15,10 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public ReservationTime create(ReservationTimeRequest request) {
-        return reservationTimeRepository.save(request);
+    public ReservationTime save(ReservationTimeRequest request) {
+        Long id = reservationTimeRepository.save(request);
+        return reservationTimeRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("예약 시간 저장 후 조회에 실패했습니다. id=" + id));
     }
 
     public List<ReservationTime> findAll() {

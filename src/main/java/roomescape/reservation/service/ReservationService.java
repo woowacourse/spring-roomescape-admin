@@ -16,7 +16,9 @@ public class ReservationService {
     }
 
     public Reservation save(ReservationRequest request) {
-        return reservationRepository.save(request);
+        Long id = reservationRepository.save(request);
+        return reservationRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("예약 저장 후 조회에 실패했습니다. id=" + id));
     }
 
     public List<Reservation> findAll() {

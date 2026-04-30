@@ -1,13 +1,10 @@
 package roomescape.reservation.repository;
 
-import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Objects;
-import org.springframework.dao.DuplicateKeyException;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.entity.ReservationTime;
 import roomescape.reservation.payload.ReservationTimeRequest;
@@ -16,44 +13,44 @@ import roomescape.reservation.payload.ReservationTimeRequest;
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<ReservationTime> reservationTimeRowMapper = (rs, rowNum) ->
+            ReservationTime.of(
+                    rs.getLong("id"),
+                    rs.getObject("start_at", LocalTime.class)
+            );
 
     public JdbcReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public ReservationTime save(ReservationTimeRequest request) {
-        String sql = "insert into reservation_time (start_at) values (?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+    public Long save(ReservationTimeRequest request) {
+        String sql = """
+                MERGE INTO reservation_time (start_at)
+                KEY(start_at)
+                VALUES (?)
+                """;
 
-        try {
-            jdbcTemplate.update(connection -> {
-                PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-                ps.setObject(1, request.startAt());
-                return ps;
-            }, keyHolder);
+        jdbcTemplate.update(sql, request.startAt());
+        return findIdByStartAt(request.startAt());
+    }
 
-            Long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
-            return ReservationTime.of(id, request.startAt());
-        } catch (DuplicateKeyException e) {
-            return findByStartAt(request.startAt());
-        }
+    @Override
+    public Optional<ReservationTime> findById(Long id) {
+        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+        List<ReservationTime> result = jdbcTemplate.query(sql, reservationTimeRowMapper, id);
+        return result.stream().findFirst();
     }
 
     @Override
     public List<ReservationTime> findAll() {
-        String sql = "select id, start_at from reservation_time";
-        return jdbcTemplate.query(sql, (rs, rowNum) ->
-                ReservationTime.of(
-                        rs.getLong("id"),
-                        rs.getObject("start_at", LocalTime.class)
-                )
-        );
+        String sql = "SELECT id, start_at FROM reservation_time ORDER BY id";
+        return jdbcTemplate.query(sql, reservationTimeRowMapper);
     }
 
     @Override
     public void deleteById(Long id) {
-        String sql = "delete from reservation_time where id = ?";
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
 
         int affectedRows = jdbcTemplate.update(sql, id);
         if (affectedRows == 0) {
@@ -61,14 +58,9 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         }
     }
 
-    private ReservationTime findByStartAt(LocalTime startAt) {
-        String sql = "select id, start_at from reservation_time where start_at = ?";
-
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
-                ReservationTime.of(
-                        rs.getLong("id"),
-                        rs.getObject("start_at", LocalTime.class)
-                ), startAt);
+    private Long findIdByStartAt(LocalTime startAt) {
+        String sql = "SELECT id FROM reservation_time WHERE start_at = ?";
+        return jdbcTemplate.queryForObject(sql, Long.class, startAt);
     }
 
 }

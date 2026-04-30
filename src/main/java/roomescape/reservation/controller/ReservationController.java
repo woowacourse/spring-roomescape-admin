@@ -2,8 +2,7 @@ package roomescape.reservation.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.reservation.dao.QueryingDao;
-import roomescape.reservation.dao.UpdatingDao;
+import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.dto.ReservationRequestDto;
 import roomescape.reservation.entity.Reservation;
 
@@ -13,28 +12,27 @@ import java.util.List;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final QueryingDao queryingDao;
-    private final UpdatingDao updatingDao;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationController(QueryingDao queryingDao, UpdatingDao updatingDao) {
-        this.queryingDao = queryingDao;
-        this.updatingDao = updatingDao;
+    public ReservationController(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
     }
 
     @GetMapping
     public ResponseEntity<List<Reservation>> readAll() {
-        return ResponseEntity.ok(queryingDao.findAll());
+        return ResponseEntity.ok(reservationRepository.findAll());
     }
 
     @PostMapping
     public ResponseEntity<Reservation> create(@RequestBody ReservationRequestDto requestDto) {
-        Long id = updatingDao.insert(requestDto);
-        Reservation savedReservation = queryingDao.findById(id);
+        Long id = reservationRepository.save(requestDto);
+        Reservation savedReservation = reservationRepository.findById(id);
         return ResponseEntity.ok(savedReservation);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        updatingDao.delete(id);
+        reservationRepository.delete(id);
     }
 }
+

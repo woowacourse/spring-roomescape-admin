@@ -20,13 +20,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/reservations")
 public class ReservationController {
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Reservation> rowMapper = (rs, rowNum) ->
-            new Reservation(
-                    rs.getLong("id"),
-                    rs.getString("name"),
-                    rs.getString("date"),
-                    rs.getString("time")
-            );
+    private final RowMapper<Reservation> rowMapper = (rs, rowNum) -> {
+        ReservationTime time = new ReservationTime(
+                rs.getLong("time_id"),
+                rs.getString("start_at")
+        );
+        return new Reservation(
+                rs.getLong("reservation_id"),
+                rs.getString("name"),
+                rs.getString("date"),
+                time
+        );
+    };
 
     public ReservationController(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -34,28 +39,44 @@ public class ReservationController {
 
     @GetMapping
     public List<Reservation> read() {
-        String sql = "SELECT id, name, date, time FROM reservation";
+        String sql = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                INNER JOIN reservation_time as t
+                  ON r.time_id = t.id
+                """;
 
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     @PostMapping
     public ResponseEntity<Reservation> create(@RequestBody ReservationRequest request) {
-        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, request.name());
             ps.setString(2, request.date());
-            ps.setString(3, request.time());
+            ps.setLong(3, request.timeId());
             return ps;
         }, keyHolder);
 
         Long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
-        Reservation reservation = new Reservation(id, request.name(), request.date(), request.time());
 
-        return ResponseEntity.ok(reservation);
+        String timeSql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+        ReservationTime time = jdbcTemplate.queryForObject(timeSql, (rs, rowNum) -> new ReservationTime(
+                rs.getLong("id"),
+                rs.getString("start_at")
+        ), request.timeId());
+        Reservation newReservation = request.toEntity(id, time);
+
+        return ResponseEntity.ok(newReservation);
     }
 
     @DeleteMapping("/{id}")

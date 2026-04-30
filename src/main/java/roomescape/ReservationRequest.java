@@ -1,11 +1,11 @@
 package roomescape;
 
 public record ReservationRequest(
-        String name,
         String date,
-        String time
+        String name,
+        Long timeId
 ) {
-    public Reservation toEntity(Long id) {
-        return new Reservation(id, this.name, this.date, this.time);
+    public Reservation toEntity(Long id, ReservationTime reservationTime) {
+        return new Reservation(id, this.name, this.date, reservationTime);
     }
 }

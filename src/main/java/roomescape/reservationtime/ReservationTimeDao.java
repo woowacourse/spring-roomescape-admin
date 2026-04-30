@@ -58,7 +58,7 @@ class ReservationTimeDao {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
 
         try {
-            return jdbcTemplate.queryForObject(sql,rowMapper, id);
+            return jdbcTemplate.queryForObject(sql, rowMapper, id);
         } catch (EmptyResultDataAccessException exception) {
             throw new ApiException(ErrorCode.RESERVATION_TIME_NOT_FOUND, id);
         }

@@ -33,7 +33,8 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = reservationService.createReservation(reservationRequest.name(), reservationRequest.date(), reservationRequest.timeId());
+        Reservation reservation = reservationService.createReservation(reservationRequest.name(),
+                reservationRequest.date(), reservationRequest.timeId());
         return ResponseEntity.ok(ReservationResponse.from(reservation));
     }
 

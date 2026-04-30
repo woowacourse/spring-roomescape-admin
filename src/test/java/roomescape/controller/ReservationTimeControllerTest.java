@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import roomescape.dao.ReservationTimeDAO;
+import roomescape.domain.ReservationTime;
 
 import java.time.LocalTime;
 import java.util.List;

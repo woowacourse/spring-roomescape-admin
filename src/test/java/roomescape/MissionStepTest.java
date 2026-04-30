@@ -18,8 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.reservation.application.dto.Reservation;
 import roomescape.reservation.presentation.ReservationController;
+import roomescape.reservation.repository.dto.Reservation;
 import roomescape.time.repository.TimeEntity;
 import roomescape.time.repository.TimesRepository;
 

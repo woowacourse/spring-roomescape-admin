@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.reservation.repository.dto.Reservation;
 import roomescape.time.repository.JdbcTemplateTimesRepository;
 import roomescape.time.repository.TimeEntity;
 import roomescape.time.repository.TimesRepository;
@@ -42,12 +43,12 @@ class JdbcTemplateReservationsRepositoryTest {
 
     @DisplayName("기본적으로는 아무런 예약도 존재하지 않는다.")
     @Test
-    void getReservations_empty() {
+    void findAllReservationsWithTime_empty() {
         //when
-        List<ReservationEntity> reservationEntities = reservationsRepository.getReservations();
+        List<Reservation> reservationsWithTime = reservationsRepository.findAllReservationsWithTime();
 
         //then
-        assertThat(reservationEntities).isEmpty();
+        assertThat(reservationsWithTime).isEmpty();
     }
 
     @DisplayName("새로운 예약을 추가한다.")
@@ -76,7 +77,7 @@ class JdbcTemplateReservationsRepositoryTest {
 
         //then
         assertThat(
-                reservationsRepository.getReservations().size()
+                reservationsRepository.findAllReservationsWithTime().size()
         ).isEqualTo(3);
     }
 
@@ -95,7 +96,7 @@ class JdbcTemplateReservationsRepositoryTest {
         reservationsRepository.deleteReservationById(entityWithId.id());
 
         //then
-        assertThat(reservationsRepository.getReservations()).isEmpty();
+        assertThat(reservationsRepository.findAllReservationsWithTime()).isEmpty();
     }
 
     @DisplayName("id에 해당하는 예약이 없으면 예외가 발생한다.")

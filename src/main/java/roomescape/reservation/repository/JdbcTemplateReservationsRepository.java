@@ -9,14 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.reservation.repository.dto.Reservation;
+import roomescape.time.application.dto.TimeInfo;
 
 @Repository
 public class JdbcTemplateReservationsRepository implements ReservationsRepository {
-
-    private final static String ID_COLUMN = "id";
-    private final static String NAME_COLUMN = "name";
-    private final static String DATE_COLUMN = "date";
-    private final static String TIME_ID_COLUMN = "time_id";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -26,17 +23,34 @@ public class JdbcTemplateReservationsRepository implements ReservationsRepositor
     }
 
     @Override
-    public List<ReservationEntity> getReservations() {
-        String sql = "SELECT * FROM reservation";
+    public List<Reservation> findAllReservationsWithTime() {
+        String reservationIdColumn = "reservation_id";
+        String reservationNameColumn = "reservation_name";
+        String reservationDateColumn = "reservation_date";
+        String timeIdColumn = "time_id";
+        String timeValueColumn = "time_value";
 
-        return jdbcTemplate.query(
-                sql,
-                (rs, rowNum) -> new ReservationEntity(
-                        rs.getLong(ID_COLUMN),
-                        rs.getString(NAME_COLUMN),
-                        rs.getDate(DATE_COLUMN),
-                        rs.getLong(TIME_ID_COLUMN)
-                )
+        String sql = "SELECT\n"
+                + "    r.id as " + reservationIdColumn + ",\n"
+                + "    r.name as " + reservationNameColumn + ",\n"
+                + "    r.date as " + reservationDateColumn + ",\n"
+                + "    t.id as " + timeIdColumn + ",\n"
+                + "    t.start_at as " + timeValueColumn + "\n"
+                + "FROM reservation as r\n"
+                + "INNER JOIN reservation_time as t\n"
+                + "  ON r.time_id = t.id\n";
+
+
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+            new Reservation(
+                    rs.getLong(reservationIdColumn),
+                    rs.getString(reservationNameColumn),
+                    rs.getDate(reservationDateColumn).toLocalDate(),
+                    new TimeInfo(
+                            rs.getLong(timeIdColumn),
+                            rs.getTime(timeValueColumn).toLocalTime()
+                    )
+            )
         );
     }
 

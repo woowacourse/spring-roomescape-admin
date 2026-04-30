@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+import roomescape.reservation.repository.dto.Reservation;
 
 public class InMemoryReservationsRepository implements ReservationsRepository {
 
@@ -16,10 +17,8 @@ public class InMemoryReservationsRepository implements ReservationsRepository {
     }
 
     @Override
-    public List<ReservationEntity> getReservations() {
-        return reservationEntities.values()
-                .stream()
-                .toList();
+    public List<Reservation> findAllReservationsWithTime() {
+        return List.of();
     }
 
     @Override

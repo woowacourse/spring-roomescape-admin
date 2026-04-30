@@ -4,10 +4,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.reservation.application.dto.Reservation;
 import roomescape.reservation.application.dto.ReservationRequest;
 import roomescape.reservation.repository.ReservationEntity;
 import roomescape.reservation.repository.ReservationsRepository;
+import roomescape.reservation.repository.dto.Reservation;
 import roomescape.time.repository.TimesRepository;
 
 @Service
@@ -26,15 +26,7 @@ public class ReservationsService {
     }
 
     public List<Reservation> getReservations() {
-        List<ReservationEntity> reservationEntities = reservationsRepository.getReservations();
-
-        return reservationEntities.stream()
-                .map(e ->
-                        Reservation.from(
-                                e,
-                                timesRepository.getTimeEntityById(e.timeId())
-                        )
-                ).toList();
+        return reservationsRepository.findAllReservationsWithTime();
     }
 
     @Transactional

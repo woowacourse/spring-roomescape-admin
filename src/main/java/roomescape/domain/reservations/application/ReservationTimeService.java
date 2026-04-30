@@ -34,17 +34,17 @@ public class ReservationTimeService {
 
     public void deleteTime(Long id) {
         if (id == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("[ERROR] 예약 날짜 ID가 비어있습니다.");
         }
         reservationTimeRepository.deleteById(id);
     }
 
     private void validateSaveRequest(ReservationTimeRequest request) {
         if (request == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("[ERROR] 예약 시간 데이터가 비어있습니다.");
         }
         if (request.startAt() == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("[ERROR] 예약 시간이 비어있습니다.");
         }
     }
 }

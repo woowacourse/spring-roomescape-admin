@@ -45,23 +45,23 @@ public class ReservationService {
 
     public void deleteReservation(Long id) {
         if (id == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("[ERROR] 예약 목록 ID가 비어있습니다.");
         }
         reservationRepository.deleteById(id);
     }
 
     private void validateSaveRequest(ReservationRequest request) {
         if (request == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("[ERROR] 예약 데이터가 비어있습니다.");
         }
         if (request.name() == null || request.name().trim().isBlank()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("[ERROR] 예약자의 이름이 비어있습니다.");
         }
         if (request.date() == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("[ERROR] 예약 날짜가 비어있습니다.");
         }
         if (request.timeId() == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("[ERROR] 예약 시간이 비어있습니다.");
         }
     }
 }

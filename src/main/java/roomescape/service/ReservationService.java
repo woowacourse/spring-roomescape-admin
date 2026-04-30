@@ -9,12 +9,12 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 @Service
-public class RoomEscapeService {
+public class ReservationService {
 
     private final ReservationDao reservationDao;
     private final ReservationTimeDao reservationTimeDao;
 
-    public RoomEscapeService(final ReservationDao reservationDao, final ReservationTimeDao reservationTimeDao) {
+    public ReservationService(final ReservationDao reservationDao, final ReservationTimeDao reservationTimeDao) {
         this.reservationDao = reservationDao;
         this.reservationTimeDao = reservationTimeDao;
     }

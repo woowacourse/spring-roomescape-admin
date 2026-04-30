@@ -78,35 +78,6 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean existsById(long id) {
-        final String sql = "SELECT EXISTS (SELECT 1 FROM reservation WHERE id = ?)";
-
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(
-                sql,
-                Boolean.class,
-                id
-        ));
-    }
-
-    @Override
-    public boolean existsByDateAndTime(LocalDate date, LocalTime time) {
-        final String sql = """
-                 SELECT EXISTS (
-                     SELECT 1
-                     FROM reservation r
-                     JOIN reservation_time t ON r.time_id = t.id
-                     WHERE r.date = ? and t.start_at = ?
-                     )
-                """;
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(
-                sql,
-                Boolean.class,
-                date,
-                time
-        ));
-    }
-
-    @Override
     public Optional<Reservation> findById(long id) {
         final String sql = """
                 SELECT

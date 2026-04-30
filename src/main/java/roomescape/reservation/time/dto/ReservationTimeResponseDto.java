@@ -2,12 +2,12 @@ package roomescape.reservation.time.dto;
 
 import roomescape.reservation.time.ReservationTime;
 
-public record TimeResponseDto(
+public record ReservationTimeResponseDto(
         Long id,
         String startAt
 ) {
-    public static TimeResponseDto from(ReservationTime reservationTime) {
-        return new TimeResponseDto(
+    public static ReservationTimeResponseDto from(ReservationTime reservationTime) {
+        return new ReservationTimeResponseDto(
                 reservationTime.getId(),
                 reservationTime.getStartAt()
         );

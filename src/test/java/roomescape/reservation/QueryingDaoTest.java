@@ -13,11 +13,11 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-@Import(QueryingDAO.class)
+@Import(ReservationQueryingDao.class)
 public class QueryingDaoTest {
 
     @Autowired
-    private QueryingDAO queryingDAO;
+    private ReservationQueryingDao reservationQueryingDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -25,25 +25,38 @@ public class QueryingDaoTest {
     @BeforeEach
     void setUp() {
         jdbcTemplate.execute("DROP TABLE IF EXISTS reservation");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS reservation_time");
+
         jdbcTemplate.execute("""
-                CREATE TABLE reservation (
-                    id   BIGINT       NOT NULL AUTO_INCREMENT,
-                    name VARCHAR(255) NOT NULL,
-                    date VARCHAR(255) NOT NULL,
-                    time VARCHAR(255) NOT NULL,
+                CREATE TABLE reservation_time (
+                    id       BIGINT       NOT NULL AUTO_INCREMENT,
+                    start_at VARCHAR(255) NOT NULL,
                     PRIMARY KEY (id)
                 )""");
-        jdbcTemplate.execute("INSERT INTO reservation (name, date, time) VALUES ('현미밥', '2026-04-29', '10:00:00')");
-        jdbcTemplate.execute("INSERT INTO reservation (name, date, time) VALUES ('테리', '2026-04-30', '11:24:00')");
-        jdbcTemplate.execute("INSERT INTO reservation (name, date, time) VALUES ('주니', '2026-05-05', '21:38:00')");
+
+        jdbcTemplate.execute("""
+                CREATE TABLE reservation (
+                    id      BIGINT       NOT NULL AUTO_INCREMENT,
+                    name    VARCHAR(255) NOT NULL,
+                    date    VARCHAR(255) NOT NULL,
+                    time_id BIGINT,
+                    PRIMARY KEY (id),
+                    FOREIGN KEY (time_id) REFERENCES reservation_time (id)
+                )""");
+
+        jdbcTemplate.execute("INSERT INTO reservation_time (start_at) VALUES ('10:00:00')");
+        jdbcTemplate.execute("INSERT INTO reservation_time (start_at) VALUES ('11:24:00')");
+        jdbcTemplate.execute("INSERT INTO reservation_time (start_at) VALUES ('21:38:00')");
+
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES ('현미밥', '2026-04-29', 1)");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES ('테리', '2026-04-30', 2)");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES ('주니', '2026-05-05', 3)");
     }
-
-
 
     @Test
     @DisplayName("전체 예약 목록을 조회한다")
     void findAll() {
-        List<Reservation> reservations = queryingDAO.findAll();
+        List<Reservation> reservations = reservationQueryingDao.findAll();
 
         assertThat(reservations).hasSize(3);
         assertThat(reservations.get(0).getName()).isEqualTo("현미밥");

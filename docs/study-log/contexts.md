@@ -3,12 +3,12 @@
 ### 1단계: 웹 요청-응답
 
 - [x] ResponseEntity
-- [ ] ResponseEntity.build()?
+- [x] ResponseEntity.build()?
 
 ### 2단계: 데이터베이스 연동
 
-- [ ] 마틴 파울러의 '실용적 예외' 허용
-- [ ] CQS 원칙
+- [x] 마틴 파울러의 '실용적 예외' 허용
+- [x] CQS 원칙
 - [ ] implementation
 - [ ] runtimeOnly
 - [ ] developmentOnly
@@ -19,4 +19,3 @@
 
 - [ ] N+1 쿼리
 - [ ] DB 에서 JOIN vs Repository 에서 조립
-- [ ] 

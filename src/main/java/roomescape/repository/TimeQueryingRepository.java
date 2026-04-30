@@ -1,16 +1,17 @@
-package roomescape.reservationTime;
+package roomescape.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import roomescape.domain.ReservationTime;
 
 import java.util.List;
 
 @Repository
-public class TimeQueryingDao {
+public class TimeQueryingRepository {
     private JdbcTemplate jdbcTemplate;
 
-    public TimeQueryingDao(JdbcTemplate jdbcTemplate) {
+    public TimeQueryingRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

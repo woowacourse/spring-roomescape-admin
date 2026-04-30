@@ -1,4 +1,4 @@
-package roomescape.reservation;
+package roomescape.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -9,10 +9,10 @@ import roomescape.dto.ReservationRequest;
 import java.sql.PreparedStatement;
 
 @Repository
-public class ReservationUpdatingDao {
+public class ReservationUpdatingRepository {
     private JdbcTemplate jdbcTemplate;
 
-    public ReservationUpdatingDao(JdbcTemplate jdbcTemplate) {
+    public ReservationUpdatingRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

@@ -6,6 +6,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -15,6 +16,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationTimeTest {
+    @DisplayName("시간 추가, 조회, 삭제 API가 정상 동작한다.")
     @Test
     void 시간_관리_API() {
         Map<String, String> params = new HashMap<>();
@@ -39,6 +41,7 @@ public class ReservationTimeTest {
                 .statusCode(204);
     }
 
+    @DisplayName("예약과 시간이 올바르게 연결된다.")
     @Test
     void 예약과_시간_연결() {
         RestAssured.given()

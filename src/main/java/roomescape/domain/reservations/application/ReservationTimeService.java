@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.reservations.entity.ReservationTime;
-import roomescape.domain.reservations.infrastructure.ReservationTimeRepository;
+import roomescape.domain.reservations.entity.ReservationTimeRepository;
 import roomescape.domain.reservations.presentation.dto.ReservationTimeRequest;
 import roomescape.domain.reservations.presentation.dto.ReservationTimeResponse;
 

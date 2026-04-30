@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.reservations.entity.Reservation;
 import roomescape.domain.reservations.entity.ReservationTime;
-import roomescape.domain.reservations.infrastructure.ReservationRepository;
-import roomescape.domain.reservations.infrastructure.ReservationTimeRepository;
+import roomescape.domain.reservations.entity.ReservationRepository;
+import roomescape.domain.reservations.entity.ReservationTimeRepository;
 import roomescape.domain.reservations.presentation.dto.ReservationRequest;
 import roomescape.domain.reservations.presentation.dto.ReservationResponse;
 

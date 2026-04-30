@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,17 +22,21 @@ public class ReservationRepository {
 
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> new Reservation(
-            rs.getLong("id"),
-            rs.getString("name"),
-            LocalDateTime.of(LocalDate.parse(rs.getString("date")), LocalTime.parse(rs.getString("time")))
-    );
+    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> {
+        final ReservationTime reservationTime = new ReservationTime(rs.getLong("time_id"), LocalTime.parse(rs.getString("start_at")));
+        return new Reservation(
+                rs.getLong("id"),
+                rs.getString("name"),
+                LocalDate.parse(rs.getString("date")),
+                reservationTime);
+    };
 
     public Reservation findById(long id) {
         return jdbcTemplate.query("""
-                        SELECT id, name, date, time 
-                        FROM reservation 
-                        WHERE id = ?
+                        SELECT r.id, r.name, r.date, rt.id as time_id, rt.start_at
+                        FROM reservation r
+                        inner join reservation_time rt on r.time_id = rt.id
+                        WHERE r.id = ?
                    """,
                 reservationRowMapper,
                 id).stream()
@@ -40,24 +45,23 @@ public class ReservationRepository {
     }
 
     public long save(Reservation reservation) {
-        final LocalDateTime reservationDateTime = reservation.getReservationDateTime();
         final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
                     final PreparedStatement ps = con.prepareStatement("""
                            MERGE INTO reservation r
-                           USING (VALUES (?, ?, ?, ?)) t(id, name, date, time) ON r.id = t.id
+                           USING (VALUES (?, ?, ?, ?)) t(id, name, date, time_id) ON r.id = t.id
                            WHEN MATCHED THEN
                                UPDATE SET
                                    name = t.name,
                                    date = t.date,
-                                   time = t.time
+                                   time_id = t.time_id
                            WHEN NOT MATCHED THEN
-                               INSERT (name, date, time)
-                               VALUES (t.name, t.date, t.time)""", new String[]{"id"});
+                               INSERT (name, date, time_id)
+                               VALUES (t.name, t.date, t.time_id)""", new String[]{"id"});
                     ps.setObject(1, reservation.getId());
                     ps.setString(2, reservation.getReservationName());
-                    ps.setString(3, reservationDateTime.toLocalDate().format(dateFormatter));
-                    ps.setString(4, reservationDateTime.toLocalTime().format(timeFormatter));
+                    ps.setString(3, reservation.getReservationDate().format(dateFormatter));
+                    ps.setLong(4, reservation.getReservationTime().getId());
                     return ps;
                 },
                 keyHolder);
@@ -77,8 +81,9 @@ public class ReservationRepository {
 
     public List<Reservation> findAll() {
         return jdbcTemplate.query("""
-                        SELECT id, name, date, time 
-                        FROM reservation
+                        SELECT r.id, r.name, r.date, rt.id as time_id, rt.start_at
+                        FROM reservation r
+                        inner join reservation_time rt on r.time_id = rt.id
                    """,
                 reservationRowMapper);
     }

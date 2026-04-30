@@ -25,10 +25,24 @@ public class MissionStepTest1 {
 
     @Test
     void 예약_추가_및_삭제() {
-        Map<String, String> params = new HashMap<>();
+
+        Map<String, String> timeParams = new HashMap<>();
+        timeParams.put("startAt", "10:00");
+
+        Long id = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(timeParams)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getLong("id");
+
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "15:40");
+        params.put("timeId", id);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

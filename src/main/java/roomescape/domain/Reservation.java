@@ -3,10 +3,13 @@ package roomescape.domain;
 import java.time.LocalDate;
 
 public class Reservation {
-    private final Long id;
-    private final String name;
-    private final LocalDate date;
-    private final ReservationTime time;
+    private Long id;
+    private String name;
+    private LocalDate date;
+    private ReservationTime time;
+
+    private Reservation() {
+    }
 
     public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;

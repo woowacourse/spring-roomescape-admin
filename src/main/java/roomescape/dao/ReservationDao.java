@@ -1,35 +1,24 @@
-package roomescape;
+package roomescape.dao;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Repository;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
-
-@RestController
-public class ReservationController {
-
+@Repository
+public class ReservationDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationController(JdbcTemplate jdbcTemplate) {
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> read() {
-        List<Reservation> reservations = jdbcTemplate.query(
+    public List<Reservation> findAll() {
+        return jdbcTemplate.query(
                 "SELECT r.id AS reservation_id, r.name, r.date, " +
                         "t.id AS time_id, t.start_at AS time_value " +
                         "FROM reservation r " +
@@ -44,21 +33,20 @@ public class ReservationController {
                         )
                 )
         );
-
-        return ResponseEntity.ok(reservations);
     }
 
-    @PostMapping("/reservations")
-    public ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
-        ReservationTime time = jdbcTemplate.queryForObject(
+    public ReservationTime findTimeById(Long timeId) {
+        return jdbcTemplate.queryForObject(
                 "SELECT id, start_at FROM reservation_time WHERE id = ?",
                 (rs, rowNum) -> new ReservationTime(
                         rs.getLong("id"),
                         rs.getString("start_at")
                 ),
-                reservation.getTimeId()
+                timeId
         );
+    }
 
+    public Reservation save(Reservation reservation, ReservationTime reservationTime) {
         SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
@@ -69,13 +57,12 @@ public class ReservationController {
         params.put("time_id", reservation.getTimeId());
 
         Long id = insert.executeAndReturnKey(params).longValue();
+        return new Reservation(id, reservation.getName(), reservation.getDate(), reservationTime);
 
-        return ResponseEntity.ok(new Reservation(id, reservation.getName(), reservation.getDate(), time));
     }
 
-    @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public void delete(Long id) {
         jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
-        return ResponseEntity.ok().build();
     }
+
 }

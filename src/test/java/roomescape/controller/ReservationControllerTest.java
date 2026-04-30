@@ -10,6 +10,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import roomescape.dao.ReservationDAO;
 import roomescape.dao.ReservationTimeDAO;
 import roomescape.domain.Reservation;
+import roomescape.service.ReservationService;
 import roomescape.dto.ReservationRequestDTO;
 
 import java.time.LocalDate;
@@ -47,8 +48,8 @@ public class ReservationControllerTest {
 
         ReservationDAO reservationDAO = new ReservationDAO(jdbcTemplate);
         ReservationTimeDAO reservationTimeDAO = new ReservationTimeDAO(jdbcTemplate);
-
-        controller = new ReservationController(reservationDAO, reservationTimeDAO);
+        ReservationService reservationService = new ReservationService(reservationDAO, reservationTimeDAO);
+        controller = new ReservationController(reservationService);
 
         jdbcTemplate.update("INSERT INTO reservation_time(start_at) VALUES (?)", "15:00");
 
@@ -82,11 +83,8 @@ public class ReservationControllerTest {
         Long id = reservations.getFirst().getId();
         int beforeSize = reservations.size();
 
-        ResponseEntity<List<Reservation>> deleteResponse = controller.delete(id);
-
-        ResponseEntity<List<Reservation>> readAfterResponse = controller.read();
-        List<Reservation> afterReservations = readAfterResponse.getBody();
-        int afterSize = afterReservations.size();
+        ResponseEntity<Void> deleteResponse = controller.delete(id);
+        int afterSize = controller.read().getBody().size();
 
         assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(beforeSize).isEqualTo(afterSize + 1);

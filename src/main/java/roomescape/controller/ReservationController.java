@@ -31,17 +31,22 @@ public class ReservationController {
         List<Reservation> reservations = reservationRepository.findAll();
 
         for (Reservation reservation : reservations) {
-            responseDtos.add(ReservationResponseDto.from(reservation));
+            Long timeId = reservation.getTime().getId();
+            ReservationTime time = reservationTimeRepository.findById(timeId);
+            Reservation reservationIncludingTime = new Reservation(reservation, time);
+
+            responseDtos.add(ReservationResponseDto.from(reservationIncludingTime));
         }
 
         return responseDtos;
     }
 
     @PostMapping("/reservations")
+    @ResponseStatus(HttpStatus.OK)
     public ReservationResponseDto addReservation(@RequestBody ReservationRequestDto requestDto) {
-        Reservation reservation = new Reservation(null, requestDto.name(), requestDto.date(), requestDto.time());
-
-        reservationRepository.createReservation(reservation);
+        ReservationTime time = reservationTimeRepository.findById(requestDto.time_id());
+        Long id = reservationRepository.createReservation(new Reservation(null, requestDto.name(), requestDto.date(), time));
+        Reservation reservation = reservationRepository.findById(id);
 
         return ReservationResponseDto.from(reservation);
     }
@@ -66,6 +71,7 @@ public class ReservationController {
     }
 
     @PostMapping("/times")
+    @ResponseStatus(HttpStatus.OK)
     public ReservationTimeResponseDto addReservationTime(@RequestBody ReservationTimeRequesetDto requestDto) {
         ReservationTime reservationTime = reservationTimeRepository.createReservationTime(new ReservationTime(null, requestDto.startAt()));
 

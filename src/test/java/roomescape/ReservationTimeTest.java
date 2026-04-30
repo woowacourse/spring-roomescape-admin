@@ -6,13 +6,23 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@Transactional
 public class ReservationTimeTest {
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
+
+    @AfterEach
+    void cleanUp() {
+        jdbcTemplate.execute("DELETE FROM reservation");
+        jdbcTemplate.execute("DELETE FROM reservation_time");
+    }
 
     @Test
     void 시간_관리_API() {

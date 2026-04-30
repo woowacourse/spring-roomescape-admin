@@ -1,11 +1,11 @@
-package roomescape.dto;
+package roomescape.controller.dto;
 
-public class ReservationCreateDto {
+public class ReservationCreateRequestDto {
     private final String name;
     private final String date;
     private final Long timeId;
 
-    public ReservationCreateDto(String name, String date, Long timeId) {
+    public ReservationCreateRequestDto(String name, String date, Long timeId) {
         this.name = name;
         this.date = date;
         this.timeId = timeId;

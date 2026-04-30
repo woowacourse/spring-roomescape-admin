@@ -8,32 +8,32 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dao.ReservationTimeDao;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
+import roomescape.service.ReservationTimeService;
 
 @RestController
 public class ReservationTimeController {
 
-    private final ReservationTimeDao reservationTimeDao;
+    private final ReservationTimeService reservationTimeService;
 
     @Autowired
-    public ReservationTimeController(ReservationTimeDao reservationTimeDao) {
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @PostMapping("/times")
     public ReservationTimeResponse createReservationTime(@RequestBody ReservationTimeRequest request) {
-        return reservationTimeDao.create(request);
+        return reservationTimeService.createReservationTime(request);
     }
 
     @GetMapping("/times")
     public List<ReservationTimeResponse> getReservationTimes() {
-        return reservationTimeDao.getTimes();
+        return reservationTimeService.getReservationTimes();
     }
 
     @DeleteMapping("/times/{id}")
     public void deleteReservationTime(@PathVariable Long id) {
-        reservationTimeDao.delete(id);
+        reservationTimeService.deleteReservationTime(id);
     }
 }

@@ -6,11 +6,11 @@ import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
-import roomescape.dto.ReservationTimeResponse;
 
-@Component
+@Repository
 public class ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -19,7 +19,7 @@ public class ReservationTimeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ReservationTimeResponse create(ReservationTimeRequest reservationTimeRequest) {
+    public ReservationTime create(ReservationTimeRequest reservationTimeRequest) {
         String sql = "INSERT INTO reservation_time(start_at) VALUES (?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -32,19 +32,19 @@ public class ReservationTimeDao {
                 }, keyHolder
         );
 
-        return new ReservationTimeResponse(keyHolder.getKey().longValue(), reservationTimeRequest.startAt());
+        return new ReservationTime(keyHolder.getKey().longValue(), reservationTimeRequest.startAt());
     }
 
-    public List<ReservationTimeResponse> getTimes() {
+    public List<ReservationTime> getTimes() {
         String sql = "SELECT * FROM reservation_time";
 
         return jdbcTemplate.query(sql,
                 (resultSet, rowNum) -> {
-                    ReservationTimeResponse reservationTimeResponse = new ReservationTimeResponse(
+                    ReservationTime reservationTime = new ReservationTime(
                             resultSet.getLong("id"),
                             resultSet.getString("start_at")
                     );
-                    return reservationTimeResponse;
+                    return reservationTime;
                 });
     }
 
@@ -52,5 +52,19 @@ public class ReservationTimeDao {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
 
         jdbcTemplate.update(sql, id);
+    }
+
+    public ReservationTime findById(long id) {
+        String sql = "SELECT * FROM reservation_time WHERE id = ?";
+
+        return jdbcTemplate.queryForObject(sql,
+                (resultSet, rowNum) -> {
+                    ReservationTime time = new ReservationTime(
+                            resultSet.getLong("id"),
+                            resultSet.getString("start_at")
+                    );
+
+                    return time;
+                }, id);
     }
 }

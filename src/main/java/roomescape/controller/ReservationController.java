@@ -8,32 +8,32 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dao.ReservationDao;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.service.ReservationService;
 
 @RestController
 public class ReservationController {
 
-    private final ReservationDao reservationDao;
+    private final ReservationService reservationService;
 
     @Autowired
-    public ReservationController(ReservationDao reservationDao) {
-        this.reservationDao = reservationDao;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping("/reservations")
     public List<ReservationResponse> readAllReservations() {
-        return reservationDao.getReservations();
+        return reservationService.getReservations();
     }
 
     @PostMapping("/reservations")
     public ReservationResponse createReservation(@RequestBody ReservationRequest request) {
-        return reservationDao.createReservation(request);
+        return reservationService.createReservation(request);
     }
 
     @DeleteMapping("/reservations/{id}")
     public void deleteReservation(@PathVariable long id) {
-        reservationDao.deleteReservation(id);
+        reservationService.deleteReservation(id);
     }
 }

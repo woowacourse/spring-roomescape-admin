@@ -1,10 +1,12 @@
 package roomescape.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDAO;
 import roomescape.domain.Reservation;
 import roomescape.dto.request.ReservationRequest;
+import roomescape.dto.response.ReservationResponse;
 
 @Service
 public class ReservationService {
@@ -19,8 +21,10 @@ public class ReservationService {
         return reservationDAO.insert(request.name(), request.date(), request.timeId());
     }
 
-    public List<Reservation> findAll() {
-        return reservationDAO.findAll();
+    public List<ReservationResponse> findAll() {
+        return reservationDAO.findAll().stream()
+                .map(ReservationResponse::from)
+                .collect(Collectors.toList());
     }
 
     public void delete(Long id) {

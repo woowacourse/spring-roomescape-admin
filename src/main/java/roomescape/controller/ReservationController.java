@@ -34,9 +34,7 @@ public class ReservationController {
     @ResponseBody
     @GetMapping("/reservations")
     public List<ReservationResponse> findAll() {
-        return reservationService.findAll().stream()
-                .map(ReservationResponse::from)
-                .collect(Collectors.toList());
+        return reservationService.findAll();
     }
 
     @DeleteMapping("/reservations/{id}")

@@ -1,10 +1,10 @@
 package roomescape.time.dto;
 
-public class TimeRequestDto {
+public class ReservationTimeRequestDto {
 
     private final String startAt;
 
-    public TimeRequestDto(String startAt) {
+    public ReservationTimeRequestDto(String startAt) {
         this.startAt = startAt;
     }
 

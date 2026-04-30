@@ -10,6 +10,10 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
+    public static ReservationTime create(String startAt) {
+        return new ReservationTime(null, startAt);
+    }
+
     public Long getId() {
         return id;
     }

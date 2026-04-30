@@ -1,15 +1,14 @@
 package roomescape.time.repository;
 
-import roomescape.time.dto.TimeRequestDto;
 import roomescape.time.entity.ReservationTime;
 
 import java.util.List;
 
 public interface ReservationTimeRepository {
 
-    ReservationTime save(TimeRequestDto requestDto);
+    ReservationTime save(ReservationTime reservationTime);
 
-    void delete(Long id);
+    void deleteById(Long id);
 
     ReservationTime findById(Long id);
 

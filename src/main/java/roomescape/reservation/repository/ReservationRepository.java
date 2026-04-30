@@ -11,4 +11,8 @@ public interface ReservationRepository {
     void deleteById(Long id);
 
     List<Reservation> findAll();
+
+    boolean existsById(Long id);
+
+    boolean existsByReservation(String date, Long timeId);
 }

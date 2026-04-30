@@ -63,4 +63,18 @@ public class JdbcReservationRepository implements ReservationRepository {
                 "inner join reservation_time t on r.time_id = t.id";
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
+
+    @Override
+    public boolean existsById(Long id) {
+        String sql = "select count(*) from reservation where id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+        return count != null && count > 0;
+    }
+
+    @Override
+    public boolean existsByReservation(String date, Long timeId) {
+        String sql = "select count(*) from reservation where date = ? and time_id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, date, timeId);
+        return count != null && count > 0;
+    }
 }

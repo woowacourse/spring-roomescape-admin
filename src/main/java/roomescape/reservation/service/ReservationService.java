@@ -1,6 +1,5 @@
 package roomescape.reservation.service;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.dto.ReservationRequestDto;
 import roomescape.reservation.dto.ReservationResponseDto;
@@ -23,21 +22,22 @@ public class ReservationService {
     }
 
     public ReservationResponseDto save(ReservationRequestDto requestDto) {
-        try {
-            ReservationTime time = reservationTimeRepository.findById(requestDto.getTimeId());
-            Reservation reservation = Reservation.create(requestDto.getName(), requestDto.getDate(), time);
-            return ReservationResponseDto.from(reservationRepository.save(reservation));
-        } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("이미 예약이 존재합니다.");
+        ReservationTime time = reservationTimeRepository.findById(requestDto.getTimeId());
+
+        if (reservationRepository.existsByReservation(requestDto.getDate(), requestDto.getTimeId())) {
+            throw new IllegalArgumentException("이미 해당 날짜와 시간에 예약이 존재합니다.");
         }
+
+        Reservation reservation = Reservation.create(requestDto.getName(), requestDto.getDate(), time);
+        return ReservationResponseDto.from(reservationRepository.save(reservation));
     }
 
     public void deleteById(Long id) {
-        try {
-            reservationRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
+        if (!reservationRepository.existsById(id)) {
             throw new IllegalArgumentException("삭제하려는 예약이 존재하지 않습니다.");
         }
+
+        reservationRepository.deleteById(id);
     }
 
     public List<ReservationResponseDto> findAll() {

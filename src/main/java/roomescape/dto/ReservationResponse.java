@@ -7,9 +7,9 @@ public class ReservationResponse {
     private final long id;
     private final String name;
     private final String date;
-    private final String time;
+    private final ReservationTimeResponse time;
 
-    private ReservationResponse(long id, String name, String date, String time) {
+    private ReservationResponse(long id, String name, String date, ReservationTimeResponse time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -21,16 +21,8 @@ public class ReservationResponse {
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getDate().toString(),
-                reservation.getTime().toString()
+                ReservationTimeResponse.from(reservation.getTime())
         );
-    }
-
-    public static ReservationResponse of(Long id, ReservationRequest request) {
-        return new ReservationResponse(
-                id,
-                request.getName(),
-                request.getDate().toString(),
-                request.getTime().toString());
     }
 
     public long getId() {
@@ -46,6 +38,6 @@ public class ReservationResponse {
     }
 
     public String getTime() {
-        return time;
+        return time.getStartAt();
     }
 }

@@ -6,7 +6,9 @@ import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationsResponse;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 import java.util.List;
 
@@ -14,15 +16,19 @@ import java.util.List;
 public class ReservationService {
 
     private final ReservationRepository repository;
+    private final ReservationTimeRepository timeRepository;
 
-    public ReservationService(ReservationRepository repository) {
+    public ReservationService(ReservationRepository repository, ReservationTimeRepository timeRepository) {
         this.repository = repository;
+        this.timeRepository = timeRepository;
     }
 
     @Transactional
     public ReservationResponse create(ReservationRequest request) {
+        ReservationTime time = timeRepository.findById(request.getTimeId());
         Long id = repository.create(request);
-        return ReservationResponse.of(id, request);
+        Reservation reservation = new Reservation(id, request.getName(), request.getDate(), time);
+        return ReservationResponse.from(reservation);
     }
 
     @Transactional

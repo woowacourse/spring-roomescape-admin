@@ -6,6 +6,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.dto.ReservationRequest;
 import roomescape.model.Reservation;
+import roomescape.model.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
@@ -22,7 +23,7 @@ public class ReservationRepository {
     }
 
     public Long create(ReservationRequest request) {
-        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -31,21 +32,32 @@ public class ReservationRepository {
                     PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
                     ps.setString(1, request.getName());
                     ps.setObject(2, request.getDate());
-                    ps.setObject(3, request.getTime());
+                    ps.setLong(3, request.getTimeId());
                     return ps;
                 }, keyHolder);
         return keyHolder.getKey().longValue();
     }
 
     public List<Reservation> findAll() {
-        String sql = "SELECT id, name, date, time FROM reservation";
+        String sql = """
+            SELECT 
+                r.id, r.name, r.date, 
+                t.id AS time_id, t.start_at AS time_value 
+            FROM reservation r 
+            INNER JOIN reservation_time t ON r.time_id = t.id""";
 
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
+            ReservationTime time = new ReservationTime(
+                    resultSet.getLong("time_id"),
+                    resultSet.getObject("time_value", LocalTime.class)
+            );
+
+            // 3. 만들어진 time 객체를 Reservation에 꽂아줍니다.
             return new Reservation(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),
                     resultSet.getObject("date", LocalDate.class),
-                    resultSet.getObject("time", LocalTime.class)
+                    time
             );
         });
     }

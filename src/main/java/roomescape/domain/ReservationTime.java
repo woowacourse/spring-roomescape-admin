@@ -6,11 +6,6 @@ public class ReservationTime {
     private final Long id;
     private final LocalTime startAt;
 
-    public ReservationTime() {
-        this.id = null;
-        this.startAt = null;
-    }
-
     public ReservationTime(Long id, LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;

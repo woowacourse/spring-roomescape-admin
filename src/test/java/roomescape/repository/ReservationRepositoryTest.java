@@ -50,7 +50,7 @@ class ReservationRepositoryTest {
             );
 
             // when
-            reservationRepository.create(transientReservation);
+            reservationRepository.persist(transientReservation);
 
             // then
             String countSql = "SELECT count(*) FROM reservation";
@@ -70,7 +70,7 @@ class ReservationRepositoryTest {
             );
 
             // when
-            Reservation persistedReservation = reservationRepository.create(transientReservation);
+            Reservation persistedReservation = reservationRepository.persist(transientReservation);
 
             // then
             String selectSql = "SELECT r.*, rt.start_at"

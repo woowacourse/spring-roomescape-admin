@@ -39,7 +39,7 @@ class ReservationTimeRepositoryTest {
             ReservationTime transientTime = ReservationTime.create(DEFAULT_START_AT);
 
             // when
-            timeRepository.create(transientTime);
+            timeRepository.persist(transientTime);
 
             // then
             String timeCountSql = "SELECT count(*)"
@@ -58,7 +58,7 @@ class ReservationTimeRepositoryTest {
             ReservationTime transientTime = ReservationTime.create(DEFAULT_START_AT);
 
             // when
-            ReservationTime persistedReservationTime = timeRepository.create(transientTime);
+            ReservationTime persistedReservationTime = timeRepository.persist(transientTime);
 
             // then
             String selectSql = "SELECT id, start_at"

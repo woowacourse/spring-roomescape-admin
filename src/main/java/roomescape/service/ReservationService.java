@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.exception.InUseTimeException;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.command.ReservationCreateCommand;
@@ -36,7 +35,7 @@ public class ReservationService {
                 time
         );
 
-        return reservationRepository.create(reservation);
+        return reservationRepository.persist(reservation);
     }
 
     @Transactional
@@ -45,7 +44,7 @@ public class ReservationService {
     ) {
         ReservationTime reservationTime = ReservationTime.create(createCommand.startAt());
 
-        return timeRepository.create(reservationTime);
+        return timeRepository.persist(reservationTime);
     }
 
     @Transactional

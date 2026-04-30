@@ -4,7 +4,6 @@ import static roomescape.repository.rowmapper.RowMapperUtils.RESERVATION_TIME_RO
 
 import java.util.List;
 import java.util.Map;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -26,7 +25,7 @@ public class ReservationTimeRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public ReservationTime create(ReservationTime reservationTime) {
+    public ReservationTime persist(ReservationTime reservationTime) {
         Number id = simpleJdbcInsert.executeAndReturnKey(Map.of(
                 "start_at", reservationTime.getStartAt()
         ));

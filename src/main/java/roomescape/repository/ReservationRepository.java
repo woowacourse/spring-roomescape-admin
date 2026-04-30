@@ -25,7 +25,7 @@ public class ReservationRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public Reservation create(Reservation reservation) {
+    public Reservation persist(Reservation reservation) {
         Number id = simpleJdbcInsert.executeAndReturnKey(Map.of(
                 "name", reservation.getName(),
                 "date", reservation.getDate(),

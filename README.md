@@ -137,6 +137,9 @@ Content-Type: application/json
 
 #### ReservationController에 웹 요청 처리·비즈니스 로직·DB 접근이 모두 몰려 응집도는 낮고 결합도는 높은 상황이다. 레이어드 아키텍처로 레이어별 책임에 따라 코드를 분리한다.
 
+- [x] 레이어별 책임과 역할에 따라 클래스를 분리하고, 분리한 클래스를 Spring Bean으로 등록한다.
+    - [x] ReservationController에 JdbcTemplate 필드가 남아있지 않아야 한다
+
 # 📝API 명세
 
 | 기능    | 메서드 / URL                   | 요청 본문                   | 응답                                 |

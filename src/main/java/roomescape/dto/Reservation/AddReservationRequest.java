@@ -1,6 +1,6 @@
-package roomescape.dto;
+package roomescape.dto.Reservation;
 
-import roomescape.domain.ReservationCommand;
+import roomescape.domain.Reservation.ReservationCommand;
 
 public record AddReservationRequest(String name, String date, long timeId) {
     public ReservationCommand to() {

@@ -10,8 +10,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import roomescape.domain.ReservationTime;
-import roomescape.domain.ReservationTimeCommand;
+import roomescape.domain.ReservationTime.ReservationTime;
+import roomescape.domain.ReservationTime.ReservationTimeCommand;
 
 public class ReservationTimeDaoTest {
     private ReservationTimeDao reservationTimeDao;

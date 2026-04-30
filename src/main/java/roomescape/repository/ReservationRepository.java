@@ -4,9 +4,9 @@ import java.util.Collections;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import roomescape.dao.ReservationDao;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationCommand;
-import roomescape.domain.ReservationTime;
+import roomescape.domain.Reservation.Reservation;
+import roomescape.domain.Reservation.ReservationCommand;
+import roomescape.domain.ReservationTime.ReservationTime;
 
 @Repository
 public class ReservationRepository {

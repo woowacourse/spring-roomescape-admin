@@ -13,20 +13,22 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class ReservationTimeRepository {
+public class JdbcReservationTimeRepository implements ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
+    public JdbcReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public List<ReservationTime> getAll() {
         return jdbcTemplate.query(
             "SELECT id, start_at FROM reservation_time",
             reservationTimeRowMapper);
     }
 
+    @Override
     public Optional<ReservationTime> findById(long id) {
         List<ReservationTime> reservationTimes = jdbcTemplate.query(
             "SELECT id, start_at FROM reservation_time WHERE id = ?",
@@ -41,6 +43,7 @@ public class ReservationTimeRepository {
             rs.getTime("start_at").toLocalTime()
         );
 
+    @Override
     public ReservationTime save(ReservationTime reservationTime) {
         final String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
 
@@ -54,6 +57,7 @@ public class ReservationTimeRepository {
         return reservationTime.withId(keyHolder.getKey().longValue());
     }
 
+    @Override
     public void deleteById(long id) {
         int update = jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
         if (update == 0) {

@@ -13,14 +13,15 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class ReservationRepository {
+public class JdbcReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationRepository(JdbcTemplate jdbcTemplate) {
+    public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public List<Reservation> getAll() {
         return jdbcTemplate.query(
             "SELECT "
@@ -46,6 +47,7 @@ public class ReservationRepository {
         );
 
 
+    @Override
     public Reservation save(Reservation reservation) {
         final String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
 
@@ -61,6 +63,7 @@ public class ReservationRepository {
         return reservation.withId(keyHolder.getKey().longValue());
     }
 
+    @Override
     public void deleteById(long reservationId) {
         int update = jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", reservationId);
         if (update == 0) {

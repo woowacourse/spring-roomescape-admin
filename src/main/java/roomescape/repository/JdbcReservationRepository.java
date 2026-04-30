@@ -12,7 +12,7 @@ import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 
 @Repository
-public class ReservationRepositoryImpl implements ReservationRepository {
+public class JdbcReservationRepository implements ReservationRepository {
 
     @Autowired
     JdbcTemplate jdbcTemplate;

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.entity.ReservationTime;
 
 @Repository
-public class ReservationTimeRepositoryImpl implements ReservationTimeRepository {
+public class JdbcReservationTimeRepository implements ReservationTimeRepository {
 
     @Autowired
     JdbcTemplate jdbcTemplate;

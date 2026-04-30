@@ -25,7 +25,7 @@ class ReservationTest {
         Long expected = 1L;
 
         //when
-        Long actual = reservation.getId();
+        Long actual = reservation.id();
 
         //then
         assertEquals(expected, actual);
@@ -38,7 +38,7 @@ class ReservationTest {
         String expected = "한다";
 
         //when
-        String actual = reservation.getName();
+        String actual = reservation.name();
 
         //then
         assertEquals(expected, actual);
@@ -51,7 +51,7 @@ class ReservationTest {
         LocalDate expected = LocalDate.of(2023, 8, 5);
 
         //when
-        LocalDate actual = reservation.getDate();
+        LocalDate actual = reservation.date();
 
         //then
         assertEquals(expected, actual);
@@ -64,7 +64,7 @@ class ReservationTest {
         Long expected = 1L;
 
         //when
-        Long actual = reservation.getTime().getId();
+        Long actual = reservation.time().id();
 
         //then
         assertEquals(expected, actual);

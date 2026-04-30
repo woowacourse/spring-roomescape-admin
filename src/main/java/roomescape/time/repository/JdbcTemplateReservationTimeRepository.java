@@ -54,7 +54,7 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
 
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setTime(1, Time.valueOf(reservationTime.getStartAt()));
+            preparedStatement.setTime(1, Time.valueOf(reservationTime.startAt()));
             return preparedStatement;
         }, keyHolder);
 

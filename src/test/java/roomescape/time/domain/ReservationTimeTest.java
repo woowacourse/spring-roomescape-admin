@@ -22,7 +22,7 @@ class ReservationTimeTest {
         Long expected = 1L;
 
         //when
-        Long actual = reservationTime.getId();
+        Long actual = reservationTime.id();
 
         //then
         assertEquals(expected, actual);
@@ -35,7 +35,7 @@ class ReservationTimeTest {
         LocalTime expected = LocalTime.of(10, 0);
 
         //when
-        LocalTime actual = reservationTime.getStartAt();
+        LocalTime actual = reservationTime.startAt();
 
         //then
         assertEquals(expected, actual);

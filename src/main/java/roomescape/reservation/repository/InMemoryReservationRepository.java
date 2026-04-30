@@ -20,16 +20,16 @@ public class InMemoryReservationRepository implements ReservationRepository {
     @Override
     public Optional<Reservation> findById(Long id) {
         return reservations.stream()
-                .filter(reservations -> reservations.getId().equals(id)).findAny();
+                .filter(reservations -> reservations.id().equals(id)).findAny();
     }
 
     @Override
     public Long save(Reservation reservation) {
-        if (!findById(reservation.getId()).isEmpty()) {
+        if (!findById(reservation.id()).isEmpty()) {
             throw new IllegalStateException("중복된 예약 id가 존재합니다.");
         }
         reservations.add(reservation);
-        return reservation.getId();
+        return reservation.id();
     }
 
     @Override

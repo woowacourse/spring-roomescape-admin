@@ -22,11 +22,6 @@ public class JdbcReservationDao implements ReservationDao {
     }
 
     @Override
-    public Reservation select(Long id) {
-        return null;
-    }
-
-    @Override
     public List<Reservation> selectAll() {
         String sql = """
                 select 

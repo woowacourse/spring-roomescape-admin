@@ -53,6 +53,15 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         template.update(sql, id);
     }
 
+    @Override
+    public ReservationTime findById(Long id) {
+        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?;";
+
+        ReservationTime time = template.queryForObject(sql, reservationTimeRowMapper(), id);
+
+        return time;
+    }
+
     private RowMapper<ReservationTime> reservationTimeRowMapper() {
         return ((rs, rowNum) -> {
             ReservationTime reservationTime = new ReservationTime(

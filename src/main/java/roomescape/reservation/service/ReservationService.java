@@ -2,6 +2,7 @@ package roomescape.reservation.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.CreateReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
@@ -20,12 +21,14 @@ public class ReservationService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<ReservationResponse> findAll() {
         return reservationRepository.findAll().stream()
                 .map(ReservationResponse::from)
                 .toList();
     }
 
+    @Transactional
     public ReservationResponse create(CreateReservationRequest createReservationRequest) {
         ReservationTime reservationTime = reservationTimeRepository.findById(createReservationRequest.timeId())
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 예약 시간입니다."));
@@ -38,6 +41,7 @@ public class ReservationService {
         return ReservationResponse.from(reservation);
     }
 
+    @Transactional
     public ReservationResponse delete(Long id) {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 예약입니다."));

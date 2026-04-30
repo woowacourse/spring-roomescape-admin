@@ -7,9 +7,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.dto.ReservationRequestDto;
-import roomescape.domain.entity.Reservation;
-import roomescape.domain.entity.ReservationTime;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationRequestDto;
 
 @Primary
 @Repository

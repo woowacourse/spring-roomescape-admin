@@ -1,8 +1,8 @@
 package roomescape.dao;
 
 import java.util.List;
-import roomescape.domain.dto.ReservationRequestDto;
-import roomescape.domain.entity.Reservation;
+import roomescape.domain.Reservation;
+import roomescape.dto.ReservationRequestDto;
 
 public interface ReservationDao {
     Reservation create(ReservationRequestDto requestDto);

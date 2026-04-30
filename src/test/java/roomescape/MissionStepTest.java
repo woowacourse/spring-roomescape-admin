@@ -41,7 +41,14 @@ public class MissionStepTest {
                 .then().statusCode(200);
     }
 
-    // 1단계 테스트
+    private Map<String, Object> reservationParams() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("timeId", 1);
+        return params;
+    }
+
     @Test
     void 예약_조회() {
         RestAssured.given().log().all()
@@ -111,7 +118,6 @@ public class MissionStepTest {
                 .body("size()", is(0));
     }
 
-    // 2단계 테스트
     @Test
     void 데이터베이스_연동() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
@@ -160,7 +166,6 @@ public class MissionStepTest {
         assertThat(countAfterDelete).isEqualTo(0);
     }
 
-    // 3단계 테스트
     @Test
     void 시간_관리_API() {
         RestAssured.given().log().all()
@@ -203,13 +208,5 @@ public class MissionStepTest {
         }
 
         assertThat(isJdbcTemplateInjected).isFalse();
-    }
-
-    private Map<String, Object> reservationParams() {
-        Map<String, Object> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("timeId", 1);
-        return params;
     }
 }

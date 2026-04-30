@@ -22,7 +22,7 @@ public class ReservationTimeController {
 
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTime>> getReservationTimes() {
-        List<ReservationTime> reservationTimeList = reservationTimeService.getRservationTimes();
+        List<ReservationTime> reservationTimeList = reservationTimeService.getReservationTimes();
         return ResponseEntity.ok().body(reservationTimeList);
     }
 

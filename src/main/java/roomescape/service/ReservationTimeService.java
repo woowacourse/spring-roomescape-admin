@@ -17,7 +17,7 @@ public class ReservationTimeService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReservationTime> getRservationTimes() {
+    public List<ReservationTime> getReservationTimes() {
         return reservationTimeDao.findAllReservationTimes();
     }
 

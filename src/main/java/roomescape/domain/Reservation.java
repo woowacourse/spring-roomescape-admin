@@ -8,12 +8,12 @@ public class Reservation {
     private Long id;
     private String name;
     private LocalDate date;
-    private LocalTime time;
+    private ReservationTime time;
 
     public Reservation() {
     }
 
-    public Reservation(Long id, String name, LocalDate date, LocalTime time) {
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -32,8 +32,8 @@ public class Reservation {
         return date.toString();
     }
 
-    public String getTime() {
-        return time.toString();
+    public ReservationTime getTime() {
+        return time;
     }
 
 }

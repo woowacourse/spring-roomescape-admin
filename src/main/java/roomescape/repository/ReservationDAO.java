@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationDAO {
@@ -15,11 +16,16 @@ public class ReservationDAO {
     private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> {
+        ReservationTime time = new ReservationTime(
+                resultSet.getLong("time_id"),
+                resultSet.getTime("start_at").toLocalTime()
+        );
+
         Reservation reservation = new Reservation(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 resultSet.getDate("date").toLocalDate(),
-                resultSet.getTime("time").toLocalTime()
+                time
         );
         return reservation;
     };
@@ -29,24 +35,30 @@ public class ReservationDAO {
     }
 
     public Reservation findById(Long id) {
-        String sql = "select id, name, date, time from reservation where id = ?";
+        String sql = """
+                select r.id, r.name, r.date, t.id as time_id, t.start_at from reservation r 
+                join reservation_time t on r.time_id = t.id where r.id = ?
+                """;
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     public List<Reservation> findAll() {
-        String sql = "select id, name, date, time from reservation";
+        String sql = """
+                select r.id, r.name, r.date, t.id as time_id, t.start_at from reservation r 
+                join reservation_time t on r.time_id = t.id
+                """;
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     public Long save(Reservation reservation) {
-        String sql = "insert into reservation(name, date, time) values(?, ?, ?)";
+        String sql = "insert into reservation(name, date, time_id) values(?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.getName());
             ps.setString(2, reservation.getDate());
-            ps.setString(3, reservation.getTime());
+            ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
 

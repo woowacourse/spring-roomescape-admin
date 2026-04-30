@@ -12,4 +12,6 @@ public interface MyRepository<T> {
     T save(T t);
 
     void delete(long id);
+
+    boolean isExists(long id);
 }

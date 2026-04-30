@@ -56,4 +56,13 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
         jdbcTemplate.update(sql, params);
     }
+
+    @Override
+    public boolean isExists(long id) {
+        String sql = "SELECT EXISTS(SELECT 1 FROM reservation_time WHERE id = :id)";
+
+        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, params, Boolean.class));
+    }
 }

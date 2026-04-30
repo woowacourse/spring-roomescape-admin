@@ -28,6 +28,9 @@ public class ReservationService {
     }
 
     public Reservation save(ReservationRequestDto reservationRequestDto) {
+        if (!reservationTimeRepository.isExists(reservationRequestDto.timeId())) {
+            throw new IllegalArgumentException("예약시간이 존재하지 않습니다. id: " + reservationRequestDto.timeId());
+        }
         ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequestDto.timeId());
 
         return reservationRepository.save(reservationRequestDto.toReservation(reservationTime));

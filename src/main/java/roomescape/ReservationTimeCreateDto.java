@@ -1,9 +1,9 @@
 package roomescape;
 
-public class TimeCreateDto {
+public class ReservationTimeCreateDto {
     private final String startAt;
 
-    public TimeCreateDto(String startAt) {
+    public ReservationTimeCreateDto(String startAt) {
         this.startAt = startAt;
     }
 

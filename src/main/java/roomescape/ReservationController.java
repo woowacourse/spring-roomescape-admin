@@ -13,32 +13,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private final TimeRepository timeRepository;
-    private final ReservationRepository reservationRepository;
+    private final ReservationService reservationService;
 
-    public ReservationController(TimeRepository timeRepository, ReservationRepository reservationRepository) {
-        this.timeRepository = timeRepository;
-        this.reservationRepository = reservationRepository;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
     public ResponseEntity<List<Reservation>> findAll() {
-        List<Reservation> find = reservationRepository.findAll();
+        List<Reservation> find = reservationService.findAll();
         return ResponseEntity.ok(find);
     }
 
     @PostMapping
     public ResponseEntity<Reservation> create(@RequestBody ReservationCreateDto reservationCreateDto) {
-        ReservationTime find = timeRepository.findById(reservationCreateDto.getTimeId())
-                .orElseThrow(() -> new IllegalArgumentException("조회된 타임 슬롯이 없습니다."));
-
-        Reservation reservation = reservationRepository.save(reservationCreateDto, find);
-        return ResponseEntity.ok(reservation);
+        Reservation saved = reservationService.save(reservationCreateDto);
+        return ResponseEntity.ok(saved);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        reservationRepository.deleteById(id);
+        reservationService.deleteById(id);
 
         return ResponseEntity.ok().build();
     }

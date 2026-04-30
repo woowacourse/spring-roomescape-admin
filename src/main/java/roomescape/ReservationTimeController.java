@@ -12,31 +12,31 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/times")
-public class TimeController {
-    private final TimeRepository timeRepository;
+public class ReservationTimeController {
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public TimeController(TimeRepository timeRepository) {
-        this.timeRepository = timeRepository;
+    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTime> create(@RequestBody TimeCreateDto timeCreateDto) {
-        String time = timeCreateDto.getStartAt();
-        ReservationTime created = timeRepository.save(time);
+    public ResponseEntity<ReservationTime> create(@RequestBody ReservationTimeCreateDto reservationTimeCreateDto) {
+        String time = reservationTimeCreateDto.getStartAt();
+        ReservationTime created = reservationTimeRepository.save(time);
 
         return ResponseEntity.ok(created);
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTime>> findAll() {
-        List<ReservationTime> find = timeRepository.findAll();
+        List<ReservationTime> find = reservationTimeRepository.findAll();
 
         return ResponseEntity.ok(find);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
-        timeRepository.delete(id);
+        reservationTimeRepository.delete(id);
         return ResponseEntity.ok().build();
     }
 }

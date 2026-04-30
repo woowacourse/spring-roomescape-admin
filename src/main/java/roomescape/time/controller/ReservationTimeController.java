@@ -2,9 +2,9 @@ package roomescape.time.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.time.repository.JdbcReservationTimeRepository;
-import roomescape.time.dto.TimeRequestDto;
-import roomescape.time.entity.ReservationTime;
+import roomescape.time.dto.ReservationTimeResponseDto;
+import roomescape.time.dto.ReservationTimeRequestDto;
+import roomescape.time.service.ReservationTimeService;
 
 import java.util.List;
 
@@ -12,24 +12,24 @@ import java.util.List;
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private final JdbcReservationTimeRepository jdbcReservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(JdbcReservationTimeRepository jdbcReservationTimeRepository) {
-        this.jdbcReservationTimeRepository = jdbcReservationTimeRepository;
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTime>> readAll() {
-        return ResponseEntity.ok(jdbcReservationTimeRepository.findAll());
+    public ResponseEntity<List<ReservationTimeResponseDto>> readAll() {
+        return ResponseEntity.ok(reservationTimeService.findAll());
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTime> create(@RequestBody TimeRequestDto requestDto) {
-        return ResponseEntity.ok(jdbcReservationTimeRepository.save(requestDto));
+    public ResponseEntity<ReservationTimeResponseDto> create(@RequestBody ReservationTimeRequestDto requestDto) {
+        return ResponseEntity.ok(reservationTimeService.save(requestDto));
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        jdbcReservationTimeRepository.delete(id);
+        reservationTimeService.deleteById(id);
     }
 }

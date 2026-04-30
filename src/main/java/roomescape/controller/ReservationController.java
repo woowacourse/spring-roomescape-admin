@@ -39,7 +39,7 @@ public class ReservationController {
                             resultSet.getLong("id"),
                             new Name(resultSet.getString("name")),
                             new ReservationDate(resultSet.getString("date")),
-                            new ReservationTime(resultSet.getString("time"))
+                            new ReservationTime(1L, "10:00")
                     );
 
                     return ReservationResponse.from(reservation);
@@ -49,17 +49,21 @@ public class ReservationController {
 
     @PostMapping("/reservations")
     @ResponseBody
-    public Long create(@RequestBody ReservationRequest request) {
+    public ReservationResponse create(@RequestBody ReservationRequest request) {
+        Name name = new Name(request.name());
+        ReservationDate date = new ReservationDate(request.date());
+        ReservationTime time = findTimeById(request.timeId());
+
         KeyHolder keyholder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(
-                    "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
+                    "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
                     new String[]{"id"});
 
-            preparedStatement.setString(1, request.name());
-            preparedStatement.setString(2, request.date());
-            preparedStatement.setString(3, request.time());
+            preparedStatement.setString(1, name.value());
+            preparedStatement.setString(2, date.value());
+            preparedStatement.setLong(3, time.id());
 
             return preparedStatement;
         }, keyholder);
@@ -70,7 +74,8 @@ public class ReservationController {
             throw new IllegalStateException("[ERROR] 예약 ID가 생성되지 않았습니다.");
         }
 
-        return key.longValue();
+        Reservation reservation = new Reservation(key.longValue(), name, date, time);
+        return ReservationResponse.from(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")
@@ -110,13 +115,11 @@ public class ReservationController {
                 "SELECT id, start_at FROM reservation_time ORDER BY id",
                 (resultSet, rowNum) -> {
                     ReservationTime reservationTime = new ReservationTime(
+                            resultSet.getLong("id"),
                             resultSet.getString("start_at")
                     );
 
-                    return new TimeResponse(
-                            resultSet.getLong("id"),
-                            reservationTime.value()
-                    );
+                    return TimeResponse.from(reservationTime);
                 }
         );
     }
@@ -131,5 +134,16 @@ public class ReservationController {
         if (deleteCount == 0) {
             throw new IllegalArgumentException("[ERROR] 존재하지 않는 시간입니다.");
         }
+    }
+
+    private ReservationTime findTimeById(Long id) {
+        return jdbcTemplate.queryForObject(
+                "SELECT id, start_at FROM reservation_time WHERE id = ?",
+                (rs, rowNum) -> new ReservationTime(
+                        rs.getLong("id"),
+                        rs.getString("start_at")
+                ),
+                id
+        );
     }
 }

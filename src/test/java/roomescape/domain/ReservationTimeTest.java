@@ -20,21 +20,21 @@ class ReservationTimeTest {
     })
     @DisplayName("시간이 정상 형태가 아닌 경우 예외를 발생한다.")
     void throwException_When_TimeIllegalFormat(String input) {
-        assertThatThrownBy(() -> new ReservationTime(input))
+        assertThatThrownBy(() -> new ReservationTime(1L, input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     @DisplayName("시간이 null인 경우 예외를 발생한다.")
     void throwException_When_TimeIsNull() {
-        assertThatThrownBy(() -> new ReservationTime(null))
+        assertThatThrownBy(() -> new ReservationTime(1L, null))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     @DisplayName("정상적인 시간인 경우 예외가 발생하지 않는다.")
     void makeTime_When_legalTime() {
-        assertThatCode(() -> new ReservationTime("12:30"))
+        assertThatCode(() -> new ReservationTime(1L,"12:30"))
                 .doesNotThrowAnyException();
     }
 //

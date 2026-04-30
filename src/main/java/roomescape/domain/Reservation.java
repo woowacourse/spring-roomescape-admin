@@ -25,7 +25,7 @@ public class Reservation {
         return date.value();
     }
 
-    public String getTime() {
-        return time.value();
+    public ReservationTime getTime() {
+        return time;
     }
 }

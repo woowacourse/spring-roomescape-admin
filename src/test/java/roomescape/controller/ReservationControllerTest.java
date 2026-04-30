@@ -55,15 +55,20 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약을 생성한다.")
     void makeReservation() {
+        reservationController.createTime(new TimeRequest("10:00"));
         ReservationRequest request = new ReservationRequest(
                 "브라운",
-                "2026-04-29"
-                , "10:30"
+                "2026-04-29",
+                1L
         );
 
-        Long reservationId = reservationController.create(request);
+        ReservationResponse reservationResponse = reservationController.create(request);
 
-        assertThat(reservationId.longValue()).isEqualTo(1L);
+        assertThat(reservationResponse.id()).isEqualTo(1L);
+        assertThat(reservationResponse.name()).isEqualTo("브라운");
+        assertThat(reservationResponse.date()).isEqualTo("2026-04-29");
+        assertThat(reservationResponse.time().id()).isEqualTo(1L);
+        assertThat(reservationResponse.time().startAt()).isEqualTo("10:00");
     }
 
     @Test
@@ -77,8 +82,10 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약이 생성된 상태에서 예약을 조회한다.")
     void findAllReservations_After_Create() {
-        reservationController.create(new ReservationRequest("브라운", "2026-04-29", "10:30"));
-        reservationController.create(new ReservationRequest("리사", "2026-04-30", "10:40"));
+        reservationController.createTime(new TimeRequest("10:00"));
+        reservationController.createTime(new TimeRequest("11:00"));
+        reservationController.create(new ReservationRequest("브라운", "2026-04-29", 1L));
+        reservationController.create(new ReservationRequest("리사", "2026-04-30", 2L));
 
         List<ReservationResponse> reservations = reservationController.findAll();
 
@@ -97,8 +104,8 @@ class ReservationControllerTest {
     @Test
     @DisplayName("예약이 존재하는 상황에서 예약을 삭제한다.")
     void deleteReservation_After_Create() {
-        reservationController.create(new ReservationRequest("브라운", "2026-04-29", "10:30"));
-        reservationController.create(new ReservationRequest("리사", "2026-04-30", "10:40"));
+        reservationController.create(new ReservationRequest("브라운", "2026-04-29", 1L));
+        reservationController.create(new ReservationRequest("리사", "2026-04-30", 2L));
 
         reservationController.delete(1L);
 

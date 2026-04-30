@@ -39,18 +39,6 @@ class ReservationDaoTest {
         this.reservationDao = new ReservationDao(jdbcTemplate);
     }
 
-    private ReservationTime findTimeByStartAt(String startAt) {
-        String sql = "SELECT id, start_at FROM reservation_time WHERE start_at = ?;";
-        return jdbcTemplate.queryForObject(
-                sql,
-                (resultSet, rowNum) -> {
-                    ReservationTime reservationTime = new ReservationTime(
-                            resultSet.getLong("id"),
-                            resultSet.getString("start_at"));
-                    return reservationTime;
-                }, startAt);
-    }
-
     @Test
     void 예약_추가_테스트() {
         // given
@@ -91,5 +79,17 @@ class ReservationDaoTest {
                 () -> assertThat(reservations).hasSize(1),
                 () -> assertThatThrownBy(() -> reservationDao.findBy(id1))
                         .isInstanceOf(EmptyResultDataAccessException.class));
+    }
+
+    private ReservationTime findTimeByStartAt(String startAt) {
+        String sql = "SELECT id, start_at FROM reservation_time WHERE start_at = ?;";
+        return jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) -> {
+                    ReservationTime reservationTime = new ReservationTime(
+                            resultSet.getLong("id"),
+                            resultSet.getString("start_at"));
+                    return reservationTime;
+                }, startAt);
     }
 }

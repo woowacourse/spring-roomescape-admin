@@ -2,6 +2,7 @@ package roomescape;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -14,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.entity.Reservation;
+import roomescape.controller.ReservationController;
+import roomescape.controller.ReservationTimeController;
+import roomescape.dto.ReservationResponseDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -106,11 +109,11 @@ public class MissionStepTest {
                     "브라운", "2023-08-05", 1
             );
 
-            List<Reservation> reservations = RestAssured.given().log().all()
+            List<ReservationResponseDto> reservations = RestAssured.given().log().all()
                     .when().get("/reservations")
                     .then().log().all()
                     .statusCode(200).extract()
-                    .jsonPath().getList(".", Reservation.class);
+                    .jsonPath().getList(".", ReservationResponseDto.class);
 
             Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
@@ -195,6 +198,43 @@ public class MissionStepTest {
                     .then().log().all()
                     .statusCode(200)
                     .body("size()", is(1));
+        }
+    }
+
+    @Nested
+    class Step4 {
+
+        @Autowired
+        private ReservationController reservationController;
+        @Autowired
+        private ReservationTimeController reservationTimeController;
+
+        @Test
+        void 계층화_리팩터링_예약_컨트롤러() {
+            boolean isJdbcTemplateInjected = false;
+
+            for (Field field : reservationController.getClass().getDeclaredFields()) {
+                if (field.getType().equals(JdbcTemplate.class)) {
+                    isJdbcTemplateInjected = true;
+                    break;
+                }
+            }
+
+            assertThat(isJdbcTemplateInjected).isFalse();
+        }
+
+        @Test
+        void 계층화_리팩터링_예약_시간_컨트롤러() {
+            boolean isJdbcTemplateInjected = false;
+
+            for (Field field : reservationTimeController.getClass().getDeclaredFields()) {
+                if (field.getType().equals(JdbcTemplate.class)) {
+                    isJdbcTemplateInjected = true;
+                    break;
+                }
+            }
+
+            assertThat(isJdbcTemplateInjected).isFalse();
         }
     }
 }

@@ -39,20 +39,13 @@ public class ReservationRepository {
     }
 
     public List<Reservation> findAll() {
-        String sql = """
-            SELECT 
-                r.id, r.name, r.date, 
-                t.id AS time_id, t.start_at AS time_value 
-            FROM reservation r 
-            INNER JOIN reservation_time t ON r.time_id = t.id""";
+        String sql = "SELECT r.id, r.name, r.date, t.id AS time_id, t.start_at AS time_value FROM reservation r INNER JOIN reservation_time t ON r.time_id = t.id";
 
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
             ReservationTime time = new ReservationTime(
                     resultSet.getLong("time_id"),
                     resultSet.getObject("time_value", LocalTime.class)
             );
-
-            // 3. 만들어진 time 객체를 Reservation에 꽂아줍니다.
             return new Reservation(
                     resultSet.getLong("id"),
                     resultSet.getString("name"),

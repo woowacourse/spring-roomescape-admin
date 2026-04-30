@@ -10,13 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
+import roomescape.dto.ReservationRequestDto;
 import roomescape.persistence.dao.ReservationDao;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
-
 
 @RestController
 @RequestMapping("/reservations")
@@ -33,8 +30,8 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservations(@RequestBody Reservation reservation) {
-        Long id = reservationDao.insert(reservation);
+    public ResponseEntity<Reservation> createReservations(@RequestBody ReservationRequestDto reservationRequest) {
+        Long id = reservationDao.insert(reservationRequest);
         Reservation reservationById = reservationDao.findById(id);
         return ResponseEntity.ok(reservationById);
     }

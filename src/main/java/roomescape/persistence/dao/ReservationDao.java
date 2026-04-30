@@ -6,6 +6,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.Time;
+import roomescape.dto.ReservationRequestDto;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
@@ -22,43 +24,60 @@ public class ReservationDao {
     }
 
     private final RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> {
+        Time time = new Time(resultSet.getLong("time_id"),
+                LocalTime.parse(resultSet.getString("start_at")));
+
         Reservation reservation = new Reservation(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 LocalDate.parse(resultSet.getString("date")),
-                LocalTime.parse(resultSet.getString("time"))
+              time
         );
         return reservation;
     };
 
     public List<Reservation> findAll() {
         String sql = """
-                SELECT * FROM reservation
+                SELECT 
+                    r.id,
+                    r.name,
+                    r.date,
+                    t.id AS time_id,
+                    t.start_at
+                    FROM reservation r
+                INNER JOIN reservation_time t ON r.time_id = t.id
                 """;
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     public Reservation findById(Long id){
         String sql = """
-                SELECT * FROM reservation
-                WHERE id = ?
+                SELECT
+                    r.id,
+                    r.name,
+                    r.date,
+                    t.id AS time_id,
+                    t.start_at
+                FROM reservation r
+                INNER JOIN reservation_time t ON r.time_id = t.id
+                WHERE r.id = ?
                 """;
         return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
 
-    public Long insert(Reservation reservation) {
+    public Long insert(ReservationRequestDto reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = """
                 INSERT INTO reservation
-                (name, date, time)
+                (name, date, time_id)
                 VALUES (?, ?, ?)
                 """;
         jdbcTemplate.update(con -> {
             PreparedStatement pstmt = con.prepareStatement(sql, new String[]{"id"});
             pstmt.setString(1, reservation.getName());
             pstmt.setString(2, reservation.getDate().toString());
-            pstmt.setString(3, reservation.getTime().toString());
+            pstmt.setLong(3, reservation.getTimeId());
             return pstmt;
         }, keyHolder);
 
@@ -70,6 +89,6 @@ public class ReservationDao {
                 DELETE FROM reservation
                 WHERE id = ?
                 """;
-        return jdbcTemplate.update(sql, Long.valueOf(id));
+        return jdbcTemplate.update(sql, id);
     }
 }

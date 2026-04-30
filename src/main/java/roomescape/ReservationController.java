@@ -7,6 +7,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import roomescape.dto.ReservationRequest;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
@@ -22,23 +23,37 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> create(@RequestBody Reservation newReservation) {
-        String sql = "insert into reservation (name, date, time) values (?, ?, ?)";
+    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationRequest reservationRequest) {
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, newReservation.getName());
-            ps.setString(2, newReservation.getDate());
-            ps.setString(3, newReservation.getTime());
+            ps.setString(1, reservationRequest.name());
+            ps.setString(2, reservationRequest.date());
+            ps.setLong(3, reservationRequest.timeId());
 
             return ps;
         }, keyHolder);
 
         Long id = keyHolder.getKey().longValue();
-        Reservation reservation = Reservation.toEntity(newReservation, id);
+        ReservationTime reservationTime = findReservationTimeByTimeId(reservationRequest.timeId());
+        Reservation reservation = reservationRequest.toEntity(reservationTime, id);
 
         return ResponseEntity.ok(reservation);
+    }
+
+    private ReservationTime findReservationTimeByTimeId(Long timeId) {
+        String sql = "select id, start_at from reservation_time where id = ?";
+
+        return jdbcTemplate.queryForObject(sql,
+                (rs, rowNum) -> {
+                    ReservationTime reservationTime = new ReservationTime(
+                            rs.getLong("id"),
+                            rs.getString("start_at")
+                    );
+                    return reservationTime;
+                }, timeId);
     }
 
     @GetMapping("/reservations")
@@ -48,20 +63,62 @@ public class ReservationController {
                     rs.getLong("id"),
                     rs.getString("name"),
                     rs.getString("date"),
-                    rs.getString("time")
+                    rs.getLong("time_id"),
+                    rs.getString("time_value")
             );
             return reservation;
         };
 
-        String sql = "select * from reservation";
+        String sql = """
+                    SELECT
+                        r.id as reservation_id,
+                        r.name,
+                        r.date,
+                        t.id as time_id,
+                        t.start_at as time_value
+                    FROM reservation as r INNER JOIN reservation_time as t ON r.time_id = t.id
+        """;
         List<Reservation> reservations = jdbcTemplate.query(sql, rowMapper);
 
         return ResponseEntity.ok(reservations);
     }
+    @PostMapping("/times")
+    public ResponseEntity<ReservationTime> createReservationTime(@RequestBody ReservationTime newReservationTime) {
+        String sql = "insert into reservation_time (start_at) values (?)";
 
-    @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        String sql = "delete from reservation where id = ?";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, newReservationTime.getStartAt());
+
+            return ps;
+        }, keyHolder);
+
+        Long id = keyHolder.getKey().longValue();
+        ReservationTime reservationTime = ReservationTime.toEntity(newReservationTime, id);
+
+        return ResponseEntity.ok(reservationTime);
+    }
+
+    @GetMapping("/times")
+    public ResponseEntity<List<ReservationTime>> readReservationTime() {
+        RowMapper<ReservationTime> rowMapper = (rs, rowNum) -> {
+            ReservationTime reservationTime = new ReservationTime(
+                    rs.getLong("id"),
+                    rs.getString("start_at")
+            );
+            return reservationTime;
+        };
+
+        String sql = "select * from reservation_time";
+        List<ReservationTime> reservations = jdbcTemplate.query(sql, rowMapper);
+
+        return ResponseEntity.ok(reservations);
+    }
+
+    @DeleteMapping("/times/{id}")
+    public ResponseEntity<Void> deleteReservationTime(@PathVariable Long id) {
+        String sql = "delete from reservation_time where id = ?";
 
         jdbcTemplate.update(sql, id);
 

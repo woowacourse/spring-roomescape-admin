@@ -4,6 +4,10 @@ public class ReservationTime {
     private Long id;
     private final String startAt;
 
+    public ReservationTime(String startAt) {
+        this.startAt = startAt;
+    }
+
     public ReservationTime(Long id, String startAt) {
         this.id = id;
         this.startAt = startAt;

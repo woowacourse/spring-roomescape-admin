@@ -17,7 +17,9 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse addReservationTime(ReservationTimeRequest request) {
-        return ReservationTimeResponse.from(reservationTimeDao.insert(request));
+        ReservationTime reservationTime = new ReservationTime(request.startAt());
+        ReservationTime newReservationTime = reservationTimeDao.insert(reservationTime);
+        return ReservationTimeResponse.from(newReservationTime);
     }
 
     public List<ReservationTimeResponse> getReservationTimes() {

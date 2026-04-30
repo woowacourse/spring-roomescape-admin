@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.Reservation;
+import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 
 @Repository
@@ -31,9 +31,9 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public long save(ReservationRequest request) {
+    public long save(ReservationRequest reservationRequest) {
         SimpleJdbcInsert insert = createInsert();
-        Map<String, Object> params = createParams(request);
+        Map<String, Object> params = createParams(reservationRequest);
         return insert.executeAndReturnKey(params).longValue();
     }
 
@@ -48,7 +48,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void delete(long id) {
+    public void deleteById(long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }

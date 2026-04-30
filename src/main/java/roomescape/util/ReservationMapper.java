@@ -1,6 +1,6 @@
 package roomescape.util;
 
-import roomescape.Reservation;
+import roomescape.domain.Reservation;
 import roomescape.dto.ReservationResponse;
 
 public class ReservationMapper {

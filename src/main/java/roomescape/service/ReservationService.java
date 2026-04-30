@@ -2,7 +2,7 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.Reservation;
+import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.repository.ReservationRepository;
 
@@ -23,8 +23,8 @@ public class ReservationService {
         return reservationRepository.save(reservationRequest);
     }
 
-    public void removeReservation(long id) {
-        reservationRepository.delete(id);
+    public void removeReservation(long reservationId) {
+        reservationRepository.deleteById(reservationId);
     }
 
     public Reservation findReservation(long reservationId) {

@@ -102,11 +102,11 @@ prompt 5
 
 예약 CRUD API
 
-기능메서드 / URL요청 본문응답예약 조회GET /reservations—[{id, name, date, time}, ...]예약 추가POST /reservations{name, date, time}{id, name, date, time}예약 삭제DELETE /reservations/{id}—200 OK 
+기능메서드 / URL요청 본문응답예약 조회GET /reservations—[{id, name, date, reservationTime}, ...]예약 추가POST /reservations{name, date, reservationTime}{id, name, date, reservationTime}예약 삭제DELETE /reservations/{id}—200 OK 
 
 예약 추가 요청·응답 예시
 
-POST /reservations HTTP/1.1 Content-Type: application/json { "name": "브라운", "date": "2023-08-05", "time": "15:40" }
+POST /reservations HTTP/1.1 Content-Type: application/json { "name": "브라운", "date": "2023-08-05", "reservationTime": "15:40" }
 ```
 
 ---

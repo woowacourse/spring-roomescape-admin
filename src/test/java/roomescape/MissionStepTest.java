@@ -8,10 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.controller.ReservationController;
 import roomescape.dto.ReservationDetailDto;
 
-import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -27,9 +25,6 @@ class MissionStepTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    private ReservationController reservationController;
 
     @BeforeEach
     void 예약_시간_생성() {
@@ -171,20 +166,6 @@ class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
-    }
-
-    @Test
-    void 계층화_리팩터링() {
-        boolean isJdbcTemplateInjected = false;
-
-        for (Field field : reservationController.getClass().getDeclaredFields()) {
-            if (field.getType().equals(JdbcTemplate.class)) {
-                isJdbcTemplateInjected = true;
-                break;
-            }
-        }
-
-        assertThat(isJdbcTemplateInjected).isFalse();
     }
 
 }

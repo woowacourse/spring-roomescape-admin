@@ -3,7 +3,6 @@ package roomescape.time.service;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.time.entity.ReservationTime;
@@ -20,7 +19,17 @@ public class ReservationTimeService {
     @Transactional
     public ReservationTime save(LocalTime startAt) {
         ReservationTime reservationTime = ReservationTime.createNew(startAt);
+
+        if (reservationTimeRepository.existsByStartAt(startAt)) {
+            throw new ReservationTimeException(ReservationTimeErrorCode.RESERVATION_TIME_DUPLICATE);
+        }
+
         return reservationTimeRepository.save(reservationTime);
+    }
+
+    @Transactional
+    public void deleteById(long id) {
+        reservationTimeRepository.deleteById(id);
     }
 
     public ReservationTime getById(long id) {
@@ -30,11 +39,6 @@ public class ReservationTimeService {
 
     public List<ReservationTime> findAll() {
         return reservationTimeRepository.findAll();
-    }
-
-    @Transactional
-    public void deleteById(long id) {
-        reservationTimeRepository.deleteById(id);
     }
 
 }

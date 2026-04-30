@@ -2,9 +2,9 @@ package roomescape.exception.response;
 
 public record ValidationError(
         String field,
-        String reason
+        String message
 ) {
-    public static ValidationError of(String field, String reason) {
-        return new ValidationError(field, reason);
+    public static ValidationError of(String field, String message) {
+        return new ValidationError(field, message);
     }
 }

@@ -49,7 +49,7 @@ class ReservationServiceTest {
         //given & when & then
         assertThatThrownBy(() -> reservationService.getById(99L))
                 .isInstanceOf(ReservationException.class)
-                .hasMessageContaining("예약을 찾을 수 없습니다.");
+                .hasMessageContaining("찾는 예약이 없습니다.");
     }
 
 }

@@ -37,6 +37,21 @@ class ReservationTimeServiceTest {
     }
 
     @Test
+    @DisplayName("예약 시간 중복 저장 예외")
+    void save_duplicate_test() {
+        //given
+        LocalTime time = LocalTime.parse("11:00");
+
+        //when
+        reservationTimeService.save(time);
+
+        //then
+        assertThatThrownBy(() -> reservationTimeService.save(time))
+                .isInstanceOf(ReservationTimeException.class)
+                .hasMessageContaining("예약 시간은 중복 생성이 불가능합니다.");
+    }
+
+    @Test
     @DisplayName("예약 시간 단일 조회 id 없음 예외")
     void findById_null_search_test() {
         //given & when & then

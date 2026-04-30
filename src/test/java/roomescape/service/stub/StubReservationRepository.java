@@ -1,5 +1,6 @@
 package roomescape.service.stub;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,17 @@ public class StubReservationRepository implements ReservationRepository {
     @Override
     public List<Reservation> findAll() {
         return new ArrayList<>(store.values());
+    }
+
+    @Override
+    public boolean existsByDateAndTimeId(LocalDate date, long timeId) {
+        for (Reservation reservation : store.values()) {
+            if (reservation.getDate().equals(date) && reservation.getTime().getId() == timeId) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override

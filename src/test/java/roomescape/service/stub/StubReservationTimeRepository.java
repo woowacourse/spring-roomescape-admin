@@ -1,5 +1,6 @@
 package roomescape.service.stub;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,14 +26,21 @@ public class StubReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
+    public boolean existsByStartAt(LocalTime startAt) {
+        for (ReservationTime reservationTime : store.values()) {
+            if (reservationTime.getStartAt().equals(startAt)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
     public void deleteById(long id) {
         store.remove(id);
     }
 
-    @Override
-    public boolean existsById(long id) {
-        return store.containsKey(id);
-    }
 
     @Override
     public ReservationTime save(ReservationTime reservationTime) {

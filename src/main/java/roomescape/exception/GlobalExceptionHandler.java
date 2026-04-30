@@ -57,8 +57,8 @@ public class GlobalExceptionHandler {
         log.warn("DataIntegrityViolationException 발생", e);
 
         return ResponseEntity
-                .status(GlobalErrorCode.CONFLICT.getHttpStatus())
-                .body(ErrorResponse.of(GlobalErrorCode.CONFLICT));
+                .status(GlobalErrorCode.BAD_REQUEST.getHttpStatus())
+                .body(ErrorResponse.of(GlobalErrorCode.BAD_REQUEST));
     }
 
 }

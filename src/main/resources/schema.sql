@@ -14,5 +14,5 @@ CREATE TABLE reservation
     time_id BIGINT       NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (time_id) REFERENCES reservation_time (id),
-        UNIQUE (date, time_id)
+    UNIQUE (date, time_id)
 );

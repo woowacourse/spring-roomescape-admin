@@ -24,6 +24,10 @@ public class ReservationService {
         ReservationTime reservationTime = reservationTimeService.getById(timeId);
         Reservation nonIdReservation = Reservation.createNew(name, date, reservationTime);
 
+        if(reservationRepository.existsByDateAndTimeId(date, timeId)){
+            throw new ReservationException(ReservationErrorCode.RESERVATION_DUPLICATE);
+        }
+
         return reservationRepository.save(nonIdReservation);
     }
 

@@ -2,8 +2,8 @@ package roomescape.reservation.repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -34,23 +34,6 @@ public class JdbcReservationRepository implements ReservationRepository {
     };
 
     private final JdbcTemplate jdbcTemplate;
-
-    @Override
-    public List<Reservation> findAll() {
-        final String sql = """
-                SELECT
-                    r.id,
-                    r.name,
-                    r.date,
-                    t.id AS time_id,
-                    t.start_at
-                FROM reservation r
-                INNER JOIN reservation_time t
-                    ON r.time_id = t.id
-                """;
-
-        return jdbcTemplate.query(sql, reservationRowMapper);
-    }
 
     @Override
     public Reservation save(Reservation reservation) {
@@ -95,6 +78,35 @@ public class JdbcReservationRepository implements ReservationRepository {
         return jdbcTemplate.query(sql, reservationRowMapper, id)
                 .stream()
                 .findFirst();
+    }
+
+    @Override
+    public List<Reservation> findAll() {
+        final String sql = """
+                SELECT
+                    r.id,
+                    r.name,
+                    r.date,
+                    t.id AS time_id,
+                    t.start_at
+                FROM reservation r
+                INNER JOIN reservation_time t
+                    ON r.time_id = t.id
+                """;
+
+        return jdbcTemplate.query(sql, reservationRowMapper);
+    }
+
+    @Override
+    public boolean existsByDateAndTimeId(LocalDate date, long timeId) {
+        final String sql = "SELECT EXISTS (SELECT 1 FROM reservation WHERE date = ? AND time_id = ?)";
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(
+                sql,
+                Boolean.class,
+                Date.valueOf(date),
+                timeId
+        ));
     }
 
 }

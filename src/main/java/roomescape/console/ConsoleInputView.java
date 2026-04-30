@@ -13,13 +13,14 @@ public class ConsoleInputView {
     private static final Scanner sc = new Scanner(System.in);
 
     public static int readOption() {
-        System.out.println("선택하고 싶은 옵션을 선택해주세요: (1~6)");
+        System.out.println("선택하고 싶은 옵션을 선택해주세요: (1~7)");
         System.out.println("1. 시간 추가");
         System.out.println("2. 시간 목록 조회");
         System.out.println("3. 특정 ID의 시간 삭제");
         System.out.println("4. 예약 추가");
         System.out.println("5. 예약 목록 조회");
         System.out.println("6. 특정 ID의 예약 삭제");
+        System.out.println("7. 종료");
 
         return parseAndValidateOption(sc.nextLine());
     }
@@ -28,7 +29,7 @@ public class ConsoleInputView {
         try {
             int i = Integer.parseInt(strOption);
             if(i < 1 || i > 6) {
-                throw new RuntimeException("1~6 사이의 숫자를 입력해주세요.");
+                throw new RuntimeException("1~7 사이의 숫자를 입력해주세요.");
             }
             return i;
         } catch (NumberFormatException e) {

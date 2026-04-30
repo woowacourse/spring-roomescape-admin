@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDAO;
 import roomescape.domain.Reservation;
+import roomescape.dto.request.ReservationRequest;
 
 @Service
 public class ReservationService {
@@ -14,8 +15,8 @@ public class ReservationService {
         this.reservationDAO = reservationDAO;
     }
 
-    public Reservation create(String name, String date, Long timeId) {
-        return reservationDAO.insert(name, date, timeId);
+    public Reservation create(ReservationRequest request) {
+        return reservationDAO.insert(request.name(), request.date(), request.timeId());
     }
 
     public List<Reservation> findAll() {

@@ -17,7 +17,8 @@ public class ReservationDAO {
     }
 
     public Reservation insert(String name, String date, Long timeId) {
-        jdbcTemplate.update("insert into reservation (name, date, time_id) values (?, ?, ?)", name, date, timeId);
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
+        jdbcTemplate.update(sql, name, date, timeId);
         Long id = jdbcTemplate.queryForObject("select max(id) from reservation", Long.class);
 
         ReservationTime time = jdbcTemplate.queryForObject(
@@ -32,6 +33,7 @@ public class ReservationDAO {
     public List<Reservation> findAll() {
         String sql = "select r.id, r.name, r.date, t.id as time_id, t.start_at "
                 + "from reservation r inner join reservation_time t on r.time_id = t.id";
+
         RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> Reservation.of(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
@@ -43,6 +45,7 @@ public class ReservationDAO {
     }
 
     public void delete(Long id) {
-        jdbcTemplate.update("delete from reservation where id = ?", id);
+        String sql = "delete from reservation where id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

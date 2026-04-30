@@ -3,11 +3,11 @@ package roomescape.time.service;
 import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.time.controller.dto.ReservationTimeRequest;
-import roomescape.time.controller.dto.ReservationTimeResponse;
 import roomescape.time.entity.ReservationTime;
+import roomescape.time.exception.ReservationTimeException;
 import roomescape.time.repository.ReservationTimeRepository;
 
 @Service
@@ -24,7 +24,7 @@ public class ReservationTimeService {
 
     public ReservationTime getById(long id) {
         return reservationTimeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("찾는 예약 시간이 없습니다."));
+                .orElseThrow(() -> new ReservationTimeException(HttpStatus.CONFLICT.value(), "찾는 예약 시간이 없습니다."));
     }
 
     public List<ReservationTime> findAll() {

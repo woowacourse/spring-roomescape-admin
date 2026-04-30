@@ -4,8 +4,8 @@ import roomescape.exception.BaseException;
 
 public class ReservationTimeException extends BaseException {
 
-    ReservationTimeException(String message){
-        super(message);
+    public ReservationTimeException(int code, String message) {
+        super(code, message);
     }
 
 }

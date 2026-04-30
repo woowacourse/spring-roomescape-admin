@@ -36,8 +36,8 @@ public class GlobalExceptionHandler {
         log.warn("BaseException 발생: {}", e.getMessage(), e);
 
         return ResponseEntity
-                .badRequest()
-                .body(ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), e.getMessage(), null));
+                .status(e.getCode())
+                .body(ErrorResponse.of(e.getCode(), e.getMessage(), null));
     }
 
     @ExceptionHandler(Exception.class)

@@ -34,7 +34,7 @@ public class ReservationController {
 
     @PostMapping
     public ReservationResponse add(@Valid @RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation =  reservationService.save(
+        Reservation reservation = reservationService.save(
                 reservationRequest.name(),
                 reservationRequest.date(),
                 reservationRequest.timeId()

@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -141,5 +142,27 @@ class ReservationControllerTest {
         List<TimeResponse> times = reservationController.findAllTime();
 
         assertThat(times).isEmpty();
+    }
+
+    @Test
+    @DisplayName("시간을 삭제한다.")
+    void deleteTime_After_Create() {
+        reservationController.createTime(new TimeRequest("10:00"));
+        reservationController.createTime(new TimeRequest("11:00"));
+
+        reservationController.deleteTime(1L);
+
+        List<TimeResponse> times = reservationController.findAllTime();
+
+        assertThat(times).hasSize(1);
+        assertThat(times.get(0).id()).isEqualTo(2L);
+        assertThat(times.get(0).startAt()).isEqualTo("11:00");
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 시간을 삭제하면 예외가 발생한다.")
+    void deleteTime_NotFound() {
+        assertThatThrownBy(() -> reservationController.deleteTime(1L))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

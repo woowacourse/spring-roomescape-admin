@@ -120,4 +120,16 @@ public class ReservationController {
                 }
         );
     }
+
+    @DeleteMapping("/times/{id}")
+    @ResponseBody
+    public void deleteTime(@PathVariable Long id) {
+        int deleteCount = jdbcTemplate.update(
+                "DELETE FROM reservation_time WHERE id = ?", id
+        );
+
+        if (deleteCount == 0) {
+            throw new IllegalArgumentException("[ERROR] 존재하지 않는 시간입니다.");
+        }
+    }
 }

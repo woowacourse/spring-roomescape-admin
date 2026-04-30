@@ -119,21 +119,27 @@ class ReservationControllerTest {
     }
 
     @Test
-    @DisplayName("시간을 조회한다.")
-    void findAllTime() {
-        TimeRequest request1 = new TimeRequest("10:00");
-        TimeRequest request2 = new TimeRequest("11:00");
-
-        reservationController.createTime(request1);
-        reservationController.createTime(request2);
+    @DisplayName("시간이 생성된 상태에서 시간을 조회한다.")
+    void findAllTimes_After_Create() {
+        reservationController.createTime(new TimeRequest("10:00"));
+        reservationController.createTime(new TimeRequest("11:00"));
 
         List<TimeResponse> timeResponses = reservationController.findAllTime();
 
-        assertThat(timeResponses.size()).isEqualTo(2);
+        assertThat(timeResponses).hasSize(2);
+
         assertThat(timeResponses.get(0).id()).isEqualTo(1L);
         assertThat(timeResponses.get(0).startAt()).isEqualTo("10:00");
 
         assertThat(timeResponses.get(1).id()).isEqualTo(2L);
         assertThat(timeResponses.get(1).startAt()).isEqualTo("11:00");
+    }
+
+    @Test
+    @DisplayName("아무 시간도 없는 상태에서 시간을 조회한다.")
+    void findAllTimes_Before_Create() {
+        List<TimeResponse> times = reservationController.findAllTime();
+
+        assertThat(times).isEmpty();
     }
 }

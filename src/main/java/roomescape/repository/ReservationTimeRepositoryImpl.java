@@ -52,8 +52,7 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
 
     @Override
     public ReservationTime save(final ReservationTime reservationTime) {
-        final Map<String, Object> args = Map.of(
-            "start_at", reservationTime.getStartAt());
+        final Map<String, Object> args = Map.of("start_at", reservationTime.getStartAt());
 
         final long generatedKey = simpleJdbcInsert.executeAndReturnKey(args).longValue();
         return ReservationTime.builder()

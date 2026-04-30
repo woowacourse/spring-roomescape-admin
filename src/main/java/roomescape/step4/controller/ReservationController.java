@@ -9,7 +9,7 @@ import roomescape.step4.service.ReservationService;
 
 import java.util.List;
 
-@RestController("ReservationControllerStep4")
+@RestController("reservationControllerStep4")
 @RequestMapping("/step4/reservations")
 public class ReservationController {
 

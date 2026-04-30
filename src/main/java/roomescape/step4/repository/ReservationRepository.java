@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-@Repository("ReservationRepositoryStep4")
+@Repository("reservationRepositoryStep4")
 public class ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;

@@ -336,3 +336,57 @@ void 예약과_시간_연결() {
             .body("size()", is(1));
 }
 ```
+
+## 🚀 4단계: 계층 분리
+
+### 요구사항
+
+ReservationController에 웹 요청 처리·비즈니스 로직·DB 접근이 모두 몰려 응집도는 낮고 결합도는 높은 상황이다.
+레이어드 아키텍처로 레이어별 책임에 따라 코드를 분리한다.
+
+⚠️ 새로운 테스트 도구나 기법을 도입하지 않고 레벨1에서 학습했던 JUnit만 활용한 단위 테스트에 집중한다.
+요구사항에서 RestAssured가 주어진 경우 그대로 사용하되, 그 위에 새 테스트 기법을 쌓지 않는다.
+
+레이어별 책임과 역할에 따라 클래스를 분리하고, 분리한 클래스를 Spring Bean으로 등록한다.
+
+| 레이어              | 책임       |
+|------------------|----------|
+| Controller       | 웹 요청·응답  |
+| Service          | 비즈니스 플로우 |
+| DAO (Repository) | DB 접근    |
+| Domain           | 비즈니스 규칙  |
+
+- ReservationController에 JdbcTemplate 필드가 남아있지 않아야 한다
+
+### (선택) 콘솔 UI 지원
+
+현재 예약·시간 관리 기능은 웹에서만 쓸 수 있는 상황이다.
+같은 기능을 콘솔에서도 쓸 수 있게 만들어, 계층 분리가 실제로 "다른 UI에 재사용 가능한 구조"를 만들었는지 검증한다.
+계층 분리의 효과를 검증하고 싶은 크루만 진행한다.
+
+- 시간 · 예약 관리 기능을 콘솔에서도 사용할 수 있도록 콘솔 UI 추가
+- 콘솔 UI가 만드는 데이터는 메모리에 저장 (DB와 분리)
+
+### 요구사항 테스트
+
+아래 테스트가 통과하면 단계 4 완료.
+
+```
+@Autowired
+private ReservationController reservationController;
+
+@Test
+void 계층화_리팩터링() {
+boolean isJdbcTemplateInjected = false;
+
+    for (Field field : reservationController.getClass().getDeclaredFields()) {
+        if (field.getType().equals(JdbcTemplate.class)) {
+            isJdbcTemplateInjected = true;
+            break;
+        }
+    }
+
+    assertThat(isJdbcTemplateInjected).isFalse();
+
+}
+```

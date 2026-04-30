@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Repository
-public class JdbcReservationTimeDao implements ReservationTimeDao{
+public class JdbcReservationTimeDao implements ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
 

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.reservation.dto.CreateReservationRequest;
 import roomescape.reservation.dto.ReservationResultResponse;
-import roomescape.reservation.mapper.ReservationMapper;
 import roomescape.reservation.service.ReservationService;
 
 @RestController
@@ -34,8 +33,7 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationResultResponse> createReservations(
             @RequestBody CreateReservationRequest createReservationRequest) {
-        ReservationResultResponse reservedRoomId = reservationService.reserve(
-                ReservationMapper.toReservation(createReservationRequest));
+        ReservationResultResponse reservedRoomId = reservationService.reserve(createReservationRequest);
         return ResponseEntity.of(Optional.of(reservedRoomId));
     }
 

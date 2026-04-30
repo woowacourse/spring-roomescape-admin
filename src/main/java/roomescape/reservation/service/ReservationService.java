@@ -3,6 +3,7 @@ package roomescape.reservation.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.dto.CreateReservationRequest;
 import roomescape.reservation.dto.ReservationResultResponse;
 import roomescape.reservation.mapper.ReservationMapper;
 import roomescape.reservation.repository.ReservationRepository;
@@ -22,7 +23,8 @@ public class ReservationService {
                 .toList();
     }
 
-    public ReservationResultResponse reserve(Reservation reservation) {
+    public ReservationResultResponse reserve(CreateReservationRequest createReservationRequest) {
+        Reservation reservation = ReservationMapper.toReservation(createReservationRequest);
         Reservation saved = reservationRepository.save(reservation);
         return ReservationMapper.toReservationResultDto(saved);
     }

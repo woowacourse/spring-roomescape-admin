@@ -3,6 +3,7 @@ package roomescape.time.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.time.domain.ReservationTime;
+import roomescape.time.dto.CreateResrvationTimeRequest;
 import roomescape.time.dto.ReservationTimeResponse;
 import roomescape.time.mapper.ReservationTimeMapper;
 import roomescape.time.repository.ReservationTimeRepository;
@@ -16,8 +17,9 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public ReservationTimeResponse addReservationTime(ReservationTime requestedReservationTime) {
-        ReservationTime savedReservationTime = reservationTimeRepository.save(requestedReservationTime);
+    public ReservationTimeResponse addReservationTime(CreateResrvationTimeRequest createResrvationTimeRequest) {
+        ReservationTime reservationTime = ReservationTimeMapper.toReservationTime(createResrvationTimeRequest);
+        ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
         return ReservationTimeMapper.toReseravationTimeRespone(savedReservationTime);
     }
 

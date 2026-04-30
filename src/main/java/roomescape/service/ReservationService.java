@@ -24,14 +24,11 @@ public class ReservationService {
     }
 
     public Reservation findById(long id) {
-        return reservationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("id에 해당하는 reservation이 없습니다. id: " + id));
+        return reservationRepository.findById(id);
     }
 
     public Reservation save(ReservationRequestDto reservationRequestDto) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequestDto.timeId())
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "id에 해당하는 ReservationTime을 찾을 수 없습니다. id: " + reservationRequestDto.timeId()));
+        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequestDto.timeId());
 
         return reservationRepository.save(reservationRequestDto.toReservation(reservationTime));
     }

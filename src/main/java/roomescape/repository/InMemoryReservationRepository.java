@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.Reservation;
 
@@ -18,8 +17,8 @@ public class InMemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> findById(long id) {
-        return Optional.ofNullable(reservations.get(id));
+    public Reservation findById(long id) {
+        return reservations.get(id);
     }
 
     @Override

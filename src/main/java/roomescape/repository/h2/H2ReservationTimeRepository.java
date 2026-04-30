@@ -1,12 +1,13 @@
 package roomescape.repository.h2;
 
 import java.time.LocalTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
@@ -31,29 +32,28 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
     }
 
     @Override
-    public Optional<ReservationTime> findById(long id) {
+    public ReservationTime findById(long id) {
         String sql = "SELECT * FROM reservation_time WHERE id = :id";
-        Map<String, Object> params = new HashMap<>();
-        params.put("id", id);
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, params, rowMapper));
+        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
+        return jdbcTemplate.queryForObject(sql, params, rowMapper);
     }
 
     @Override
     public ReservationTime save(ReservationTime reservationTime) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "INSERT INTO reservation_time(start_at) values(:startAt)";
 
-        Map<String, Object> params = new HashMap<>();
-        params.put("startAt", reservationTime.getStartAt());
+        MapSqlParameterSource params = new MapSqlParameterSource("startAt", reservationTime.getStartAt());
 
-        long id = jdbcTemplate.update(sql, params);
+        jdbcTemplate.update(sql, params, keyHolder);
+        long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
         return new ReservationTime(id, reservationTime.getStartAt());
     }
 
     @Override
     public void delete(long id) {
         String sql = "DELETE FROM reservation_time WHERE id = :id";
-        Map<String, Object> params = new HashMap<>();
-        params.put("id", id);
+        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
         jdbcTemplate.update(sql, params);
     }
 }

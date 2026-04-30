@@ -30,4 +30,12 @@ public class ReservationTime {
     public LocalTime getStartAt() {
         return startAt;
     }
+
+    @Override
+    public String toString() {
+        return "ReservationTime{" +
+                "id=" + id +
+                ", startAt=" + startAt +
+                '}';
+    }
 }

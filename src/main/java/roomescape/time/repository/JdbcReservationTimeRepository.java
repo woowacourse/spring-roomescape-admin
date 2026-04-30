@@ -25,6 +25,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public ReservationTime save(ReservationTime reservationTime) {
         String sql = "insert into reservation_time (start_at) values (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -38,16 +39,26 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         return new ReservationTime(id, reservationTime.getStartAt());
     }
 
+    @Override
     public void deleteById(Long id) {
         jdbcTemplate.update("delete from reservation_time where id = ?", id);
     }
 
+    @Override
     public ReservationTime findById(Long id) {
         String sql = "select id, start_at from reservation_time where id = ?";
         return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, id);
     }
 
+    @Override
     public List<ReservationTime> findAll() {
         return jdbcTemplate.query("select id, start_at from reservation_time", reservationTimeRowMapper);
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        String sql = "select count(*) from reservation_time where id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+        return count != null && count > 0;
     }
 }

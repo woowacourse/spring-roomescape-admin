@@ -25,21 +25,11 @@ public class ReservationTimeService {
     }
 
     public void deleteById(Long id) {
-        try {
-            reservationTimeRepository.findById(id);
-            reservationTimeRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("삭제하려는 시간 정보가 존재하지 않습니다. id: " + id);
+        if (!reservationTimeRepository.existsById(id)) {
+            throw new IllegalArgumentException("존재하지 않는 시간입니다.");
         }
-    }
 
-    public ReservationTimeResponseDto findById(Long id) {
-        try {
-            ReservationTime time = reservationTimeRepository.findById(id);
-            return ReservationTimeResponseDto.from(time);
-        } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("해당 ID의 시간 정보를 찾을 수 없습니다. id: " + id);
-        }
+        reservationTimeRepository.deleteById(id);
     }
 
     public List<ReservationTimeResponseDto> findAll() {

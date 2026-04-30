@@ -4,7 +4,7 @@
 
 ## ✅ 리팩토링 할 것 목록
 
-- [ ] **1. request dto의 사용되지 않는 toDomain() 제거하기**
+- [x] **1. request dto의 사용되지 않는 toDomain() 제거하기**
 - [ ] **2. EOF 개행 문자 추가 확인할 것.**
 - [ ] **3. Reservation의 도메인 제약 사항 추가하기**
 - [ ] **4. ReservationDao의 SELECT_WITH_JOIN 쿼리를 인라인으로 되돌리기**

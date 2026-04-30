@@ -97,6 +97,11 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+
+        RestAssured.given().log().all()
+                .when().get("/times/temp")
+                .then().log().all()
+                .statusCode(200);
     }
 
     @Autowired

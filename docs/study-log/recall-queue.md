@@ -1,6 +1,5 @@
 
 
-
 ### 요청과 응답에서의 Jackson 직렬화
 <details>
 
@@ -109,6 +108,11 @@
         - 추상화로 가려진 DB 기능들을 조금 더 살펴보기 위해 선택.
         - *"DB가 어떻게 키를 돌려주는가"* 가 좀 더 노출됨.
         - 계층 분리를 할때 DAO 개념도 같이 학습하기에 더 잘맞음.
+- "H2/Spring Boot에서 schema.sql 실행 순서, FK 검사 시점, DROP/CREATE 정책”
+    - `reservation`이 `reservation_time`을 참조(FK)한다. SQL 실행 시점에 참조 대상이 이미 존재해야한다. 그래서 **`schema.sql`** 작성시 참조 관계를 고려해야함. 고려 안하면 FK 제약 생성 실패함.
+- 트랜잭션 필요성
+  - Post에서 시간 정보를 select하는 부분 (하나의 일관된 작업에서 두번 데이터베이스에 접근한다.)
+  - INSERT 후 응답에 ReservationTime 객체를 담아야 하는데, 클라이언트는 timeId만 보냈고 우리는 startAt을 모름. 그래서 별도 쿼리.
 
 </details>
 
@@ -118,3 +122,9 @@
 
 
 </details>
+
+
+
+
+
+

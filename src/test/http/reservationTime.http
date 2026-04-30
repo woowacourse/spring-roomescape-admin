@@ -1,0 +1,16 @@
+### 1. 전체 예약 조회 (GET)
+# @name getReservationTime
+GET http://localhost:8080/times
+
+### 2. 예약 추가 (POST)
+# @name createReservationTime
+POST http://localhost:8080/times
+Content-Type: application/json
+
+{
+  "startAt": "15:40"
+}
+
+### 3. 예약 삭제 (DELETE)
+# id가 1인 예약을 삭제합니다.
+DELETE http://localhost:8080/times/1

@@ -16,14 +16,14 @@ public class ReservationTimeService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public ReservationTime enrollReservationTimes(String startAt) {
+    public ReservationTime save(String startAt) {
         return reservationTimeDao.save(
                 ReservationTime.constructWithoutId(startAt)
         );
     }
 
     @Transactional(readOnly = true)
-    public List<ReservationTime> findAllReservationTimes() {
+    public List<ReservationTime> findAll() {
         return reservationTimeDao.findAll();
     }
 

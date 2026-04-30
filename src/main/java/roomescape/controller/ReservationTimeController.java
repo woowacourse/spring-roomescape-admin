@@ -26,7 +26,7 @@ public class ReservationTimeController {
 
     @PostMapping
     ResponseEntity<ReservationTimeResponse> enrollTime(@RequestBody ReservationTimeRequest requestBody) {
-        ReservationTime result = reservationTimeService.enrollReservationTimes(requestBody.startAt());
+        ReservationTime result = reservationTimeService.save(requestBody.startAt());
 
         ReservationTimeResponse responseBody = new ReservationTimeResponse(
                 result.id(),
@@ -38,7 +38,7 @@ public class ReservationTimeController {
 
     @GetMapping
     ResponseEntity<List<ReservationTimeResponse>> queryReservationTimes() {
-        List<ReservationTime> result = reservationTimeService.findAllReservationTimes();
+        List<ReservationTime> result = reservationTimeService.findAll();
 
         List<ReservationTimeResponse> foundReservationTimes = result.stream()
                 .map(this::parseReservationTimeToReservationTimeResponse)

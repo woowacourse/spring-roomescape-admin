@@ -28,7 +28,7 @@ public class ReservationController {
 
     @GetMapping
     ResponseEntity<List<ReservationResponse>> findReservations() {
-        List<Reservation> resultOfFind = reservationService.findAllReservations();
+        List<Reservation> resultOfFind = reservationService.findAll();
 
         List<ReservationResponse> responseData = resultOfFind.stream()
                 .map(this::parseReservationToReservationResponse)
@@ -42,7 +42,7 @@ public class ReservationController {
 
     @PostMapping
     ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest request) {
-        Reservation result = reservationService.enrollReservation(
+        Reservation result = reservationService.save(
                 request.name(),
                 request.date(),
                 request.timeId()
@@ -58,7 +58,7 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
-        reservationService.deleteSpecificReservationById(id);
+        reservationService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

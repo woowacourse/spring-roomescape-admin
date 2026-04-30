@@ -41,18 +41,18 @@ class ReservationTimeServiceTest {
 
     @Test
     @DisplayName("저장을 잘 한다")
-    void enrollReservationTimes_success() {
+    void save_success() {
         //when
         Assertions.assertDoesNotThrow(
-                () -> service.enrollReservationTimes(TEST_TIME)
+                () -> service.save(TEST_TIME)
         );
     }
 
     @Test
     @DisplayName("저장을 하고, ID와 저정된 값을 반환한다")
-    void enrollReservationTimes_and_return_value() {
+    void save_and_return_value() {
         //when
-        ReservationTime result = service.enrollReservationTimes(TEST_TIME);
+        ReservationTime result = service.save(TEST_TIME);
 
         //then
         Assertions.assertNotNull(
@@ -63,10 +63,10 @@ class ReservationTimeServiceTest {
     @Test
     @DisplayName("찾기 기능을 수행할 때에 오류가 발생하지 않는다")
     void find_AllReservationTimes_success() {
-        service.enrollReservationTimes(TEST_TIME);
+        service.save(TEST_TIME);
 
         Assertions.assertDoesNotThrow(
-                () -> service.findAllReservationTimes()
+                () -> service.findAll()
         );
     }
 
@@ -74,14 +74,14 @@ class ReservationTimeServiceTest {
     @DisplayName("찾기 기능을 수행할 때에 저장소가 비어 있어도 오류가 발생하지 않는다")
     void find_AllReservationTimes_success_when_empty() {
         Assertions.assertDoesNotThrow(
-                () -> service.findAllReservationTimes()
+                () -> service.findAll()
         );
     }
 
     @Test
     @DisplayName("삭제를 레포지토리 계층에 전달하고, 오류가 발생하지 않으면 오류를 일으키지 않는다")
     void delete_SpecificReservationTime_success() {
-        ReservationTime saved = service.enrollReservationTimes(TEST_TIME);
+        ReservationTime saved = service.save(TEST_TIME);
         Assertions.assertDoesNotThrow(
                 () -> service.deleteSpecificReservationTime(saved.id())
         );

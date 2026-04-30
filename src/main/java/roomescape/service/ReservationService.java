@@ -20,7 +20,7 @@ public class ReservationService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public Reservation enrollReservation(String name, String date, Long timeId) {
+    public Reservation save(String name, String date, Long timeId) {
         ReservationTime targetTime = reservationTimeDao.findById(timeId);
         return reservationDao.save(
                 Reservation.constructWithNoId(name, date, targetTime)
@@ -28,11 +28,11 @@ public class ReservationService {
     }
 
     @Transactional(readOnly = true)
-    public List<Reservation> findAllReservations() {
+    public List<Reservation> findAll() {
         return reservationDao.findAll();
     }
 
-    public void deleteSpecificReservationById(Long targetId) {
+    public void deleteById(Long targetId) {
         reservationDao.delete(targetId);
     }
 }

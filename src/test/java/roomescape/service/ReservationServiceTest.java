@@ -57,18 +57,18 @@ class ReservationServiceTest {
 
     @Test
     @DisplayName("저장을 잘 한다")
-    void enrollReservation_success() {
+    void save_success() {
         //when
         Assertions.assertDoesNotThrow(
-                () -> service.enrollReservation(TESTER_NAME, TEST_DATE, testTimeId)
+                () -> service.save(TESTER_NAME, TEST_DATE, testTimeId)
         );
     }
 
     @Test
     @DisplayName("저장을 하고, ID와 저정된 값을 반환한다")
-    void enrollReservation_and_return_value() {
+    void save_and_return_value() {
         //when
-        Reservation result = service.enrollReservation(TESTER_NAME, TEST_DATE, testTimeId);
+        Reservation result = service.save(TESTER_NAME, TEST_DATE, testTimeId);
 
         //then
         Assertions.assertNotNull(
@@ -79,10 +79,10 @@ class ReservationServiceTest {
     @Test
     @DisplayName("찾기 기능을 수행할 때에 오류가 발생하지 않는다")
     void find_AllReservations_success() {
-        service.enrollReservation(TESTER_NAME, TEST_DATE, testTimeId);
+        service.save(TESTER_NAME, TEST_DATE, testTimeId);
 
         Assertions.assertDoesNotThrow(
-                () -> service.findAllReservations()
+                () -> service.findAll()
         );
     }
 
@@ -90,16 +90,16 @@ class ReservationServiceTest {
     @DisplayName("찾기 기능을 수행할 때에 저장소가 비어 있어도 오류가 발생하지 않는다")
     void find_AllReservations_success_when_empty() {
         Assertions.assertDoesNotThrow(
-                () -> service.findAllReservations()
+                () -> service.findAll()
         );
     }
 
     @Test
     @DisplayName("삭제를 레포지토리 계층에 전달하고, 오류가 발생하지 않으면 오류를 일으키지 않는다")
     void delete_SpecificReservationById_success() {
-        Reservation saved = service.enrollReservation(TESTER_NAME, TEST_DATE, testTimeId);
+        Reservation saved = service.save(TESTER_NAME, TEST_DATE, testTimeId);
         Assertions.assertDoesNotThrow(
-                () -> service.deleteSpecificReservationById(saved.id())
+                () -> service.deleteById(saved.id())
         );
     }
 
@@ -108,7 +108,7 @@ class ReservationServiceTest {
     void delete_SpecificReservationById_exception_propagation() {
         long notExistReservationId = 100000L;
         assertThatThrownBy(
-                () -> service.deleteSpecificReservationById(notExistReservationId)
+                () -> service.deleteById(notExistReservationId)
         ).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("삭제 대상이 존재하지 않습니다");
     }

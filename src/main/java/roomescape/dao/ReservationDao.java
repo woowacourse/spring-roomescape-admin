@@ -20,14 +20,25 @@ public class ReservationDao {
     }
 
     public List<Map<String, Object>> findAll() {
-        return jdbcTemplate.queryForList("SELECT id, name, date, time FROM reservation ORDER BY id");
+        return jdbcTemplate.queryForList("""
+                SELECT
+                    r.id AS reservation_id,
+                    r.name,
+                    r.date,
+                    t.id AS time_id,
+                    t.start_at
+                FROM reservation AS r
+                INNER JOIN reservation_time AS t
+                    ON r.time_id = t.id
+                ORDER BY r.id
+                """);
     }
 
-    public long save(final String name, final String date, final String time) {
+    public long save(final String name, final String date, final long timeId) {
         return simpleJdbcInsert.executeAndReturnKey(Map.of(
                 "name", name,
                 "date", date,
-                "time", time
+                "time_id", timeId
         )).longValue();
     }
 

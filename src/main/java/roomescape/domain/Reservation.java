@@ -5,35 +5,16 @@ public class Reservation {
     private long id;
     private String name;
     private String date;
-    private String time;
+    private ReservationTime time;
 
-    public Reservation() {
-    }
-
-    public Reservation(long id, String name, String date, String time) {
+    public Reservation(final long id, final String name, final String date, final ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public static Reservation create(long id, String name, String date, String time) {
+    public static Reservation create(final long id, final String name, final String date, final ReservationTime time) {
         return new Reservation(id, name, date, time);
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public String getTime() {
-        return time;
     }
 }

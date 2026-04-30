@@ -1,6 +1,5 @@
 package roomescape.reservation.application.dto;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import roomescape.reservation.repository.ReservationEntity;
 
@@ -12,7 +11,7 @@ public record ReservationRequest(
     public ReservationEntity toReservationEntity() {
         return ReservationEntity.of(
                 name,
-                Date.valueOf(date),
+                date,
                 timeId
         );
     }

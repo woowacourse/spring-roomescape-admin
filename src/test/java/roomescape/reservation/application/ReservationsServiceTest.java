@@ -5,8 +5,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -73,7 +71,7 @@ class ReservationsServiceTest {
                         new ReservationEntity(
                                 1L,
                                 "브라운",
-                                Date.valueOf(LocalDate.of(2026, 4, 29)),
+                                LocalDate.of(2026, 4, 29),
                                 1L
                         )
                 );
@@ -82,7 +80,7 @@ class ReservationsServiceTest {
                 .willReturn(
                         new TimeEntity(
                                 1L,
-                                Time.valueOf(LocalTime.of(10, 0))
+                                LocalTime.of(10, 0)
                         )
                 );
 

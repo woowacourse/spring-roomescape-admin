@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
-import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -36,7 +35,7 @@ class TimesServiceTest {
                 .willReturn(
                         new TimeEntity(
                                 1L,
-                                Time.valueOf(LocalTime.of(10, 0))
+                                LocalTime.of(10, 0)
                         )
                 );
 
@@ -58,9 +57,9 @@ class TimesServiceTest {
         //given
         given(timesRepository.getTimes())
                 .willReturn(List.of(
-                        new TimeEntity(1L, Time.valueOf(LocalTime.of(10, 0))),
-                        new TimeEntity(2L, Time.valueOf(LocalTime.of(11, 0))),
-                        new TimeEntity(3L, Time.valueOf(LocalTime.of(12, 0)))
+                        new TimeEntity(1L, LocalTime.of(10, 0)),
+                        new TimeEntity(2L, LocalTime.of(11, 0)),
+                        new TimeEntity(3L, LocalTime.of(12, 0))
                 ));
 
         //when

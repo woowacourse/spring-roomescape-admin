@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -48,7 +49,7 @@ public class JdbcTemplateTimesRepository implements TimesRepository {
                 Statement.RETURN_GENERATED_KEYS
         );
 
-        preparedStatement.setTime(1, entity.startAt());
+        preparedStatement.setTime(1, Time.valueOf(entity.startAt()));
         return preparedStatement;
     }
 
@@ -61,7 +62,7 @@ public class JdbcTemplateTimesRepository implements TimesRepository {
                 (rs, rowNum) ->
                         new TimeEntity(
                                 rs.getLong(ID_COLUMN),
-                                rs.getTime(START_AT_COLUMN)
+                                rs.getTime(START_AT_COLUMN).toLocalTime()
                         )
         );
     }
@@ -87,7 +88,7 @@ public class JdbcTemplateTimesRepository implements TimesRepository {
                     sql,
                     (rs, rowNum) -> new TimeEntity(
                             rs.getLong("id"),
-                            rs.getTime("start_at")
+                            rs.getTime("start_at").toLocalTime()
                     ),
                     id
             );

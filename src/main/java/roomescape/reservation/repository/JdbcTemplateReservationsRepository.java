@@ -1,6 +1,7 @@
 package roomescape.reservation.repository;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -79,7 +80,7 @@ public class JdbcTemplateReservationsRepository implements ReservationsRepositor
         );
 
         preparedStatement.setString(1, reservationEntity.name());
-        preparedStatement.setDate(2, reservationEntity.date());
+        preparedStatement.setDate(2, Date.valueOf(reservationEntity.date()));
         preparedStatement.setLong(3, reservationEntity.timeId());
 
         return preparedStatement;

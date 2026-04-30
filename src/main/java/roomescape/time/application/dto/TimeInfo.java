@@ -10,7 +10,7 @@ public record TimeInfo(
     public static TimeInfo from(TimeEntity entity) {
         return new TimeInfo(
                 entity.id(),
-                entity.startAt().toLocalTime()
+                entity.startAt()
         );
     }
 }

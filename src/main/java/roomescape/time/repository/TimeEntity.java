@@ -1,14 +1,13 @@
 package roomescape.time.repository;
 
-import java.sql.Time;
 import java.time.LocalTime;
 
 public record TimeEntity(
         Long id,
-        Time startAt
+        LocalTime startAt
 ) {
     public static TimeEntity of(LocalTime startAt) {
-        return new TimeEntity(null, Time.valueOf(startAt));
+        return new TimeEntity(null, startAt);
     }
 
     public TimeEntity updateId(long id) {

@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,6 +14,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 @Repository
+@RequiredArgsConstructor
 public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -29,10 +31,6 @@ public class ReservationDao {
                 reservationTime
         );
     };
-
-    public ReservationDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public Reservation save(Reservation reservation, long timeId) {
         SqlParameterSource params = new MapSqlParameterSource()

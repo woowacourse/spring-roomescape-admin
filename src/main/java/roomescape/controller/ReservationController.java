@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,22 +20,13 @@ import roomescape.service.ReservationTimeCommandService;
 import roomescape.service.ReservationTimeQueryService;
 
 @RestController
+@RequiredArgsConstructor
 public class ReservationController {
 
     private final ReservationCommandService reservationCommandService;
     private final ReservationQueryService reservationQueryService;
     private final ReservationTimeCommandService reservationTimeCommandService;
     private final ReservationTimeQueryService reservationTimeQueryService;
-
-    public ReservationController(ReservationCommandService reservationCommandService,
-                                 ReservationQueryService reservationQueryService,
-                                 ReservationTimeCommandService reservationTimeCommandService,
-                                 ReservationTimeQueryService reservationTimeQueryService) {
-        this.reservationCommandService = reservationCommandService;
-        this.reservationQueryService = reservationQueryService;
-        this.reservationTimeCommandService = reservationTimeCommandService;
-        this.reservationTimeQueryService = reservationTimeQueryService;
-    }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<ReservationResponse>> getAllReservations() {

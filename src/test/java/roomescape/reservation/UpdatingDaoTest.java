@@ -7,16 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.repository.ReservationUpdatingRepository;
 import roomescape.dto.ReservationRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-@Import(ReservationUpdatingDao.class)
+@Import(ReservationUpdatingRepository.class)
 public class UpdatingDaoTest {
 
     @Autowired
-    private ReservationUpdatingDao reservationUpdatingDao;
+    private ReservationUpdatingRepository reservationUpdatingRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -52,7 +53,7 @@ public class UpdatingDaoTest {
         Long timeId = jdbcTemplate.queryForObject("SELECT id FROM reservation_time LIMIT 1", Long.class);
         ReservationRequest request = new ReservationRequest("가현", "2026-05-01", timeId);
 
-        Long generatedId = reservationUpdatingDao.insert(request);
+        Long generatedId = reservationUpdatingRepository.insert(request);
 
         assertThat(generatedId).isNotNull();
         Integer count = jdbcTemplate.queryForObject("SELECT count(*) FROM reservation WHERE id = ?", Integer.class, generatedId);
@@ -66,7 +67,7 @@ public class UpdatingDaoTest {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES ('가현', '2026-05-01', ?)", timeId);
         Long id = jdbcTemplate.queryForObject("SELECT id FROM reservation LIMIT 1", Long.class);
 
-        int updatedRow = reservationUpdatingDao.delete(id);
+        int updatedRow = reservationUpdatingRepository.delete(id);
 
         assertThat(updatedRow).isEqualTo(1);
         Integer count = jdbcTemplate.queryForObject("SELECT count(*) FROM reservation WHERE id = ?", Integer.class, id);

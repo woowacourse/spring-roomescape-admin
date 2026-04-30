@@ -7,17 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.repository.ReservationQueryingRepository;
+import roomescape.domain.Reservation;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-@Import(ReservationQueryingDao.class)
+@Import(ReservationQueryingRepository.class)
 public class QueryingDaoTest {
 
     @Autowired
-    private ReservationQueryingDao reservationQueryingDao;
+    private ReservationQueryingRepository reservationQueryingRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -56,7 +58,7 @@ public class QueryingDaoTest {
     @Test
     @DisplayName("전체 예약 목록을 조회한다")
     void findAll() {
-        List<Reservation> reservations = reservationQueryingDao.findAll();
+        List<Reservation> reservations = reservationQueryingRepository.findAll();
 
         assertThat(reservations).hasSize(3);
         assertThat(reservations.get(0).getName()).isEqualTo("현미밥");

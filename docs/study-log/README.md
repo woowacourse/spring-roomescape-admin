@@ -107,3 +107,22 @@
 
 - (ResultSet, rowNum) -> {} 으로 동작하는 것이 어떻게 되는 것인지 궁금함
 - 람다표현법, stream
+
+# 4단계
+
+- 계층 분리를 한다.
+
+#### 생각해볼 점
+
+계층 분리를 하면서 Service를 도입해야하는가와 DAO를 도입해야하는지를 고민했음.
+Service는 비즈니스 작업 단위를 구성하고 비즈니스 작업에 대한 흐름을 오케스트레이션 하는 것이라 생각함.
+현재의 요구사항에서는 아직 흐름이 크지 않다고 생각함.
+
+또한, DAO 역시 테이블 매핑 분리가 가능하나, 이는 Repository가 단순히 DAO를 위임하는 계층이 될 것 같았다
+따라서 Controller가 HTTP 요청과 응답을 담당하고, Repository가 도메인 객체의 저장과 조회를 담당하는 구조로 가져가기로 했다
+
+다만 예약을 생성할 때 timeId로 시간을 조회하는 부분 때분에 고민이 Service 계층의 고민이 생겼다. 시간에 대해서 별도의 Controller와 Repository를 가진 리소스이기 때문에
+ReservationRepository 안에서 private 메서드로 직접 조회하는 것보다 ReservationTimeRepository가 findById를 담당하는 편이 더 적절하다고 생각한다.
+그래서 지금은 Service를 두기보다는 ReservationRepository가 ReservationTimeRepository를 사용하였다.
+
+추후 PR을 올린 뒤 Service 계층에 대해서 도입해보고자 한다.

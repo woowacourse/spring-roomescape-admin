@@ -40,7 +40,7 @@ class ReservationServiceTest {
     private ReservationRequest createReservationRequest(ReservationTime time) {
         return new ReservationRequest(
                 "브라운",
-                LocalDate.of(2026, 4, 29),
+                LocalDate.now(),
                 time.getId()
         );
     }
@@ -61,10 +61,12 @@ class ReservationServiceTest {
         ReservationResponse savedReservation = reservationService.saveReservation(request);
 
         // then
-        assertThat(savedReservation.id()).isNotNull();
+        assertThat(savedReservation.time().id()).isEqualTo(time.getId());
+        assertThat(savedReservation.time().startAt()).isEqualTo(time.getStartAt().toString());
         assertThat(savedReservation.name()).isEqualTo("브라운");
-        assertThat(savedReservation.date()).isEqualTo("2026-04-29");
-        assertThat(savedReservation.time()).isEqualTo(time);
+        assertThat(savedReservation.date()).isEqualTo(LocalDate.now().toString());
+        assertThat(savedReservation.time().id()).isEqualTo(time.getId());
+
     }
 
     @Test

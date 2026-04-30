@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
 
 @Repository
 public class ReservationDao {
@@ -39,7 +37,7 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ReservationResponse insert(ReservationRequest request) {
+    public Reservation insert(ReservationRequest request) {
         String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -58,17 +56,14 @@ public class ReservationDao {
         }, keyHolder);
 
         long generatedId = keyHolder.getKey().longValue();
-        return ReservationResponse.from(new Reservation(generatedId, request.name(), request.date(), new ReservationTime(request.timeId(), null)));
+        return new Reservation(generatedId, request.name(), request.date(), new ReservationTime(request.timeId(), null));
     }
 
-    public List<ReservationResponse> findAllReservations() {
+    public List<Reservation> select() {
         String sql = "select r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as start_at from reservation as r "
                 + "inner join reservation_time as t on r.time_id = t.id";
         try {
-            List<Reservation> reservations = jdbcTemplate.query(sql, rowMapper);
-            return reservations.stream()
-                    .map(ReservationResponse::from)
-                    .collect(Collectors.toList());
+            return jdbcTemplate.query(sql, rowMapper);
         } catch (EmptyResultDataAccessException exception) {
             return null;
         }

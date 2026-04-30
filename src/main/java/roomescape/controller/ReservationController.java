@@ -1,10 +1,6 @@
 package roomescape.controller;
 
-import java.sql.PreparedStatement;
 import java.util.List;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,96 +8,43 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-import roomescape.domain.Name;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationDate;
-import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.repository.ReservationRepository;
 
 @Controller
 public class ReservationController {
-    private JdbcTemplate jdbcTemplate;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationController(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public ReservationController(ReservationRepository reservationRepository) {
+        this.reservationRepository = reservationRepository;
     }
 
     @GetMapping("/reservations")
     @ResponseBody
     public List<ReservationResponse> findAll() {
-        return jdbcTemplate.query("""
-                        SELECT r.id AS reservation_id,
-                               r.name,
-                               r.date,
-                               t.id AS time_id,
-                               t.start_at
-                        FROM reservation r
-                        INNER JOIN reservation_time t
-                            ON r.time_id = t.id
-                        ORDER BY r.id
-                        """,
-                (resultSet, rowNum) -> {
-                    Reservation reservation = new Reservation(
-                            resultSet.getLong("reservation_id"),
-                            new Name(resultSet.getString("name")),
-                            new ReservationDate(resultSet.getString("date")),
-                            new ReservationTime(
-                                    resultSet.getLong("time_id"),
-                                    resultSet.getString("start_at")
-                            )
-                    );
-
-                    return ReservationResponse.from(reservation);
-                }
-        );
+        return reservationRepository.findAll()
+                .stream()
+                .map(ReservationResponse::from)
+                .toList();
     }
 
     @PostMapping("/reservations")
     @ResponseBody
     public ReservationResponse create(@RequestBody ReservationRequest request) {
-        Name name = new Name(request.name());
-        ReservationDate date = new ReservationDate(request.date());
-        ReservationTime time = findTimeById(request.timeId());
+        Reservation reservation = reservationRepository.save(
+                request.name(),
+                request.date(),
+                request.timeId()
+        );
 
-        KeyHolder keyholder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
-                    new String[]{"id"});
-
-            preparedStatement.setString(1, name.value());
-            preparedStatement.setString(2, date.value());
-            preparedStatement.setLong(3, time.id());
-
-            return preparedStatement;
-        }, keyholder);
-
-        Number key = keyholder.getKey();
-
-        if (key == null) {
-            throw new IllegalStateException("[ERROR] 예약 ID가 생성되지 않았습니다.");
-        }
-
-        Reservation reservation = new Reservation(key.longValue(), name, date, time);
         return ReservationResponse.from(reservation);
     }
 
     @DeleteMapping("/reservations/{id}")
     @ResponseBody
     public void delete(@PathVariable Long id) {
-        jdbcTemplate.update("DELETE FROM RESERVATION WHERE id = ?", id);
-    }
-
-    private ReservationTime findTimeById(Long id) {
-        return jdbcTemplate.queryForObject(
-                "SELECT id, start_at FROM reservation_time WHERE id = ?",
-                (rs, rowNum) -> new ReservationTime(
-                        rs.getLong("id"),
-                        rs.getString("start_at")
-                ),
-                id
-        );
+        reservationRepository.deleteById(id);
     }
 }

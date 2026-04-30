@@ -1,0 +1,87 @@
+package roomescape.repository;
+
+import java.sql.PreparedStatement;
+import java.util.List;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
+import roomescape.domain.Name;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationDate;
+import roomescape.domain.ReservationTime;
+
+@Repository
+public class ReservationRepository {
+    private final JdbcTemplate jdbcTemplate;
+
+    public ReservationRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public Reservation save(String nameValue, String dateValue, Long timeId) {
+        Name name = new Name(nameValue);
+        ReservationDate date = new ReservationDate(dateValue);
+        ReservationTime time = findTimeById(timeId);
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                    new String[]{"id"}
+            );
+
+            statement.setString(1, name.value());
+            statement.setString(2, date.value());
+            statement.setLong(3, time.id());
+            return statement;
+        }, keyHolder);
+
+        Number key = keyHolder.getKey();
+        if (key == null) {
+            throw new IllegalStateException("[ERROR] 예약 ID가 생성되지 않았습니다.");
+        }
+
+        return new Reservation(key.longValue(), name, date, time);
+    }
+
+    public List<Reservation> findAll() {
+        return jdbcTemplate.query("""
+                        SELECT r.id AS reservation_id,
+                               r.name,
+                               r.date,
+                               t.id AS time_id,
+                               t.start_at
+                        FROM reservation r
+                        INNER JOIN reservation_time t
+                            ON r.time_id = t.id
+                        ORDER BY r.id
+                        """,
+                (resultSet, rowNum) -> new Reservation(
+                        resultSet.getLong("reservation_id"),
+                        new Name(resultSet.getString("name")),
+                        new ReservationDate(resultSet.getString("date")),
+                        new ReservationTime(
+                                resultSet.getLong("time_id"),
+                                resultSet.getString("start_at")
+                        )
+                )
+        );
+    }
+
+    public void deleteById(Long id) {
+        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
+    }
+
+    private ReservationTime findTimeById(Long id) {
+        return jdbcTemplate.queryForObject(
+                "SELECT id, start_at FROM reservation_time WHERE id = ?",
+                (resultSet, rowNum) -> new ReservationTime(
+                        resultSet.getLong("id"),
+                        resultSet.getString("start_at")
+                ),
+                id
+        );
+    }
+}

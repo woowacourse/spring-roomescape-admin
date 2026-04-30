@@ -10,7 +10,7 @@ import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationTimeRepository {
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

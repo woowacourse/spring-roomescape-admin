@@ -1,6 +1,7 @@
 ## 학습 로그 #4
 
-**시간**: 04/29 20:00 ~ 21:10 (약 70분) **학습 범위**: Spring Data Access / JDBC를 활용한 데이터 삽입 전략 (JdbcTemplate, NamedParameterJdbcTemplate, SimpleJdbcInsert)
+**시간**: 04/29 20:00 ~ 21:10 (약 70분) 
+**학습 범위**: Spring Data Access / JDBC를 활용한 데이터 삽입 전략 (JdbcTemplate, NamedParameterJdbcTemplate, SimpleJdbcInsert)
 
 ### 1. 막힌 것의 종류
 

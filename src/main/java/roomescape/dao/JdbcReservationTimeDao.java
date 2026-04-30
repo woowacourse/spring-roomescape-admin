@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class JdbcReservationTimeDao implements ReservationTimeDao{
@@ -17,6 +18,15 @@ public class JdbcReservationTimeDao implements ReservationTimeDao{
 
     public JdbcReservationTimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public Optional<ReservationTime> select(Long id) {
+        String sql = "select * from reservation_time where id = ?";
+        List<ReservationTime> result = jdbcTemplate.query(sql, (resultSet, rowNum) -> new ReservationTime(
+                resultSet.getLong("id"),
+                resultSet.getTime("start_at").toLocalTime()
+        ), id);
+        return result.stream().findFirst();
     }
 
     public List<ReservationTime> selectAll() {

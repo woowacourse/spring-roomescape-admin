@@ -52,6 +52,19 @@ public class ReservationController {
         reservationRepository.deleteById(id);
     }
 
+    @GetMapping("/times")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ReservationTimeResponseDto> getReservationTimes() {
+        List<ReservationTimeResponseDto> responseDtos = new ArrayList<>();
+        List<ReservationTime> times = reservationTimeRepository.findAll();
+
+        for (ReservationTime time : times) {
+            responseDtos.add(ReservationTimeResponseDto.from(time));
+        }
+
+        return responseDtos;
+    }
+
     @PostMapping("/times")
     public ReservationTimeResponseDto addReservationTime(@RequestBody ReservationTimeRequesetDto requestDto) {
         ReservationTime reservationTime = reservationTimeRepository.createReservationTime(new ReservationTime(null, requestDto.startAt()));

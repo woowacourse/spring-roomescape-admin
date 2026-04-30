@@ -22,17 +22,17 @@ public class ReservationService {
     }
 
     public List<ReservationResponse> readAllReservation() {
-        return ReservationResponse.fromEntities(reservationDao.findAllReservation());
+        return ReservationResponse.fromEntities(reservationDao.findAll());
     }
 
     public ReservationResponse createReservation(ReservationCreateRequest request) {
         ReservationTime reservationTime = reservationTimeDao.findById(request.timeId());
-        Long id = reservationDao.insertReservation(request.toEntity(reservationTime));
-        return ReservationResponse.fromEntity(reservationDao.findReservation(id));
+        Long id = reservationDao.save(request.toEntity(reservationTime));
+        return ReservationResponse.fromEntity(reservationDao.findById(id));
     }
 
     public void deleteReservation(Long id) {
-        reservationDao.deleteReservation(id);
+        reservationDao.deleteById(id);
     }
 
     public ReservationTimeResponse createReservationTime(ReservationTimeCreateRequest request) {

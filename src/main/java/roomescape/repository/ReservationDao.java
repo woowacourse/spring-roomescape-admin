@@ -33,7 +33,7 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Reservation> findAllReservation() {
+    public List<Reservation> findAll() {
         String sql = """
                         SELECT r.id AS reservation_id,
                                r.name,
@@ -47,7 +47,7 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
-    public Reservation findReservation(Long id) {
+    public Reservation findById(Long id) {
         String sql = """
                         SELECT r.id AS reservation_id,
                                r.name,
@@ -66,7 +66,7 @@ public class ReservationDao {
         }
     }
 
-    public Long insertReservation(Reservation reservation) {
+    public Long save(Reservation reservation) {
         String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -81,7 +81,7 @@ public class ReservationDao {
         return keyHolder.getKey().longValue();
     }
 
-    public void deleteReservation(Long id) {
+    public void deleteById(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }

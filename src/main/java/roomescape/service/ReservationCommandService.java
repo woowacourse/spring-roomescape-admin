@@ -15,12 +15,12 @@ public class ReservationCommandService {
         this.reservationDao = reservationDao;
     }
 
-    public ReservationResponse create(String name, LocalDate date, Long timeId) {
+    public ReservationResponse create(String name, LocalDate date, long timeId) {
         Reservation savedReservation = reservationDao.save(Reservation.pending(name, date), timeId);
         return ReservationResponse.from(savedReservation);
     }
 
-    public void delete(Long reservationId) {
+    public void delete(long reservationId) {
         reservationDao.delete(reservationId);
     }
 }

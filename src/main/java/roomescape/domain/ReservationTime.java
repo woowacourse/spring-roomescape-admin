@@ -18,6 +18,10 @@ public class ReservationTime {
         return new ReservationTime(PENDING_RESERVATION_TIME_ID, LocalTime.MIDNIGHT);
     }
 
+    public static ReservationTime pending(LocalTime startAt) {
+        return new ReservationTime(PENDING_RESERVATION_TIME_ID, startAt);
+    }
+
     public static ReservationTime create(long id, LocalTime startAt) {
         return new ReservationTime(id, startAt);
     }

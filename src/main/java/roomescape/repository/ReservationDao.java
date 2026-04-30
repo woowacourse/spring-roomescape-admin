@@ -16,11 +16,6 @@ import roomescape.domain.ReservationTime;
 public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
-
-    public ReservationDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> {
         ReservationTime reservationTime = ReservationTime.create(
                 rs.getLong("time_id"),
@@ -35,7 +30,11 @@ public class ReservationDao {
         );
     };
 
-    public Reservation save(Reservation reservation, Long timeId) {
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public Reservation save(Reservation reservation, long timeId) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", reservation.username())
                 .addValue("date", reservation.date())
@@ -63,6 +62,11 @@ public class ReservationDao {
         return jdbcTemplate.queryForObject(sql, reservationRowMapper, reservationId.longValue());
     }
 
+    public void delete(long reservationId) {
+        String sql = "DELETE FROM reservation WHERE id = ?";
+        jdbcTemplate.update(sql, reservationId);
+    }
+
     public List<Reservation> findAllReservations() {
         String sql = """
                 SELECT
@@ -77,10 +81,5 @@ public class ReservationDao {
                 """;
 
         return jdbcTemplate.query(sql, reservationRowMapper);
-    }
-
-    public void delete(Long reservationId) {
-        String sql = "DELETE FROM reservation WHERE id = ?";
-        jdbcTemplate.update(sql, reservationId);
     }
 }

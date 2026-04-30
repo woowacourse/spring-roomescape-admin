@@ -44,6 +44,8 @@ public class MissionStepTest {
 
     @Test
     void 예약과_시간_연결() {
+        jdbcTemplate.update("insert into reservation_times (start_at) values (?)", "10:00");
+
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");

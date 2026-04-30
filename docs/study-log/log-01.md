@@ -15,7 +15,7 @@
 - 이전에 바꾸기로 한 전략은 무엇이었는가?
 
 <details>
-<summary>Problem-Driven 학습법</summary>
+<summary>Problem-Driven 학습법 (학습법 v3)</summary>
 <div markdown="1">
 
 1. **Problem-Driven**

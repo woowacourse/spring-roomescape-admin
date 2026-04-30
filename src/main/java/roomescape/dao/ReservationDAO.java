@@ -14,7 +14,7 @@ import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationDAO {
-    private final RowMapper<Reservation> rowMapper = (rs, rowNum) -> {
+    private static final RowMapper<Reservation> rowMapper = (rs, rowNum) -> {
         return new Reservation(
                 rs.getLong("id"),
                 rs.getString("name"),

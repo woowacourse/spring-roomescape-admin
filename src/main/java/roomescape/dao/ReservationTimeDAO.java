@@ -12,7 +12,7 @@ import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationTimeDAO {
-    private RowMapper<ReservationTime> rowMapper = (rs, rowNum) -> {
+    private static final RowMapper<ReservationTime> rowMapper = (rs, rowNum) -> {
         return new ReservationTime(rs.getLong("id")
                 , LocalTime.parse(rs.getString("start_at"), DateTimeFormatter.ofPattern("HH:mm")));
     };

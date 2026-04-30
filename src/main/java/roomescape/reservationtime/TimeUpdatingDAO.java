@@ -31,7 +31,7 @@ public class TimeUpdatingDAO {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setObject(1, reservationTime.getStartAt());
+            ps.setObject(1, reservationTime.getStartAt().toString());
             return ps;
         }, keyHolder);
 

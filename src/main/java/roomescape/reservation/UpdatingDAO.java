@@ -17,8 +17,8 @@ public class UpdatingDAO {
     }
 
     public void save(Long id, Reservation reservation) {
-        String sql = "update reservation SET name = ?, date = ?, time = ? where id = ?";
-        jdbcTemplate.update(sql, reservation.getName(), reservation.getDate(), reservation.getTime(), id);
+        String sql = "update reservation SET name = ?, date = ?, time_id = ? where id = ?";
+        jdbcTemplate.update(sql, reservation.getName(), reservation.getDate(), reservation.getTime().getId(), id);
     }
 
     public int delete(Long id) {
@@ -26,8 +26,8 @@ public class UpdatingDAO {
         return jdbcTemplate.update(sql, id);
     }
 
-    public Long insertWithKeyHolder(Reservation reservation) {
-        String sql = "insert into reservation(name, date, time) values(?, ?, ?)";
+    public Long insertWithKeyHolder(ReservationRequest reservationReq) {
+        String sql = "insert into reservation(name, date, time_id) values(?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -35,9 +35,9 @@ public class UpdatingDAO {
                     sql,
                     new String[]{"id"}
             );
-            ps.setString(1, reservation.getName());
-            ps.setObject(2, reservation.getDate());
-            ps.setObject(3, reservation.getTime());
+            ps.setString(1, reservationReq.getName());
+            ps.setObject(2, reservationReq.getDate());
+            ps.setLong(3, reservationReq.getTimeId());
             return ps;
         }, keyHolder);
 

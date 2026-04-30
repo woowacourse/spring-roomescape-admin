@@ -40,10 +40,7 @@ public class ReservationTimeController {
 
     @PutMapping("/times/{id}")
     public ResponseEntity<Void> update(@RequestBody ReservationTime newReservationTime, @PathVariable Long id) {
-        ReservationTime reservationTime = timeQueryingDAO.findReservationTimeById(id);
-
-        reservationTime.update(newReservationTime);
-        timeUpdatingDAO.save(id, reservationTime);
+        timeUpdatingDAO.save(id, newReservationTime);
         return ResponseEntity.ok().build();
     }
 

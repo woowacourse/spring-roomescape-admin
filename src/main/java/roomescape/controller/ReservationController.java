@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.reservation.QueryingDAO;
 import roomescape.reservation.Reservation;
+import roomescape.reservation.ReservationRequest;
 import roomescape.reservation.UpdatingDAO;
 
 import java.util.List;
@@ -26,8 +27,9 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
-        Long generatedId = updatingDAO.insertWithKeyHolder(reservation);
+    //requestBody dto로 감싸기
+    public ResponseEntity<Reservation> create(@RequestBody ReservationRequest reservationReq) {
+        Long generatedId = updatingDAO.insertWithKeyHolder(reservationReq);
         Reservation newReservation = queryingDAO.findReservationById(generatedId);
         return ResponseEntity.ok().body(newReservation);
     }
@@ -39,11 +41,8 @@ public class ReservationController {
     }
 
     @PutMapping("/reservations/{id}")
-    public ResponseEntity<Void> update(@RequestBody Reservation newReservation, @PathVariable Long id) {
-        Reservation reservation = queryingDAO.findReservationById(id);
-        reservation.update(newReservation);
-        updatingDAO.save(id, reservation);
-
+    public ResponseEntity<Void> update(@RequestBody Reservation newReservationReq, @PathVariable Long id) {
+        updatingDAO.save(id, newReservationReq);
         return ResponseEntity.ok().build();
     }
 

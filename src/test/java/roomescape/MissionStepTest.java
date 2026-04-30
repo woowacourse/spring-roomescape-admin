@@ -152,6 +152,13 @@ public class MissionStepTest {
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
+                .body("{\"startAt\": \"10:00\"}")
+                .when().post("/times")
+                .then().statusCode(200);
+
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
                 .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()

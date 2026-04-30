@@ -25,13 +25,8 @@ public class ReservationController {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    @GetMapping("/reservations")
-    public List<Reservation> getReservations() {
-        return reservationRepository.findAll();
-    }
-
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationRequest request) {
+    public ResponseEntity<Reservation> create(@RequestBody ReservationRequest request) {
         ReservationTime time = reservationTimeRepository.findById(request.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간: " + request.timeId()));
 
@@ -40,28 +35,15 @@ public class ReservationController {
         return ResponseEntity.ok(saved);
     }
 
+    @GetMapping("/reservations")
+    public List<Reservation> read() {
+        return reservationRepository.findAll();
+    }
+
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable long id) {
+    public ResponseEntity<Void> delete(@PathVariable long id) {
         reservationRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
-    @GetMapping("/times")
-    public List<ReservationTime> getReservationTimes() {
-        return reservationTimeRepository.findAll();
-    }
-
-    @PostMapping("/times")
-    public ResponseEntity<ReservationTime> createReservationTime(@RequestBody ReservationTime reservationTime) {
-        ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
-        return ResponseEntity.ok(savedReservationTime);
-    }
-
-    @DeleteMapping("/times/{id}")
-    public ResponseEntity<Void> deleteReservationTime(@PathVariable long id) {
-        reservationTimeRepository.deleteById(id);
-        return ResponseEntity.ok().build();
-    }
-
 }
 

@@ -1,7 +1,6 @@
 package roomescape.reservation.service;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,12 +22,6 @@ public class ReservationService {
     @Transactional
     public Reservation save(String name, LocalDate date, long timeId) {
         ReservationTime reservationTime = reservationTimeService.getById(timeId);
-
-        LocalTime time = reservationTime.getStartAt();
-        if (reservationRepository.existsByDateAndTime(date, time)) {
-            throw new ReservationException(HttpStatus.CONFLICT.value(), "중복으로 예약을 생성할 수 없습니다.");
-        }
-
         Reservation nonIdReservation = Reservation.createNew(name, date, reservationTime);
 
         return reservationRepository.save(nonIdReservation);

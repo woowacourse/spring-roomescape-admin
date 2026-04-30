@@ -3,6 +3,8 @@ package roomescape.exception;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -49,6 +51,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), null));
+    }
+
+    @ExceptionHandler(DuplicateKeyException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicate(DataIntegrityViolationException e) {
+        String message = "중복으로 예약을 생성할 수 없습니다.";
+        log.warn("DataIntegrityViolationException 발생", e);
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT) // 409
+                .body(new ErrorResponse(HttpStatus.CONFLICT.value(), message, null));
     }
 
 }

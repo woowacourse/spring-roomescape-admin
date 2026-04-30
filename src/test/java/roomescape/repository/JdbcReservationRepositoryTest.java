@@ -2,6 +2,7 @@ package roomescape.repository;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.repository.JdbcReservationRepository;
@@ -30,11 +32,6 @@ class JdbcReservationRepositoryTest {
     void setup() {
         jdbcReservationRepository = new JdbcReservationRepository(jdbcTemplate);
         jdbcReservationTimeRepository = new JdbcReservationTimeRepository(jdbcTemplate);
-        ReservationTime nonIdReservationTime = ReservationTime.createNew(LocalTime.parse("10:00"));
-        ReservationTime reservationTime = jdbcReservationTimeRepository.save(nonIdReservationTime);
-        Reservation reservation = Reservation.createNew("쿠다", LocalDate.parse("2023-08-06"), reservationTime);
-
-        jdbcReservationRepository.save(reservation);
     }
 
     @Test
@@ -43,10 +40,9 @@ class JdbcReservationRepositoryTest {
         //given
         String name = "쿠다";
         LocalDate date = LocalDate.parse("2023-08-05");
-        ReservationTime reservationTime = jdbcReservationTimeRepository.findAll()
-                .stream()
-                .findFirst()
-                .orElseThrow();
+        LocalTime time = LocalTime.parse("10:00");
+
+        ReservationTime reservationTime = jdbcReservationTimeRepository.save(ReservationTime.createNew(time));
 
         Reservation reservation = Reservation.createNew(name, date, reservationTime);
         //when
@@ -66,9 +62,36 @@ class JdbcReservationRepositoryTest {
     }
 
     @Test
+    @DisplayName("예약 저장 중복 예외")
+    void reservation_save_duplicate_test() {
+        // given
+        LocalDate date = LocalDate.parse("2026-08-06");
+        LocalTime time = LocalTime.parse("10:00");
+
+        ReservationTime reservationTime = jdbcReservationTimeRepository.save(ReservationTime.createNew(time));
+
+        // when & then
+        assertThrows(DataIntegrityViolationException.class, () -> {
+            jdbcReservationRepository.save(
+                    Reservation.createNew("쿠다", date, reservationTime)
+            );
+            jdbcReservationRepository.save(
+                    Reservation.createNew("아루", date, reservationTime)
+            );
+        });
+    }
+
+    @Test
     @DisplayName("예약 전체 조회")
     void reservation_findAll_test() {
-        //given & when
+        //given
+        LocalDate date = LocalDate.parse("2026-08-06");
+        LocalTime time = LocalTime.parse("10:00");
+
+        ReservationTime reservationTime = jdbcReservationTimeRepository.save(ReservationTime.createNew(time));
+        jdbcReservationRepository.save(Reservation.createNew("쿠다", date, reservationTime));
+
+        //when
         List<Reservation> reservations = jdbcReservationRepository.findAll();
 
         //then
@@ -79,6 +102,13 @@ class JdbcReservationRepositoryTest {
     @DisplayName("예약 삭제")
     void reservation_delete_test() {
         // given
+        LocalDate date = LocalDate.parse("2026-08-06");
+        LocalTime time = LocalTime.parse("10:00");
+
+        ReservationTime reservationTime = jdbcReservationTimeRepository.save(ReservationTime.createNew(time));
+
+        jdbcReservationRepository.save(Reservation.createNew("쿠다", date, reservationTime));
+
         int beforeSize = jdbcReservationRepository.findAll().size();
 
         Reservation reservation = jdbcReservationRepository.findAll()

@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalTime;
 import java.util.Optional;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import roomescape.time.entity.ReservationTime;
 import roomescape.time.repository.JdbcReservationTimeRepository;
@@ -24,14 +26,16 @@ class JdbcReservationTimeRepositoryTest {
     @BeforeEach
     void setup() {
         jdbcReservationTimeRepository = new JdbcReservationTimeRepository(jdbcTemplate);
-        ReservationTime nonIdReservationTime = ReservationTime.createNew(LocalTime.parse("10:00"));
-        jdbcReservationTimeRepository.save(nonIdReservationTime);
     }
 
     @Test
     @DisplayName("예약 시간 전체 조회")
     void reservationTime_findAll_test() {
         //given & when
+        LocalTime time = LocalTime.parse("11:00");
+        ReservationTime nonIdReservationTime = ReservationTime.createNew(time);
+        jdbcReservationTimeRepository.save(nonIdReservationTime);
+
         Optional<ReservationTime> reservationTime = jdbcReservationTimeRepository.findAll()
                 .stream()
                 .findFirst();
@@ -59,15 +63,28 @@ class JdbcReservationTimeRepositoryTest {
     }
 
     @Test
+    @DisplayName("예약 시간 저장")
+    void save_duplicate_test() {
+        //given
+        LocalTime time = LocalTime.parse("11:00");
+
+        //when
+        jdbcReservationTimeRepository.save(ReservationTime.createNew(time));
+
+        //then
+        assertThrows(DuplicateKeyException.class, () -> {
+            jdbcReservationTimeRepository.save(ReservationTime.createNew(time));
+        });
+    }
+
+    @Test
     @DisplayName("예약 시간 삭제")
     void reservationTime_delete_test() {
         // given
+        LocalTime time = LocalTime.parse("11:00");
+        ReservationTime nonIdReservationTime = ReservationTime.createNew(time);
+        ReservationTime reservationTime = jdbcReservationTimeRepository.save(nonIdReservationTime);
         int beforeSize = jdbcReservationTimeRepository.findAll().size();
-
-        ReservationTime reservationTime = jdbcReservationTimeRepository.findAll()
-                .stream()
-                .findFirst()
-                .orElseThrow();
 
         // when
         jdbcReservationTimeRepository.deleteById(reservationTime.getId());

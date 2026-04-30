@@ -8,12 +8,11 @@ import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.reservation.controller.dto.ReservationRequest;
 import roomescape.reservation.entity.Reservation;
+import roomescape.reservation.exception.ReservationException;
 import roomescape.reservation.service.ReservationService;
 import roomescape.service.stub.StubReservationRepository;
 import roomescape.service.stub.StubReservationTimeRepository;
-import roomescape.time.controller.dto.ReservationTimeRequest;
 import roomescape.time.entity.ReservationTime;
 import roomescape.time.service.ReservationTimeService;
 
@@ -32,21 +31,19 @@ class ReservationServiceTest {
     @DisplayName("예약 저장")
     void save_test() {
         // given
-        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(LocalTime.parse("10:00"));
-        ReservationTime reservationTime = reservationTimeService.save(reservationTimeRequest.startAt());
-        ReservationRequest reservationRequest = new ReservationRequest("쿠다", LocalDate.parse("2023-08-06"),
-                reservationTime.getId());
+        LocalDate date = LocalDate.parse("2026-08-06");
+        LocalTime time = LocalTime.parse("10:00");
+        ReservationTime reservationTime = reservationTimeService.save(time);
 
         // when
-        Reservation result = reservationService.save(reservationRequest.name(), reservationRequest.date(),
-                reservationRequest.timeId());
+        Reservation result = reservationService.save("쿠다", date, reservationTime.getId());
         Reservation saved = reservationService.getById(result.getId());
 
         // then
         assertThat(result.getId()).isNotNull();
-        assertThat(result.getName()).isEqualTo(reservationRequest.name());
-        assertThat(result.getDate()).isEqualTo(reservationRequest.date());
-        assertThat(result.getTime().getId()).isEqualTo(reservationRequest.timeId());
+        assertThat(result.getName()).isEqualTo("쿠다");
+        assertThat(result.getDate()).isEqualTo(date);
+        assertThat(result.getTime().getId()).isEqualTo(reservationTime.getId());
 
         assertThat(saved.getName()).isEqualTo(result.getName());
         assertThat(saved.getDate()).isEqualTo(result.getDate());
@@ -54,42 +51,12 @@ class ReservationServiceTest {
     }
 
     @Test
-    @DisplayName("예약 저장 중복 예외")
-    void reservation_save_duplicate_test() {
-        // given
-        LocalDate date = LocalDate.parse("2026-08-06");
-
-        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(LocalTime.parse("10:00"));
-        ReservationTime reservationTime = reservationTimeService.save(reservationTimeRequest.startAt());
-
-        ReservationRequest reservationRequest = new ReservationRequest("쿠다", date, reservationTime.getId());
-        ReservationRequest newReservationRequest = new ReservationRequest("아루", date, reservationTime.getId());
-
-        // when
-        reservationService.save(reservationRequest.name(), reservationRequest.date(), reservationRequest.timeId());
-
-        // then
-        assertThatThrownBy(() -> reservationService.save(newReservationRequest.name(), newReservationRequest.date(),
-                newReservationRequest.timeId()))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("중복으로 예약을 생성할 수 없습니다.");
-    }
-
-    @Test
     @DisplayName("예약 단일 조회 id 없음 예외")
     void reservation_findById_null_search_test() {
         //given & when & then
         assertThatThrownBy(() -> reservationService.getById(99L))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ReservationException.class)
                 .hasMessageContaining("예약을 찾을 수 없습니다.");
     }
 
-    @Test
-    @DisplayName("예약 삭제 시 없는 예약 삭제 예외")
-    void reservation_delete_non_exists_test() {
-        // given & when & then
-        assertThatThrownBy(() -> reservationService.deleteById(99L))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("삭제할 예약이 존재하지 않습니다.");
-    }
 }

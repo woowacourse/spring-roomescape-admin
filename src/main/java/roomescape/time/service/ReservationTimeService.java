@@ -24,7 +24,7 @@ public class ReservationTimeService {
 
     public ReservationTime getById(long id) {
         return reservationTimeRepository.findById(id)
-                .orElseThrow(() -> new ReservationTimeException(HttpStatus.CONFLICT.value(), "찾는 예약 시간이 없습니다."));
+                .orElseThrow(() -> new ReservationTimeException(HttpStatus.NOT_FOUND.value(), "찾는 예약 시간이 없습니다."));
     }
 
     public List<ReservationTime> findAll() {

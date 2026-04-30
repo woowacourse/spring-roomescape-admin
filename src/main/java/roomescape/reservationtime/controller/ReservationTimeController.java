@@ -2,6 +2,7 @@ package roomescape.reservationtime.controller;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,17 +19,19 @@ public class ReservationTimeController {
     private final ReservationTimeService reservationTimeService;
 
     @GetMapping("/times")
-    public List<ReservationTimeResponse> findAllReservationTimes() {
-        return reservationTimeService.findAllReservationTimes();
+    public ResponseEntity<List<ReservationTimeResponse>> findAllReservationTimes() {
+        List<ReservationTimeResponse> reservationTimeResponses = reservationTimeService.findAllReservationTimes();
+        return ResponseEntity.ok(reservationTimeResponses);
     }
 
     @PostMapping("/times")
-    public ReservationTimeResponse saveReservationTime(@RequestBody ReservationTimeRequest reservationTimeRequest) {
-        return reservationTimeService.saveReservationTime(reservationTimeRequest);
+    public ResponseEntity<ReservationTimeResponse> saveReservationTime(@RequestBody ReservationTimeRequest reservationTimeRequest) {
+        ReservationTimeResponse reservationTimeResponse = reservationTimeService.saveReservationTime(reservationTimeRequest);
+        return ResponseEntity.ok(reservationTimeResponse);
     }
 
     @DeleteMapping("/times/{id}")
-    public int deleteById(@PathVariable Long id) {
-        return reservationTimeService.deleteById(id);
+    public ResponseEntity<Integer> deleteById(@PathVariable Long id) {
+        return ResponseEntity.ok(reservationTimeService.deleteById(id));
     }
 }

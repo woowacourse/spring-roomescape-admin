@@ -25,10 +25,6 @@ public class ReservationTimeService {
     }
 
     public ReservationTime add(ReservationTimeRequest request) {
-        if (request.startAt() == null || request.startAt().isBlank()) {
-            throw new IllegalArgumentException("시작 시간은 필수 입력값입니다.");
-        }
-
         LocalTime startAt;
         try {
             startAt = LocalTime.parse(request.startAt());
@@ -43,7 +39,7 @@ public class ReservationTimeService {
     public void deleteById(long id) {
         reservationRepository.findByReservationTimeId(id)
             .ifPresent(reservation -> {
-                throw new IllegalArgumentException("해당 시간을 사용하는 예약이 존재합니다. timeId: " + reservation.id());
+                throw new IllegalArgumentException("해당 시간을 사용하는 예약이 존재합니다. timeId: " + id);
             });
         repository.deleteById(id);
     }

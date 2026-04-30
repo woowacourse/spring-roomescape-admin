@@ -1,30 +1,36 @@
 package roomescape.repository;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import javax.sql.DataSource;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Import(JdbcReservationRepository.class)
+@Import({JdbcReservationRepository.class, JdbcReservationTimeRepository.class})
 @JdbcTest
 class JdbcReservationRepositoryTest {
     private final ReservationRepository repository;
+    private final ReservationTimeRepository timeRepository;
 
     @Autowired
     public JdbcReservationRepositoryTest(DataSource dataSource) {
         this.repository = new JdbcReservationRepository(dataSource);
+        this.timeRepository = new JdbcReservationTimeRepository(dataSource);
     }
 
     @Test
     void 데이터_생성_테스트() {
         // given
-        Reservation reservation = new Reservation(null, "브라운", "2026-04-28", "20:43");
+        ReservationTime time = timeRepository.createReservationTime(new ReservationTime(null, LocalTime.parse("20:43")));
+        Reservation reservation = new Reservation(null, "브라운", "2026-04-28", time);
 
         // when
         Long id = repository.createReservation(reservation);
@@ -40,8 +46,10 @@ class JdbcReservationRepositoryTest {
     @Test
     void 데이터_전체_조회_테스트() {
         // given
-        repository.createReservation(new Reservation(null, "브라운", "2026-04-28", "20:43"));
-        repository.createReservation(new Reservation(null, "제임스", "2026-04-29", "10:00"));
+        ReservationTime time1 = timeRepository.createReservationTime(new ReservationTime(null, LocalTime.parse("13:43")));
+        ReservationTime time2 = timeRepository.createReservationTime(new ReservationTime(null, LocalTime.parse("10:00")));
+        repository.createReservation(new Reservation(null, "브라운", "2026-04-28", time1));
+        repository.createReservation(new Reservation(null, "제임스", "2026-04-29", time2));
 
         // when
         List<Reservation> reservations = repository.findAll();
@@ -57,7 +65,8 @@ class JdbcReservationRepositoryTest {
     @Test
     void 데이터_삭제_테스트() {
         // given
-        Long id = repository.createReservation(new Reservation(null, "브라운", "2026-04-28", "20:43"));
+        ReservationTime time = timeRepository.createReservationTime(new ReservationTime(null, LocalTime.parse("20:40")));
+        Long id = repository.createReservation(new Reservation(null, "브라운", "2026-04-28", time));
         assertThat(repository.findAll()).hasSize(1);
 
         // when

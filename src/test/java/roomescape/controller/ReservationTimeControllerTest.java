@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import roomescape.dto.TimeRequest;
 import roomescape.dto.TimeResponse;
+import roomescape.repository.ReservationTimeRepository;
 
 public class ReservationTimeControllerTest {
     ReservationTimeController reservationTimeController;
@@ -37,7 +38,8 @@ public class ReservationTimeControllerTest {
                 )
                 """);
 
-        reservationTimeController = new ReservationTimeController(jdbcTemplate);
+        ReservationTimeRepository reservationTimeRepository = new ReservationTimeRepository(jdbcTemplate);
+        reservationTimeController = new ReservationTimeController(reservationTimeRepository);
     }
 
     @Test
@@ -57,7 +59,7 @@ public class ReservationTimeControllerTest {
         reservationTimeController.create(new TimeRequest("10:00"));
         reservationTimeController.create(new TimeRequest("11:00"));
 
-        List<TimeResponse> timeResponses = reservationTimeController.findAllTime();
+        List<TimeResponse> timeResponses = reservationTimeController.findAll();
 
         assertThat(timeResponses).hasSize(2);
 
@@ -71,7 +73,7 @@ public class ReservationTimeControllerTest {
     @Test
     @DisplayName("아무 시간도 없는 상태에서 시간을 조회한다.")
     void findAllTimes_Before_Create() {
-        List<TimeResponse> times = reservationTimeController.findAllTime();
+        List<TimeResponse> times = reservationTimeController.findAll();
 
         assertThat(times).isEmpty();
     }
@@ -82,7 +84,7 @@ public class ReservationTimeControllerTest {
         reservationTimeController.create(new TimeRequest("10:00"));
         reservationTimeController.create(new TimeRequest("11:00"));
 
-        reservationTimeController.deleteTime(1L);
+        reservationTimeController.delete(1L);
 
         List<TimeResponse> times = reservationTimeController.findAll();
 

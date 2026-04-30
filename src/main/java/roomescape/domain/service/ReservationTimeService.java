@@ -7,7 +7,6 @@ import roomescape.domain.entity.ReservationTime;
 import roomescape.domain.dto.ReservationTimeRequest;
 import roomescape.domain.dto.ReservationTimeResponse;
 import roomescape.domain.repository.ReservationTimeRepository;
-import roomescape.util.DateAndTimeConverter;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ public class ReservationTimeService {
     public ReservationTimeResponse save(ReservationTimeRequest reservationTimeRequest) {
         ReservationTime reservationTime = ReservationTime.create(
                 null,
-                DateAndTimeConverter.parseToTime(reservationTimeRequest.startAt())
+                reservationTimeRequest.startAt()
         );
 
         return new ReservationTimeResponse(
@@ -34,7 +33,7 @@ public class ReservationTimeService {
                 .stream()
                 .map(reservationTime -> new ReservationTimeResponse(
                         reservationTime.getId(),
-                        DateAndTimeConverter.formatTime(reservationTime.getStartAt()))
+                        reservationTime.getStartAt())
                 ).toList();
     }
 

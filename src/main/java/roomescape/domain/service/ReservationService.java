@@ -10,7 +10,6 @@ import roomescape.domain.entity.Reservation;
 import roomescape.domain.dto.ReservationRequest;
 import roomescape.domain.dto.ReservationResponse;
 import roomescape.domain.repository.ReservationTimeRepository;
-import roomescape.util.DateAndTimeConverter;
 
 import java.util.List;
 
@@ -25,20 +24,20 @@ public class ReservationService {
         Reservation reservation = Reservation.create(
                 null,
                 reservationRequest.name(),
-                DateAndTimeConverter.parseToDate(reservationRequest.date()),
+                reservationRequest.date(),
                 reservationTimeRepository.getById(reservationRequest.timeId())
         );
 
         ReservationTime reservationTime = reservation.getTime();
         ReservationTimeResponse reservationTimeResponse = new ReservationTimeResponse(
                 reservationTime.getId(),
-                DateAndTimeConverter.formatTime(reservationTime.getStartAt())
+                reservationTime.getStartAt()
         );
 
         return new ReservationResponse(
                 reservationRepository.save(reservation),
                 reservation.getName(),
-                DateAndTimeConverter.formatDate(reservation.getDate()),
+                reservation.getDate(),
                 reservationTimeResponse
         );
     }
@@ -51,13 +50,13 @@ public class ReservationService {
                     ReservationTime reservationTime = reservation.getTime();
                     ReservationTimeResponse reservationTimeResponse = new ReservationTimeResponse(
                             reservationTime.getId(),
-                            DateAndTimeConverter.formatTime(reservationTime.getStartAt())
+                            reservationTime.getStartAt()
                     );
 
                     return new ReservationResponse(
                             reservation.getId(),
                             reservation.getName(),
-                            DateAndTimeConverter.formatDate(reservation.getDate()),
+                            reservation.getDate(),
                             reservationTimeResponse
                     );
                 })

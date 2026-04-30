@@ -8,9 +8,10 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.entity.Reservation;
 import roomescape.domain.entity.ReservationTime;
-import roomescape.util.DateAndTimeConverter;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
@@ -22,13 +23,13 @@ public class ReservationRepository {
             (resultSet, rowNumber) -> {
                 ReservationTime reservationTime = ReservationTime.create(
                         resultSet.getLong("time_id"),
-                        DateAndTimeConverter.parseToTime(resultSet.getString("time_value"))
+                        LocalTime.parse(resultSet.getString("time_value"))
                 );
 
                 return Reservation.create(
                         resultSet.getLong("reservation_id"),
                         resultSet.getString("name"),
-                        DateAndTimeConverter.parseToDate(resultSet.getString("date")),
+                        LocalDate.parse(resultSet.getString("date")),
                         reservationTime);
             };
 
@@ -40,7 +41,7 @@ public class ReservationRepository {
             PreparedStatement preparedStatement = connection.prepareStatement(insertSql, new String[]{"id"});
 
             preparedStatement.setString(1, reservation.getName());
-            preparedStatement.setString(2, DateAndTimeConverter.formatDate(reservation.getDate()));
+            preparedStatement.setString(2, String.valueOf(reservation.getDate()));
             preparedStatement.setLong(3, reservation.getTime().getId());
 
             return preparedStatement;

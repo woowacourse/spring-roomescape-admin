@@ -7,9 +7,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.entity.ReservationTime;
-import roomescape.util.DateAndTimeConverter;
 
 import java.sql.PreparedStatement;
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
@@ -20,7 +20,7 @@ public class ReservationTimeRepository {
     private final RowMapper<ReservationTime> reservationTimeRowMapper =
             (resultSet, rowNumber) -> ReservationTime.create(
                     resultSet.getLong("id"),
-                    DateAndTimeConverter.parseToTime(resultSet.getString("start_at"))
+                    LocalTime.parse(resultSet.getString("start_at"))
             );
 
     public Long save(ReservationTime reservationTime) {
@@ -29,7 +29,7 @@ public class ReservationTimeRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(insertSql, new String[]{"id"});
-            preparedStatement.setString(1, DateAndTimeConverter.formatTime(reservationTime.getStartAt()));
+            preparedStatement.setString(1, String.valueOf(reservationTime.getStartAt()));
 
             return preparedStatement;
         }, keyHolder);

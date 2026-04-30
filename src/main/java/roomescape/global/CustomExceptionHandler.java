@@ -6,6 +6,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.format.DateTimeParseException;
+
 @RestControllerAdvice
 public class CustomExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -16,6 +18,13 @@ public class CustomExceptionHandler {
                 .getDefaultMessage();
 
         CustomErrorResponse errorResponse = new CustomErrorResponse(e.getStatusCode(), errorMessage);
+        return ResponseEntity.badRequest()
+                .body(errorResponse);
+    }
+
+    @ExceptionHandler(DateTimeParseException.class)
+    public ResponseEntity<CustomErrorResponse> handleDateTimeParseException() {
+        CustomErrorResponse errorResponse = new CustomErrorResponse(HttpStatus.BAD_REQUEST, "날짜 및 시간 형식이 잘못되었습니다.");
         return ResponseEntity.badRequest()
                 .body(errorResponse);
     }

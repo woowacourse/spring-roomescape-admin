@@ -9,8 +9,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.entity.Reservation;
-import roomescape.entity.ReservationTime;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationRepository {
@@ -46,19 +46,19 @@ public class ReservationRepository {
         );
 
 
-    public Long save(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         final String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, reservation.getName());
-            ps.setDate(2, Date.valueOf(reservation.getDate()));
-            ps.setLong(3, reservation.getTime().getId());
+            ps.setString(1, reservation.name());
+            ps.setDate(2, Date.valueOf(reservation.date()));
+            ps.setLong(3, reservation.getTimeId());
             return ps;
         }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+        return reservation.withId(keyHolder.getKey().longValue());
     }
 
     public void deleteById(long reservationId) {

@@ -68,7 +68,6 @@ public class AdminController {
         Reservation reservation = jdbcTemplate.queryForObject(
                 sql,
                 reservationRowMapper,
-                Reservation.class,
                 id
         );
 
@@ -109,4 +108,31 @@ public class AdminController {
         return ResponseEntity.ok(newReservationTime);
     }
 
+    @GetMapping("/times")
+    public ResponseEntity<List<ReservationTime>> readTimeAll() {
+        String sql = "SELECT start_at FROM reservation_time";
+
+        List<ReservationTime> reservationTimes = jdbcTemplate.query(
+                sql,
+                (resultSet, rowNum) -> new ReservationTime(
+                        resultSet.getString("start_at")
+                ));
+
+        return ResponseEntity.ok(reservationTimes);
+    }
+
+    @GetMapping("/times/{id}")
+    public ResponseEntity<ReservationTime> readTime(@PathVariable Long id) {
+        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+
+        ReservationTime reservationTime = jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) -> new ReservationTime(
+                        resultSet.getLong("id"),
+                        resultSet.getString("start_at")
+                ),
+                id);
+
+        return ResponseEntity.ok(reservationTime);
+    }
 }

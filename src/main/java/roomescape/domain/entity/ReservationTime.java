@@ -19,4 +19,8 @@ public class ReservationTime {
                 .startAt(startAt)
                 .build();
     }
+
+    public boolean isSameTime(LocalTime time){
+        return startAt.equals(time);
+    }
 }

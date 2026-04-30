@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import roomescape.reservationtime.domain.ReservationTime;
 import roomescape.reservationtime.dto.ReservationTimeRequest;
+import roomescape.reservationtime.dto.ReservationTimeResponse;
 import roomescape.reservationtime.mapper.ReservationTimeMapper;
 import roomescape.reservationtime.repository.ReservationTimeRepository;
 
@@ -13,13 +14,18 @@ import roomescape.reservationtime.repository.ReservationTimeRepository;
 public class ReservationTimeService {
     private final ReservationTimeRepository reservationTimeRepository;
 
-    public List<ReservationTime> findAllReservationTimes() {
-        return reservationTimeRepository.findAllReservationTimes();
+    public List<ReservationTimeResponse> findAllReservationTimes() {
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAllReservationTimes();
+
+        return reservationTimes.stream()
+                .map(ReservationTimeMapper::toResponse)
+                .toList();
     }
 
-    public ReservationTime saveReservationTime(ReservationTimeRequest reservationTimeRequest) {
+    public ReservationTimeResponse saveReservationTime(ReservationTimeRequest reservationTimeRequest) {
         ReservationTime reservationTime = ReservationTimeMapper.toEntity(reservationTimeRequest);
-        return reservationTimeRepository.saveReservationTime(reservationTime);
+        ReservationTime createdReservationTime = reservationTimeRepository.saveReservationTime(reservationTime);
+        return ReservationTimeMapper.toResponse(createdReservationTime);
     }
 
     public int deleteById(Long id) {

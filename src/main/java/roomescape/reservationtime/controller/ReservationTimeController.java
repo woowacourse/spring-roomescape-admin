@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.reservationtime.domain.ReservationTime;
 import roomescape.reservationtime.dto.ReservationTimeRequest;
+import roomescape.reservationtime.dto.ReservationTimeResponse;
 import roomescape.reservationtime.service.ReservationTimeService;
 
 @RestController
@@ -18,12 +18,12 @@ public class ReservationTimeController {
     private final ReservationTimeService reservationTimeService;
 
     @GetMapping("/times")
-    public List<ReservationTime> findAllReservationTimes() {
+    public List<ReservationTimeResponse> findAllReservationTimes() {
         return reservationTimeService.findAllReservationTimes();
     }
 
     @PostMapping("/times")
-    public ReservationTime saveReservationTime(@RequestBody ReservationTimeRequest reservationTimeRequest) {
+    public ReservationTimeResponse saveReservationTime(@RequestBody ReservationTimeRequest reservationTimeRequest) {
         return reservationTimeService.saveReservationTime(reservationTimeRequest);
     }
 

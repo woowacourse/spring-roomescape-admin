@@ -17,8 +17,12 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationTimeRepository reservationTimeRepository;
 
-    public List<Reservation> findAllReservations() {
-        return reservationRepository.findAllReservations();
+    public List<ReservationResponse> findAllReservations() {
+        List<Reservation> reservations = reservationRepository.findAllReservations();
+
+        return reservations.stream()
+                .map(ReservationMapper::toResponse)
+                .toList();
     }
 
     public ReservationResponse saveReservation(ReservationRequest reservationRequest) {

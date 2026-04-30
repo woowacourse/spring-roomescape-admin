@@ -37,19 +37,12 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
-    public Reservation save(String name, LocalDate date, Long timeId) {
-        Long id = jdbcInsert.executeAndReturnKey(Map.of(
+    public Long save(String name, LocalDate date, Long timeId) {
+        return jdbcInsert.executeAndReturnKey(Map.of(
                 "name", name,
                 "date", date,
                 "time_id", timeId
         )).longValue();
-        String sql = """
-                SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value
-                FROM reservation AS r
-                INNER JOIN reservation_time AS t ON r.time_id = t.id
-                WHERE r.id = ?
-                """;
-        return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
     public void delete(Long id) {

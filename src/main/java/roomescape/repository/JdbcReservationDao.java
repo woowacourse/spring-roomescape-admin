@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import java.util.List;
 import java.util.Map;

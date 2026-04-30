@@ -4,6 +4,9 @@
 
 - [x] ResponseEntity
 - [ ] ResponseEntity.build()?
+
+### 2단계: 데이터베이스 연동
+
 - [ ] 마틴 파울러의 '실용적 예외' 허용
 - [ ] CQS 원칙
 - [ ] implementation

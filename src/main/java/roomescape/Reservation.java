@@ -4,19 +4,20 @@ public class Reservation {
     private Long id;
     private String name;
     private String date;
-    private String time;
+    private Long timeId;
+    private ReservationTime time;
 
     public Reservation() {
 
     }
 
-    public Reservation(String name, String date, String time) {
+    public Reservation(String name, String date, ReservationTime time) {
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public Reservation(Long id, String name, String date, String time) {
+    public Reservation(Long id, String name, String date, ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -39,8 +40,15 @@ public class Reservation {
         return date;
     }
 
-    public String getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 
+    public void setTimeId(Long timeId) {
+        this.timeId = timeId;
+    }
+
+    public Long getTimeId() {
+        return timeId;
+    }
 }

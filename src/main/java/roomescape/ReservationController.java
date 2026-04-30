@@ -30,19 +30,35 @@ public class ReservationController {
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> read() {
         List<Reservation> reservations = jdbcTemplate.query(
-                "SELECT id, name, date, time FROM reservation",
+                "SELECT r.id AS reservation_id, r.name, r.date, " +
+                        "t.id AS time_id, t.start_at AS time_value " +
+                        "FROM reservation r " +
+                        "INNER JOIN reservation_time t ON r.time_id = t.id",
                 (rs, rowNum) -> new Reservation(
                         rs.getLong("id"),
                         rs.getString("name"),
                         rs.getString("date"),
-                        rs.getString("time")
+                        new ReservationTime(
+                                rs.getLong("time_id"),
+                                rs.getString("time_value")
+                        )
                 )
         );
+
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> create(@RequestBody Reservation reservation) {
+        ReservationTime time = jdbcTemplate.queryForObject(
+                "SELECT id, start_at FROM reservation_time WHERE id = ?",
+                (rs, rowNum) -> new ReservationTime(
+                        rs.getLong("id"),
+                        rs.getString("start_at")
+                ),
+                reservation.getTimeId()
+        );
+
         SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
@@ -50,11 +66,11 @@ public class ReservationController {
         Map<String, Object> params = new HashMap<>();
         params.put("name", reservation.getName());
         params.put("date", reservation.getDate());
-        params.put("time", reservation.getTime());
+        params.put("time_id", reservation.getTimeId());
 
         Long id = insert.executeAndReturnKey(params).longValue();
 
-        return ResponseEntity.ok(new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime()));
+        return ResponseEntity.ok(new Reservation(id, reservation.getName(), reservation.getDate(), time));
     }
 
     @DeleteMapping("/reservations/{id}")

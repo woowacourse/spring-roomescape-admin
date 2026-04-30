@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -14,7 +13,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
-import roomescape.dto.ReservationTimeResponse;
 
 @Repository
 public class ReservationTimeDao {
@@ -31,7 +29,7 @@ public class ReservationTimeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ReservationTimeResponse insert(ReservationTimeRequest request) {
+    public ReservationTime insert(ReservationTimeRequest request) {
         String sql = "insert into reservation_time (start_at) values (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -48,16 +46,13 @@ public class ReservationTimeDao {
         }, keyHolder);
 
         long generatedId = keyHolder.getKey().longValue();
-        return ReservationTimeResponse.from(new ReservationTime(generatedId, request.startAt()));
+        return new ReservationTime(generatedId, request.startAt());
     }
 
-    public List<ReservationTimeResponse> findAllReservationTimes() {
+    public List<ReservationTime> select() {
         String sql = "select * from reservation_time";
         try {
-            List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, rowMapper);
-            return reservationTimes.stream()
-                    .map(ReservationTimeResponse::from)
-                    .collect(Collectors.toList());
+            return jdbcTemplate.query(sql, rowMapper);
         } catch (EmptyResultDataAccessException exception) {
             return null;
         }

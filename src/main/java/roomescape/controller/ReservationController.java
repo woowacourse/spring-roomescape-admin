@@ -1,9 +1,6 @@
 package roomescape.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -16,28 +13,32 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import roomescape.domain.Reservation;
 import roomescape.domain.User;
+import roomescape.domain.repository.ReservationRepository;
 import roomescape.dto.ReservationRequestDTO;
 import roomescape.dto.ReservationResponseDTO;
 
 @Controller
 public class ReservationController {
-    private final List<Reservation> reservations = new ArrayList<>();
-    private final AtomicLong index = new AtomicLong(1);
+    private final ReservationRepository repository;
+
+    public ReservationController(ReservationRepository repository) {
+        this.repository = repository;
+    }
 
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/reservations")
     public ReservationResponseDTO create(@RequestBody ReservationRequestDTO requestDTO) {
-        Long id = index.getAndIncrement();
-        Reservation newReservation = new Reservation(id, new User(index.getAndIncrement(), requestDTO.getName()), requestDTO.getDate(), requestDTO.getTime());
-        reservations.add(newReservation);
-        return ReservationResponseDTO.from(newReservation);
+        Reservation reservation = new Reservation(null, new User(null, requestDTO.getName()), requestDTO.getDate(), requestDTO.getTime());
+        Long id = repository.save(reservation);
+        return ReservationResponseDTO.from(
+                new Reservation(id, reservation.getUser(), reservation.getDate(), reservation.getTime()));
     }
 
     @ResponseBody
     @GetMapping("/reservations")
     public List<ReservationResponseDTO> read() {
-        return reservations.stream()
+        return repository.findAll().stream()
                 .map(ReservationResponseDTO::from)
                 .collect(Collectors.toList());
     }
@@ -46,11 +47,6 @@ public class ReservationController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/reservations/{id}")
     public void delete(@PathVariable Long id) {
-        Reservation reservationToDelete = reservations.stream()
-                .filter(reservation -> Objects.equals(reservation.getId(), id))
-                .findFirst()
-                .orElseThrow(RuntimeException::new);
-
-        reservations.remove(reservationToDelete);
+        repository.delete(id);
     }
 }

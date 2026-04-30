@@ -3,9 +3,11 @@ package roomescape.domain.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.domain.entity.Reservation;
 import roomescape.domain.entity.ReservationTime;
 import roomescape.domain.dto.ReservationTimeRequest;
 import roomescape.domain.dto.ReservationTimeResponse;
+import roomescape.domain.repository.ReservationRepository;
 import roomescape.domain.repository.ReservationTimeRepository;
 
 import java.util.List;
@@ -14,6 +16,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ReservationTimeService {
+    private final ReservationRepository reservationRepository;
     private final ReservationTimeRepository reservationTimeRepository;
 
     @Transactional

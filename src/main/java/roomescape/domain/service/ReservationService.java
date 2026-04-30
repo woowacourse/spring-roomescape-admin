@@ -12,6 +12,7 @@ import roomescape.domain.dto.ReservationResponse;
 import roomescape.domain.repository.ReservationTimeRepository;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,13 @@ public class ReservationService {
 
     @Transactional
     public ReservationResponse save(ReservationRequest reservationRequest) {
+        List<Reservation> reservations = reservationRepository.getAll();
+        for (Reservation reservation : reservations) {
+            if(reservation.getDate().equals(reservationRequest.date()) && Objects.equals(reservation.getTime().getId(), reservationRequest.timeId())){
+                throw new IllegalArgumentException("예약이 마감된 일시입니다.");
+            }
+        }
+
         Reservation reservation = Reservation.create(
                 null,
                 reservationRequest.name(),

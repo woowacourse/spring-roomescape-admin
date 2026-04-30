@@ -28,8 +28,8 @@ public class Reservation {
         return name;
     }
 
-    public String getDate() {
-        return date.toString();
+    public LocalDate getDate() {
+        return date;
     }
 
     public ReservationTime getTime() {

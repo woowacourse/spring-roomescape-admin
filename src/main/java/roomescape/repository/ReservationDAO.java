@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -57,7 +58,7 @@ public class ReservationDAO {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate());
+            ps.setDate(2, Date.valueOf(reservation.getDate()));
             ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);

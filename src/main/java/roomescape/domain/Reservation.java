@@ -9,7 +9,7 @@ public class Reservation {
     private final Long id;
     private final Name name;
     private final LocalDate date;
-    private final LocalTime time;
+    private final ReservationTime time;
 
     public Reservation() {
         this.id = null;
@@ -18,27 +18,17 @@ public class Reservation {
         this.time = null;
     }
 
-    public Reservation(Long id, String name, String date, String time) {
+    public Reservation(Long id, String name, String date, ReservationTime time) {
         this.id = id;
         this.name = new Name(name);
         this.date = translateDate(date);
-        this.time = translateTime(time);
+        this.time = time;
     }
 
     private LocalDate translateDate(String date) {
         // TODO : 검증 로직
 
         return LocalDate.parse(date);
-    }
-
-    private LocalTime translateTime(String time) {
-        // TODO : 검증 로직
-
-        return LocalTime.parse(time);
-    }
-
-    public boolean isEqualId(Long other) {
-        return other == this.id;
     }
 
     public Long getId() {
@@ -53,7 +43,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 }

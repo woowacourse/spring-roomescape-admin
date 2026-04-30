@@ -10,8 +10,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class ListReservationTimeRepository implements ReservationTimeRepository {
-    private static AtomicLong idCursor = new AtomicLong(1);
-    private static List<ReservationTime> reservationTimes = new ArrayList<>();
+    private static final AtomicLong idCursor = new AtomicLong(1);
+    private static final List<ReservationTime> reservationTimes = new ArrayList<>();
 
     @Override
     public ReservationTime save(ReservationTime reservationTime) {

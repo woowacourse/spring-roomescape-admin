@@ -9,8 +9,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class ListReservationRepository implements ReservationRepository {
-    private static AtomicLong idCursor = new AtomicLong(1);
-    private static List<Reservation> reservations = new ArrayList<>();
+    private static final AtomicLong idCursor = new AtomicLong(1);
+    private static final List<Reservation> reservations = new ArrayList<>();
 
     @Override
     public Reservation save(Reservation reservation) {

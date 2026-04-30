@@ -37,8 +37,15 @@ public class ReservationService {
     }
 
     public ReservationResponseDTO saveReservation(ReservationCreateRequestDTO requestDTO) {
-        Reservation reservation = new Reservation(requestDTO.name(), requestDTO.date(), requestDTO.time());
+        Reservation reservation = createReservation(requestDTO);
         return convertReservationToDTO(reservationRepository.save(reservation));
+    }
+
+    private Reservation createReservation(ReservationCreateRequestDTO requestDTO) {
+        if (requestDTO.timeId() != null) {
+            return new Reservation(requestDTO.name(), requestDTO.date(), requestDTO.timeId());
+        }
+        return new Reservation(requestDTO.name(), requestDTO.date(), requestDTO.time());
     }
 
     public void deleteReservationById(Long id) {

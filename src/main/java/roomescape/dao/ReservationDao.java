@@ -22,15 +22,17 @@ public class ReservationDao implements ReservationRepository {
 
     @Override
     public List<Reservation> selectReservations() {
-        final String sql = "SELECT\n"
-                + "    r.id as reservation_id,\n"
-                + "    r.name,\n"
-                + "    r.date,\n"
-                + "    t.id as time_id,\n"
-                + "    t.start_at as time_value\n"
-                + "FROM reservation as r\n"
-                + "INNER JOIN reservation_time as t\n"
-                + "  ON r.time_id = t.id";
+        final String sql = """
+            SELECT
+                r.id as reservation_id,
+                r.name,
+                r.date,
+                t.id as time_id,
+                t.start_at as time_value
+            FROM reservation r
+            INNER JOIN reservation_time t
+            on r.time_id = t.id;
+            """;
         return jdbcTemplate.query(sql,
                 (resultSet, rowNum) -> {
             ReservationTime time = new ReservationTime(

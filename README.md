@@ -34,6 +34,15 @@
 | `id` | `Long`   | 사용자 ID |
 | `userName` | `String` | 사용자 이름 |
 
+#### ReservationTime
+
+예약 시간 정보를 관리한다.
+
+| 필드       | 타입        | 설명 |
+|----------|-----------|------|
+| `id`     | `Long`    | 시간 ID |
+| `startAt` | `LocalTime` | 시작 시간 |
+
 ---
 
 ### Controller
@@ -67,7 +76,10 @@ Content-Type: application/json
         "id": 1,
         "name": "브라운",
         "date": "2023-08-05",
-        "time": "15:40"
+        "time": {
+            "id": 1,
+            "startAt": "10:00"
+        }
     }
 ]
 ```
@@ -85,7 +97,7 @@ Content-Type: application/json
 {
     "name": "브라운",
     "date": "2023-08-05",
-    "time": "15:40"
+    "timeId": 1
 }
 ```
 
@@ -99,13 +111,71 @@ Content-Type: application/json
     "id": 1,
     "name": "브라운",
     "date": "2023-08-05",
-    "time": "15:40"
+    "time": {
+        "id": 1,
+        "startAt": "10:00"
+    }
 }
 ```
 
 ---
 
 ### DELETE /reservations/{id} — 예약 삭제
+
+**응답 예시**
+
+```http
+HTTP/1.1 204 No Content
+```
+
+---
+
+### GET /times — 시간 전체 조회
+
+**응답 예시**
+
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+    {
+        "id": 1,
+        "startAt": "10:00"
+    }
+]
+```
+
+---
+
+### POST /times — 시간 추가
+
+**요청 예시**
+
+```http
+POST /times HTTP/1.1
+Content-Type: application/json
+
+{
+    "startAt": "10:00"
+}
+```
+
+**응답 예시**
+
+```http
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+    "id": 1,
+    "startAt": "10:00"
+}
+```
+
+---
+
+### DELETE /times/{id} — 시간 삭제
 
 **응답 예시**
 

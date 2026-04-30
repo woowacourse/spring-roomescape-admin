@@ -21,7 +21,8 @@ public class ReservationService {
     @Transactional
     public ReservationResponse create(Reservation reservation) {
         Long id = repository.create(reservation);
-        return ReservationResponse.from(reservation);
+        Reservation newReservation = new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+        return ReservationResponse.from(newReservation);
     }
 
     @Transactional

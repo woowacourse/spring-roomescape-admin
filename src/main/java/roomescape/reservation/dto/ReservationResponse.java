@@ -5,7 +5,7 @@ import roomescape.reservation.Reservation;
 import roomescape.reservationtime.dto.ReservationTimeResponse;
 
 
-public record ReservationResponse(Long id, String name, LocalDate date, ReservationTimeResponse time) {
+public record ReservationResponse(long id, String name, LocalDate date, ReservationTimeResponse time) {
     public static ReservationResponse from(Reservation reservation) {
         return new ReservationResponse(
                 reservation.id(),

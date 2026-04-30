@@ -82,15 +82,9 @@ public class ReservationDaoJdbcImplementation implements ReservationDao {
 
         ps.setString(1, entity.name());
         ps.setString(2, entity.date());
-        ps.setString(3, extractReservationTimeId(entity));
+        ps.setLong(3, entity.timeEntity().id());
 
         return ps;
-    }
-
-    private String extractReservationTimeId(ReservationEntity entity) {
-        return String.valueOf(
-                entity.timeEntity().id()
-        );
     }
 
     @Override

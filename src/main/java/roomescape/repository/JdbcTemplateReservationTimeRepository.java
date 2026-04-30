@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Primary
 public class JdbcTemplateReservationTimeRepository implements ReservationTimeRepository {
 
 

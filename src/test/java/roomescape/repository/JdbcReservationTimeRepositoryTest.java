@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
-import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 import javax.sql.DataSource;
@@ -30,7 +29,7 @@ class JdbcReservationTimeRepositoryTest {
         // then
         assertThat(reservationTime).isNotNull();
 
-        List<ReservationTime> all = reservationTime.findAll();
+        List<ReservationTime> all = repository.findAll();
         assertThat(all).hasSize(1);
         assertThat(all.get(0).getId()).isEqualTo(reservationTime.getId());
         assertThat(all.get(0).getStartAt()).isEqualTo(reservationTime.getStartAt());

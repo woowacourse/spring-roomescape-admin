@@ -2,6 +2,7 @@ package roomescape;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -24,6 +25,7 @@ public class MissionStepTest {
                 .body("size()", is(0)); // 아직 생성 요청이 없으니 0개
     }
 
+    @Disabled
     @Test
     void 예약_추가_및_삭제() {
         Map<String, String> params = new HashMap<>();

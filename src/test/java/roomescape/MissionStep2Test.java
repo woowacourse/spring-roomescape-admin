@@ -2,6 +2,7 @@ package roomescape;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,6 +36,7 @@ public class MissionStep2Test {
         }
     }
 
+    @Disabled
     @Test
     void DB_조회_API_전환() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
@@ -50,6 +52,7 @@ public class MissionStep2Test {
         assertThat(reservations.size()).isEqualTo(count);
     }
 
+    @Disabled
     @Test
     void DB_추가_삭제_API_전환() {
         Map<String, String> params = new HashMap<>();

@@ -8,50 +8,41 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import roomescape.reservationtime.TimeQueryingDAO;
 import roomescape.reservationtime.ReservationTime;
-import roomescape.reservationtime.TimeUpdatingDAO;
+import roomescape.service.ReservationTimeService;
 
 import java.util.List;
 
 @Controller
 public class ReservationTimeController {
 
-    private final TimeQueryingDAO timeQueryingDAO;
-    private final TimeUpdatingDAO timeUpdatingDAO;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(TimeQueryingDAO timeQueryingDAO, TimeUpdatingDAO timeUpdatingDAO) {
-        this.timeQueryingDAO = timeQueryingDAO;
-        this.timeUpdatingDAO = timeUpdatingDAO;
-    }
-
-    @PostMapping("/times")
-    public ResponseEntity<ReservationTime> create(@RequestBody ReservationTime reservationTime) {
-        Long generatedId = timeUpdatingDAO.insertWithKeyHolder(reservationTime);
-        ReservationTime newReservationTime = timeQueryingDAO.findReservationTimeById(generatedId);
-        return ResponseEntity.ok().body(newReservationTime);
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTime>> read() {
-        List<ReservationTime> reservationTimes = timeQueryingDAO.findAllReservationTime();
+        List<ReservationTime> reservationTimes = reservationTimeService.read();
         return ResponseEntity.ok().body(reservationTimes);
+    }
+
+    @PostMapping("/times")
+    public ResponseEntity<ReservationTime> create(@RequestBody ReservationTime reservationTime) {
+        ReservationTime newReservationTime = reservationTimeService.create(reservationTime);
+        return ResponseEntity.ok().body(newReservationTime);
     }
 
     @PutMapping("/times/{id}")
     public ResponseEntity<Void> update(@RequestBody ReservationTime newReservationTime, @PathVariable Long id) {
-        timeUpdatingDAO.save(id, newReservationTime);
+        reservationTimeService.update(newReservationTime, id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/times/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        int delete = timeUpdatingDAO.delete(id);
-
-        if (delete == 0) {
-            throw new RuntimeException("삭제하려는 예약 시간을 찾을 수 없습니다.");
-        }
-
+        reservationTimeService.delete(id);
         return ResponseEntity.ok().build();
     }
 }

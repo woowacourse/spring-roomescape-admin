@@ -8,52 +8,42 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import roomescape.reservation.QueryingDAO;
 import roomescape.reservation.Reservation;
 import roomescape.reservation.ReservationRequest;
-import roomescape.reservation.UpdatingDAO;
+import roomescape.service.ReservationService;
 
 import java.util.List;
 
 @Controller
 public class ReservationController {
 
-    private final QueryingDAO queryingDAO;
-    private final UpdatingDAO updatingDAO;
+    private final ReservationService reservationService;
 
-    public ReservationController(QueryingDAO queryingDAO, UpdatingDAO updatingDAO) {
-        this.queryingDAO = queryingDAO;
-        this.updatingDAO = updatingDAO;
-    }
-
-    @PostMapping("/reservations")
-    //requestBody dto로 감싸기
-    public ResponseEntity<Reservation> create(@RequestBody ReservationRequest reservationReq) {
-        Long generatedId = updatingDAO.insertWithKeyHolder(reservationReq);
-        Reservation newReservation = queryingDAO.findReservationById(generatedId);
-        return ResponseEntity.ok().body(newReservation);
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping("/reservations")
     public ResponseEntity<List<Reservation>> read() {
-        List<Reservation> reservations = queryingDAO.findAllReservations();
+        List<Reservation> reservations = reservationService.read();
         return ResponseEntity.ok().body(reservations);
     }
 
+    @PostMapping("/reservations")
+    public ResponseEntity<Reservation> create(@RequestBody ReservationRequest reservationReq) {
+        Reservation newReservation = reservationService.create(reservationReq);
+        return ResponseEntity.ok().body(newReservation);
+    }
+
     @PutMapping("/reservations/{id}")
-    public ResponseEntity<Void> update(@RequestBody Reservation newReservationReq, @PathVariable Long id) {
-        updatingDAO.save(id, newReservationReq);
+    public ResponseEntity<Void> update(@RequestBody Reservation newReservation, @PathVariable Long id) {
+        reservationService.update(newReservation, id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        int count = updatingDAO.delete(id);
-
-        if (count == 0) {
-            throw new RuntimeException("삭제하려는 예약을 찾을 수 없습니다.");
-        }
-
+        reservationService.delete(id);
         return ResponseEntity.ok().build();
     }
 }

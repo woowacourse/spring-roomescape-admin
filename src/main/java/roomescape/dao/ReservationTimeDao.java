@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
@@ -50,11 +49,7 @@ public class ReservationTimeDao {
 
     public List<ReservationTime> select() {
         String sql = "select * from reservation_time";
-        try {
-            return jdbcTemplate.query(sql, rowMapper);
-        } catch (EmptyResultDataAccessException exception) {
-            return null;
-        }
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     public void delete(Long id) {

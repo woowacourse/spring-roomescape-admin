@@ -7,18 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
+import roomescape.dto.ReservationRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-@Import(UpdatingDAO.class)
+@Import(ReservationUpdatingDao.class)
 public class UpdatingDaoTest {
 
     @Autowired
-    private UpdatingDAO updatingDAO;
+    private ReservationUpdatingDao reservationUpdatingDao;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -26,21 +24,36 @@ public class UpdatingDaoTest {
     @BeforeEach
     void setUp() {
         jdbcTemplate.execute("DROP TABLE IF EXISTS reservation");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS reservation_time");
+
         jdbcTemplate.execute("""
-                CREATE TABLE reservation (
-                    id   BIGINT       NOT NULL AUTO_INCREMENT,
-                    name VARCHAR(255) NOT NULL,
-                    date DATE         NOT NULL,
-                    time TIME         NOT NULL,
+                CREATE TABLE reservation_time (
+                    id       BIGINT       NOT NULL AUTO_INCREMENT,
+                    start_at VARCHAR(255) NOT NULL,
                     PRIMARY KEY (id)
                 )""");
+
+        jdbcTemplate.execute("""
+                CREATE TABLE reservation (
+                    id      BIGINT       NOT NULL AUTO_INCREMENT,
+                    name    VARCHAR(255) NOT NULL,
+                    date    VARCHAR(255) NOT NULL,
+                    time_id BIGINT,
+                    PRIMARY KEY (id),
+                    FOREIGN KEY (time_id) REFERENCES reservation_time (id)
+                )""");
+
+        jdbcTemplate.execute("INSERT INTO reservation_time (start_at) VALUES ('15:30:00')");
     }
 
     @Test
     @DisplayName("새로운 예약을 추가하면 생성된 ID를 반환한다")
     void insert() {
-        Reservation reservation = new Reservation(null, "가현", LocalDate.parse("2026-05-01"), LocalTime.parse("15:30:00"));
-        Long generatedId = updatingDAO.insert(reservation);
+        Long timeId = jdbcTemplate.queryForObject("SELECT id FROM reservation_time LIMIT 1", Long.class);
+        ReservationRequest request = new ReservationRequest("가현", "2026-05-01", timeId);
+
+        Long generatedId = reservationUpdatingDao.insert(request);
+
         assertThat(generatedId).isNotNull();
         Integer count = jdbcTemplate.queryForObject("SELECT count(*) FROM reservation WHERE id = ?", Integer.class, generatedId);
         assertThat(count).isEqualTo(1);
@@ -49,9 +62,12 @@ public class UpdatingDaoTest {
     @Test
     @DisplayName("예약을 삭제하면 해당 데이터가 DB에서 제거된다")
     void delete() {
-        jdbcTemplate.execute("INSERT INTO reservation (name, date, time) VALUES ('가현', '2026-05-01', '13:00:00')");
+        Long timeId = jdbcTemplate.queryForObject("SELECT id FROM reservation_time LIMIT 1", Long.class);
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES ('가현', '2026-05-01', ?)", timeId);
         Long id = jdbcTemplate.queryForObject("SELECT id FROM reservation LIMIT 1", Long.class);
-        int updatedRow = updatingDAO.delete(id);
+
+        int updatedRow = reservationUpdatingDao.delete(id);
+
         assertThat(updatedRow).isEqualTo(1);
         Integer count = jdbcTemplate.queryForObject("SELECT count(*) FROM reservation WHERE id = ?", Integer.class, id);
         assertThat(count).isEqualTo(0);

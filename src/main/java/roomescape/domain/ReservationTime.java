@@ -1,8 +1,5 @@
 package roomescape.domain;
 
-import static com.fasterxml.jackson.annotation.JsonCreator.Mode.DELEGATING;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -11,7 +8,6 @@ public record ReservationTime(String value) {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
-    @JsonCreator(mode = DELEGATING)
     public ReservationTime {
         if (value == null) {
             throw new IllegalArgumentException("[ERROR] 시간은 null일 수 없습니다.");

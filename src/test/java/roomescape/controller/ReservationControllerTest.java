@@ -28,6 +28,8 @@ class ReservationControllerTest {
         jdbcTemplate = new JdbcTemplate(dataSource);
 
         jdbcTemplate.execute("DROP TABLE IF EXISTS reservation");
+        jdbcTemplate.execute("DROP TABLE IF EXISTS reservation_time");
+
         jdbcTemplate.execute("""
                 CREATE TABLE reservation (
                     id BIGINT NOT NULL AUTO_INCREMENT,
@@ -114,5 +116,24 @@ class ReservationControllerTest {
 
         assertThat(timeResponse.id()).isEqualTo(1L);
         assertThat(timeResponse.startAt()).isEqualTo("10:00");
+    }
+
+    @Test
+    @DisplayName("시간을 조회한다.")
+    void findAllTime() {
+        TimeRequest request1 = new TimeRequest("10:00");
+        TimeRequest request2 = new TimeRequest("11:00");
+
+        reservationController.createTime(request1);
+        reservationController.createTime(request2);
+
+        List<TimeResponse> timeResponses = reservationController.findAllTime();
+
+        assertThat(timeResponses.size()).isEqualTo(2);
+        assertThat(timeResponses.get(0).id()).isEqualTo(1L);
+        assertThat(timeResponses.get(0).startAt()).isEqualTo("10:00");
+
+        assertThat(timeResponses.get(1).id()).isEqualTo(2L);
+        assertThat(timeResponses.get(1).startAt()).isEqualTo("11:00");
     }
 }

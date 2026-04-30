@@ -102,4 +102,22 @@ public class ReservationController {
 
         return new TimeResponse(key.longValue(), request.startAt());
     }
+
+    @GetMapping("/times")
+    @ResponseBody
+    public List<TimeResponse> findAllTime() {
+        return jdbcTemplate.query(
+                "SELECT id, start_at FROM reservation_time ORDER BY id",
+                (resultSet, rowNum) -> {
+                    ReservationTime reservationTime = new ReservationTime(
+                            resultSet.getString("start_at")
+                    );
+
+                    return new TimeResponse(
+                            resultSet.getLong("id"),
+                            reservationTime.value()
+                    );
+                }
+        );
+    }
 }

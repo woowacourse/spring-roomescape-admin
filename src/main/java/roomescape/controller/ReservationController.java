@@ -11,34 +11,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequestDto;
-import roomescape.persistence.dao.ReservationDao;
+import roomescape.dao.ReservationDao;
+import roomescape.service.ReservationService;
+import roomescape.service.command.CreateReservationCommand;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
-    private ReservationDao reservationDao;
+    private final ReservationService reservationService;
 
-    public ReservationController(ReservationDao reservationDao) {
-        this.reservationDao = reservationDao;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> getReservations() {
-        return ResponseEntity.ok(reservationDao.findAll());
+    public ResponseEntity<List<Reservation>> findAllReservations() {
+        return ResponseEntity.ok(reservationService.findAll());
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> createReservations(@RequestBody ReservationRequestDto reservationRequest) {
-        Long id = reservationDao.insert(reservationRequest);
-        Reservation reservationById = reservationDao.findById(id);
-        return ResponseEntity.ok(reservationById);
+    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationRequestDto reservationRequest) {
+        CreateReservationCommand command = CreateReservationCommand.from(reservationRequest);
+        Reservation reservation = reservationService.createReservation(command);
+        return ResponseEntity.ok(reservation);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable Long id){
-        int delete = reservationDao.delete(id);
+        reservationService.deleteReservation(id);
         return ResponseEntity.ok().build();
     }
 }

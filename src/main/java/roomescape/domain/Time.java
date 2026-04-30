@@ -1,7 +1,5 @@
 package roomescape.domain;
 
-import org.springframework.cglib.core.Local;
-
 import java.time.LocalTime;
 
 public class Time {

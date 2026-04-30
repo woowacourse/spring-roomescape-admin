@@ -1,10 +1,12 @@
-package roomescape.persistence.dao;
+package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.dao.vo.ReservationRow;
+import roomescape.dao.vo.ReservationRows;
 import roomescape.domain.Reservation;
 import roomescape.domain.Time;
 import roomescape.dto.ReservationRequestDto;
@@ -13,6 +15,8 @@ import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class ReservationDao {
@@ -23,20 +27,19 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<Reservation> rowMapper = (resultSet, rowNum) -> {
-        Time time = new Time(resultSet.getLong("time_id"),
-                LocalTime.parse(resultSet.getString("start_at")));
-
-        Reservation reservation = new Reservation(
+    private final RowMapper<ReservationRow> rowMapper = (resultSet, rowNum) -> {
+        ReservationRow row = new ReservationRow(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
                 LocalDate.parse(resultSet.getString("date")),
-              time
+                resultSet.getLong("time_id"),
+                LocalTime.parse(resultSet.getString("start_at"))
         );
-        return reservation;
+
+        return row;
     };
 
-    public List<Reservation> findAll() {
+    public ReservationRows findAll() {
         String sql = """
                 SELECT 
                     r.id,
@@ -47,10 +50,10 @@ public class ReservationDao {
                     FROM reservation r
                 INNER JOIN reservation_time t ON r.time_id = t.id
                 """;
-        return jdbcTemplate.query(sql, rowMapper);
+        return new ReservationRows(jdbcTemplate.query(sql, rowMapper));
     }
 
-    public Reservation findById(Long id){
+    public Optional<ReservationRow> findById(Long id){
         String sql = """
                 SELECT
                     r.id,
@@ -62,11 +65,11 @@ public class ReservationDao {
                 INNER JOIN reservation_time t ON r.time_id = t.id
                 WHERE r.id = ?
                 """;
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
     }
 
 
-    public Long insert(ReservationRequestDto reservation) {
+    public Long insert(Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = """
                 INSERT INTO reservation
@@ -77,11 +80,11 @@ public class ReservationDao {
             PreparedStatement pstmt = con.prepareStatement(sql, new String[]{"id"});
             pstmt.setString(1, reservation.getName());
             pstmt.setString(2, reservation.getDate().toString());
-            pstmt.setLong(3, reservation.getTimeId());
+            pstmt.setLong(3, reservation.getTime().getId());
             return pstmt;
         }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
     public int delete(Long id) {

@@ -1,14 +1,19 @@
-package roomescape.persistence.dao;
+package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.dao.vo.TimeRow;
+import roomescape.dao.vo.TimeRows;
 import roomescape.domain.Time;
 
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class TimeDao {
@@ -17,6 +22,15 @@ public class TimeDao {
     public TimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
+    private final RowMapper<TimeRow> rowMapper = (resultSet, rowNum) -> {
+        TimeRow row = new TimeRow(
+                resultSet.getLong("id"),
+                LocalTime.parse(resultSet.getString("start_at"))
+        );
+
+        return row;
+    };
 
     public Long insert(Time time) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -31,33 +45,27 @@ public class TimeDao {
             return pstmt;
         }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+        return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Time findById(Long id) {
+    public Optional<TimeRow> findById(Long id) {
         String sql = """
                 SELECT * FROM reservation_time
                 WHERE id = ?
                 """;
 
-        return jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
-                new Time(
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
+                new TimeRow(
                         resultSet.getLong("id"),
                         LocalTime.parse(resultSet.getString("start_at"))
-                ), id);
+                ), id));
     }
 
-    public List<Time> findAll() {
+    public TimeRows findAll() {
         String sql = """
                 SELECT * FROM reservation_time
                 """;
-        return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
-            Time time = new Time(
-                    resultSet.getLong("id"),
-                    LocalTime.parse(resultSet.getString("start_at"))
-            );
-            return time;
-        });
+        return new TimeRows(jdbcTemplate.query(sql, rowMapper));
     }
 
     public int delete(Long id) {

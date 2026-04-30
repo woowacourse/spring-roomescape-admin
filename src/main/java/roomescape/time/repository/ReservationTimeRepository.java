@@ -21,6 +21,15 @@ public class ReservationTimeRepository {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    public ReservationTime findById(Long timeId) {
+        String sql = "SELECT * FROM reservation_time WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+            Long id = rs.getLong("id");
+            LocalTime time = LocalTime.parse(rs.getString("start_at"));
+            return new ReservationTime(id, time);
+        }, timeId);
+    }
+
     public ReservationTime save(LocalTime startAt) {
         String sql = "INSERT INTO reservation_time (start_At) VALUES (?)";
 

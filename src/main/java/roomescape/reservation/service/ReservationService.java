@@ -4,9 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.repository.ReservationRepository;
+import roomescape.time.domain.ReservationTime;
+import roomescape.time.repository.ReservationTimeRepository;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -14,13 +15,16 @@ import java.util.List;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
     public List<Reservation> getReservations() {
-        return reservationRepository.findAll();
+        return reservationRepository.findAllWithTime();
     }
 
-    public Reservation createReservation(String name, LocalDate date, LocalTime time) {
-        return reservationRepository.save(name, date, time);
+    public Reservation createReservation(String name, LocalDate date, Long timeId) {
+        ReservationTime time = reservationTimeRepository.findById(timeId);
+        Long id = reservationRepository.save(name, date, timeId);
+        return new Reservation(id, name, date, time);
     }
 
     public void deleteReservation(Long id) {

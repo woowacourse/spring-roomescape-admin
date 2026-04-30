@@ -25,7 +25,7 @@ public class ReservationController {
         return reservationService.createReservation(
                 request.getName(),
                 request.getDate(),
-                request.getTime()
+                request.getTimeId()
         );
     }
 

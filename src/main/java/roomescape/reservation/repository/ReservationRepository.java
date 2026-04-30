@@ -6,6 +6,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
+import roomescape.time.domain.ReservationTime;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
@@ -22,25 +23,31 @@ public class ReservationRepository {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public List<Reservation> findAll() {
-        String sql = "select * from reservation";
+    public List<Reservation> findAllWithTime() {
+        String sql = """
+                SELECT r.id          AS reservation_id,
+                       r.name        AS reservation_name,
+                       r.date        AS reservation_date,
+                       t.id          AS time_id,
+                       t.start_at    AS time_start_at
+                FROM reservation r
+                JOIN reservation_time t ON r.time_id = t.id
+                """;
         return jdbcTemplate.query(sql, reservationRowsMapper());
     }
 
-    public Reservation save(String name, LocalDate date, LocalTime time) {
-        String sql = "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)";
+    public Long save(String name, LocalDate date, Long timeId) {
+        String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, name);
             ps.setObject(2, date);
-            ps.setObject(3, time);
+            ps.setObject(3, timeId);
             return ps;
         }, keyHolder);
-
-        long id = keyHolder.getKey().longValue();
-        return new Reservation(id, name, date, time);
+        return keyHolder.getKey().longValue();
     }
 
     public void deleteById(Long id) {
@@ -49,12 +56,17 @@ public class ReservationRepository {
     }
 
     private RowMapper<Reservation> reservationRowsMapper() {
-        return ((rs, rowNum) -> {
-            Long id = rs.getLong("id");
-            String name = rs.getString("name");
-            LocalDate date = LocalDate.parse(rs.getString("date"));
-            LocalTime time = LocalTime.parse(rs.getString("time"));
-            return new Reservation(id, name, date, time);
-        });
+        return (rs, rowNum) -> {
+            ReservationTime time = new ReservationTime(
+                    rs.getLong("time_id"),
+                    LocalTime.parse(rs.getString("time_start_at"))
+            );
+            return new Reservation(
+                    rs.getLong("reservation_id"),
+                    rs.getString("reservation_name"),
+                    LocalDate.parse(rs.getString("reservation_date")),
+                    time
+            );
+        };
     }
 }

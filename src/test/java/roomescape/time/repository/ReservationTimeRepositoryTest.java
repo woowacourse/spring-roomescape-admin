@@ -14,18 +14,16 @@ import roomescape.time.domain.ReservationTime;
 @JdbcTest
 class ReservationTimeRepositoryTest {
     private JdbcTemplateReservationTimeRepository jdbcTemplateReservationTimeRepository;
+    private Long timeId;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setup() {
-        jdbcTemplate.update("DELETE FROM reservation_time");
-        jdbcTemplate.update("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
-
         jdbcTemplateReservationTimeRepository = new JdbcTemplateReservationTimeRepository(jdbcTemplate);
 
-        jdbcTemplateReservationTimeRepository.save(new ReservationTime(null,
+        timeId = jdbcTemplateReservationTimeRepository.save(new ReservationTime(null,
                 LocalTime.of(15, 40)));
         jdbcTemplateReservationTimeRepository.save(new ReservationTime(
                 null, LocalTime.of(15, 40)));
@@ -52,7 +50,7 @@ class ReservationTimeRepositoryTest {
     @DisplayName("예약을 삭제한다.")
     void delete() {
         //given & when
-        jdbcTemplateReservationTimeRepository.delete(2L);
+        jdbcTemplateReservationTimeRepository.delete(timeId);
 
         //then
         assertThat(jdbcTemplateReservationTimeRepository.findAll().size()).isEqualTo(1);

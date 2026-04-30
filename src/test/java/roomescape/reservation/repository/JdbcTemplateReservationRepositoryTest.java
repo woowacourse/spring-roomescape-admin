@@ -18,24 +18,22 @@ import roomescape.time.repository.JdbcTemplateReservationTimeRepository;
 class JdbcTemplateReservationRepositoryTest {
     private JdbcTemplateReservationRepository jdbcTemplateReservationRepository;
     private JdbcTemplateReservationTimeRepository jdbcTemplateReservationTimeRepository;
+    private Long timeId;
+    private Long reservationId;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setup() {
-        jdbcTemplate.update("DELETE FROM reservation");
-        jdbcTemplate.update("DELETE FROM reservation_time");
-        jdbcTemplate.update("ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1");
-        jdbcTemplate.update("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
-
         jdbcTemplateReservationRepository = new JdbcTemplateReservationRepository(jdbcTemplate);
         jdbcTemplateReservationTimeRepository = new JdbcTemplateReservationTimeRepository(jdbcTemplate);
 
-        Long timeId = jdbcTemplateReservationTimeRepository.save(new ReservationTime(null, LocalTime.of(15, 40)));
+        timeId = jdbcTemplateReservationTimeRepository.save(new ReservationTime(null, LocalTime.of(15, 40)));
         ReservationTime reservationTime = jdbcTemplateReservationTimeRepository.findById(timeId).get();
 
-        jdbcTemplateReservationRepository.save(new Reservation(null, "한다", LocalDate.of(2023, 8, 5), reservationTime));
+        reservationId = jdbcTemplateReservationRepository.save(
+                new Reservation(null, "한다", LocalDate.of(2023, 8, 5), reservationTime));
         jdbcTemplateReservationRepository.save(new Reservation(null, "판다", LocalDate.of(2023, 10, 5), reservationTime));
     }
 
@@ -49,7 +47,7 @@ class JdbcTemplateReservationRepositoryTest {
     @DisplayName("예약을 추가한다.")
     void save() {
         //given & when
-        ReservationTime reservationTime = jdbcTemplateReservationTimeRepository.findById(1L).get();
+        ReservationTime reservationTime = jdbcTemplateReservationTimeRepository.findById(timeId).get();
         jdbcTemplateReservationRepository.save(
                 new Reservation(null, "새로운사람", LocalDate.of(2023, 6, 5), reservationTime));
 
@@ -61,7 +59,7 @@ class JdbcTemplateReservationRepositoryTest {
     @DisplayName("예약을 삭제한다.")
     void delete() {
         //given & when
-        jdbcTemplateReservationRepository.delete(2L);
+        jdbcTemplateReservationRepository.delete(reservationId);
 
         //then
         assertThat(jdbcTemplateReservationRepository.findAll().size()).isEqualTo(1);

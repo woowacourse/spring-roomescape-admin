@@ -24,9 +24,6 @@ class ReservationTimeServiceTest {
 
     @BeforeEach
     void setup() {
-        jdbcTemplate.update("DELETE FROM reservation_time");
-        jdbcTemplate.update("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
-
         JdbcTemplateReservationTimeRepository reservationTimeRepository = new JdbcTemplateReservationTimeRepository(
                 jdbcTemplate);
         this.reservationTimeService = new ReservationTimeService(reservationTimeRepository);

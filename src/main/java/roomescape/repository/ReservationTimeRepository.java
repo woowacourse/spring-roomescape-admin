@@ -7,4 +7,5 @@ import java.util.List;
 public interface ReservationTimeRepository {
     ReservationTime createReservationTime(ReservationTime reservationTime);
     List<ReservationTime> findAll();
+    void deleteById(Long id);
 }

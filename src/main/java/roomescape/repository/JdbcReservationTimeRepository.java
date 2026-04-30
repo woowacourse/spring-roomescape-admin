@@ -46,6 +46,13 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         return times;
     }
 
+    @Override
+    public void deleteById(Long id) {
+        String sql = "DELETE FROM reservation_time WHERE id = ?;";
+
+        template.update(sql, id);
+    }
+
     private RowMapper<ReservationTime> reservationTimeRowMapper() {
         return ((rs, rowNum) -> {
             ReservationTime reservationTime = new ReservationTime(

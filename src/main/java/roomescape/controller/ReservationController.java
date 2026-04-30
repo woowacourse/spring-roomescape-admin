@@ -71,4 +71,10 @@ public class ReservationController {
 
         return ReservationTimeResponseDto.from(reservationTime);
     }
+
+    @DeleteMapping("/times/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteReservationTime(@PathVariable("id") Long id) {
+        reservationTimeRepository.deleteById(id);
+    }
 }

@@ -10,6 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.dto.TimeRequest;
+import roomescape.dto.TimeResponse;
 
 class ReservationControllerTest {
     ReservationController reservationController;
@@ -32,6 +34,13 @@ class ReservationControllerTest {
                     name VARCHAR(255) NOT NULL,
                     date VARCHAR(255) NOT NULL,
                     time VARCHAR(255) NOT NULL,
+                    PRIMARY KEY (id)
+                )
+                """);
+        jdbcTemplate.execute("""
+                CREATE TABLE reservation_time (
+                    id BIGINT NOT NULL AUTO_INCREMENT,
+                    start_at VARCHAR(255) NOT NULL,
                     PRIMARY KEY (id)
                 )
                 """);
@@ -94,5 +103,16 @@ class ReservationControllerTest {
         assertThat(reservations).hasSize(1);
         assertThat(reservations.get(0).id()).isEqualTo(2L);
         assertThat(reservations.get(0).name()).isEqualTo("리사");
+    }
+
+    @Test
+    @DisplayName("시간을 추가한다.")
+    void createTime() {
+        TimeRequest timeRequest = new TimeRequest("10:00");
+
+        TimeResponse timeResponse = reservationController.createTime(timeRequest);
+
+        assertThat(timeResponse.id()).isEqualTo(1L);
+        assertThat(timeResponse.startAt()).isEqualTo("10:00");
     }
 }

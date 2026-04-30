@@ -37,4 +37,20 @@ class ReservationTimeTest {
         assertThatCode(() -> new ReservationTime("12:30"))
                 .doesNotThrowAnyException();
     }
+//
+//    @Test
+//    @DisplayName("예약 시간은 아이디와 시작시간을 가진다.")
+//    void reservationTimeHave_IdAndStartedAt() {
+//        ReservationTime time = new ReservationTime(1L, "10:00");
+//
+//        assertThat(time.getId()).isEqualTo(1L);
+//        assertThat(time.getStartAt()).isEqualTo("10:00");
+//    }
+//
+//    @Test
+//    @DisplayName("id가 0 이하이면 예외를 발생한다.")
+//    void throwException_when_IdUnderZero() {
+//        assertThatThrownBy(() -> new ReservationTime(-1L, "10:00"))
+//                .isInstanceOf(IllegalArgumentException.class);
+//    }
 }

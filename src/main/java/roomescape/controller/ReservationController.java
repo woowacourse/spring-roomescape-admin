@@ -18,6 +18,8 @@ import roomescape.domain.ReservationDate;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.dto.TimeRequest;
+import roomescape.dto.TimeResponse;
 
 @Controller
 public class ReservationController {
@@ -75,5 +77,29 @@ public class ReservationController {
     @ResponseBody
     public void delete(@PathVariable Long id) {
         jdbcTemplate.update("DELETE FROM RESERVATION WHERE id = ?", id);
+    }
+
+    @PostMapping("/times")
+    @ResponseBody
+    public TimeResponse createTime(@RequestBody TimeRequest request) {
+        KeyHolder keyholder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(
+                connection -> {
+                    PreparedStatement preparedStatement = connection.prepareStatement(
+                            "INSERT INTO reservation_time (start_at) VALUES (?)",
+                            new String[]{"id"});
+
+                    preparedStatement.setString(1, request.startAt());
+
+                    return preparedStatement;
+                }, keyholder);
+
+        Number key = keyholder.getKey();
+        if (key == null) {
+            throw new IllegalStateException("[ERROR] 예약 ID가 생성되지 않았습니다.");
+        }
+
+        return new TimeResponse(key.longValue(), request.startAt());
     }
 }

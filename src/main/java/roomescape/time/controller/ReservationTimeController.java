@@ -24,4 +24,9 @@ public class ReservationTimeController {
     public List<ReservationTime> getTimes() {
         return reservationTimeService.getTimes();
     }
+
+    @DeleteMapping("/{id}")
+    public void removeTime(@PathVariable Long id) {
+        reservationTimeService.removeTime(id);
+    }
 }

@@ -46,4 +46,9 @@ public class ReservationTimeRepository {
                     LocalTime.parse(rs.getString("start_at"))
         );
     }
+
+    public void remove(Long id) {
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
+        jdbcTemplate.update(sql, id);
+    }
 }

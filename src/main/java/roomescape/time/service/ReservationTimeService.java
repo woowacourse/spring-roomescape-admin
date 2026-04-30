@@ -21,4 +21,8 @@ public class ReservationTimeService {
     public List<ReservationTime> getTimes() {
         return reservationTimeRepository.findAll();
     }
+
+    public void removeTime(Long id) {
+        reservationTimeRepository.remove(id);
+    }
 }

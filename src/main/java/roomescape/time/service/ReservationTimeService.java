@@ -20,12 +20,12 @@ public class ReservationTimeService {
     public ReservationTimeResponse addReservationTime(CreateResrvationTimeRequest createResrvationTimeRequest) {
         ReservationTime reservationTime = ReservationTimeMapper.toReservationTime(createResrvationTimeRequest);
         ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
-        return ReservationTimeMapper.toReseravationTimeRespone(savedReservationTime);
+        return ReservationTimeMapper.toReservationTimeResponse(savedReservationTime);
     }
 
     public List<ReservationTimeResponse> findAllReservationTimes() {
         return reservationTimeRepository.findAll().stream()
-                .map(ReservationTimeMapper::toReseravationTimeRespone)
+                .map(ReservationTimeMapper::toReservationTimeResponse)
                 .toList();
     }
 

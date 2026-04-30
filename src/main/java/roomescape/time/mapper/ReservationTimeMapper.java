@@ -18,7 +18,7 @@ public class ReservationTimeMapper {
         return new ReservationTime(from.getId(), from.getStartAt());
     }
 
-    public static ReservationTimeResponse toReseravationTimeRespone(ReservationTime from) {
+    public static ReservationTimeResponse toReservationTimeResponse(ReservationTime from) {
         return new ReservationTimeResponse(from.getId(), from.getStartAt());
     }
 

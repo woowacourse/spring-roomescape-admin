@@ -28,7 +28,7 @@ public class ConsoleInputView {
     private static int parseAndValidateOption(String strOption) {
         try {
             int i = Integer.parseInt(strOption);
-            if(i < 1 || i > 6) {
+            if(i < 1 || i > 7) {
                 throw new RuntimeException("1~7 사이의 숫자를 입력해주세요.");
             }
             return i;

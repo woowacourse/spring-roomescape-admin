@@ -2,6 +2,7 @@ package roomescape.domain;
 
 import java.util.Objects;
 import org.springframework.util.StringUtils;
+import roomescape.exception.InvalidReservationTimeException;
 
 public class ReservationTime {
 
@@ -54,7 +55,7 @@ public class ReservationTime {
 
     private static void validateStartAt(String startAt) {
         if (!StringUtils.hasText(startAt)) {
-            throw new IllegalArgumentException("예약 시간엔 시간 정보가 존재해야 합니다.");
+            throw new InvalidReservationTimeException("예약 시간엔 시간 정보가 존재해야 합니다.");
         }
     }
 

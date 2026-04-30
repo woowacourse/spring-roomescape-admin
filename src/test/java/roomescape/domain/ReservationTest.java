@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import roomescape.exception.InvalidReservationException;
 
 class ReservationTest {
 
@@ -27,7 +28,7 @@ class ReservationTest {
                     emptyName,
                     DEFAULT_DATE,
                     DEFAULT_TIME
-            )).isInstanceOf(IllegalArgumentException.class)
+            )).isInstanceOf(InvalidReservationException.class)
                     .hasMessage("예약엔 이름이 존재해야 합니다.");
         }
 
@@ -37,7 +38,7 @@ class ReservationTest {
                     null,
                     DEFAULT_DATE,
                     DEFAULT_TIME
-            )).isInstanceOf(IllegalArgumentException.class)
+            )).isInstanceOf(InvalidReservationException.class)
                     .hasMessage("예약엔 이름이 존재해야 합니다.");
         }
     }
@@ -48,7 +49,7 @@ class ReservationTest {
                 DEFAULT_NAME,
                 DEFAULT_DATE,
                 null
-        )).isInstanceOf(IllegalArgumentException.class)
+        )).isInstanceOf(InvalidReservationException.class)
                 .hasMessage("예약엔 시간이 존재해야 합니다.");
     }
 
@@ -58,7 +59,7 @@ class ReservationTest {
                 DEFAULT_NAME,
                 null,
                 DEFAULT_TIME
-        )).isInstanceOf(IllegalArgumentException.class)
+        )).isInstanceOf(InvalidReservationException.class)
                 .hasMessage("예약엔 날짜가 존재해야 합니다.");
     }
 

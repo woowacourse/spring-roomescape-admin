@@ -2,6 +2,7 @@ package roomescape.domain;
 
 import java.util.Objects;
 import org.springframework.util.StringUtils;
+import roomescape.exception.InvalidReservationException;
 
 public class Reservation {
     private final Long id;
@@ -83,19 +84,19 @@ public class Reservation {
 
     private static void validateName(String name) {
         if (!StringUtils.hasText(name)) {
-            throw new IllegalArgumentException("예약엔 이름이 존재해야 합니다.");
+            throw new InvalidReservationException("예약엔 이름이 존재해야 합니다.");
         }
     }
 
     private static void validateDate(String date) {
         if (date == null) {
-            throw new IllegalArgumentException("예약엔 날짜가 존재해야 합니다.");
+            throw new InvalidReservationException("예약엔 날짜가 존재해야 합니다.");
         }
     }
 
     private static void validateTime(ReservationTime time) {
         if (time == null) {
-            throw new IllegalArgumentException("예약엔 시간이 존재해야 합니다.");
+            throw new InvalidReservationException("예약엔 시간이 존재해야 합니다.");
         }
     }
 

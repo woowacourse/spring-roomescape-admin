@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
+import roomescape.exception.InvalidReservationTimeException;
 
 class ReservationTimeTest {
 
@@ -13,7 +14,7 @@ class ReservationTimeTest {
     void 생성_시_시간_정보가_없다면_예외를_던진다() {
         assertThatThrownBy(() -> ReservationTime.create(
                 null
-        )).isInstanceOf(IllegalArgumentException.class)
+        )).isInstanceOf(InvalidReservationTimeException.class)
                 .hasMessage("예약 시간엔 시간 정보가 존재해야 합니다.");
     }
 

@@ -18,9 +18,9 @@ public class CreateReservationCommand {
 
     public static CreateReservationCommand from(ReservationRequestDto reservationRequest) {
         return new CreateReservationCommand(
-                reservationRequest.getName(),
-                reservationRequest.getDate(),
-                reservationRequest.getTimeId()
+                reservationRequest.name(),
+                reservationRequest.date(),
+                reservationRequest.timeId()
         );
     }
 

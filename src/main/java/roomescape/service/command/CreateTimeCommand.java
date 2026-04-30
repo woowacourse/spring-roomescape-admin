@@ -12,7 +12,7 @@ public class CreateTimeCommand {
     }
 
     public static CreateTimeCommand from(TimeRequestDto timeRequest) {
-        return new CreateTimeCommand(timeRequest.getStartAt());
+        return new CreateTimeCommand(timeRequest.startAt());
     }
 
     public LocalTime getTime() {

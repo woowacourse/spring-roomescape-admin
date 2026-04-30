@@ -43,12 +43,12 @@ public class ReservationTimeDAO {
         }, id);
     }
 
-    public ReservationTimeResponse create(ReservationTime reservationTime) {
+    public ReservationTime create(ReservationTime time) {
         MapSqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("start_at", reservationTime.getStartAt());
+                .addValue("start_at", time.getStartAt());
 
         Long id = (long) simpleJdbcInsert.executeAndReturnKey(parameters);
-        return ReservationTimeResponse.from(id, reservationTime.getStartAt());
+        return new ReservationTime(id, time.getStartAt());
     }
 
     public int delete(Long id) {

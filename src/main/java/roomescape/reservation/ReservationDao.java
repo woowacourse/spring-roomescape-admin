@@ -11,11 +11,6 @@ import roomescape.reservationTime.ReservationTime;
 
 @Repository
 public class ReservationDao {
-    private static final String SELECT_WITH_JOIN =
-            "SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value " +
-            "FROM reservation AS r " +
-            "INNER JOIN reservation_time AS t ON r.time_id = t.id";
-
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
@@ -34,7 +29,12 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAll() {
-        return jdbcTemplate.query(SELECT_WITH_JOIN, reservationRowMapper);
+        String sql = """
+                SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value
+                FROM reservation AS r
+                INNER JOIN reservation_time AS t ON r.time_id = t.id
+                """;
+        return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
     public Reservation save(String name, LocalDate date, Long timeId) {
@@ -43,7 +43,13 @@ public class ReservationDao {
                 "date", date,
                 "time_id", timeId
         )).longValue();
-        return jdbcTemplate.queryForObject(SELECT_WITH_JOIN + " WHERE r.id = ?", reservationRowMapper, id);
+        String sql = """
+                SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at AS time_value
+                FROM reservation AS r
+                INNER JOIN reservation_time AS t ON r.time_id = t.id
+                WHERE r.id = ?
+                """;
+        return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
     public void delete(Long id) {

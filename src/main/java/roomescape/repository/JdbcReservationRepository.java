@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
@@ -16,7 +17,10 @@ public class JdbcReservationRepository implements ReservationRepository {
                     rs.getLong("id"),
                     rs.getString("name"),
                     rs.getString("date"),
-                    rs.getString("time")
+                    new ReservationTime(
+                            rs.getLong("time_id"),
+                            rs.getString("start_at")
+                    )
             );
 
     private final JdbcTemplate jdbcTemplate;
@@ -27,7 +31,12 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        return jdbcTemplate.query("SELECT id, name, date, time FROM reservation", RESERVATION_ROW_MAPPER);
+        String sql = """
+                SELECT r.id AS reservation_id, r.name, r.date, t.id AS time_id, t.start_at
+                FROM reservation r
+                INNER JOIN reservation_time t ON r.time_id = t.id
+                """;
+        return jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER);
     }
 
     @Override
@@ -36,12 +45,12 @@ public class JdbcReservationRepository implements ReservationRepository {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)",
+                    "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
                     new String[]{"id"}
             );
             ps.setString(1, reservation.name());
             ps.setString(2, reservation.date());
-            ps.setString(3, reservation.time());
+            ps.setLong(3, reservation.reservationTime().id());
             return ps;
         }, keyHolder);
 
@@ -50,7 +59,7 @@ public class JdbcReservationRepository implements ReservationRepository {
                 generatedId,
                 reservation.name(),
                 reservation.date(),
-                reservation.time()
+                reservation.reservationTime()
         );
     }
 

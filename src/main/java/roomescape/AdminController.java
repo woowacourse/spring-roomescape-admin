@@ -135,4 +135,16 @@ public class AdminController {
 
         return ResponseEntity.ok(reservationTime);
     }
+
+    @DeleteMapping("/times/{id}")
+    public ResponseEntity<Void> deleteTime(@PathVariable Long id) {
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
+
+        jdbcTemplate.update(
+                sql,
+                id
+        );
+
+        return ResponseEntity.ok().build();
+    }
 }

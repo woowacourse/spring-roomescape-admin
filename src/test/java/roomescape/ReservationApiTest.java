@@ -4,33 +4,39 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.util.HashMap;
 import java.util.Map;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class MissionStepTest {
+public class ReservationApiTest {
+    @BeforeEach
+    void setUp() {
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(Map.of("startAt", "10:00"))
+                .when().post("/times");
+    }
 
     @Test
-    @DisplayName("예약을 조회한다.")
     void 예약_조회() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(0)); // 아직 생성 요청이 없으니 0개
+                .body("size()", is(0));
     }
 
     @Test
-    @DisplayName("예약을 추가한다.")
     void 예약_추가() {
         Map<String, String> params = Map.of(
                 "name", "Ace",
                 "date", "2026-04-28",
-                "time", "10:00"
+                "timeId", "1"
         );
 
         RestAssured.given().log().all()
@@ -42,11 +48,10 @@ public class MissionStepTest {
     }
 
     @Test
-    @DisplayName("예약을 삭제한다.")
     void 예약_삭제() {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(Map.of("name", "Ace", "date", "2026-04-29", "time", "10:00")).
+                .body(Map.of("name", "Ace", "date", "2026-04-29", "timeId", "1")).
                 when().post("/reservations")
                 .then().statusCode(200);
 
@@ -59,5 +64,26 @@ public class MissionStepTest {
                 .when().get("/reservations")
                 .then()
                 .body("size()", is(0));
+    }
+
+    @Test
+    void 예약과_시간_연결() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
     }
 }

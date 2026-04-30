@@ -41,7 +41,7 @@ public class ReservationTimeController {
         List<ReservationTime> result = reservationTimeService.findAll();
 
         List<ReservationTimeResponse> foundReservationTimes = result.stream()
-                .map(this::parseReservationTimeToReservationTimeResponse)
+                .map(ReservationTimeResponse::fromDomain)
                 .toList();
 
         return new ResponseEntity<>(
@@ -54,12 +54,5 @@ public class ReservationTimeController {
     public ResponseEntity<Void> deleteReservationTime(@PathVariable Long id) {
         reservationTimeService.deleteSpecificReservationTime(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    private ReservationTimeResponse parseReservationTimeToReservationTimeResponse(ReservationTime reservationTime) {
-        return new ReservationTimeResponse(
-                reservationTime.id(),
-                reservationTime.startAt()
-        );
     }
 }

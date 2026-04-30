@@ -13,7 +13,7 @@ public class RatiExceptionHandler {
     ResponseEntity<CommonErrorResponse> clarifyReasonOfIllegalStateException(
             IllegalStateException illegalStateException) {
         return new ResponseEntity<>(
-                new CommonErrorResponse(illegalStateException.getMessage()),
+                CommonErrorResponse.fromException(illegalStateException),
                 HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
@@ -22,7 +22,7 @@ public class RatiExceptionHandler {
     ResponseEntity<CommonErrorResponse> clarifyReasonOfIllegalArgumentException(
             IllegalArgumentException illegalArgumentException) {
         return new ResponseEntity<>(
-                new CommonErrorResponse(illegalArgumentException.getMessage()),
+                CommonErrorResponse.fromException(illegalArgumentException),
                 HttpStatus.BAD_REQUEST
         );
     }

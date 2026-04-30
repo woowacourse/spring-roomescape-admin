@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
-import roomescape.controller.dto.ReservationTimeResponse;
 import roomescape.domain.Reservation;
 import roomescape.service.ReservationService;
 
@@ -31,7 +30,7 @@ public class ReservationController {
         List<Reservation> resultOfFind = reservationService.findAll();
 
         List<ReservationResponse> responseData = resultOfFind.stream()
-                .map(this::parseReservationToReservationResponse)
+                .map(ReservationResponse::fromDomain)
                 .toList();
 
         return new ResponseEntity<>(
@@ -48,7 +47,7 @@ public class ReservationController {
                 request.timeId()
         );
 
-        ReservationResponse responseData = parseReservationToReservationResponse(result);
+        ReservationResponse responseData = ReservationResponse.fromDomain(result);
 
         return new ResponseEntity<>(
                 responseData,
@@ -60,14 +59,5 @@ public class ReservationController {
     ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    private ReservationResponse parseReservationToReservationResponse(Reservation result) {
-        return new ReservationResponse(
-                result.id(),
-                result.name(),
-                result.date(),
-                new ReservationTimeResponse(result.time().id(), result.time().startAt())
-        );
     }
 }

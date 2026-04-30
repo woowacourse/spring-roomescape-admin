@@ -44,7 +44,8 @@ public class DBTest {
     @DisplayName("DB에서 예약 목록을 조회한다.")
     @Test
     void DB_조회_API_전환() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "15:40");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", 1);
 
         List<Reservation> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -60,10 +61,15 @@ public class DBTest {
     @DisplayName("DB에 예약을 추가하고 삭제한다.")
     @Test
     void DB_추가_삭제_API_전환() {
-        Map<String, String> params = new HashMap<>();
+        RestAssured.given()
+                .body(Map.of("startAt", "10:00"))
+                .contentType(ContentType.JSON)
+                .when().post("/times");
+
+        Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("time", "10:00");
+        params.put("timeId", 1L);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,10 +22,15 @@ public class ReservationTest {
     @Test
     void 예약_생성_테스트() {
         // given
+        RestAssured.given()
+                .body(Map.of("startAt", "10:00"))
+                .contentType(ContentType.JSON)
+                .when().post("/times");
+
         var body = Map.of(
                 "name", "brown",
                 "date", LocalDate.now().toString(),
-                "time", LocalTime.now().toString()
+                "timeId", 1L
         );
 
         // when

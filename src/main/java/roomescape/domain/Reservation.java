@@ -8,21 +8,21 @@ public class Reservation {
     private Long id;
     private String name;
     private LocalDate date;
-    private LocalTime time;
+    private ReservationTime time;
 
-    private Reservation(Long id, String name, LocalDate date, LocalTime time) {
+    private Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public static Reservation create(String name, LocalDate date, LocalTime time) {
+    public static Reservation create(String name, LocalDate date, ReservationTime time) {
         validate(name);
         return new Reservation(null, name, date, time);
     }
 
-    public static Reservation withId(Long id, String name, LocalDate date, LocalTime time) {
+    public static Reservation withId(Long id, String name, LocalDate date, ReservationTime time) {
         validate(name);
         return new Reservation(id, name, date, time);
     }
@@ -45,7 +45,7 @@ public class Reservation {
         return date;
     }
 
-    public LocalTime getTime() {
+    public ReservationTime getTime() {
         return time;
     }
 }

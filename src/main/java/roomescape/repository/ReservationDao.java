@@ -2,7 +2,6 @@ package roomescape.repository;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -10,6 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -25,9 +25,12 @@ public class ReservationDao {
     }
 
     public Reservation save(Reservation reservation) {
-        String sql = "INSERT INTO reservation (name, date, time)" +
-                " VALUES (:name, :date, :time)";
-        SqlParameterSource param = new BeanPropertySqlParameterSource(reservation);
+        String sql = "INSERT INTO reservation (name, date, time_id)" +
+                " VALUES (:name, :date, :time_id)";
+        SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("name", reservation.getName())
+                .addValue("date", reservation.getDate())
+                .addValue("time_id", reservation.getTime().getId());
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         template.update(sql, param, keyHolder);
@@ -37,12 +40,15 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAll() {
-        String sql = "SELECT id, name, date, time FROM reservation";
+        String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at FROM reservation as r " +
+                "INNER JOIN reservation_time as t ON r.time_id = t.id";
         return template.query(sql, reservationRowMapper());
     }
 
     public Optional<Reservation> findById(Long id) {
-        String sql = "SELECT id, name, date, time FROM reservation WHERE id = :id";
+        String sql = "SELECT r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at FROM reservation as r " +
+                "INNER JOIN reservation_time as t ON r.time_id = t.id " +
+                "WHERE r.id = :id ";
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("id", id);
 
@@ -62,10 +68,13 @@ public class ReservationDao {
 
     private RowMapper<Reservation> reservationRowMapper() {
         return (rs, rowNum) -> Reservation.withId(
-                rs.getLong("id"),
+                rs.getLong("reservation_id"),
                 rs.getString("name"),
                 rs.getDate("date").toLocalDate(),
-                rs.getTime("time").toLocalTime()
+                ReservationTime.withId(
+                        rs.getLong("time_id"),
+                        rs.getTime("start_at").toLocalTime()
+                )
         );
     }
 }

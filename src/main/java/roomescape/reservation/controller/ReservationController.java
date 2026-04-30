@@ -13,6 +13,7 @@ import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.ReservationRequestDto;
 import roomescape.reservation.dto.ReservationResponseDto;
 import roomescape.reservation.repository.ReservationJdbcDao;
+import roomescape.reservation.service.ReservationService;
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.repository.ReservationTimeJdbcDao;
 
@@ -20,17 +21,15 @@ import roomescape.time.repository.ReservationTimeJdbcDao;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationJdbcDao reservationJdbcDao;
-    private final ReservationTimeJdbcDao reservationTimeJdbcDao;
+    private final ReservationService reservationService;
 
-    public ReservationController(ReservationJdbcDao reservationJdbcDao, ReservationTimeJdbcDao reservationTimeJdbcDao) {
-        this.reservationJdbcDao = reservationJdbcDao;
-        this.reservationTimeJdbcDao = reservationTimeJdbcDao;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponseDto>> getAll() {
-        List<ReservationResponseDto> responseReservations = reservationJdbcDao.findAll().stream()
+        List<ReservationResponseDto> responseReservations = reservationService.findAll().stream()
                 .map(ReservationResponseDto::from)
                 .toList();
 
@@ -39,21 +38,13 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponseDto> create(@RequestBody ReservationRequestDto dto) {
-        ReservationTime reservationTime = reservationTimeJdbcDao.findById(dto.timeId());
-        Reservation reservation = Reservation.create(dto, reservationTime);
-
-        Long savedReservationId = reservationJdbcDao.save(reservation);
-
-        Reservation savedReservation = Reservation.create(savedReservationId,
-                reservation.getName(),
-                reservation.getDate(),
-                reservation.getReservationTime());
-
+        Reservation savedReservation = reservationService.save(dto);
+        ReservationResponseDto response = ReservationResponseDto.from(savedReservation);
         return ResponseEntity.ok(ReservationResponseDto.from(savedReservation));
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        reservationJdbcDao.deleteById(id);
+        reservationService.deleteById(id);
     }
 }

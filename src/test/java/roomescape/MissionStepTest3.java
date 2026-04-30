@@ -40,6 +40,15 @@ public class MissionStepTest3 {
 
     @Test
     void 예약과_시간_연결() {
+        Map<String, String> time = new HashMap<>();
+        time.put("startAt", "10:00");
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(time)
+                .when().post("/times")
+                .then().statusCode(200);
+
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");

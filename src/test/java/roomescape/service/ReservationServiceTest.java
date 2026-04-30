@@ -40,14 +40,7 @@ class ReservationServiceTest {
         Reservation saved = reservationService.getById(result.getId());
 
         // then
-        assertThat(result.getId()).isNotNull();
-        assertThat(result.getName()).isEqualTo("쿠다");
-        assertThat(result.getDate()).isEqualTo(date);
-        assertThat(result.getTime().getId()).isEqualTo(reservationTime.getId());
-
-        assertThat(saved.getName()).isEqualTo(result.getName());
-        assertThat(saved.getDate()).isEqualTo(result.getDate());
-        assertThat(saved.getTime().getId()).isEqualTo(result.getTime().getId());
+        assertThat(result).isEqualTo(saved);
     }
 
     @Test

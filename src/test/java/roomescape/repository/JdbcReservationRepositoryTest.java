@@ -51,14 +51,7 @@ class JdbcReservationRepositoryTest {
                 .orElseThrow();
 
         // then
-        assertThat(result.getId()).isNotNull();
-        assertThat(result.getName()).isEqualTo(name);
-        assertThat(result.getDate()).isEqualTo(date);
-        assertThat(result.getTime().getId()).isEqualTo(reservationTime.getId());
-
-        assertThat(saved.getId()).isEqualTo(result.getId());
-        assertThat(saved.getDate()).isEqualTo(result.getDate());
-        assertThat(saved.getTime().getId()).isEqualTo(result.getTime().getId());
+        assertThat(result).isEqualTo(saved);
     }
 
     @Test

@@ -56,6 +56,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DuplicateKeyException.class)
     public ResponseEntity<ErrorResponse> handleDuplicate(DataIntegrityViolationException e) {
         String message = "중복으로 예약을 생성할 수 없습니다.";
+
         log.warn("DataIntegrityViolationException 발생", e);
         return ResponseEntity
                 .status(HttpStatus.CONFLICT) // 409

@@ -33,11 +33,7 @@ class ReservationTimeServiceTest {
         ReservationTime saved = reservationTimeService.getById(result.getId());
 
         //then
-        assertThat(result.getId()).isNotNull();
-        assertThat(result.getStartAt()).isEqualTo(time);
-
-        assertThat(result.getId()).isEqualTo(saved.getId());
-        assertThat(result.getStartAt()).isEqualTo(saved.getStartAt());
+        assertThat(result).isEqualTo(saved);
     }
 
     @Test

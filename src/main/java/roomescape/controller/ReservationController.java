@@ -1,7 +1,6 @@
 package roomescape.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.http.ResponseEntity;
 import roomescape.domain.Reservation;
+import roomescape.dto.response.ReservationCreateResponse;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.dto.response.ReservationResponse;
 import roomescape.service.ReservationService;
@@ -26,9 +26,9 @@ public class ReservationController {
 
     @ResponseBody
     @PostMapping("/reservations")
-    public ReservationResponse create(@RequestBody ReservationRequest request) {
+    public ReservationCreateResponse create(@RequestBody ReservationRequest request) {
         Reservation reservation = reservationService.create(request);
-        return ReservationResponse.from(reservation);
+        return ReservationCreateResponse.from(reservation);
     }
 
     @ResponseBody

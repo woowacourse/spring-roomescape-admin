@@ -1,8 +1,11 @@
 package roomescape.dao;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -17,9 +20,16 @@ public class ReservationDAO {
     }
 
     public Reservation insert(String name, String date, Long timeId) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
         String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
-        jdbcTemplate.update(sql, name, date, timeId);
-        Long id = jdbcTemplate.queryForObject("select max(id) from reservation", Long.class);
+        long id = jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
+            ps.setString(1, name);
+            ps.setString(2, date);
+            ps.setLong(3, timeId);
+            return ps;
+        }, keyHolder);
 
         ReservationTime time = jdbcTemplate.queryForObject(
                 "select id, start_at from reservation_time where id = ?",

@@ -3,10 +3,10 @@ package roomescape.reservation.service;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.reservation.entity.Reservation;
+import roomescape.reservation.exception.ReservationErrorCode;
 import roomescape.reservation.exception.ReservationException;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.time.entity.ReservationTime;
@@ -38,7 +38,7 @@ public class ReservationService {
 
     public Reservation getById(long id) {
         return reservationRepository.findById(id)
-                .orElseThrow(() -> new ReservationException(HttpStatus.NOT_FOUND.value(), "예약을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ReservationException(ReservationErrorCode.RESERVATION_NOT_FOUND));
     }
 
 }

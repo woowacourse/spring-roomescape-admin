@@ -1,15 +1,14 @@
 package roomescape.exception;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import roomescape.exception.response.ErrorResponse;
+import roomescape.exception.response.ValidationError;
 
 @Slf4j
 @RestControllerAdvice
@@ -19,27 +18,25 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleValidationException(
             MethodArgumentNotValidException e
     ) {
-        Map<String, Object> errors = new HashMap<>();
-
-        e.getBindingResult().getFieldErrors()
-                .forEach(error ->
-                        errors.put(error.getField(), error.getDefaultMessage())
-                );
+        List<ValidationError> errors = e.getBindingResult().getFieldErrors()
+                .stream()
+                .map(error -> ValidationError.of(error.getField(), error.getCode()))
+                .toList();
 
         return ResponseEntity
-                .badRequest()
-                .body(ErrorResponse.of(HttpStatus.BAD_REQUEST.value(), e.getMessage(), errors));
+                .status(GlobalErrorCode.INVALID_INPUT.getHttpStatus())
+                .body(ErrorResponse.of(GlobalErrorCode.INVALID_INPUT, errors));
     }
 
-    @ExceptionHandler(BaseException.class)
-    public ResponseEntity<ErrorResponse> handleRuntimeException(
-            BaseException e
+    @ExceptionHandler(RoomescapeException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessException(
+            RoomescapeException e
     ) {
-        log.warn("BaseException 발생: {}", e.getMessage(), e);
+        log.warn("BusinessException 발생: {}", e.getMessage(), e);
 
         return ResponseEntity
-                .status(e.getCode())
-                .body(ErrorResponse.of(e.getCode(), e.getMessage(), null));
+                .status(e.getErrorCode().getHttpStatus())
+                .body(ErrorResponse.of(e.getErrorCode()));
     }
 
     @ExceptionHandler(Exception.class)
@@ -49,18 +46,19 @@ public class GlobalExceptionHandler {
         log.error("Unexpected Exception 발생", e);
 
         return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), null));
+                .status(GlobalErrorCode.INTERNAL_SERVER_ERROR.getHttpStatus())
+                .body(ErrorResponse.of(GlobalErrorCode.INTERNAL_SERVER_ERROR));
     }
 
-    @ExceptionHandler(DuplicateKeyException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicate(DataIntegrityViolationException e) {
-        String message = "중복으로 예약을 생성할 수 없습니다.";
-
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicate(
+            DataIntegrityViolationException e
+    ) {
         log.warn("DataIntegrityViolationException 발생", e);
+
         return ResponseEntity
-                .status(HttpStatus.CONFLICT) // 409
-                .body(new ErrorResponse(HttpStatus.CONFLICT.value(), message, null));
+                .status(GlobalErrorCode.CONFLICT.getHttpStatus())
+                .body(ErrorResponse.of(GlobalErrorCode.CONFLICT));
     }
 
 }

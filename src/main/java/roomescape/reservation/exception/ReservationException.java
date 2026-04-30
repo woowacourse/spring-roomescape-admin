@@ -1,10 +1,11 @@
 package roomescape.reservation.exception;
 
-import roomescape.exception.BaseException;
+import roomescape.exception.ErrorCode;
+import roomescape.exception.RoomescapeException;
 
-public class ReservationException extends BaseException {
-    public ReservationException(int code, String message) {
-        super(code, message);
+public class ReservationException extends RoomescapeException {
+    public ReservationException(ErrorCode errorCode) {
+        super(errorCode);
     }
 
 }

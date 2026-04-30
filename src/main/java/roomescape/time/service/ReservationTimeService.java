@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.time.entity.ReservationTime;
+import roomescape.time.exception.ReservationTimeErrorCode;
 import roomescape.time.exception.ReservationTimeException;
 import roomescape.time.repository.ReservationTimeRepository;
 
@@ -24,7 +25,7 @@ public class ReservationTimeService {
 
     public ReservationTime getById(long id) {
         return reservationTimeRepository.findById(id)
-                .orElseThrow(() -> new ReservationTimeException(HttpStatus.NOT_FOUND.value(), "찾는 예약 시간이 없습니다."));
+                .orElseThrow(() -> new ReservationTimeException(ReservationTimeErrorCode.RESERVATION_TIME_NOT_FOUND));
     }
 
     public List<ReservationTime> findAll() {

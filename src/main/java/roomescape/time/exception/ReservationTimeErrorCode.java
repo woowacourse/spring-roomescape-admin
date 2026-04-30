@@ -1,0 +1,33 @@
+package roomescape.time.exception;
+
+import org.springframework.http.HttpStatus;
+import roomescape.exception.ErrorCode;
+
+public enum ReservationTimeErrorCode implements ErrorCode {
+    RESERVATION_TIME_NOT_FOUND(HttpStatus.NOT_FOUND, "찾는 예약 시간이 없습니다.");
+
+
+    private final HttpStatus httpStatus;
+
+    private final String message;
+
+    ReservationTimeErrorCode(HttpStatus httpStatus, String message) {
+        this.httpStatus = httpStatus;
+        this.message = message;
+    }
+
+    @Override
+    public HttpStatus getHttpStatus() {
+        return httpStatus;
+    }
+
+    @Override
+    public int getCode() {
+        return httpStatus.value();
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
+}

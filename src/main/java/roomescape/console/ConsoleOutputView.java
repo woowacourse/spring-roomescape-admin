@@ -22,4 +22,8 @@ public class ConsoleOutputView {
     public static void printReservationList(List<Reservation> reservations) {
         System.out.println(reservations);
     }
+
+    public static void printErrorMessage(String message) {
+        System.out.println(message);
+    }
 }

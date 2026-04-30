@@ -1,7 +1,7 @@
 package roomescape.domain.reservation;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
@@ -20,11 +20,12 @@ class ReservationTest {
         Reservation reservation = Reservation.createWithoutId(name, date, time);
 
         // then
-        assertAll(
-            () -> assertThat(reservation.getId()).isNull(),
-            () -> assertThat(reservation.getName()).isEqualTo(name),
-            () -> assertThat(reservation.getDate()).isEqualTo(date),
-            () -> assertThat(reservation.getTime()).isEqualTo(time)
+        assertSoftly(softly -> {
+                softly.assertThat(reservation.getId()).isNull();
+                softly.assertThat(reservation.getName()).isEqualTo(name);
+                softly.assertThat(reservation.getDate()).isEqualTo(date);
+                softly.assertThat(reservation.getTime()).isEqualTo(time);
+            }
         );
     }
 
@@ -42,11 +43,12 @@ class ReservationTest {
         Reservation reservationWithId = Reservation.createWithId(1L, reservation);
 
         // then
-        assertAll(
-            () -> assertThat(reservationWithId.getId()).isEqualTo(1L),
-            () -> assertThat(reservationWithId.getName()).isEqualTo("보예"),
-            () -> assertThat(reservationWithId.getDate()).isEqualTo(LocalDate.of(2023, 8, 5)),
-            () -> assertThat(reservationWithId.getTime()).isEqualTo(time)
+        assertSoftly(softly -> {
+                assertThat(reservationWithId.getId()).isEqualTo(1L);
+                assertThat(reservationWithId.getName()).isEqualTo("보예");
+                assertThat(reservationWithId.getDate()).isEqualTo(LocalDate.of(2023, 8, 5));
+                assertThat(reservationWithId.getTime()).isEqualTo(time);
+            }
         );
     }
 
@@ -62,11 +64,12 @@ class ReservationTest {
         Reservation reservation = Reservation.of(id, name, date, time);
 
         // then
-        assertAll(
-            () -> assertThat(reservation.getId()).isEqualTo(id),
-            () -> assertThat(reservation.getName()).isEqualTo(name),
-            () -> assertThat(reservation.getDate()).isEqualTo(date),
-            () -> assertThat(reservation.getTime()).isEqualTo(time)
+        assertSoftly(softly -> {
+                assertThat(reservation.getId()).isEqualTo(id);
+                assertThat(reservation.getName()).isEqualTo(name);
+                assertThat(reservation.getDate()).isEqualTo(date);
+                assertThat(reservation.getTime()).isEqualTo(time);
+            }
         );
     }
 }

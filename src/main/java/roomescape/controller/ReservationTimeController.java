@@ -2,25 +2,25 @@ package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeDetailDto;
 import roomescape.dto.ReservationTimeSaveDto;
+import roomescape.service.ReservationTimeService;
 
 import java.util.List;
 
 @RestController
 public class ReservationTimeController {
 
-    private final ReservationTimeDao reservationTimeDao;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(ReservationTimeDao reservationTimeDao) {
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTimeDetailDto>> getReservationTimes() {
-        List<ReservationTimeDetailDto> responseData = reservationTimeDao.selectAll().stream()
+        List<ReservationTimeDetailDto> responseData = reservationTimeService.readAll().stream()
                 .map(ReservationTimeDetailDto::from)
                 .toList();
         return ResponseEntity.ok(responseData);
@@ -28,14 +28,14 @@ public class ReservationTimeController {
 
     @PostMapping("/times")
     public ResponseEntity<ReservationTimeDetailDto> createReservationTime(@RequestBody ReservationTimeSaveDto dto) {
-        ReservationTime savedReservationTime = reservationTimeDao.insert(new ReservationTime(dto.startAt()));
+        ReservationTime savedReservationTime = reservationTimeService.register(dto.startAt());
         ReservationTimeDetailDto responseData = ReservationTimeDetailDto.from(savedReservationTime);
         return ResponseEntity.ok(responseData);
     }
 
     @DeleteMapping("/times/{id}")
     public ResponseEntity<Void> deleteReservationTime(@PathVariable Long id) {
-        reservationTimeDao.delete(id);
+        reservationTimeService.deregister(id);
         return ResponseEntity.ok().build();
     }
 

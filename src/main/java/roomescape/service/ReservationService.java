@@ -35,7 +35,7 @@ public class ReservationService {
 
     private ReservationTime readReservationTime(Long id) {
         return reservationTimeDao.select(id)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 ReservationTime 입니다."));
     }
 
 }

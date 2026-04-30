@@ -17,12 +17,12 @@ class InMemoryReservationRepositoryTest {
     @BeforeEach
     void setup() {
         inMemoryReservationRepository = new InMemoryReservationRepository();
-        inMemoryReservationRepository.save(new Reservation(
+        inMemoryReservationRepository.save(Reservation.of(
                 inMemoryReservationRepository.generateId(), "한다", LocalDate.of(2023, 8, 5),
-                new ReservationTime(1L, LocalTime.of(15, 40))));
-        inMemoryReservationRepository.save(new Reservation(
+                ReservationTime.of(1L, LocalTime.of(15, 40))));
+        inMemoryReservationRepository.save(Reservation.of(
                 inMemoryReservationRepository.generateId(), "판다", LocalDate.of(2023, 10, 5),
-                new ReservationTime(2L, LocalTime.of(15, 40))));
+                ReservationTime.of(2L, LocalTime.of(15, 40))));
     }
 
     @Test
@@ -36,7 +36,7 @@ class InMemoryReservationRepositoryTest {
     void save() {
         //given & when
         inMemoryReservationRepository.save(
-                new Reservation(3L, "새로운사람", LocalDate.of(2023, 6, 5), new ReservationTime(3L, LocalTime.of(12, 0))));
+                Reservation.of(3L, "새로운사람", LocalDate.of(2023, 6, 5), ReservationTime.of(3L, LocalTime.of(12, 0))));
 
         //then
         assertThat(inMemoryReservationRepository.findAll().size()).isEqualTo(3);
@@ -46,7 +46,7 @@ class InMemoryReservationRepositoryTest {
     @DisplayName("예약 추가시 중복되는 아이디가 존재하면 예외가 발생한다.")
     void save_id_already_exists() {
         assertThatThrownBy(() -> inMemoryReservationRepository.save(
-                new Reservation(1L, "새로운사람", LocalDate.of(2023, 6, 5), new ReservationTime(3L, LocalTime.of(12, 0)))))
+                Reservation.of(1L, "새로운사람", LocalDate.of(2023, 6, 5), ReservationTime.of(3L, LocalTime.of(12, 0)))))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("중복된 예약 id가 존재합니다.");
     }

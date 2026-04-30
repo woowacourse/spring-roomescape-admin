@@ -33,7 +33,7 @@ class ReservationServiceTest {
                 jdbcTemplate);
         this.reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
 
-        timeId = reservationTimeRepository.save(new ReservationTime(null, LocalTime.of(15, 40)));
+        timeId = reservationTimeRepository.save(ReservationTime.create(LocalTime.of(15, 40)));
         reservationService.create(new CreateReservationRequest("한다", LocalDate.of(2023, 8, 5), timeId));
         reservationService.create(new CreateReservationRequest("판다", LocalDate.of(2023, 10, 5), timeId));
     }

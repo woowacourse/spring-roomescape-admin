@@ -31,7 +31,7 @@ public class ReservationService {
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 예약 시간입니다."));
 
         Long id = reservationRepository.save(
-                new Reservation(null, createReservationRequest.name(), createReservationRequest.date(),
+                Reservation.create(createReservationRequest.name(), createReservationRequest.date(),
                         reservationTime));
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("예약 생성에 실패했습니다."));

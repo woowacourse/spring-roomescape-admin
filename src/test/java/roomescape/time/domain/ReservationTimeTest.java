@@ -12,7 +12,7 @@ class ReservationTimeTest {
 
     @BeforeEach
     void setUp() {
-        reservationTime = new ReservationTime(1L, LocalTime.of(10, 0));
+        reservationTime = ReservationTime.of(1L, LocalTime.of(10, 0));
     }
 
     @Test

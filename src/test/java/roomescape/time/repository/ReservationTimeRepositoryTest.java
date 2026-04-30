@@ -23,10 +23,10 @@ class ReservationTimeRepositoryTest {
     void setup() {
         jdbcTemplateReservationTimeRepository = new JdbcTemplateReservationTimeRepository(jdbcTemplate);
 
-        timeId = jdbcTemplateReservationTimeRepository.save(new ReservationTime(null,
+        timeId = jdbcTemplateReservationTimeRepository.save(ReservationTime.create(
                 LocalTime.of(15, 40)));
-        jdbcTemplateReservationTimeRepository.save(new ReservationTime(
-                null, LocalTime.of(15, 40)));
+        jdbcTemplateReservationTimeRepository.save(ReservationTime.create(
+                LocalTime.of(15, 40)));
     }
 
     @Test
@@ -34,7 +34,7 @@ class ReservationTimeRepositoryTest {
     void save() {
         //given & when
         jdbcTemplateReservationTimeRepository.save(
-                new ReservationTime(null, LocalTime.of(12, 0)));
+                ReservationTime.create(LocalTime.of(12, 0)));
 
         //then
         assertThat(jdbcTemplateReservationTimeRepository.findAll().size()).isEqualTo(3);

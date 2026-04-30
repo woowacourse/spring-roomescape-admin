@@ -22,7 +22,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse create(CreateReservationTimeRequest createReservationTimeRequest) {
-        Long id = reservationTimeRepository.save(new ReservationTime(null, createReservationTimeRequest.startAt()));
+        Long id = reservationTimeRepository.save(ReservationTime.create(createReservationTimeRequest.startAt()));
         ReservationTime reservationTime = reservationTimeRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("예약 시간 생성에 실패했습니다."));
         return ReservationTimeResponse.from(reservationTime);

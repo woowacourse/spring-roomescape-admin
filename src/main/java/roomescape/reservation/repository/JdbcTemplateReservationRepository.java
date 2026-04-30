@@ -32,11 +32,11 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
         return jdbcTemplate.query(
                 sql,
-                (resultSet, rowNumber) -> new Reservation(
+                (resultSet, rowNumber) -> Reservation.of(
                         resultSet.getLong("id"),
                         resultSet.getString("name"),
                         resultSet.getDate("date").toLocalDate(),
-                        new ReservationTime(
+                        ReservationTime.of(
                                 resultSet.getLong("time_id"),
                                 resultSet.getTime("start_at").toLocalTime()
                         )));
@@ -54,11 +54,11 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
-                    (resultSet, rowNumber) -> new Reservation(
+                    (resultSet, rowNumber) -> Reservation.of(
                             resultSet.getLong("id"),
                             resultSet.getString("name"),
                             resultSet.getDate("date").toLocalDate(),
-                            new ReservationTime(
+                            ReservationTime.of(
                                     resultSet.getLong("time_id"),
                                     resultSet.getTime("start_at").toLocalTime()
                             )

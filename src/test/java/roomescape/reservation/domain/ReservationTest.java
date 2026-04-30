@@ -14,8 +14,8 @@ class ReservationTest {
 
     @BeforeEach
     void setup() {
-        reservation = new Reservation(1L, "한다", LocalDate.of(2023, 8, 5),
-                new ReservationTime(1L, LocalTime.of(15, 40)));
+        reservation = Reservation.of(1L, "한다", LocalDate.of(2023, 8, 5),
+                ReservationTime.of(1L, LocalTime.of(15, 40)));
     }
 
     @Test

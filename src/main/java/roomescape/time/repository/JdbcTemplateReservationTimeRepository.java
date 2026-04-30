@@ -25,7 +25,7 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
         String sql = "SELECT * FROM reservation_time";
 
         return jdbcTemplate.query(sql,
-                (resultSet, rowNumber) -> new ReservationTime(
+                (resultSet, rowNumber) -> ReservationTime.of(
                         resultSet.getLong("id"),
                         resultSet.getTime("start_at").toLocalTime()
                 ));
@@ -38,7 +38,7 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
         try {
             return Optional.ofNullable(
                     jdbcTemplate.queryForObject(sql,
-                            (resultSet, row) -> new ReservationTime(
+                            (resultSet, row) -> ReservationTime.of(
                                     resultSet.getLong("id"),
                                     resultSet.getTime("start_at").toLocalTime()
                             ), id));

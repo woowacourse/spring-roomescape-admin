@@ -1,4 +1,4 @@
-package roomescape.domain;
+package roomescape.domain.user;
 
 public class User {
     private final Long id;

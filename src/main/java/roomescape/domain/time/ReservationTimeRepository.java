@@ -1,7 +1,6 @@
-package roomescape.domain.repository;
+package roomescape.domain.time;
 
 import java.util.List;
-import roomescape.domain.ReservationTime;
 
 public interface ReservationTimeRepository {
     // 시간 추가

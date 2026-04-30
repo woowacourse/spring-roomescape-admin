@@ -1,7 +1,6 @@
-package roomescape.domain.repository;
+package roomescape.domain.reservation;
 
 import java.util.List;
-import roomescape.domain.Reservation;
 
 public interface ReservationRepository {
     // 예약 추가

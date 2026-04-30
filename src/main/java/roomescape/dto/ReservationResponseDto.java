@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 public record ReservationResponseDto(
         Long id,
         String name,
         LocalDate date,
-        @JsonFormat(pattern = "HH:mm")
-        LocalTime time
+        ReservationTime time
 ) {
 
     public static ReservationResponseDto from(Reservation reservation) {

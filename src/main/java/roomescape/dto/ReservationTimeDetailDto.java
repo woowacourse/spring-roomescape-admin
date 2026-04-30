@@ -6,7 +6,7 @@ import java.time.LocalTime;
 
 public record ReservationTimeDetailDto(
         Long id,
-        LocalTime time
+        LocalTime startAt
 ) {
 
     public static ReservationTimeDetailDto from(ReservationTime reservationTime) {

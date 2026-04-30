@@ -1,7 +1,7 @@
 ## 학습 로그 #N
 
-**시간**: MM/DD HH:MM ~ HH:MM (약 __분)
-**학습 범위**: (예: 1단계 MVC / 2단계 DB 연동 / 3단계 시간 관리)
+**시간**: 04/30 13:00 ~ HH:MM (약 __분)
+**학습 범위**: 3단계 시간 관리
 
 ### 1. 막힌 것의 종류
 이번에 막힌 것은 어떤 종류의 어려움이었는가? (해당하는 것에 체크)
@@ -11,6 +11,31 @@
 - [ ] 기타: ___
 
 ### 2. 이번 타임의 학습 전략
+
+[데이터 모델링] FK의 이해: 테이블의 time_id가 어떻게 자바의 ReservationTime 객체로 치환되는지 그 과정을 이해한다.
+[SQL] JOIN의 숙달: 평면적인 reservation 테이블을 JOIN을 통해 입체적인 객체 구조로 복원하는 쿼리 작성에 집중한다.
+[객체지향] 객체 그래프 탐색: Reservation이 ReservationTime을 필드로 가짐으로써 발생하는 '객체 간의 협력' 구조를 익힌다.
+
+가지치기(제외할 것):
+- 새로운 테스트 프레임워크 학습 (제공된 것만 사용)
+- 복잡한 예외 처리 로직 (ID 미존재 등 최소한의 예외만 처리)
+- LocalDate 등 시간 타입 고도화 (요구사항대로 String 기반으로 우선 연동)
+
+공식문서 참고해야 할 부분
+
+Spring Framework: RowMapper와 INNER JOIN 매핑 규약: 이름 충돌 방지를 위한 SQL Alias(별칭) 사용, 객체 조립 순서(내부 객체 먼저 조립 -> 외부 객체 조립)
+
+H2 Database: FOREIGN KEY 문법과 예외 처리: 
+```sql
+    -- FOREIGN KEY (현재테이블컬럼) REFERENCES 부모테이블(부모컬럼)
+    FOREIGN KEY (time_id) REFERENCES reservation_time (id)
+```
+주의할 점
+reservation_time 테이블에 없는 id(예: 999)를 reservation.time_id에 넣으려고 시도(POST)하면, H2는 제약 조건 위반 에러를 발생시킵니다.
+
+스프링의 JdbcTemplate은 이 DB 에러를 낚아채서 자바 예외인 DataIntegrityViolationException으로 자동 변환해 던집니다. (이 예외가 터지면 정상적으로 DB 제약 조건이 작동하고 있다는 증거입니다.)
+
+Jackson 공식 문서에 따르면, Java 14+의 record 타입은 별도의 기본 생성자나 Getter, 어노테이션(@JsonProperty 등) 없이도 필드명 그대로 완벽하게 자동 직렬화를 지원합니다.
 
 #### 이전에 바꾸기로 한 전략은 무엇이었고, 실행했는가?
 

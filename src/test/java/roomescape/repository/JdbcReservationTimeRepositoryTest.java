@@ -69,4 +69,17 @@ class JdbcReservationTimeRepositoryTest {
         assertThatNoException().isThrownBy(() -> repository.deleteById(reservationTime.getId()));
         assertThat(repository.findAll()).hasSize(0);
     }
+
+    @Test
+    void 아이디로_특정_데이터_조회_테스트() {
+        // given
+        ReservationTime test = repository.createReservationTime(new ReservationTime(null, "16:20"));
+        Long id = test.getId();
+
+        // when
+        ReservationTime target = repository.findById(id);
+
+        // then
+        assertThat(target.getStartAt()).isEqualTo(test.getStartAt());
+    }
 }

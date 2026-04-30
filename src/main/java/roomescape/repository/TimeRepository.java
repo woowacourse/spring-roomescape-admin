@@ -2,7 +2,7 @@ package roomescape.repository;
 
 import java.util.List;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.TimeRequest;
+import roomescape.dto.ReservationTimeRequest;
 
 public interface TimeRepository {
 
@@ -10,7 +10,7 @@ public interface TimeRepository {
 
     ReservationTime findById(long id);
 
-    long save(TimeRequest timeRequest);
+    long save(ReservationTimeRequest reservationTimeRequest);
 
     void deleteById(long id);
 }

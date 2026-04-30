@@ -3,7 +3,7 @@ package roomescape.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.TimeRequest;
+import roomescape.dto.ReservationTimeRequest;
 import roomescape.repository.TimeRepository;
 
 @Service
@@ -19,8 +19,8 @@ public class TimeService {
         return timeRepository.findAll();
     }
 
-    public long saveTime(TimeRequest timeRequest) {
-        return timeRepository.save(timeRequest);
+    public long saveTime(ReservationTimeRequest reservationTimeRequest) {
+        return timeRepository.save(reservationTimeRequest);
     }
 
     public void removeTime(long timeId) {

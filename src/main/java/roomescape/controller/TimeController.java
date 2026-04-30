@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.TimeRequest;
-import roomescape.dto.TimeResponse;
+import roomescape.dto.ReservationTimeRequest;
+import roomescape.dto.ReservationTimeResponse;
 import roomescape.service.TimeService;
-import roomescape.util.TimeMapper;
+import roomescape.util.ReservationTimeMapper;
 
 @RestController
 @RequestMapping("times")
@@ -26,15 +26,17 @@ public class TimeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TimeResponse>> times() {
+    public ResponseEntity<List<ReservationTimeResponse>> times() {
         return ResponseEntity.ok(convertToTimeResponses(timeService.allTimes()));
     }
 
     @PostMapping
-    public ResponseEntity<TimeResponse> createTime(@RequestBody TimeRequest timeRequest) {
-        long timeId = timeService.saveTime(timeRequest);
-        TimeResponse timeResponse = TimeMapper.toResponse(timeService.findTime(timeId));
-        return ResponseEntity.ok(timeResponse);
+    public ResponseEntity<ReservationTimeResponse> createTime(
+            @RequestBody ReservationTimeRequest reservationTimeRequest) {
+        long timeId = timeService.saveTime(reservationTimeRequest);
+        ReservationTimeResponse reservationTimeResponse = ReservationTimeMapper.toResponse(
+                timeService.findTime(timeId));
+        return ResponseEntity.ok(reservationTimeResponse);
     }
 
     @DeleteMapping("/{id}")
@@ -43,9 +45,9 @@ public class TimeController {
         return ResponseEntity.ok().build();
     }
 
-    private List<TimeResponse> convertToTimeResponses(List<ReservationTime> reservationTimes) {
+    private List<ReservationTimeResponse> convertToTimeResponses(List<ReservationTime> reservationTimes) {
         return reservationTimes.stream()
-                .map(TimeMapper::toResponse)
+                .map(ReservationTimeMapper::toResponse)
                 .toList();
     }
 }

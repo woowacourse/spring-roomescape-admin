@@ -13,7 +13,7 @@ import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.service.ReservationService;
-import roomescape.util.ReservationMapper;
+import roomescape.util.ReservationTimeMapper;
 
 @RestController
 @RequestMapping("/reservations")
@@ -33,8 +33,7 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
         long reservationId = reservationService.saveReservation(reservationRequest);
-        ReservationResponse reservationResponse = ReservationMapper.toResponse(
-                reservationService.findReservation(reservationId));
+        ReservationResponse reservationResponse = toResponse(reservationService.findReservation(reservationId));
         return ResponseEntity.ok(reservationResponse);
     }
 
@@ -46,7 +45,16 @@ public class ReservationController {
 
     private List<ReservationResponse> convertToReservationResponse(List<Reservation> reservations) {
         return reservations.stream()
-                .map(ReservationMapper::toResponse)
+                .map(this::toResponse)
                 .toList();
+    }
+
+    private ReservationResponse toResponse(Reservation reservation) {
+        return new ReservationResponse(
+                reservation.id(),
+                reservation.name(),
+                reservation.date(),
+                ReservationTimeMapper.toResponse(reservation.reservationTime())
+        );
     }
 }

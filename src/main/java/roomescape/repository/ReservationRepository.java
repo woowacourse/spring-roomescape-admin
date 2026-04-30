@@ -22,7 +22,7 @@ public class ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long create(ReservationRequest request) {
+    public Long create(Reservation reservation) {
         String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -30,9 +30,9 @@ public class ReservationRepository {
         jdbcTemplate.update(
                 connection -> {
                     PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-                    ps.setString(1, request.getName());
-                    ps.setObject(2, request.getDate());
-                    ps.setLong(3, request.getTimeId());
+                    ps.setString(1, reservation.getName());
+                    ps.setObject(2, reservation.getDate());
+                    ps.setLong(3, reservation.getTime().getId());
                     return ps;
                 }, keyHolder);
         return keyHolder.getKey().longValue();

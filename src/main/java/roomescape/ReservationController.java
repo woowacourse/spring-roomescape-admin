@@ -13,38 +13,38 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class RoomEscapeController {
+public class ReservationController {
 
-    private final ReservationDAO reservationDAO;
+    private final RoomescapeService roomescapeService;
 
-    public RoomEscapeController(ReservationDAO reservationDAO) {
-        this.reservationDAO = reservationDAO;
+    public ReservationController(RoomescapeService roomescapeService) {
+        this.roomescapeService = roomescapeService;
     }
 
     @GetMapping("/reservations")
     @ResponseBody
     public List<Reservation> read() {
-        return reservationDAO.findAllReservation();
+        return roomescapeService.readReservation();
     }
 
     @PostMapping("/reservations")
     @ResponseBody
     public ResponseEntity<Reservation> add(
             @RequestBody ReservationRequestDTO reservationRequestDTO) {
-        ReservationTime reservationTime = reservationDAO.findReservationTimeById(
+        ReservationTime reservationTime = roomescapeService.getReservationTime(
                 reservationRequestDTO.timeId());
         Reservation newReservation = new Reservation(reservationRequestDTO.name(),
                 reservationRequestDTO.date(), reservationTime);
-        Long id = reservationDAO.add(newReservation);
-        Reservation finalReservaion = new Reservation(id, reservationRequestDTO.name(),
+        Long id = roomescapeService.addReservation(newReservation);
+        Reservation finalReservation = new Reservation(id, reservationRequestDTO.name(),
                 reservationRequestDTO.date(), reservationTime);
-        return ResponseEntity.ok(finalReservaion);
+        return ResponseEntity.ok(finalReservation);
     }
 
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        reservationDAO.delete(id);
+        roomescapeService.deleteReservation(id);
         return ResponseEntity.ok().build();
     }
 
@@ -53,19 +53,19 @@ public class RoomEscapeController {
     public ResponseEntity<ReservationTime> add(@RequestBody Map<String, String> params) {
         ReservationTime reservationTime = new ReservationTime(null,
                 LocalTime.parse(params.get("startAt")));
-        ReservationTime saved = reservationDAO.addReservationTime(reservationTime);
+        ReservationTime saved = roomescapeService.addReservationTime(reservationTime);
         return ResponseEntity.ok(saved);
     }
 
     @GetMapping("/times")
     @ResponseBody
     public List<ReservationTime> readReservationTime() {
-        return reservationDAO.findAllReservationTime();
+        return roomescapeService.findAllReservationTime();
     }
 
     @DeleteMapping("/times/{id}")
     public ResponseEntity<Void> deleteReservationTime(@PathVariable Long id) {
-        reservationDAO.deleteReservationTime(id);
+        roomescapeService.deleteReservationTime(id);
         return ResponseEntity.ok().build();
     }
 }

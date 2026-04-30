@@ -22,6 +22,7 @@ public class Reservation {
         this.date = date;
         this.time = time;
     }
+
     public String getName() {
         return name;
     }

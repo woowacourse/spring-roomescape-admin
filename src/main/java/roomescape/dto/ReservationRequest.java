@@ -1,7 +1,7 @@
 package roomescape.dto;
 
-import roomescape.Reservation;
-import roomescape.ReservationTime;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 
 public record ReservationRequest(String date, String name, Long timeId) {
 

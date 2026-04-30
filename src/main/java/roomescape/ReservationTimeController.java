@@ -17,18 +17,18 @@ public class ReservationTimeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTime>> read() {
+    public ResponseEntity<List<ReservationTime>> getReservationTimes() {
         return ResponseEntity.ok().body(service.findAll());
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTime> create(@RequestBody ReservationTime reservationTime) {
-        return ResponseEntity.ok().body(service.createReservationTime(reservationTime));
+    public ResponseEntity<ReservationTime> createReservationTime(@RequestBody ReservationTime reservationTime) {
+        return ResponseEntity.ok().body(service.create(reservationTime));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.deleteReservationTime(id);
+    public ResponseEntity<Void> deleteReservationTime(@PathVariable Long id) {
+        service.delete(id);
         return ResponseEntity.ok().build();
     }
 }

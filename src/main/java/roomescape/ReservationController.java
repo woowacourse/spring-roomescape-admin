@@ -17,18 +17,18 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> read() {
+    public ResponseEntity<List<Reservation>> getReservations() {
         return ResponseEntity.ok().body(service.findAll());
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> create(@RequestBody ReservationRequest request) {
-        return ResponseEntity.ok().body(service.createReservation(request));
+    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationRequest request) {
+        return ResponseEntity.ok().body(service.create(request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.deleteReservation(id);
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+        service.delete(id);
         return ResponseEntity.ok().build();
     }
 }

@@ -19,7 +19,7 @@ public class ReservationService {
         return reservationDao.findAll();
     }
 
-    public Reservation createReservation(ReservationRequest request) {
+    public Reservation create(ReservationRequest request) {
         ReservationTime time = reservationTimeDao.findBy(request.getTimeId());
         Reservation reservation = new Reservation(
                 null,
@@ -30,7 +30,7 @@ public class ReservationService {
         return reservationDao.findBy(id);
     }
 
-    public void deleteReservation(Long id) {
+    public void delete(Long id) {
         int deletedCount = reservationDao.delete(id);
         if (deletedCount != 1) {
             throw new IllegalArgumentException("[ERROR] 삭제 요청 실패");

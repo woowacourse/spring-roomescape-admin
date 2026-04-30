@@ -17,12 +17,12 @@ public class ReservationTimeService {
         return reservationTimeDao.findAll();
     }
 
-    public ReservationTime createReservationTime(ReservationTime reservationTime) {
+    public ReservationTime create(ReservationTime reservationTime) {
         Long id = reservationTimeDao.insert(reservationTime);
         return reservationTimeDao.findBy(id);
     }
 
-    public void deleteReservationTime(Long id) {
+    public void delete(Long id) {
         int deletedCount = reservationTimeDao.delete(id);
         if (deletedCount != 1) {
             throw new IllegalArgumentException("[ERROR] 삭제 요청 실패");

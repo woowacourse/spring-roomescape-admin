@@ -50,7 +50,6 @@ class JdbcReservationRepositoryTest {
         List<Reservation> reservations = reservationRepository.findAll();
 
         assertThat(reservations).hasSize(2);
-        // Join이 잘 되었는지 ReservationTime 객체의 필드도 확인합니다.
         assertThat(reservations.get(0).getTime().getStartAt()).isEqualTo("10:00");
     }
 

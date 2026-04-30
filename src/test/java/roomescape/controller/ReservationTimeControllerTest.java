@@ -9,8 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import roomescape.dto.TimeRequest;
-import roomescape.dto.TimeResponse;
+import roomescape.controller.dto.TimeRequest;
+import roomescape.controller.dto.TimeResponse;
 import roomescape.repository.ReservationTimeRepository;
 
 public class ReservationTimeControllerTest {

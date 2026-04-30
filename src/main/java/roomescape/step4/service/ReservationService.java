@@ -8,6 +8,7 @@ import roomescape.step4.dto.ReservationRequest;
 import roomescape.step4.repository.ReservationRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional(readOnly = true)
@@ -40,6 +41,10 @@ public class ReservationService {
 
     @Transactional
     public void deleteReservation(Long id) {
-        reservationRepository.deleteById(id);
+        int deleted = reservationRepository.deleteById(id);
+
+        if (deleted == 0) {
+            throw new NoSuchElementException("삭제할 예약이 존재하지 않습니다.");
+        }
     }
 }

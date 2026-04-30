@@ -31,13 +31,9 @@ public class ReservationTimeService {
     public ReservationTimeResponse saveReservationTime(ReservationTimeCreateRequest request) {
         ReservationTime reservationTime = request.toEntity();
 
-        Long saveId = reservationTimeRepository.save(reservationTime);
-        ReservationTime saved = ReservationTime.builder()
-                .id(saveId)
-                .startAt(reservationTime.getStartAt())
-                .build();
+        ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
 
-        return ReservationTimeResponse.from(saved);
+        return ReservationTimeResponse.from(savedReservationTime);
     }
 
     public void deleteReservationTime(Long id) {

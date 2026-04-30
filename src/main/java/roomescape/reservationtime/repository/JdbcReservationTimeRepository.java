@@ -40,7 +40,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public Long save(ReservationTime reservationTime) {
+    public ReservationTime save(ReservationTime reservationTime) {
         String formattedStartAt = reservationTime.getStartAt().format(DateTimeFormatter.ofPattern("HH:mm"));
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -53,7 +53,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
             return ps;
         }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+        return reservationTime.withId(keyHolder.getKey().longValue());
     }
 
     @Override

@@ -18,4 +18,12 @@ public class GlobalExceptionHandler {
                 .body(errorCode);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorCode> handleHttpMessageNotReadable(IllegalArgumentException e) {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        ErrorCode errorCode = new ErrorCode(httpStatus.value(), httpStatus, e.getMessage());
+        return ResponseEntity.status(httpStatus)
+                .body(errorCode);
+    }
+
 }

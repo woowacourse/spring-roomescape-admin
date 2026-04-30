@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleRuntimeException(
             BaseException e
     ) {
-        log.warn("IllegalArgumentException 발생: {}", e.getMessage(), e);
+        log.warn("BaseException 발생: {}", e.getMessage(), e);
 
         return ResponseEntity
                 .badRequest()

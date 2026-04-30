@@ -37,10 +37,6 @@ public class ReservationService {
 
     @Transactional
     public void deleteById(long id) {
-        if (!reservationRepository.existsById(id)) {
-            throw new IllegalArgumentException("삭제할 예약이 존재하지 않습니다.");
-        }
-
         reservationRepository.deleteById(id);
     }
 

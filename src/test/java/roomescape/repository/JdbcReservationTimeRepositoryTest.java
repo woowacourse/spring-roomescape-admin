@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 
 @Import(JdbcReservationTimeRepository.class)
 @JdbcTest
@@ -23,13 +24,14 @@ class JdbcReservationTimeRepositoryTest {
 
     @Test
     void 시간_데이터_생성_테스트() {
-        // given, when
+        // given
         ReservationTime reservationTime = repository.createReservationTime(new ReservationTime(null, "16:20"));
-
-        // then
         assertThat(reservationTime).isNotNull();
 
+        // when
         List<ReservationTime> all = repository.findAll();
+
+        // then
         assertThat(all).hasSize(1);
         assertThat(all.get(0).getId()).isEqualTo(reservationTime.getId());
         assertThat(all.get(0).getStartAt()).isEqualTo(reservationTime.getStartAt());
@@ -53,5 +55,18 @@ class JdbcReservationTimeRepositoryTest {
                 .extracting(ReservationTime::getStartAt)
                 .anySatisfy(getStartAt -> assertThat(getStartAt).isEqualTo(time1.getStartAt()))
                 .anySatisfy(getStartAt -> assertThat(getStartAt).isEqualTo(time2.getStartAt()));
+    }
+
+    @Test
+    void 시간_데이터_삭제_테스트() {
+        // given
+        ReservationTime reservationTime = repository.createReservationTime(new ReservationTime(null, "20:43"));
+        List<ReservationTime> all = repository.findAll();
+        assertThat(all).hasSize(1);
+        assertThat(all.getFirst().getId()).isEqualTo(reservationTime.getId());
+
+        // when, then
+        assertThatNoException().isThrownBy(() -> repository.deleteById(reservationTime.getId()));
+        assertThat(repository.findAll()).hasSize(0);
     }
 }

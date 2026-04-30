@@ -1,6 +1,7 @@
 package roomescape.time.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -9,6 +10,7 @@ import roomescape.time.domain.ReservationTime;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
+import java.util.List;
 
 @Repository
 public class ReservationTimeRepository {
@@ -31,5 +33,17 @@ public class ReservationTimeRepository {
 
         long id = keyHolder.getKey().longValue();
         return new ReservationTime(id, startAt);
+    }
+
+    public List<ReservationTime> findAll() {
+        String sql = "SELECT * FROM reservation_time";
+        return jdbcTemplate.query(sql, reservationTimeRowsMapper());
+    }
+
+    private RowMapper<ReservationTime> reservationTimeRowsMapper() {
+        return (rs, rowNum) ->  new ReservationTime(
+                    rs.getLong("id"),
+                    LocalTime.parse(rs.getString("start_at"))
+        );
     }
 }

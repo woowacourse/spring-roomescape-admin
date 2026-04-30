@@ -1,52 +1,37 @@
 package roomescape.controller;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.web.bind.annotation.*;
+import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
-
-import java.sql.PreparedStatement;
-import java.util.List;
+import roomescape.service.ReservationTimeService;
 
 @RestController
 public class ReservationTimeController {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
-
-    private final RowMapper<ReservationTime> rowMapper = (rs, rowNum) -> new ReservationTime(
-            rs.getLong("id"),
-            rs.getString("start_at")
-    );
 
     @GetMapping("/times")
     public List<ReservationTime> getTimes() {
-        return jdbcTemplate.query("SELECT id, start_at FROM reservation_time", rowMapper);
+        return reservationTimeService.getTimes();
     }
 
     @PostMapping("/times")
     public ReservationTime createTime(@RequestBody ReservationTimeRequest request) {
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(con -> {
-            PreparedStatement ps = con.prepareStatement(
-                    "INSERT INTO reservation_time (start_at) VALUES (?)",
-                    new String[]{"id"}
-            );
-            ps.setString(1, request.startAt());
-            return ps;
-        }, keyHolder);
-
-        return new ReservationTime(keyHolder.getKey().longValue(), request.startAt());
+        return reservationTimeService.createTime(request);
     }
 
     @DeleteMapping("/times/{id}")
     public void deleteTime(@PathVariable Long id) {
-        jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
+        reservationTimeService.deleteTime(id);
     }
 }

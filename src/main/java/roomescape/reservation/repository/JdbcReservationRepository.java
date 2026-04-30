@@ -1,23 +1,29 @@
 package roomescape.reservation.repository;
 
-import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservationtime.domain.ReservationTime;
 
-@RequiredArgsConstructor
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
+
+    public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
+    }
 
     @Override
     public List<Reservation> findAll() {
@@ -44,19 +50,13 @@ public class JdbcReservationRepository implements ReservationRepository {
     @Override
     public Reservation save(Reservation reservation) {
         String formattedDate = reservation.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", reservation.getName())
+                .addValue("date", formattedDate)
+                .addValue("time_id", reservation.getTimeId());
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
-                    new String[]{"id"});
-            ps.setString(1, reservation.getName());
-            ps.setString(2, formattedDate);
-            ps.setLong(3, reservation.getTimeId());
-            return ps;
-        }, keyHolder);
-
-        return reservation.withId(keyHolder.getKey().longValue());
+        Long id = jdbcInsert.executeAndReturnKey(params).longValue();
+        return reservation.withId(id);
     }
 
     @Override
@@ -66,12 +66,10 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Boolean existsByDateAndTime(LocalDate date, Long timeId) {
-        String formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
         return jdbcTemplate.queryForObject(
                 "SELECT EXISTS(SELECT 1 FROM reservation WHERE date = ? AND time_id = ?)",
                 Boolean.class,
-                formattedDate,
+                date,
                 timeId);
     }
 }

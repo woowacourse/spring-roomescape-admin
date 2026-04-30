@@ -1,21 +1,27 @@
 package roomescape.reservationtime.repository;
 
-import java.sql.PreparedStatement;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservationtime.domain.ReservationTime;
 
-@RequiredArgsConstructor
 @Repository
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
+
+    public JdbcReservationTimeRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
+    }
 
     @Override
     public Optional<ReservationTime> findById(Long id) {
@@ -41,19 +47,12 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public ReservationTime save(ReservationTime reservationTime) {
-        String formattedStartAt = reservationTime.getStartAt().format(DateTimeFormatter.ofPattern("HH:mm"));
+        String formattedTime = reservationTime.getStartAt().format(DateTimeFormatter.ofPattern("HH:mm"));
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("start_at", formattedTime);
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO reservation_time (start_at) VALUES (?)",
-                    new String[]{"id"});
-            ps.setString(1, formattedStartAt);
-            return ps;
-        }, keyHolder);
-
-        return reservationTime.withId(keyHolder.getKey().longValue());
+        Long id = jdbcInsert.executeAndReturnKey(params).longValue();
+        return reservationTime.withId(id);
     }
 
     @Override

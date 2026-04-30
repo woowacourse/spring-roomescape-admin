@@ -11,7 +11,7 @@ public class ReservationTimeService {
 
     private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationTimeService(final ReservationTimeDao reservationTimeDao) {
+    public ReservationTimeService(ReservationTimeDao reservationTimeDao) {
         this.reservationTimeDao = reservationTimeDao;
     }
 
@@ -21,16 +21,16 @@ public class ReservationTimeService {
                 .toList();
     }
 
-    public ReservationTime create(final String startAt) {
+    public ReservationTime create(String startAt) {
         final long id = reservationTimeDao.save(startAt);
         return ReservationTime.create(id, startAt);
     }
 
-    public void delete(final long id) {
+    public void delete(long id) {
         reservationTimeDao.delete(id);
     }
 
-    private ReservationTime toReservationTime(final Map<String, Object> row) {
+    private ReservationTime toReservationTime(Map<String, Object> row) {
         return ReservationTime.create(
                 ((Number) row.get("id")).longValue(),
                 row.get("start_at").toString()

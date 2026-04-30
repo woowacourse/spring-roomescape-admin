@@ -12,7 +12,7 @@ public class ReservationDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationDao(final JdbcTemplate jdbcTemplate) {
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
@@ -34,7 +34,7 @@ public class ReservationDao {
                 """);
     }
 
-    public long save(final String name, final String date, final long timeId) {
+    public long save(String name, String date, long timeId) {
         return simpleJdbcInsert.executeAndReturnKey(Map.of(
                 "name", name,
                 "date", date,
@@ -42,7 +42,7 @@ public class ReservationDao {
         )).longValue();
     }
 
-    public void delete(final long id) {
+    public void delete(long id) {
         jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
     }
 }

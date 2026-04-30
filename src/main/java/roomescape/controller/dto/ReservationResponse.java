@@ -4,7 +4,7 @@ import roomescape.domain.Reservation;
 
 public record ReservationResponse(long id, String name, String date, ReservationTimeResponse time) {
 
-    public static ReservationResponse from(final Reservation reservation) {
+    public static ReservationResponse from(Reservation reservation) {
         return new ReservationResponse(
                 reservation.getId(),
                 reservation.getName(),

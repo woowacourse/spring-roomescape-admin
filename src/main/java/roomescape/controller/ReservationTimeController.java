@@ -18,7 +18,7 @@ public class ReservationTimeController {
 
     private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(final ReservationTimeService reservationTimeService) {
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
         this.reservationTimeService = reservationTimeService;
     }
 
@@ -30,12 +30,12 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    public ReservationTimeResponse createTime(@RequestBody final ReservationTimeCreateRequest request) {
+    public ReservationTimeResponse createTime(@RequestBody ReservationTimeCreateRequest request) {
         return ReservationTimeResponse.from(reservationTimeService.create(request.startAt()));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTime(@PathVariable final long id) {
+    public void deleteTime(@PathVariable long id) {
         reservationTimeService.delete(id);
     }
 }

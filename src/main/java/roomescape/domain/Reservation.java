@@ -7,14 +7,14 @@ public class Reservation {
     private final String date;
     private final ReservationTime time;
 
-    private Reservation(final long id, final String name, final String date, final ReservationTime time) {
+    private Reservation(long id, String name, String date, ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public static Reservation create(final long id, final String name, final String date, final ReservationTime time) {
+    public static Reservation create(long id, String name, String date, ReservationTime time) {
         return new Reservation(id, name, date, time);
     }
 

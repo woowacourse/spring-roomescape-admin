@@ -18,7 +18,7 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    public ReservationController(final ReservationService reservationService) {
+    public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 
@@ -30,14 +30,14 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ReservationResponse createReservation(@RequestBody final ReservationCreateRequest request) {
+    public ReservationResponse createReservation(@RequestBody ReservationCreateRequest request) {
         return ReservationResponse.from(
                 reservationService.create(request.name(), request.date(), request.timeId())
         );
     }
 
     @DeleteMapping("/{id}")
-    public void deleteReservation(@PathVariable final long id) {
+    public void deleteReservation(@PathVariable long id) {
         reservationService.delete(id);
     }
 }

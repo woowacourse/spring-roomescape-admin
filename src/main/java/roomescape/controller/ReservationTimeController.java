@@ -33,7 +33,7 @@ public class ReservationTimeController {
                 result.startAt()
         );
 
-        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -53,7 +53,7 @@ public class ReservationTimeController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteReservationTime(@PathVariable Long id) {
         reservationTimeService.deleteSpecificReservationTime(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     private ReservationTimeResponse parseReservationTimeToReservationTimeResponse(ReservationTime reservationTime) {

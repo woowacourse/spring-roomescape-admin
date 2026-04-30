@@ -52,14 +52,14 @@ public class ReservationController {
 
         return new ResponseEntity<>(
                 responseData,
-                HttpStatus.OK
+                HttpStatus.CREATED
         );
     }
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationService.deleteSpecificReservationById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     private ReservationResponse parseReservationToReservationResponse(Reservation result) {

@@ -1,5 +1,6 @@
 package roomescape.step4.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.step4.domain.ReservationTime;
@@ -21,7 +22,7 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTimeResponse> save(@RequestBody ReservationTimeRequest request) {
+    public ResponseEntity<ReservationTimeResponse> save(@Valid @RequestBody ReservationTimeRequest request) {
         ReservationTime reservationTime = reservationTimeService.save(request);
         ReservationTimeResponse response = ReservationTimeResponse.from(reservationTime);
 

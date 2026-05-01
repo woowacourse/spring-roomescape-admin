@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import roomescape.domain.Time;
+import roomescape.dto.TimeRequest;
+import roomescape.dto.TimeResponse;
 import roomescape.repository.TimeRepository;
 
 import java.util.List;
@@ -24,19 +26,22 @@ public class TimeController {
 
     @GetMapping("/times")
     @ResponseBody
-    public List<Time> findAllTimes() {
-        return repository.findAllTimes();
+    public List<TimeResponse> findAllTimes() {
+        return repository.findAllTimes().stream()
+                .map(TimeResponse::from)
+                .toList();
     }
 
     @PostMapping("/times")
     @ResponseBody
-    public Time addReservation(@RequestBody Time time) {
-        return repository.add(time);
+    public TimeResponse addTime(@RequestBody TimeRequest request) {
+        Time saved = repository.add(request.toDomain());
+        return TimeResponse.from(saved);
     }
 
     @DeleteMapping("/times/{id}")
     @ResponseBody
-    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteTime(@PathVariable("id") Long id) {
         repository.remove(id);
         return ResponseEntity.ok().build();
     }

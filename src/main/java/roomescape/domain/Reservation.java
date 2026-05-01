@@ -6,9 +6,6 @@ public class Reservation {
     private String date;
     private Time reservationTime;
 
-    public Reservation() {
-    }
-
     public Reservation(String name, String date, Time reservationTime) {
         this.name = name;
         this.date = date;

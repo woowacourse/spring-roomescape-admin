@@ -4,9 +4,6 @@ public class Time {
     private Long id;
     private String startAt;
 
-    public Time() {
-    }
-
     public Time(Long id, String startAt) {
         this.id = id;
         this.startAt = startAt;

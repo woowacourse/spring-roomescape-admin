@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.domain.Reservation;
 import roomescape.domain.Time;
 import roomescape.dto.ReservationRequest;
-import roomescape.repository.TimeRepository; // 추가
+import roomescape.dto.ReservationResponse;
+import roomescape.repository.TimeRepository;
 
 import java.util.List;
 
@@ -46,10 +46,10 @@ class ReservationControllerTest {
                 "브라운", "2023-08-05", savedTimeId
         );
 
-        List<Reservation> allReservations = controller.findAllReservations();
+        List<ReservationResponse> allReservations = controller.findAllReservations();
 
         assertThat(allReservations).hasSize(1);
-        assertThat(allReservations.get(0).getReservationTime().getStartAt()).isEqualTo("10:00");
+        assertThat(allReservations.get(0).getTime().getStartAt()).isEqualTo("10:00");
     }
 
     @Test
@@ -58,7 +58,7 @@ class ReservationControllerTest {
         ReservationRequest request = new ReservationRequest("네오", "2023-08-06", savedTimeId);
 
         controller.addReservation(request);
-        List<Reservation> allReservations = controller.findAllReservations();
+        List<ReservationResponse> allReservations = controller.findAllReservations();
 
         assertThat(allReservations).hasSize(1);
     }
@@ -74,7 +74,7 @@ class ReservationControllerTest {
         Long savedReservationId = controller.findAllReservations().get(0).getId();
         controller.deleteReservation(savedReservationId);
 
-        List<Reservation> allReservations = controller.findAllReservations();
+        List<ReservationResponse> allReservations = controller.findAllReservations();
         assertThat(allReservations).hasSize(0);
     }
 

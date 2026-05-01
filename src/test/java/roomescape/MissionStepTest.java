@@ -119,7 +119,9 @@ public class MissionStepTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(1))
+                .body("[0].time.id", is(1))
+                .body("[0].time.startAt", is("10:00"));
     }
 
 }

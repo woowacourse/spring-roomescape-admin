@@ -2,6 +2,7 @@ package roomescape.reservationtime;
 
 import java.time.LocalTime;
 import java.util.List;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.exception.ApiException;
@@ -26,7 +27,11 @@ public class ReservationTimeService {
 
     @Transactional
     public ReservationTime save(LocalTime startAt) {
-        return reservationTimeRepository.save(startAt);
+        try {
+            return reservationTimeRepository.save(startAt);
+        } catch (DataIntegrityViolationException e) {
+            throw new ApiException(ErrorCode.DUPLICATE_RESERVATION_TIME, startAt);
+        }
     }
 
     @Transactional

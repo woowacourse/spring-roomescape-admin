@@ -3,7 +3,9 @@ package roomescape.repository;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -39,16 +41,21 @@ public class ReservationTimeRepository {
         return jdbcTemplate.query(findSql, reservationTimeRowMapper());
     }
 
-    public ReservationTime findById(long id) {
-        String findSql = "SELECT id, start_at"
-                + " FROM reservation_time"
-                + " WHERE id = ?";
+    public Optional<ReservationTime> findById(long id) {
+        try {
+            String findSql = "SELECT id, start_at"
+                    + " FROM reservation_time"
+                    + " WHERE id = ?";
 
-        return jdbcTemplate.queryForObject(
-                findSql,
-                reservationTimeRowMapper(),
-                id
-        );
+            ReservationTime reservationTime = jdbcTemplate.queryForObject(
+                    findSql,
+                    reservationTimeRowMapper(),
+                    id
+            );
+            return Optional.ofNullable(reservationTime);
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     public boolean delete(long id) {

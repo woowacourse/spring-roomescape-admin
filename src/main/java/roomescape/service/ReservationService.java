@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.exception.DeleteFailureException;
+import roomescape.exception.EntityNotFoundException;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.command.ReservationCreateCommand;
@@ -28,7 +29,10 @@ public class ReservationService {
     public Reservation create(
             ReservationCreateCommand createCommand
     ) {
-        ReservationTime time = timeRepository.findById(createCommand.timeId());
+        long timeId = createCommand.timeId();
+        ReservationTime time = timeRepository.findById(timeId)
+                .orElseThrow(() -> new EntityNotFoundException("예약 시간을 조회할 수 없습니다. id = " + timeId));
+
         Reservation reservation = Reservation.create(
                 createCommand.name(),
                 createCommand.date(),

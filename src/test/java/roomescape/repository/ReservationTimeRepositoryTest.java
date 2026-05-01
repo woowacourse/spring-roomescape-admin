@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -87,17 +88,30 @@ class ReservationTimeRepositoryTest {
         assertThat(reservationTimes).hasSize(insertCount);
     }
 
-    @Test
-    void 예약_시간을_ID_기준으로_조회한다() {
-        // given
-        insertReservationTime(DEFAULT_ID, DEFAULT_START_AT);
-        ReservationTime expected = ReservationTime.retrieve(DEFAULT_ID, DEFAULT_START_AT);
+    @Nested
+    class 예약_시간을_ID_기준으로_조회한다 {
 
-        // when
-        ReservationTime actual = timeRepository.findById(DEFAULT_ID);
+        @Test
+        void 예약_시간을_ID_기준으로_조회한다() {
+            // given
+            insertReservationTime(DEFAULT_ID, DEFAULT_START_AT);
+            ReservationTime expected = ReservationTime.retrieve(DEFAULT_ID, DEFAULT_START_AT);
 
-        // then
-        assertThat(actual).isEqualTo(expected);
+            // when
+            Optional<ReservationTime> actual = timeRepository.findById(DEFAULT_ID);
+
+            // then
+            assertThat(actual).hasValue(expected);
+        }
+
+        @Test
+        void ID로_레코드가_조회되지_않는다면_빈_Optional을_반환한다() {
+            // when
+            Optional<ReservationTime> reservationTime = timeRepository.findById(NOT_EXIST_ID);
+
+            // then
+            assertThat(reservationTime).isEmpty();
+        }
     }
 
     @Nested

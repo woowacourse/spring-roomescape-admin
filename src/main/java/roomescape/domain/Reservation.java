@@ -63,6 +63,24 @@ public class Reservation {
         );
     }
 
+    private void validateName(String name) {
+        if (!StringUtils.hasText(name)) {
+            throw new InvalidReservationException("예약엔 이름이 존재해야 합니다.");
+        }
+    }
+
+    private void validateDate(LocalDate date) {
+        if (date == null) {
+            throw new InvalidReservationException("예약엔 날짜가 존재해야 합니다.");
+        }
+    }
+
+    private void validateTime(ReservationTime time) {
+        if (time == null) {
+            throw new InvalidReservationException("예약엔 시간이 존재해야 합니다.");
+        }
+    }
+
     public Long getId() {
         return id;
     }
@@ -81,24 +99,6 @@ public class Reservation {
 
     public Long getTimeId() {
         return time.getId();
-    }
-
-    private void validateName(String name) {
-        if (!StringUtils.hasText(name)) {
-            throw new InvalidReservationException("예약엔 이름이 존재해야 합니다.");
-        }
-    }
-
-    private void validateDate(LocalDate date) {
-        if (date == null) {
-            throw new InvalidReservationException("예약엔 날짜가 존재해야 합니다.");
-        }
-    }
-
-    private void validateTime(ReservationTime time) {
-        if (time == null) {
-            throw new InvalidReservationException("예약엔 시간이 존재해야 합니다.");
-        }
     }
 
     @Override

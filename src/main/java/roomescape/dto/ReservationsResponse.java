@@ -2,7 +2,6 @@ package roomescape.dto;
 
 import roomescape.model.Reservation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ReservationsResponse {
@@ -14,11 +13,9 @@ public class ReservationsResponse {
     }
 
     public static ReservationsResponse from(List<Reservation> reservations) {
-        List<ReservationResponse> responses = new ArrayList<>();
-
-        for (Reservation reservation : reservations) {
-            responses.add(ReservationResponse.from(reservation));
-        }
+        List<ReservationResponse> responses = reservations.stream()
+                .map(ReservationResponse::from)
+                .toList();
 
         return new ReservationsResponse(responses);
     }

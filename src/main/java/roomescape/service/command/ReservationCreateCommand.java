@@ -1,8 +1,10 @@
 package roomescape.service.command;
 
+import java.time.LocalDate;
+
 public record ReservationCreateCommand(
         String name,
-        String date,
+        LocalDate date,
         long timeId
 ) {
 }

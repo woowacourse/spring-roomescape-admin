@@ -1,5 +1,6 @@
 package roomescape.domain;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import org.springframework.util.StringUtils;
 import roomescape.exception.InvalidReservationException;
@@ -7,13 +8,13 @@ import roomescape.exception.InvalidReservationException;
 public class Reservation {
     private final Long id;
     private final String name;
-    private final String date;
+    private final LocalDate date;
     private final ReservationTime time;
 
     private Reservation(
             Long id,
             String name,
-            String date,
+            LocalDate date,
             ReservationTime time
     ) {
         this.id = id;
@@ -24,7 +25,7 @@ public class Reservation {
 
     public static Reservation create(
             String name,
-            String date,
+            LocalDate date,
             ReservationTime time
     ) {
         validateName(name);
@@ -42,7 +43,7 @@ public class Reservation {
     public static Reservation retrieve(
             long id,
             String name,
-            String date,
+            LocalDate date,
             ReservationTime time
     ) {
         return new Reservation(
@@ -70,7 +71,7 @@ public class Reservation {
         return name;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
@@ -88,7 +89,7 @@ public class Reservation {
         }
     }
 
-    private static void validateDate(String date) {
+    private static void validateDate(LocalDate date) {
         if (date == null) {
             throw new InvalidReservationException("예약엔 날짜가 존재해야 합니다.");
         }

@@ -1,17 +1,17 @@
 package roomescape.domain;
 
+import java.time.LocalTime;
 import java.util.Objects;
-import org.springframework.util.StringUtils;
 import roomescape.exception.InvalidReservationTimeException;
 
 public class ReservationTime {
 
     private final Long id;
-    private final String startAt;
+    private final LocalTime startAt;
 
     private ReservationTime(
             Long id,
-            String startAt
+            LocalTime startAt
     ) {
         this.id = id;
         this.startAt = startAt;
@@ -21,12 +21,12 @@ public class ReservationTime {
         return id;
     }
 
-    public String getStartAt() {
+    public LocalTime getStartAt() {
         return startAt;
     }
 
     public static ReservationTime create(
-            String startAt
+            LocalTime startAt
     ) {
         validateStartAt(startAt);
 
@@ -38,7 +38,7 @@ public class ReservationTime {
 
     public static ReservationTime retrieve(
             long id,
-            String startAt
+            LocalTime startAt
     ) {
         return new ReservationTime(
                 id,
@@ -53,8 +53,8 @@ public class ReservationTime {
         );
     }
 
-    private static void validateStartAt(String startAt) {
-        if (!StringUtils.hasText(startAt)) {
+    private static void validateStartAt(LocalTime startAt) {
+        if (startAt == null) {
             throw new InvalidReservationTimeException("예약 시간엔 시간 정보가 존재해야 합니다.");
         }
     }

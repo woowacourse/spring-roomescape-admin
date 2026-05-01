@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static roomescape.repository.rowmapper.RowMapperUtils.RESERVATION_ROW_MAPPER;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,8 +25,8 @@ class ReservationRepositoryTest {
     private static final long DEFAULT_ID = 1;
     private static final long NOT_EXIST_ID = 999;
     private static final String DEFAULT_NAME = "name";
-    private static final String DEFAULT_DATE = "2025-01-01";
-    private static final String DEFAULT_START_AT = "00:00";
+    private static final LocalDate DEFAULT_DATE = LocalDate.of(2025, 1, 1);
+    private static final LocalTime DEFAULT_START_AT = LocalTime.of(1, 1);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -156,7 +158,7 @@ class ReservationRepositoryTest {
         }
     }
 
-    private ReservationTime persistTime(String startAt) {
+    private ReservationTime persistTime(LocalTime startAt) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation_time")
                 .usingGeneratedKeyColumns("id");

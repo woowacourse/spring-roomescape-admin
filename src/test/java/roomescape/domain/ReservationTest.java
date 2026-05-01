@@ -3,6 +3,8 @@ package roomescape.domain;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,8 +15,8 @@ class ReservationTest {
 
     private static final long DEFAULT_ID = 1;
     private static final String DEFAULT_NAME = "name";
-    private static final String DEFAULT_DATE = "2001-01-01";
-    private static final ReservationTime DEFAULT_TIME = ReservationTime.create("01:01");
+    private static final LocalDate DEFAULT_DATE = LocalDate.of(2025, 1, 1);
+    private static final ReservationTime DEFAULT_TIME = ReservationTime.create(LocalTime.of(1, 1));
 
     @Nested
     class 생성_시에_이름을_검증한다 {

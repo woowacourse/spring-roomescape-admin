@@ -6,11 +6,11 @@ public class Reservation {
 
     private Long id;
 
-    private String name;
+    private final String name;
 
-    private LocalDate date;
+    private final LocalDate date;
 
-    private ReservationTime time;
+    private final ReservationTime time;
 
     public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;

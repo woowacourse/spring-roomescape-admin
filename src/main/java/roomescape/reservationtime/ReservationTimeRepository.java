@@ -2,6 +2,8 @@ package roomescape.reservationtime;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Repository;
 public class ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final Logger logger = LoggerFactory.getLogger(ReservationTimeRepository.class);
 
     public ReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -55,7 +58,7 @@ public class ReservationTimeRepository {
     }
 
     public ReservationTime findById(Long id) {
-        System.out.println("id = " + id);
+        logger.info("id = {}", id);
         String sql = "select id, start_at from reservation_time where id = ?";
         return jdbcTemplate.queryForObject(
                 sql,

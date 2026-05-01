@@ -15,13 +15,33 @@ import roomescape.domain.ReservationTime.ReservationTime;
 public class ReservationDao {
     private static final String FAILED_ID_GENERATE = "ID 생성에 실패하였습니다.";
 
+    private static final String COLUMN_ID = "id";
+    private static final String COLUMN_NAME = "name";
+    private static final String COLUMN_DATE = "date";
+
+    private static final String ALIAS_TIME_ID = "timeId";
+    private static final String ALIAS_START_AT = "startAt";
+
+    private static final String SELECT_ALL_SQL = """
+        SELECT\s
+            r.id AS id,\s
+            r.name AS name,\s
+            r.date AS date,\s
+            t.id AS timeId,\s
+            t.start_at AS startAt\s
+        FROM reservation AS r\s
+        JOIN reservation_time AS t ON r.time_id = t.id
+    """;
+    private static final String INSERT_SQL = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
+    private static final String DELETE_SPECIFIC_ID_SQL = "DELETE FROM reservation WHERE id = ?";
+
     private static final RowMapper<Reservation> MAPPER = (rs, rowNumber) -> new Reservation(
-            rs.getLong("id"),
-            rs.getString("name"),
-            rs.getString("date"),
+            rs.getLong(COLUMN_ID),
+            rs.getString(COLUMN_NAME),
+            rs.getString(COLUMN_DATE),
             new ReservationTime(
-                    rs.getLong("timeId"),
-                    rs.getString("startAt")
+                    rs.getLong(ALIAS_TIME_ID),
+                    rs.getString(ALIAS_START_AT)
             )
     );
 
@@ -32,16 +52,14 @@ public class ReservationDao {
     }
 
     public List<Reservation> getAllReservation() {
-        String sql = "SELECT r.id as id, r.name as name, r.date as date, t.id as timeId, t.start_at as startAt FROM reservation AS r JOIN reservation_time AS t ON r.time_id = t.id";
-        return jdbcTemplate.query(sql, MAPPER);
+        return jdbcTemplate.query(SELECT_ALL_SQL, MAPPER);
     }
 
     public long insertReservation(ReservationCommand reservationCommand) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(sql, new String[] { "id" });
+            PreparedStatement statement = connection.prepareStatement(INSERT_SQL, new String[] { COLUMN_ID });
             statement.setString(1, reservationCommand.name());
             statement.setString(2, reservationCommand.date());
             statement.setLong(3, reservationCommand.timeId());
@@ -57,7 +75,6 @@ public class ReservationDao {
     }
 
     public int deleteReservation(long id) {
-        String sql = "DELETE FROM reservation WHERE id = ?";
-        return jdbcTemplate.update(sql, id);
+        return jdbcTemplate.update(DELETE_SPECIFIC_ID_SQL, id);
     }
 }

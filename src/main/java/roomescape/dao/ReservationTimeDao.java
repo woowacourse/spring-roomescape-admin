@@ -15,9 +15,17 @@ import roomescape.domain.ReservationTime.ReservationTimeCommand;
 public class ReservationTimeDao {
     private static final String FAILED_ID_GENERATE = "ID 생성에 실패하였습니다.";
 
+    private static final String COLUMN_ID = "id";
+    private static final String COLUMN_START_AT = "start_at";
+
+    private static final String INSERT_SQL = "INSERT INTO reservation_time (start_at) VALUES (?)";
+    private static final String SELECT_SPECIFIC_ID_SQL = "SELECT id, start_at FROM reservation_time WHERE id = ?";
+    private static final String SELECT_ALL_SQL = "SELECT id, start_at FROM reservation_time";
+    private static final String DELETE_SPECIFIC_ID_SQL = "DELETE FROM reservation_time WHERE id = ?";
+
     private static final RowMapper<ReservationTime> MAPPER = (rs, rowNumber) -> new ReservationTime(
-            rs.getLong("id"),
-            rs.getString("start_at")
+            rs.getLong(COLUMN_ID),
+            rs.getString(COLUMN_START_AT)
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -28,10 +36,9 @@ public class ReservationTimeDao {
 
     public long insertReservationTime(ReservationTimeCommand reservationTimeCommand) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
 
         jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(sql, new String[] { "id" });
+            PreparedStatement statement = connection.prepareStatement(INSERT_SQL, new String[] { COLUMN_ID });
             statement.setString(1, reservationTimeCommand.startAt());
             return statement;
         }, keyHolder);
@@ -46,19 +53,16 @@ public class ReservationTimeDao {
     }
 
     public Optional<ReservationTime> getReservationTime(long id) {
-        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.query(sql, MAPPER, id)
+        return jdbcTemplate.query(SELECT_SPECIFIC_ID_SQL, MAPPER, id)
                 .stream()
                 .findFirst();
     }
 
     public List<ReservationTime> getAllReservationTime() {
-        String sql = "SELECT id, start_at FROM reservation_time";
-        return jdbcTemplate.query(sql, MAPPER);
+        return jdbcTemplate.query(SELECT_ALL_SQL, MAPPER);
     }
 
     public int deleteReservation(long id) {
-        String sql = "DELETE FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.update(sql, id);
+        return jdbcTemplate.update(DELETE_SPECIFIC_ID_SQL, id);
     }
 }

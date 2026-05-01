@@ -16,8 +16,8 @@ public class Reservation {
         this.time = time;
     }
 
-    public static Reservation of(Long id, String name, LocalDate date, ReservationTime timeId) {
-        return new Reservation(id, name, date, timeId);
+    public static Reservation of(Long id, String name, LocalDate date, ReservationTime time) {
+        return new Reservation(id, name, date, time);
     }
 
     public Long getId() {

@@ -13,18 +13,18 @@ import roomescape.controller.dto.ReservationTimeCreateRequest;
 import roomescape.controller.dto.ReservationTimeResponse;
 import roomescape.controller.mapper.ReservationTimeMapper;
 import roomescape.domain.ReservationTime;
-import roomescape.service.ReservationService;
+import roomescape.service.ReservationTimeService;
 import roomescape.service.command.ReservationTimeCreateCommand;
 
 @RestController
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private final ReservationService service;
+    private final ReservationTimeService service;
     private final ReservationTimeMapper mapper;
 
     public ReservationTimeController(
-            ReservationService service,
+            ReservationTimeService service,
             ReservationTimeMapper mapper
     ) {
         this.service = service;
@@ -36,7 +36,7 @@ public class ReservationTimeController {
             @RequestBody ReservationTimeCreateRequest createRequest
     ) {
         ReservationTimeCreateCommand createCommand = mapper.mapCreateToCommand(createRequest);
-        ReservationTime createdTime = service.createTime(createCommand);
+        ReservationTime createdTime = service.create(createCommand);
 
         ReservationTimeResponse response = mapper.mapToResponse(createdTime);
 
@@ -45,7 +45,7 @@ public class ReservationTimeController {
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> findAll() {
-        List<ReservationTimeResponse> responses = service.findAllTimes()
+        List<ReservationTimeResponse> responses = service.findAll()
                 .stream()
                 .map(mapper::mapToResponse)
                 .toList();
@@ -57,7 +57,7 @@ public class ReservationTimeController {
     public ResponseEntity<Void> delete(
             @PathVariable long id
     ) {
-        service.deleteTime(id);
+        service.delete(id);
 
         return ResponseEntity.ok().build();
     }

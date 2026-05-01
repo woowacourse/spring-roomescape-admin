@@ -8,7 +8,6 @@ import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.command.ReservationCreateCommand;
-import roomescape.service.command.ReservationTimeCreateCommand;
 
 @Service
 public class ReservationService {
@@ -25,7 +24,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public Reservation createReservation(
+    public Reservation create(
             ReservationCreateCommand createCommand
     ) {
         ReservationTime time = timeRepository.findById(createCommand.timeId());
@@ -39,31 +38,12 @@ public class ReservationService {
     }
 
     @Transactional
-    public ReservationTime createTime(
-            ReservationTimeCreateCommand createCommand
-    ) {
-        ReservationTime reservationTime = ReservationTime.create(createCommand.startAt());
-
-        return timeRepository.persist(reservationTime);
-    }
-
-    @Transactional
-    public List<Reservation> findAllReservations() {
+    public List<Reservation> findAll() {
         return reservationRepository.findAll();
     }
 
     @Transactional
-    public List<ReservationTime> findAllTimes() {
-        return timeRepository.findAll();
-    }
-
-    @Transactional
-    public void deleteReservation(long reservationId) {
+    public void delete(long reservationId) {
         reservationRepository.delete(reservationId);
-    }
-
-    @Transactional
-    public void deleteTime(long timeId) {
-        timeRepository.delete(timeId);
     }
 }

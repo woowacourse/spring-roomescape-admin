@@ -36,7 +36,7 @@ public class ReservationController {
             @RequestBody ReservationCreateRequest createRequest
     ) {
         ReservationCreateCommand createCommand = mapper.mapCreateToCommand(createRequest);
-        Reservation createdReservation = service.createReservation(createCommand);
+        Reservation createdReservation = service.create(createCommand);
 
         ReservationResponse response = mapper.mapToResponse(createdReservation);
 
@@ -45,7 +45,7 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> findAll() {
-        List<ReservationResponse> responses = service.findAllReservations()
+        List<ReservationResponse> responses = service.findAll()
                 .stream()
                 .map(mapper::mapToResponse)
                 .toList();
@@ -57,7 +57,7 @@ public class ReservationController {
     public ResponseEntity<Void> delete(
             @PathVariable long id
     ) {
-        service.deleteReservation(id);
+        service.delete(id);
 
         return ResponseEntity.ok().build();
     }

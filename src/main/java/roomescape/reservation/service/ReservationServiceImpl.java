@@ -7,14 +7,17 @@ import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.domain.ReservationTime;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.service.dto.ReservationSaveServiceDto;
+import roomescape.time.service.TimeService;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final TimeService timeService;
 
-    public ReservationServiceImpl(ReservationRepository reservationRepository) {
+    public ReservationServiceImpl(ReservationRepository reservationRepository, TimeService timeService) {
         this.reservationRepository = reservationRepository;
+        this.timeService = timeService;
     }
 
     @Override
@@ -24,12 +27,20 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Reservation save(ReservationSaveServiceDto reservation) {
+        ReservationTime time = findTimeOrNull(reservation.getTimeId());
         Reservation newReservation = new Reservation(
                 reservation.getName(),
                 reservation.getDate(),
-                new ReservationTime(reservation.getTimeId(), null)
+                time
         );
         return reservationRepository.save(newReservation);
+    }
+
+    private ReservationTime findTimeOrNull(Long timeId) {
+        if (timeId == null) {
+            return null;
+        }
+        return timeService.findById(timeId);
     }
 
     @Override

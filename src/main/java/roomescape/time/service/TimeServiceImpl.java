@@ -2,6 +2,7 @@ package roomescape.time.service;
 
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import roomescape.reservation.domain.ReservationTime;
@@ -24,6 +25,15 @@ public class TimeServiceImpl implements TimeService {
   @Override
   public List<ReservationTime> findAll() {
     return timeRepository.findAll();
+  }
+
+  @Override
+  public ReservationTime findById(long id) {
+    try {
+      return timeRepository.findById(id);
+    } catch (EmptyResultDataAccessException e) {
+      throw new TimeNotFoundException(id);
+    }
   }
 
   @Override

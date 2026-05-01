@@ -219,6 +219,23 @@ public class MissionStepTest {
     }
 
     @Test
+    void 예약이_존재하는_예약시간을_삭제하면_409를_반환한다() {
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservationParams())
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(201)
+                .body("id", is(1));
+
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(409);
+
+    }
+
+    @Test
     void 계층화_리팩터링() {
         boolean isJdbcTemplateInjected = false;
 

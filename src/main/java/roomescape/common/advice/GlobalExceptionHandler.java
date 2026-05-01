@@ -5,25 +5,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import roomescape.common.exception.ErrorCode;
+import roomescape.common.exception.ErrorInformation;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorCode> handleHttpMessageNotReadable(HttpMessageNotReadableException e) {
+    public ResponseEntity<ErrorInformation> handleHttpMessageNotReadable(HttpMessageNotReadableException e) {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-        ErrorCode errorCode = ErrorCode.of(httpStatus, e.getMessage());
+        ErrorInformation errorInformation = ErrorInformation.of(httpStatus, e.getMessage());
         return ResponseEntity.status(httpStatus)
-                .body(errorCode);
+                .body(errorInformation);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorCode> handleHttpMessageNotReadable(IllegalArgumentException e) {
+    public ResponseEntity<ErrorInformation> handleHttpMessageNotReadable(IllegalArgumentException e) {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-        ErrorCode errorCode = ErrorCode.of(httpStatus, e.getMessage());
+        ErrorInformation errorInformation = ErrorInformation.of(httpStatus, e.getMessage());
         return ResponseEntity.status(httpStatus)
-                .body(errorCode);
+                .body(errorInformation);
     }
 
 }

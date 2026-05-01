@@ -9,7 +9,6 @@ import roomescape.step4.dto.ReservationResponse;
 import roomescape.step4.service.ReservationService;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController("reservationControllerStep4")
 @RequestMapping("/step4/reservations")
@@ -41,11 +40,7 @@ public class ReservationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        try {
-            reservationService.delete(id);
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
-        }
+        reservationService.delete(id);
         return ResponseEntity.ok().build();
     }
 }

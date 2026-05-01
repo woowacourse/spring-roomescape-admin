@@ -27,17 +27,10 @@ class JdbcTemplateReservationsRepositoryTest {
     JdbcTemplateReservationsRepository reservationsRepository;
     TimesRepository timesRepository;
 
-    Long timeId;
-
     @BeforeEach
     void beforeEach() {
         reservationsRepository = new JdbcTemplateReservationsRepository(jdbcTemplate);
         timesRepository = new JdbcTemplateTimesRepository(jdbcTemplate);
-
-        TimeEntity timeEntity = timesRepository.saveTime(
-                TimeEntity.of(LocalTime.of(10, 0))
-        );
-        timeId = timeEntity.id();
     }
 
     @DisplayName("기본적으로는 아무런 예약도 존재하지 않는다.")
@@ -54,6 +47,11 @@ class JdbcTemplateReservationsRepositoryTest {
     @Test
     void saveReservation() {
         //given
+        TimeEntity timeEntity = timesRepository.saveTime(
+                TimeEntity.of(LocalTime.of(10, 0))
+        );
+        Long timeId = timeEntity.id();
+
         ReservationEntity entity1 = ReservationEntity.of(
                 "name1",LocalDate.now(),
                 timeId
@@ -84,6 +82,11 @@ class JdbcTemplateReservationsRepositoryTest {
     @Test
     void deleteReservationById_success() {
         //given
+        TimeEntity timeEntity = timesRepository.saveTime(
+                TimeEntity.of(LocalTime.of(10, 0))
+        );
+        Long timeId = timeEntity.id();
+
         ReservationEntity entity = ReservationEntity.of(
                 "name1",
                 LocalDate.now(),
@@ -101,6 +104,12 @@ class JdbcTemplateReservationsRepositoryTest {
     @DisplayName("id에 해당하는 예약이 없으면 예외가 발생한다.")
     @Test
     void deleteReservationById_fail() {
+        //given
+        TimeEntity timeEntity = timesRepository.saveTime(
+                TimeEntity.of(LocalTime.of(10, 0))
+        );
+        Long timeId = timeEntity.id();
+
         //when & then
         assertThatThrownBy(() -> reservationsRepository.deleteReservationById(timeId))
                 .isInstanceOf(IllegalArgumentException.class)

@@ -27,7 +27,7 @@ public class ReservationRepository {
     }
 
     public Reservation save(Reservation reservation) {
-        Long id = reservationDao.insert(reservation);
+        Long id = reservationDao.insert(ReservationMapper.toReservationEntity(reservation));
         return reservation.withId(id);
     }
 

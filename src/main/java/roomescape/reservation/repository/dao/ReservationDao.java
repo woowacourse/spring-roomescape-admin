@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.repository.entity.ReservationEntity;
 
 @Repository
@@ -32,14 +31,14 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
-    public Long insert(Reservation reservation) {
+    public Long insert(ReservationEntity reservationEntity) {
         String sql = "insert into reservation (name, date, time_id) values (?,?,?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement pstm = connection.prepareStatement(sql, new String[]{"id"});
-            pstm.setString(1, reservation.getName());
-            pstm.setString(2, String.valueOf(reservation.getDate()));
-            pstm.setString(3, String.valueOf(reservation.getTimeId()));
+            pstm.setString(1, reservationEntity.getName());
+            pstm.setString(2, String.valueOf(reservationEntity.getDate()));
+            pstm.setString(3, String.valueOf(reservationEntity.getTimeId()));
             return pstm;
         }, keyHolder);
 

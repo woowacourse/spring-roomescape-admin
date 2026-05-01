@@ -28,8 +28,8 @@ public class ReservationMapper {
                 new ReservationTimeResponse(reservation.getTime().getId(), reservation.getTime().getStartAt()));
     }
 
-    public static ReservationEntity toReservationEntity(Long reservationId, Reservation reservation) {
-        return new ReservationEntity(reservationId, reservation.getName(), reservation.getDate(),
+    public static ReservationEntity toReservationEntity(Reservation reservation) {
+        return new ReservationEntity(reservation.getId(), reservation.getName(), reservation.getDate(),
                 reservation.getTimeId());
     }
 }

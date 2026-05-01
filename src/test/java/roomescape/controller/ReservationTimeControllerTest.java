@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import roomescape.dao.ReservationTimeDAO;
 import roomescape.domain.ReservationTime;
+import roomescape.service.ReservationTimeService;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -34,7 +35,9 @@ public class ReservationTimeControllerTest {
         jdbcTemplate.execute("DROP TABLE IF EXISTS reservation_time");
         jdbcTemplate.execute("CREATE TABLE reservation_time(id BIGINT AUTO_INCREMENT PRIMARY KEY, start_at VARCHAR(255))");
 
-        controller = new ReservationTimeController(new ReservationTimeDAO(jdbcTemplate));
+        ReservationTimeDAO reservationTimeDAO = new ReservationTimeDAO(jdbcTemplate);
+        ReservationTimeService reservationTimeService = new ReservationTimeService(reservationTimeDAO);
+        controller = new ReservationTimeController(reservationTimeService);
 
         reservationTime = new ReservationTime(LocalTime.of(15, 0));
 

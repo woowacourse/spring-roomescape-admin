@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class ExceptionAdvice {
+public class GlobalExceptionHandler {
 
     private static final Map<Class<?>, String> ERROR_MESSAGES = Map.of(
             LocalTime.class, "[ERROR] 시간 형식은 HH:mm 이어야 합니다.",
@@ -20,12 +20,12 @@ public class ExceptionAdvice {
     );
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> validation(RoomEscapeException e) {
+    public ResponseEntity<ErrorResponse> handleRoomEscape(RoomEscapeException e) {
         return createBadRequestResponse(e.getMessage());
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> validation(MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
         String errorMessage = e.getBindingResult()
                 .getFieldErrors()
                 .getFirst()
@@ -35,7 +35,7 @@ public class ExceptionAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> validation(HttpMessageNotReadableException e) {
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException e) {
         String errorMessage = resolveErrorMessage(e);
 
         return createBadRequestResponse(errorMessage);

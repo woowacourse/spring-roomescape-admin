@@ -32,12 +32,10 @@ public class ReservationController {
     public ReservationResponse create(@RequestBody ReservationRequest request) {
         Reservation saved = reservationService.create(request.toCommand());
         return ReservationResponse.from(saved);
-
     }
 
     @DeleteMapping("/reservations/{id}")
     public void delete(@PathVariable Long id) {
         reservationService.delete(id);
     }
-
 }

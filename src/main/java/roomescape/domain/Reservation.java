@@ -47,7 +47,6 @@ public class Reservation {
         }
     }
 
-
     public Long getId() {
         return id;
     }

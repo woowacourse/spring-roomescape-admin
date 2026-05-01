@@ -1,5 +1,8 @@
 package roomescape;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.lang.reflect.Field;
@@ -14,14 +17,15 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.controller.ReservationController;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.is;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ReservationController reservationController;
+
 
     @Test
     void 예약_조회() {
@@ -29,7 +33,7 @@ public class MissionStepTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(0)); // 아직 생성 요청이 없으니 0개
+                .body("size()", is(0));
     }
 
     @Test
@@ -69,7 +73,6 @@ public class MissionStepTest {
 
     @Test
     void 예약과_시간_연결() {
-        // 예약은 reservation_time을 참조하므로, 시간을 먼저 만들어둠
         Map<String, String> timeParams = new HashMap<>();
         timeParams.put("startAt", "10:00");
         RestAssured.given().log().all()
@@ -98,9 +101,6 @@ public class MissionStepTest {
                 .body("size()", is(1));
     }
 
-    @Autowired
-    private ReservationController reservationController;
-
     @Test
     void 계층화_리팩터링() {
         boolean isJdbcTemplateInjected = false;
@@ -114,6 +114,4 @@ public class MissionStepTest {
 
         assertThat(isJdbcTemplateInjected).isFalse();
     }
-
-
 }

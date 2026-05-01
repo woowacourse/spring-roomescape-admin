@@ -1,7 +1,6 @@
 package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,7 +16,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.exception.EntityNotFoundException;
 
 @JdbcTest
 class ReservationRepositoryTest {
@@ -134,10 +132,32 @@ class ReservationRepositoryTest {
         }
 
         @Test
-        void 존재하지_않는_ID라면_예외를_던진다() {
-            assertThatThrownBy(() -> reservationRepository.delete(NOT_EXIST_ID))
-                    .isInstanceOf(EntityNotFoundException.class)
-                    .hasMessage("존재하지 않는 예약 id입니다.");
+        void 레코드가_제거됐다면_true를_반환한다() {
+            // given
+            ReservationTime time = persistTime(DEFAULT_START_AT);
+            String insertSql = "INSERT INTO reservation(id, name, date, time_id)"
+                    + " VALUES (?, ?, ?, ?)";
+
+            jdbcTemplate.update(
+                    insertSql,
+                    DEFAULT_ID,
+                    DEFAULT_NAME,
+                    DEFAULT_DATE,
+                    time.getId()
+            );
+
+            // when
+            boolean deleted = reservationRepository.delete(DEFAULT_ID);
+
+            // then
+            assertThat(deleted).isTrue();
+        }
+
+        @Test
+        void 아무_레코드도_제거되지_않았다면_false를_반환한다() {
+            boolean deleted = reservationRepository.delete(NOT_EXIST_ID);
+
+            assertThat(deleted).isFalse();
         }
     }
 

@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
-import roomescape.exception.EntityNotFoundException;
 import roomescape.exception.InUseTimeException;
 
 @Repository
@@ -52,22 +51,21 @@ public class ReservationTimeRepository {
         );
     }
 
-    public void delete(long id) {
+    public boolean delete(long id) {
         String deleteSql = "DELETE FROM reservation_time"
                 + " WHERE id = ?";
 
         try {
-            int deletedRows = jdbcTemplate.update(deleteSql, id);
-            validateDeleted(deletedRows);
+            int deletedRowCount = jdbcTemplate.update(deleteSql, id);
+
+            return isDeleted(deletedRowCount);
         } catch (DataIntegrityViolationException exception) {
             throw new InUseTimeException("사용중이지 않은 시간만 제거할 수 있습니다.");
         }
     }
 
-    private void validateDeleted(int deletedCount) {
-        if (deletedCount < 1) {
-            throw new EntityNotFoundException("존재하지 않는 시간 id입니다.");
-        }
+    private boolean isDeleted(int deletedCount) {
+        return deletedCount > 0;
     }
 
     private RowMapper<ReservationTime> reservationTimeRowMapper() {

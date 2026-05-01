@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.ReservationTime;
+import roomescape.exception.DeleteFailureException;
 import roomescape.repository.ReservationTimeRepository;
 import roomescape.service.command.ReservationTimeCreateCommand;
 
@@ -34,6 +35,10 @@ public class ReservationTimeService {
 
     @Transactional
     public void delete(long timeId) {
-        repository.delete(timeId);
+        boolean deleted = repository.delete(timeId);
+
+        if (!deleted) {
+            throw new DeleteFailureException("시간 저장에 실패했습니다.");
+        }
     }
 }

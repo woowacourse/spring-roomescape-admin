@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.exception.EntityNotFoundException;
 
 @Repository
 public class ReservationRepository {
@@ -46,14 +45,17 @@ public class ReservationRepository {
         return jdbcTemplate.query(findSql, reservationRowMapper());
     }
 
-    public void delete(long id) {
+    public boolean delete(long id) {
         String deleteSql = "DELETE FROM reservation"
                 + " WHERE id = ?";
 
-        int updatedRows = jdbcTemplate.update(deleteSql, id);
-        if (updatedRows < 1) {
-            throw new EntityNotFoundException("존재하지 않는 예약 id입니다.");
-        }
+        int deletedRowCount = jdbcTemplate.update(deleteSql, id);
+
+        return isDeleted(deletedRowCount);
+    }
+
+    private boolean isDeleted(int deletedRowCount) {
+        return deletedRowCount > 0;
     }
 
     private RowMapper<Reservation> reservationRowMapper() {

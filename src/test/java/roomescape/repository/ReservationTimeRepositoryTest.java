@@ -1,7 +1,6 @@
 package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -13,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import roomescape.domain.ReservationTime;
-import roomescape.exception.EntityNotFoundException;
 
 @JdbcTest
 class ReservationTimeRepositoryTest {
@@ -122,10 +120,22 @@ class ReservationTimeRepositoryTest {
         }
 
         @Test
-        void 존재하지_않는_ID라면_예외를_던진다() {
-            assertThatThrownBy(() -> timeRepository.delete(NOT_EXIST_ID))
-                    .isInstanceOf(EntityNotFoundException.class)
-                    .hasMessage("존재하지 않는 시간 id입니다.");
+        void 레코드가_제거됐다면_true를_반환한다() {
+            // given
+            insertReservationTime(DEFAULT_ID, DEFAULT_START_AT);
+
+            // when
+            boolean deleted = timeRepository.delete(DEFAULT_ID);
+
+            // then
+            assertThat(deleted).isTrue();
+        }
+
+        @Test
+        void 아무_레코드도_제거되지_않았다면_false를_반환한다() {
+            boolean deleted = timeRepository.delete(NOT_EXIST_ID);
+
+            assertThat(deleted).isFalse();
         }
     }
 

@@ -3,6 +3,7 @@ package roomescape.domain.reservations.application;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.domain.reservations.entity.ReservationRepository;
 import roomescape.domain.reservations.entity.ReservationTime;
 import roomescape.domain.reservations.entity.ReservationTimeRepository;
 import roomescape.domain.reservations.presentation.dto.ReservationTimeRequest;
@@ -12,9 +13,13 @@ import roomescape.domain.reservations.presentation.dto.ReservationTimeResponse;
 public class ReservationTimeService {
 
     private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {
+    public ReservationTimeService(
+            ReservationTimeRepository reservationTimeRepository, ReservationRepository reservationRepository
+    ) {
         this.reservationTimeRepository = reservationTimeRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     @Transactional
@@ -35,9 +40,13 @@ public class ReservationTimeService {
                 .toList();
     }
 
+    @Transactional
     public void deleteTime(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("[ERROR] 예약 시간 ID가 비어있습니다.");
+        }
+        if (reservationRepository.existsByReservationTimeId(id)) {
+            throw new IllegalStateException("[ERROR] 참조하고 있는 예약 시간이여서 삭제할 수 없습니다.");
         }
         reservationTimeRepository.deleteById(id);
     }

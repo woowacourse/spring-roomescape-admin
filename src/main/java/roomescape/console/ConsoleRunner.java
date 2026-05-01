@@ -1,6 +1,7 @@
 package roomescape.console;
 
 import org.springframework.http.ResponseEntity;
+import roomescape.common.exception.ApiException;
 import roomescape.controller.ReservationController;
 import roomescape.controller.ReservationTimeController;
 import roomescape.controller.dto.request.ReservationRequest;
@@ -29,26 +30,12 @@ public class ConsoleRunner {
         int op;
         while ((op = readOption()) != 7) {
             switch (op) {
-                case 1:
-                    addTime();
-                    break;
-                case 2:
-                    getTimeList();
-                    break;
-                case 3:
-                    deleteReservationTime();
-                    break;
-                case 4:
-                    addReservation();
-                    break;
-                case 5:
-                    getReservationList();
-                    break;
-                case 6:
-                    deleteReservation();
-                    break;
-                default:
-                    break;
+                case 1 -> addTime();
+                case 2 -> getTimeList();
+                case 3 -> deleteReservationTime();
+                case 4 -> addReservation();
+                case 5 -> getReservationList();
+                case 6 -> deleteReservation();
             }
         }
     }
@@ -126,9 +113,9 @@ public class ConsoleRunner {
     private <T> ResponseEntity<T> controllerExceptionHandler(Supplier<ResponseEntity<T>> controllerOperation) {
         try {
             return controllerOperation.get();
-        } catch (RuntimeException e) {
+        } catch (ApiException e) {
             ConsoleOutputView.printErrorMessage(e.getMessage());
-            return ResponseEntity.badRequest().build(); // TODO: 예외에 따른 에러 코드 정의
+            return ResponseEntity.status(e.getStatusCode()).build();
         }
     }
 }

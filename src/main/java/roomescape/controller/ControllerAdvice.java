@@ -12,12 +12,14 @@ public class ControllerAdvice {
 
     @ExceptionHandler(value = ApiException.class)
     public ResponseEntity<?> apiException(ApiException e, HttpServletRequest request) {
+        e.printStackTrace(); // TODO: 로깅 도입
         return ResponseEntity.status(e.getStatusCode())
                 .body(ErrorResponse.of(request.getRequestURI(), e.getMessage()));
     }
 
     @ExceptionHandler(value = Exception.class)
-    public ResponseEntity<?> error(HttpServletRequest request) {
+    public ResponseEntity<?> error(Exception e, HttpServletRequest request) {
+        e.printStackTrace(); // TODO: 로깅 도입
         return ResponseEntity.status(500)
                 .body(ErrorResponse.of(request.getRequestURI(), "알 수 없는 서버 에러"));
     }

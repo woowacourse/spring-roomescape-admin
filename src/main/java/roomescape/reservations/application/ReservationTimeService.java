@@ -3,6 +3,8 @@ package roomescape.reservations.application;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.global.exception.ErrorCode;
+import roomescape.global.exception.customException.ReservationTimeException;
 import roomescape.reservations.entity.ReservationRepository;
 import roomescape.reservations.entity.ReservationTime;
 import roomescape.reservations.entity.ReservationTimeRepository;
@@ -43,20 +45,20 @@ public class ReservationTimeService {
     @Transactional
     public void deleteTime(Long id) {
         if (id == null) {
-            throw new IllegalArgumentException("[ERROR] 예약 시간 ID가 비어있습니다.");
+            throw new ReservationTimeException(ErrorCode.RESERVATION_TIME_ID_NULL);
         }
         if (reservationRepository.existsByReservationTimeId(id)) {
-            throw new IllegalStateException("[ERROR] 참조하고 있는 예약 시간이여서 삭제할 수 없습니다.");
+            throw new ReservationTimeException(ErrorCode.RESERVATION_TIME_ALREADY_USED);
         }
         reservationTimeRepository.deleteById(id);
     }
 
     private void validateSaveRequest(ReservationTimeRequest request) {
         if (request == null) {
-            throw new IllegalArgumentException("[ERROR] 예약 시간 데이터가 비어있습니다.");
+            throw new ReservationTimeException(ErrorCode.RESERVATION_TIME_REQUEST_NULL);
         }
         if (request.startAt() == null) {
-            throw new IllegalArgumentException("[ERROR] 예약 시간이 비어있습니다.");
+            throw new ReservationTimeException(ErrorCode.RESERVATION_TIME_START_AT_NULL);
         }
     }
 }

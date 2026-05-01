@@ -3,6 +3,9 @@ package roomescape.reservations.application;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.global.exception.ErrorCode;
+import roomescape.global.exception.customException.ReservationException;
+import roomescape.global.exception.customException.ReservationTimeException;
 import roomescape.reservations.entity.Reservation;
 import roomescape.reservations.entity.ReservationTime;
 import roomescape.reservations.entity.ReservationRepository;
@@ -28,7 +31,7 @@ public class ReservationService {
     public ReservationResponse saveReservation(ReservationRequest request) {
         validateSaveRequest(request);
         ReservationTime time = reservationTimeRepository.findById(request.timeId())
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new ReservationTimeException(ErrorCode.RESERVATION_TIME_NOT_FOUND));
         Reservation reservation = Reservation.of(
                 null,
                 request.name(),
@@ -48,23 +51,23 @@ public class ReservationService {
 
     public void deleteReservation(Long id) {
         if (id == null) {
-            throw new IllegalArgumentException("[ERROR] 예약 목록 ID가 비어있습니다.");
+            throw new ReservationException(ErrorCode.RESERVATION_ID_NULL);
         }
         reservationRepository.deleteById(id);
     }
 
     private void validateSaveRequest(ReservationRequest request) {
         if (request == null) {
-            throw new IllegalArgumentException("[ERROR] 예약 데이터가 비어있습니다.");
+            throw new ReservationException(ErrorCode.RESERVATION_REQUEST_NULL);
         }
         if (request.name() == null || request.name().trim().isBlank()) {
-            throw new IllegalArgumentException("[ERROR] 예약자의 이름이 비어있습니다.");
+            throw new ReservationException(ErrorCode.RESERVATION_NAME_EMPTY);
         }
         if (request.date() == null) {
-            throw new IllegalArgumentException("[ERROR] 예약 날짜가 비어있습니다.");
+            throw new ReservationException(ErrorCode.RESERVATION_DATE_NULL);
         }
         if (request.timeId() == null) {
-            throw new IllegalArgumentException("[ERROR] 예약 시간이 비어있습니다.");
+            throw new ReservationTimeException(ErrorCode.RESERVATION_TIME_ID_NULL);
         }
     }
 }

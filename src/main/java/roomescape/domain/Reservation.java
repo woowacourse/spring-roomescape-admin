@@ -1,6 +1,7 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Reservation {
     private Long id;
@@ -25,11 +26,11 @@ public class Reservation {
         if (date == null) {
             throw new IllegalArgumentException("예약 날짜는 필수입니다.");
         }
-        if (date.isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("과거 날짜로 예약할 수 없습니다.");
-        }
         if (time == null) {
             throw new IllegalArgumentException("예약 시간은 필수입니다.");
+        }
+        if (LocalDateTime.of(date, time.getStartAt()).isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("이미 지난 날짜와 시간으로 예약할 수 없습니다.");
         }
         return new Reservation(id, name, date, time);
     }

@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 import roomescape.reservation.dao.ReservationDao;
 import roomescape.reservation.exception.ReservationException;
 import roomescape.reservation.exception.ReservationExceptionCode;
+import roomescape.reservationtime.controller.dto.CreateReservationTimeRequest;
+import roomescape.reservationtime.controller.dto.ReservationTimeResponse;
 import roomescape.reservationtime.dao.ReservationTimeDao;
 import roomescape.reservationtime.domain.ReservationTime;
-import roomescape.reservationtime.dto.CreateReservationTimeRequest;
-import roomescape.reservationtime.dto.ReservationTimeResponse;
 
 @Service
 public class ReservationTimeService {

@@ -48,7 +48,7 @@ public class ReservationService {
         boolean deleted = reservationRepository.delete(reservationId);
 
         if (!deleted) {
-            throw new DeleteFailureException("예약 삭제에 실패했습니다.");
+            throw new DeleteFailureException("예약 삭제에 실패했습니다. reservationId = " + reservationId);
         }
     }
 }

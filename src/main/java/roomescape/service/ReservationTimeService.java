@@ -38,7 +38,7 @@ public class ReservationTimeService {
         boolean deleted = repository.delete(timeId);
 
         if (!deleted) {
-            throw new DeleteFailureException("시간 삭제에 실패했습니다.");
+            throw new DeleteFailureException("시간 삭제에 실패했습니다. timeId = " + timeId);
         }
     }
 }

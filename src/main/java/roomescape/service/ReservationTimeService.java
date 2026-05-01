@@ -17,12 +17,12 @@ public class ReservationTimeService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public ReservationTimeResponse createReservationTime(ReservationTimeCreateRequest request) {
+    public ReservationTimeResponse saveReservationTime(ReservationTimeCreateRequest request) {
         Long id = reservationTimeDao.save(request.toEntity());
         return ReservationTimeResponse.fromEntity(reservationTimeDao.findById(id));
     }
 
-    public List<ReservationTimeResponse> readAllReservationTime() {
+    public List<ReservationTimeResponse> findAllReservationTime() {
         return ReservationTimeResponse.fromEntities(reservationTimeDao.findAll());
     }
 

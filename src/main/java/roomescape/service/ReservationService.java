@@ -21,11 +21,11 @@ public class ReservationService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    public List<ReservationResponse> readAllReservation() {
+    public List<ReservationResponse> findAllReservation() {
         return ReservationResponse.fromEntities(reservationDao.findAll());
     }
 
-    public ReservationResponse createReservation(ReservationCreateRequest request) {
+    public ReservationResponse saveReservation(ReservationCreateRequest request) {
         ReservationTime reservationTime = reservationTimeDao.findById(request.timeId());
         Long id = reservationDao.save(request.toEntity(reservationTime));
         return ReservationResponse.fromEntity(reservationDao.findById(id));

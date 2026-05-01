@@ -27,4 +27,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleNoSuchElement(NoSuchElementException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", e.getMessage()));
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidType(IllegalArgumentException e) {
+        return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+    }
 }

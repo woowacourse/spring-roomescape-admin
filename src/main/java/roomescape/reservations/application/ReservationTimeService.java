@@ -1,13 +1,13 @@
-package roomescape.domain.reservations.application;
+package roomescape.reservations.application;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.domain.reservations.entity.ReservationRepository;
-import roomescape.domain.reservations.entity.ReservationTime;
-import roomescape.domain.reservations.entity.ReservationTimeRepository;
-import roomescape.domain.reservations.presentation.dto.ReservationTimeRequest;
-import roomescape.domain.reservations.presentation.dto.ReservationTimeResponse;
+import roomescape.reservations.entity.ReservationRepository;
+import roomescape.reservations.entity.ReservationTime;
+import roomescape.reservations.entity.ReservationTimeRepository;
+import roomescape.reservations.presentation.dto.ReservationTimeRequest;
+import roomescape.reservations.presentation.dto.ReservationTimeResponse;
 
 @Service
 public class ReservationTimeService {

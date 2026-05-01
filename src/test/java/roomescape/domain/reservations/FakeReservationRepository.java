@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import roomescape.domain.reservations.entity.Reservation;
-import roomescape.domain.reservations.entity.ReservationRepository;
+import roomescape.reservations.entity.Reservation;
+import roomescape.reservations.entity.ReservationRepository;
 
 public class FakeReservationRepository implements ReservationRepository {
 

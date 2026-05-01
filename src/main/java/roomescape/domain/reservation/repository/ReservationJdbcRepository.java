@@ -24,7 +24,7 @@ public class ReservationJdbcRepository implements ReservationRepository {
                 t.id AS time_id,
                 t.start_at
             FROM reservation AS r
-            LEFT JOIN reservation_time AS t
+            INNER JOIN reservation_time AS t
                 ON r.time_id = t.id;
             """;
 

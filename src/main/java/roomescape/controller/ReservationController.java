@@ -1,12 +1,13 @@
 package roomescape.controller;
 
 import java.util.List;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
@@ -22,18 +23,20 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> getReservations() {
-        return ResponseEntity.ok(reservationService.selectReservations());
+    @ResponseStatus(HttpStatus.OK)
+    public List<Reservation> getReservations() {
+        return reservationService.selectReservations();
     }
 
     @PostMapping("/reservations")
-    public ResponseEntity<Reservation> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        return ResponseEntity.ok(reservationService.createReservation(reservationRequest));
+    @ResponseStatus(HttpStatus.OK)
+    public Reservation createReservation(@RequestBody ReservationRequest reservationRequest) {
+        return reservationService.createReservation(reservationRequest);
     }
 
     @DeleteMapping("/reservations/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable long id) {
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteReservation(@PathVariable long id) {
         reservationService.deleteReservation(id);
-        return ResponseEntity.ok().build();
     }
 }

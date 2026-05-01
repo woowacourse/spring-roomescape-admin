@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
@@ -30,5 +31,11 @@ public class TimeQueryingRepository {
     public ReservationTime findById(Long id) {
         String sql = "select id, start_at from reservation_time where id = ?";
         return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, id);
+    }
+
+    public boolean existsByStartAt(LocalTime startAt) {
+        String sql = "select count(*) from reservation_time where start_at = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, startAt);
+        return count > 0;
     }
 }

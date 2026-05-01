@@ -30,6 +30,9 @@ public class ReservationTimeService {
     }
 
     public ReservationTime save(ReservationTime reservationTime) {
+        if (timeQueryingRepository.existsByStartAt(reservationTime.getStartAt())) {
+            throw new IllegalArgumentException("이미 존재하는 예약 시간입니다.");
+        }
         Long id = timeUpdatingRepository.insert(reservationTime);
         return ReservationTime.toEntity(reservationTime, id);
     }

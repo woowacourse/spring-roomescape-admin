@@ -53,10 +53,6 @@ public class ReservationTimeRepository {
                 });
     }
 
-    public static ReservationTime toEntity(ReservationTime reservationTime, Long id) {
-        return new ReservationTime(id, reservationTime.getStartAt());
-    }
-
     public ReservationTime findById(Long id) {
         logger.info("id = {}", id);
         String sql = "select id, start_at from reservation_time where id = ?";

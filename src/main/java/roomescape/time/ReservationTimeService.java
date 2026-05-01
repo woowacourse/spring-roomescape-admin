@@ -33,11 +33,9 @@ public class ReservationTimeService {
     }
 
     public void delete(Long id) {
-        findById(id);
+        reservationTimeRepository.findById(id).orElseThrow(() -> new RoomescapeException(ErrorCode.RESERVATION_TIME_NOT_FOUND));
         reservationTimeRepository.deleteById(id);
     }
 
-    public ReservationTime findById(Long id) {
-        return reservationTimeRepository.findById(id).orElseThrow(() -> new RoomescapeException(ErrorCode.RESERVATION_TIME_NOT_FOUND));
-    }
+
 }

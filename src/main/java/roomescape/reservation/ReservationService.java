@@ -8,21 +8,22 @@ import roomescape.exception.RoomescapeException;
 import roomescape.reservation.dto.ReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.time.ReservationTime;
+import roomescape.time.ReservationTimeRepository;
 import roomescape.time.ReservationTimeService;
 
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final ReservationTimeService reservationTimeService;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository, ReservationTimeService reservationTimeService) {
+    public ReservationService(ReservationRepository reservationRepository, ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
-        this.reservationTimeService = reservationTimeService;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public ReservationResponse create(ReservationRequest reservationRequest) {
-        ReservationTime reservationTime = reservationTimeService.findById(reservationRequest.timeId());
+        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequest.timeId()).orElseThrow(()-> new RoomescapeException(ErrorCode.RESERVATION_TIME_NOT_FOUND));
 
         Reservation reservation = new Reservation(
                 reservationRequest.name(),

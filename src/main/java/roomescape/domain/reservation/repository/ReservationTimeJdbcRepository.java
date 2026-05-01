@@ -20,7 +20,7 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
             SELECT * FROM reservation_time;
             """;
 
-    private static final String FIND_BY_ID_RESERVATION_TIMES_QUERY = """
+    private static final String FIND_RESERVATION_TIME_BY_ID_QUERY = """
             SELECT * FROM reservation_time
             WHERE id = ?;
             """;
@@ -52,7 +52,7 @@ public class ReservationTimeJdbcRepository implements ReservationTimeRepository 
     public Optional<ReservationTime> findById(Long id) {
         try {
             ReservationTime reservationTime = jdbcTemplate.queryForObject(
-                    FIND_BY_ID_RESERVATION_TIMES_QUERY,
+                    FIND_RESERVATION_TIME_BY_ID_QUERY,
                     reservationTimeRowMapper(),
                     id
             );

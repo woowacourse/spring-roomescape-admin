@@ -1,0 +1,132 @@
+package roomescape.reservation;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Properties;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import roomescape.reservation.exception.ReservationErrorCode;
+import roomescape.reservation.exception.ReservationException;
+import roomescape.reservationtime.ReservationTime;
+import roomescape.reservationtime.ReservationTimeDao;
+import roomescape.reservationtime.ReservationTimeRepository;
+import roomescape.reservationtime.ReservationTimeService;
+import roomescape.reservationtime.exception.ReservationTimeErrorCode;
+import roomescape.reservationtime.exception.ReservationTimeException;
+
+class ReservationServiceTest {
+    private static final String TEST_PROPERTIES = "application-test.properties";
+
+    private ReservationService reservationService;
+    private ReservationTimeService reservationTimeService;
+    private JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void setUp() {
+        Properties properties = loadTestProperties();
+
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(properties.getProperty("spring.datasource.driver-class-name"));
+        dataSource.setUrl(properties.getProperty("spring.datasource.url"));
+        dataSource.setUsername(properties.getProperty("spring.datasource.username"));
+        dataSource.setPassword(properties.getProperty("spring.datasource.password"));
+
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        ReservationTimeDao reservationTimeDao = new ReservationTimeDao(jdbcTemplate);
+        ReservationTimeRepository reservationTimeRepository = new ReservationTimeRepository(reservationTimeDao);
+
+        ReservationDao reservationDao = new ReservationDao(jdbcTemplate);
+        ReservationRepository reservationRepository = new ReservationRepository(reservationDao);
+        reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
+        reservationTimeService = new ReservationTimeService(reservationTimeRepository, reservationRepository);
+
+        jdbcTemplate.execute("RUNSCRIPT FROM 'classpath:reset-test.sql'");
+    }
+
+    private Properties loadTestProperties() {
+        Properties properties = new Properties();
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(TEST_PROPERTIES)) {
+            if (inputStream == null) {
+                throw new IllegalStateException("Test properties not found: " + TEST_PROPERTIES);
+            }
+            properties.load(inputStream);
+            return properties;
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to load test properties: " + TEST_PROPERTIES, e);
+        }
+    }
+
+
+    @Test
+    void 예약을_등록할_수_있다() {
+        ReservationTime time = reservationTimeService.save(LocalTime.of(10, 0));
+
+        Reservation saved = reservationService.createReservation("브라운", LocalDate.of(2026, 5, 1), time.id());
+
+        assertThat(saved.name()).isEqualTo("브라운");
+        assertThat(saved.date()).isEqualTo(LocalDate.of(2026, 5, 1));
+        assertThat(saved.time().startAt()).isEqualTo(LocalTime.of(10, 0));
+    }
+
+    @Test
+    void 예약_시간_ID가_없으면_예외가_발생한다() {
+        assertThatThrownBy(() -> reservationService.createReservation("브라운", LocalDate.of(2026, 5, 1), 999L))
+                .isInstanceOf(ReservationTimeException.class)
+                .extracting(e -> ((ReservationTimeException) e).getErrorCode())
+                .isEqualTo(ReservationTimeErrorCode.NOT_FOUND);
+    }
+
+    @Test
+    void 예약이_중복되면_예외가_발생한다() {
+        ReservationTime time = reservationTimeService.save(LocalTime.of(11, 0));
+
+        reservationService.createReservation("브라운", LocalDate.of(2026, 5, 1), time.id());
+
+        assertThatThrownBy(() -> reservationService.createReservation("코니", LocalDate.of(2026, 5, 1), time.id()))
+                .isInstanceOf(ReservationException.class)
+                .extracting(e -> ((ReservationException) e).getErrorCode())
+                .isEqualTo(ReservationErrorCode.DUPLICATE);
+    }
+
+    @Test
+    void 전체_예약을_조회할_수_있다() {
+        ReservationTime firstTime = reservationTimeService.save(LocalTime.of(12, 0));
+        ReservationTime secondTime = reservationTimeService.save(LocalTime.of(13, 0));
+
+        reservationService.createReservation("브라운", LocalDate.of(2026, 5, 1), firstTime.id());
+        reservationService.createReservation("코니", LocalDate.of(2026, 5, 2), secondTime.id());
+
+        List<Reservation> reservations = reservationService.getReservations();
+
+        assertThat(reservations).hasSize(2);
+        assertThat(reservations)
+                .extracting(Reservation::name)
+                .containsExactly("브라운", "코니");
+    }
+
+    @Test
+    void 예약을_삭제할_수_있다() {
+        ReservationTime time = reservationTimeService.save(LocalTime.of(14, 0));
+        Reservation saved = reservationService.createReservation("브라운", LocalDate.of(2026, 5, 1), time.id());
+
+        reservationService.deleteReservation(saved.id());
+
+        assertThat(reservationService.getReservations()).isEmpty();
+    }
+
+    @Test
+    void 존재하지_않는_ID로_삭제하면_예외가_발생한다() {
+        assertThatThrownBy(() -> reservationService.deleteReservation(999L))
+                .isInstanceOf(ReservationException.class)
+                .extracting(e -> ((ReservationException) e).getErrorCode())
+                .isEqualTo(ReservationErrorCode.NOT_FOUND);
+    }
+}

@@ -1,7 +1,7 @@
 package roomescape.domain.reservation.service;
 
 import java.util.List;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.reservation.entity.ReservationTime;
@@ -10,11 +10,15 @@ import roomescape.domain.reservation.request.ReservationTimeCreateRequest;
 import roomescape.domain.reservation.response.ReservationTimeResponse;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ReservationTimeService {
 
     private final ReservationTimeRepository reservationTimeRepository;
+
+    @Autowired
+    public ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {
+        this.reservationTimeRepository = reservationTimeRepository;
+    }
 
     public List<ReservationTimeResponse> findAllReservationTimes() {
         return reservationTimeRepository.findAll().stream()

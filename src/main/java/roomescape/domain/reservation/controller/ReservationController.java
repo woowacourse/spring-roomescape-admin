@@ -1,7 +1,7 @@
 package roomescape.domain.reservation.controller;
 
 import java.util.List;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,11 +16,15 @@ import roomescape.domain.reservation.response.ReservationResponse;
 import roomescape.domain.reservation.service.ReservationService;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationService reservationService;
+
+    @Autowired
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     @GetMapping
     public ResponseEntity<List<ReservationResponse>> findAll() {

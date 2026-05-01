@@ -1,20 +1,31 @@
 package roomescape.domain.reservation.entity;
 
 import java.time.LocalTime;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@AllArgsConstructor
 public class ReservationTime {
 
-    @Setter
     private Long id;
 
     private LocalTime startAt;
 
+    public ReservationTime(Long id, LocalTime startAt) {
+        this.id = id;
+        this.startAt = startAt;
+    }
+
     public ReservationTime(LocalTime startAt) {
         this.startAt = startAt;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public LocalTime getStartAt() {
+        return startAt;
     }
 }

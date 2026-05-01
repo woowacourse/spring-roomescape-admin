@@ -56,6 +56,9 @@ public class ReservationTimeDAOTest {
     void insert() {
         ReservationTime reservationTime = new ReservationTime(LocalTime.of(15, 0));
         reservationTimeDAO.insert(reservationTime);
+        int count = reservationTimeDAO.count();
+
+        assertThat(count).isEqualTo(4);
     }
 
     @Test

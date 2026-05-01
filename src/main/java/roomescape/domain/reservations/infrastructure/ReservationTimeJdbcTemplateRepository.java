@@ -60,4 +60,17 @@ public class ReservationTimeJdbcTemplateRepository implements ReservationTimeRep
     public void deleteById(Long id) {
         jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
     }
+
+    @Override
+    public boolean existsById(Long id) {
+        String sql = """
+            SELECT EXISTS (
+                SELECT 1
+                FROM reservation
+                WHERE time_id = ?
+            );
+        """;
+        Integer result = jdbcTemplate.queryForObject(sql, Integer.class, id);
+        return result != null && result == 1;
+    }
 }

@@ -48,7 +48,7 @@ public class MissionStepThreeTest {
                 .body(time)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
 
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
@@ -60,7 +60,7 @@ public class MissionStepThreeTest {
                 .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")

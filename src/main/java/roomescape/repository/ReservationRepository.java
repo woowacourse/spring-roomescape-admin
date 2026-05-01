@@ -71,7 +71,11 @@ public class ReservationRepository {
     }
 
     public void deleteById(Long id) {
-        jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
+        int deletedCount = jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
+
+        if (deletedCount == 0) {
+            throw new IllegalArgumentException("[ERROR] 존재하지 않는 예약입니다.");
+        }
     }
 
     private ReservationTime findTimeById(Long id) {

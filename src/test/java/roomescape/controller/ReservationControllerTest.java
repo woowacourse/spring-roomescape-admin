@@ -1,11 +1,14 @@
 package roomescape.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import roomescape.controller.dto.ReservationRequest;
@@ -61,21 +64,23 @@ class ReservationControllerTest {
                 1L
         );
 
-        ReservationResponse reservationResponse = reservationController.create(request);
+        ResponseEntity<ReservationResponse> reservationResponse = reservationController.create(request);
 
-        assertThat(reservationResponse.id()).isEqualTo(1L);
-        assertThat(reservationResponse.name()).isEqualTo("브라운");
-        assertThat(reservationResponse.date()).isEqualTo("2026-04-29");
-        assertThat(reservationResponse.time().id()).isEqualTo(1L);
-        assertThat(reservationResponse.time().startAt()).isEqualTo("10:00");
+        assertThat(reservationResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(reservationResponse.getBody().id()).isEqualTo(1L);
+        assertThat(reservationResponse.getBody().name()).isEqualTo("브라운");
+        assertThat(reservationResponse.getBody().date()).isEqualTo("2026-04-29");
+        assertThat(reservationResponse.getBody().time().id()).isEqualTo(1L);
+        assertThat(reservationResponse.getBody().time().startAt()).isEqualTo("10:00");
     }
 
     @Test
     @DisplayName("아무런 예약이 없는 상태에서 예약을 조회한다.")
     void findAllReservations_Before_Create() {
-        List<ReservationResponse> reservations = reservationController.findAll();
+        ResponseEntity<List<ReservationResponse>> reservations = reservationController.findAll();
 
-        assertThat(reservations).isEmpty();
+        assertThat(reservations.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(reservations.getBody()).isEmpty();
     }
 
     @Test
@@ -86,20 +91,22 @@ class ReservationControllerTest {
         reservationController.create(new ReservationRequest("브라운", "2026-04-29", 1L));
         reservationController.create(new ReservationRequest("리사", "2026-04-30", 2L));
 
-        List<ReservationResponse> reservations = reservationController.findAll();
+        ResponseEntity<List<ReservationResponse>> reservations = reservationController.findAll();
 
-        assertThat(reservations).hasSize(2);
-        assertThat(reservations.get(0).id()).isEqualTo(1L);
-        assertThat(reservations.get(0).name()).isEqualTo("브라운");
-        assertThat(reservations.get(0).date()).isEqualTo("2026-04-29");
-        assertThat(reservations.get(0).time().id()).isEqualTo(1L);
-        assertThat(reservations.get(0).time().startAt()).isEqualTo("10:00");
+        assertThat(reservations.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        assertThat(reservations.get(1).id()).isEqualTo(2L);
-        assertThat(reservations.get(1).name()).isEqualTo("리사");
-        assertThat(reservations.get(1).date()).isEqualTo("2026-04-30");
-        assertThat(reservations.get(1).time().id()).isEqualTo(2L);
-        assertThat(reservations.get(1).time().startAt()).isEqualTo("11:00");
+        assertThat(reservations.getBody()).hasSize(2);
+        assertThat(reservations.getBody().get(0).id()).isEqualTo(1L);
+        assertThat(reservations.getBody().get(0).name()).isEqualTo("브라운");
+        assertThat(reservations.getBody().get(0).date()).isEqualTo("2026-04-29");
+        assertThat(reservations.getBody().get(0).time().id()).isEqualTo(1L);
+        assertThat(reservations.getBody().get(0).time().startAt()).isEqualTo("10:00");
+
+        assertThat(reservations.getBody().get(1).id()).isEqualTo(2L);
+        assertThat(reservations.getBody().get(1).name()).isEqualTo("리사");
+        assertThat(reservations.getBody().get(1).date()).isEqualTo("2026-04-30");
+        assertThat(reservations.getBody().get(1).time().id()).isEqualTo(2L);
+        assertThat(reservations.getBody().get(1).time().startAt()).isEqualTo("11:00");
     }
 
     @Test
@@ -110,13 +117,24 @@ class ReservationControllerTest {
         reservationController.create(new ReservationRequest("브라운", "2026-04-29", 1L));
         reservationController.create(new ReservationRequest("리사", "2026-04-30", 2L));
 
-        reservationController.delete(1L);
+        ResponseEntity<Void> response = reservationController.delete(1L);
 
-        List<ReservationResponse> reservations = reservationController.findAll();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(response.getBody()).isNull();
 
-        assertThat(reservations).hasSize(1);
-        assertThat(reservations.get(0).id()).isEqualTo(2L);
-        assertThat(reservations.get(0).name()).isEqualTo("리사");
+        ResponseEntity<List<ReservationResponse>> reservations = reservationController.findAll();
+
+        assertThat(reservations.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(reservations.getBody()).hasSize(1);
+        assertThat(reservations.getBody().get(0).id()).isEqualTo(2L);
+        assertThat(reservations.getBody().get(0).name()).isEqualTo("리사");
+    }
+
+    @Test
+    @DisplayName("예약이 존재하지 않는 상황에서 예약을 삭제하면 예외가 발생한다.")
+    void throwException_When_DeleteEmptyReservation() {
+        assertThatThrownBy(() -> reservationController.delete(1L))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     private void insertTime(String startAt) {

@@ -1,8 +1,8 @@
 package roomescape.reservationtime;
 
 public class ReservationTimeResponseDTO {
-    Long id;
-    String startAt;
+    private final Long id;
+    private final String startAt;
 
     public ReservationTimeResponseDTO(Long id, String startAt) {
         this.id = id;

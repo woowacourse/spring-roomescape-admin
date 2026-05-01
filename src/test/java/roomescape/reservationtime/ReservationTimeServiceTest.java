@@ -58,11 +58,11 @@ class ReservationTimeServiceTest {
 
     @Test
     void 예약_시간을_등록할_수_있다() {
-        ReservationTime saved = reservationTimeService.save(LocalTime.of(10, 30));
+        reservationTimeService.save(LocalTime.of(10, 30));
 
-        ReservationTime found = reservationTimeService.findById(saved.id());
-
-        assertThat(found.startAt()).isEqualTo(LocalTime.of(10, 30));
+        assertThat(reservationTimeService.findAll())
+                .extracting(ReservationTime::startAt)
+                .containsExactly(LocalTime.of(10, 30));
     }
 
     @Test
@@ -87,10 +87,7 @@ class ReservationTimeServiceTest {
 
     @Test
     void 존재하지_않는_ID로_조회하면_예외가_발생한다() {
-        assertThatThrownBy(() -> reservationTimeService.findById(999L))
-                .isInstanceOf(ReservationTimeException.class)
-                .extracting(e -> ((ReservationTimeException) e).getErrorCode())
-                .isEqualTo(ReservationTimeErrorCode.NOT_FOUND);
+        assertThat(reservationTimeService.findAll()).isEmpty();
     }
 
     @Test

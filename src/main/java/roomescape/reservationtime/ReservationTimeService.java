@@ -24,11 +24,6 @@ public class ReservationTimeService {
         return reservationTimeRepository.findAll();
     }
 
-    public ReservationTime findById(long id) {
-        return reservationTimeRepository.findById(id)
-                .orElseThrow(() -> new ReservationTimeException(ReservationTimeErrorCode.NOT_FOUND));
-    }
-
     @Transactional
     public ReservationTime save(LocalTime startAt) {
         try {

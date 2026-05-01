@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.mission;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;

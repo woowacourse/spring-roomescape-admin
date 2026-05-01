@@ -2,6 +2,7 @@ package roomescape.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationsResponse;
 import roomescape.model.Reservation;
@@ -23,11 +24,11 @@ public class ReservationService {
     }
 
     @Transactional
-    public ReservationResponse create(Reservation reservation) {
-        ReservationTime time = reservationTimeRepository.findById(reservation.getTime().getId());
+    public ReservationResponse create(ReservationRequest request) {
+        ReservationTime time = reservationTimeRepository.findById(request.getTimeId());
+        Reservation reservation = new Reservation(request.getName(), request.getDate(), time);
         Long id = reservationRepository.create(reservation);
-        Reservation newReservation = new Reservation(id, reservation.getName(), reservation.getDate(), time);
-        return ReservationResponse.from(newReservation);
+        return ReservationResponse.from(new Reservation(id, reservation.getName(), reservation.getDate(), time));
     }
 
     @Transactional

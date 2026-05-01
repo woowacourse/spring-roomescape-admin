@@ -85,6 +85,16 @@ public class ReservationDao {
         }
     }
 
+    public boolean existsByReservationTime(long reservationTimeId) {
+        String sql = """
+                SELECT EXISTS (
+                    SELECT 1
+                    FROM reservation
+                    WHERE time_id = ?
+                )""";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, reservationTimeId);
+    }
+
     public void delete(Reservation reservation) {
         String sql = """
                 DELETE FROM reservation

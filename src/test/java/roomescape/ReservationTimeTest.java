@@ -74,5 +74,14 @@ public class ReservationTimeTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200);
+
+        // reservation 조회 시 응답 형식이 올바른지 검증
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("[0].time.id", is(1))
+                .and()
+                .body("[0].time.startAt", is("10:00"));
     }
 }

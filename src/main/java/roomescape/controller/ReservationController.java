@@ -8,6 +8,8 @@ import roomescape.service.ReservationService;
 
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
@@ -26,12 +28,12 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest request) {
         Reservation reservation = reservationService.addReservation(request);
-        return ResponseEntity.ok(reservation);
+        return ResponseEntity.status(CREATED).body(reservation);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable("id") Long id) {
         reservationService.deleteReservation(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

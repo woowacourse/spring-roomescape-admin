@@ -60,6 +60,11 @@ class JdbcReservationRepositoryTest {
                 .extracting(Reservation::getName)
                 .anySatisfy(name -> assertThat(name.value()).isEqualTo("브라운"))
                 .anySatisfy(name -> assertThat(name.value()).isEqualTo("제임스"));
+
+        assertThat(reservations)
+                .extracting(Reservation::getTime)
+                .anySatisfy(time -> assertThat(time).isEqualTo(time1))
+                .anySatisfy(time -> assertThat(time).isEqualTo(time2));
     }
 
     @Test

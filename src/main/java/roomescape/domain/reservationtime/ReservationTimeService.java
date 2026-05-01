@@ -26,7 +26,7 @@ public class ReservationTimeService {
             .toList();
     }
 
-    public void deleteReservation(Long id) {
+    public void deleteReservationTime(Long id) {
         if (reservationRepository.countByTimeId(id) > 0) {
             throw new IllegalArgumentException("이미 예약이 존재할 경우 시간대를 삭제할 수 없습니다.");
         }

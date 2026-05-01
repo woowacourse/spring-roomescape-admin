@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import roomescape.exception.errorCode.GlobalErrorCode;
 import roomescape.exception.response.ErrorResponse;
 import roomescape.exception.response.ValidationError;
 

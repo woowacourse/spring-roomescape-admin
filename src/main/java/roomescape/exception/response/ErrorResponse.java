@@ -1,7 +1,7 @@
 package roomescape.exception.response;
 
 import java.util.List;
-import roomescape.exception.ErrorCode;
+import roomescape.exception.errorCode.ErrorCode;
 
 public record ErrorResponse(
         int code,

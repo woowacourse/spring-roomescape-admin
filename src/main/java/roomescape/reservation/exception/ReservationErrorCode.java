@@ -1,7 +1,7 @@
 package roomescape.reservation.exception;
 
 import org.springframework.http.HttpStatus;
-import roomescape.exception.ErrorCode;
+import roomescape.exception.errorCode.ErrorCode;
 
 public enum ReservationErrorCode implements ErrorCode {
     RESERVATION_DUPLICATE(HttpStatus.CONFLICT, "예약은 중복 생성이 불가능합니다."),

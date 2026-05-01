@@ -1,4 +1,4 @@
-package roomescape.domain.time;
+package roomescape.domain.time.repository;
 
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import roomescape.domain.time.ReservationTime;
 
 @Repository
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {

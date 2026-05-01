@@ -1,12 +1,14 @@
 package roomescape;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.controller.ReservationController;
-import roomescape.domain.Reservation;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -86,17 +84,30 @@ public class MissionStepTest {
     @Test
     void DB_조회_API_전환() {
         createTime();
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", "1");
 
-        List<Reservation> reservations = RestAssured.given().log().all()
+        int id = 1;
+        String name = "브라운";
+        String date = "2023-08-05";
+        int timeId = 1;
+        jdbcTemplate.update("INSERT INTO reservation (id, name, date, time_id) VALUES (?, ?, ?, ?)",
+                id,
+                name,
+                date,
+                timeId
+        );
+
+        RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
-                .statusCode(200).extract()
-                .jsonPath().getList(".", Reservation.class);
+                .statusCode(200)
+                .body("size()", is(1))
+                .body("[0].id", is(id))
+                .body("[0].name", is(name))
+                .body("[0].date", is(date))
+                .body("[0].time.id", is(timeId));
 
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
-
-        assertThat(reservations.size()).isEqualTo(count);
+        Integer actualCount = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        assertThat(actualCount).isEqualTo(1);
     }
 
     @Test

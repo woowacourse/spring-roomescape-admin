@@ -14,7 +14,7 @@ import java.util.Objects;
 
 @Repository
 public class ReservationTimeDAO {
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public ReservationTimeDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

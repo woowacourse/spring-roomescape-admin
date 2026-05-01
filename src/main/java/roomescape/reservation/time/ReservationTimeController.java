@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.reservation.time.dto.ReservationTimeRequestDto;
 import roomescape.reservation.time.dto.ReservationTimeResponseDto;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -30,12 +31,12 @@ public class ReservationTimeController {
 
     @PostMapping
     public ResponseEntity<ReservationTimeResponseDto> createTime(@RequestBody ReservationTimeRequestDto request) {
-        return ResponseEntity.ok(reservationTimeService.save(request));
+        return ResponseEntity.created(URI.create("/times")).body(reservationTimeService.save(request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTime(@PathVariable Long id) {
         reservationTimeService.deleteById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

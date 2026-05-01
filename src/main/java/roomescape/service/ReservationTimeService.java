@@ -20,7 +20,7 @@ public class ReservationTimeService {
 
     @Transactional
     public ReservationTimeResponse create(ReservationTimeRequest request) {
-        ReservationTime reservationTime = new ReservationTime(request.getStartAt());
+        ReservationTime reservationTime = new ReservationTime(request.startAt());
         Long id = reservationTimeRepository.create(reservationTime);
         ReservationTime savedReservationTime = new ReservationTime(id, reservationTime.getStartTime());
         return ReservationTimeResponse.of(savedReservationTime);

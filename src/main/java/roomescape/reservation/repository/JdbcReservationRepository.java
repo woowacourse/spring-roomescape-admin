@@ -20,30 +20,30 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public List<Reservation> findAll() {
-        String sql = "select r.id as reservation_id, r.name, r.date, rt.id as time_id, rt.start_at" +
-                " from reservation r " +
-                "join reservation_time rt on r.time_id = rt.id";
+        String sql = "SELECT r.id AS reservation_id, r.name, r.date, rt.id AS time_id, rt.start_at" +
+                " FROM reservation r " +
+                "JOIN reservation_time rt ON r.time_id = rt.id";
         return jdbcTemplate.query(sql,
                 (resultSet, rowNum) -> Reservation.of(
                         resultSet.getLong("reservation_id"),
                         resultSet.getString("name"),
-                        resultSet.getString("date"),
+                        resultSet.getDate("date").toLocalDate(),
                         ReservationTime.of(
                                 resultSet.getLong("time_id"),
-                                resultSet.getString("start_at")
+                                resultSet.getTime("start_at").toLocalTime()
                         )
                 ));
     }
 
     @Override
     public Reservation save(Reservation reservation) {
-        String sql = "insert into reservation(name, date, time_id) values (?, ?, ?)";
+        String sql = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate());
+            ps.setString(2, reservation.getDate().toString());
             ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
@@ -55,7 +55,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public void deleteById(Long id) {
-        String sql = "delete from reservation where id = ?";
+        String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 }

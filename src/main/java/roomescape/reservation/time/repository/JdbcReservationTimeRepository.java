@@ -5,7 +5,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.time.ReservationTime;
-import roomescape.reservation.time.dto.ReservationTimeRequestDto;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -23,32 +22,32 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
 
         return jdbcTemplate.queryForObject(sql,
-                (resultSet, rowNum) ->  ReservationTime.of(
+                (resultSet, rowNum) -> ReservationTime.of(
                         resultSet.getLong("id"),
-                        resultSet.getString("start_at")
+                        resultSet.getTime("start_at").toLocalTime()
                 ), timeId);
     }
 
     @Override
     public List<ReservationTime> findAll() {
-        String sql = "select * from reservation_time";
+        String sql = "SELECT * FROM reservation_time";
 
         return jdbcTemplate.query(sql,
                 (resultSet, rowNum) -> ReservationTime.of(
                         resultSet.getLong("id"),
-                        resultSet.getString("start_at")
+                        resultSet.getTime("start_at").toLocalTime()
                 )
         );
     }
 
     @Override
     public ReservationTime save(ReservationTime reservationTime) {
-        String sql = "insert into reservation_time (start_at) values (?)";
+        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, reservationTime.getStartAt());
+            ps.setString(1, reservationTime.getStartAt().toString());
             return ps;
         }, keyHolder);
 
@@ -59,7 +58,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public void deleteById(Long id) {
-        String sql = "delete from reservation_time where id = ?";
+        String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
 }

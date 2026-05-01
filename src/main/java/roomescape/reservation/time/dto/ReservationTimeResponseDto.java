@@ -2,9 +2,11 @@ package roomescape.reservation.time.dto;
 
 import roomescape.reservation.time.ReservationTime;
 
+import java.time.LocalTime;
+
 public record ReservationTimeResponseDto(
         Long id,
-        String startAt
+        LocalTime startAt
 ) {
     public static ReservationTimeResponseDto from(ReservationTime reservationTime) {
         return new ReservationTimeResponseDto(

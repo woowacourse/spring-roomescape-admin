@@ -1,6 +1,7 @@
 package roomescape.reservation;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,7 @@ public class ReservationRepository {
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> new Reservation(
             resultSet.getLong("id"),
             resultSet.getString("name"),
-            resultSet.getString("date"),
+            resultSet.getObject("date", LocalDate.class),
             new ReservationTime(
                     resultSet.getLong("time_id"),
                     resultSet.getObject("start_at", LocalTime.class)
@@ -36,7 +37,7 @@ public class ReservationRepository {
         jdbcTemplate.update(con -> {
             PreparedStatement psmt = con.prepareStatement(sql, new String[]{"id"});
             psmt.setString(1, reservation.getName());
-            psmt.setString(2, reservation.getDate());
+            psmt.setObject(2, reservation.getDate());
             psmt.setLong(3, reservation.getTime().getId());
 
             return psmt;

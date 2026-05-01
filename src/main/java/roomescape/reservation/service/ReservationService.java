@@ -8,6 +8,7 @@ import roomescape.reservation.dto.CreateReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.time.domain.ReservationTime;
+import roomescape.time.dto.ReservationTimeResponse;
 import roomescape.time.repository.ReservationTimeRepository;
 
 @Service
@@ -34,13 +35,11 @@ public class ReservationService {
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 예약 시간입니다."));
 
         validateDuplicateReservation(createReservationRequest);
-
         Long id = reservationRepository.save(
                 Reservation.create(createReservationRequest.name(), createReservationRequest.date(),
                         reservationTime));
-        Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("예약 생성에 실패했습니다."));
-        return ReservationResponse.from(reservation);
+        return new ReservationResponse(id, createReservationRequest.name(), createReservationRequest.date(),
+                ReservationTimeResponse.from(reservationTime));
     }
 
     private void validateDuplicateReservation(CreateReservationRequest createReservationRequest) {

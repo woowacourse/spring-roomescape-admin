@@ -29,9 +29,7 @@ public class ReservationTimeService {
         LocalTime startAt = createReservationTimeRequest.startAt();
         validateDuplicateTimeExist(startAt);
         Long id = reservationTimeRepository.save(ReservationTime.create(startAt));
-        ReservationTime reservationTime = reservationTimeRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("예약 시간 생성에 실패했습니다."));
-        return ReservationTimeResponse.from(reservationTime);
+        return new ReservationTimeResponse(id, startAt);
     }
 
     private void validateDuplicateTimeExist(LocalTime startAt) {

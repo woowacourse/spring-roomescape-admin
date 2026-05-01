@@ -1,12 +1,12 @@
 package roomescape.dao;
 
-import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Objects;
-import org.springframework.jdbc.core.JdbcTemplate;
+import javax.sql.DataSource;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -14,8 +14,8 @@ import roomescape.dto.ReservationRequest;
 
 @Repository
 public class ReservationDao {
-    private final JdbcTemplate jdbcTemplate;
-
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<Reservation> rowMapper = (rs, rowNum) -> {
         ReservationTime time = new ReservationTime(
                 rs.getLong("time_id"),
@@ -29,8 +29,11 @@ public class ReservationDao {
         );
     };
 
-    public ReservationDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public ReservationDao(DataSource dataSource) {
+        this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<Reservation> findAll() {
@@ -49,22 +52,16 @@ public class ReservationDao {
     }
 
     public Long save(ReservationRequest request) {
-        String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        SqlParameterSource parameters = new MapSqlParameterSource()
+                .addValue("name", request.name())
+                .addValue("date", request.date())
+                .addValue("time_id", request.timeId());
 
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, request.name());
-            ps.setString(2, request.date());
-            ps.setLong(3, request.timeId());
-            return ps;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 
     public void deleteById(Long id) {
-        String sql = "DELETE FROM reservation WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        String sql = "DELETE FROM reservation WHERE id = :id";
+        jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
     }
 }

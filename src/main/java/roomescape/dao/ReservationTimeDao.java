@@ -1,54 +1,50 @@
 package roomescape.dao;
 
-import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Objects;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import javax.sql.DataSource;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationTimeDao {
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationTimeDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    private final RowMapper<ReservationTime> rowMapper = (rs, rowNum) ->
+            new ReservationTime(
+                    rs.getLong("id"),
+                    rs.getString("start_at")
+            );
+
+    public ReservationTimeDao(DataSource dataSource) {
+        this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+        this.simpleJdbcInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<ReservationTime> findAll() {
         String sql = "SELECT id, start_at FROM reservation_time";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new ReservationTime(
-                rs.getLong("id"),
-                rs.getString("start_at")
-        ));
+        return jdbcTemplate.getJdbcTemplate().query(sql, rowMapper);
     }
 
     public ReservationTime findById(Long id) {
-        String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(
-                sql,
-                (rs, rowNum) -> new ReservationTime(rs.getLong("id"), rs.getString("start_at")),
-                id
-        );
+        String sql = "SELECT id, start_at FROM reservation_time WHERE id = :id";
+        return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("id", id), rowMapper);
     }
 
     public Long save(String startAt) {
-        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, startAt);
-            return ps;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return simpleJdbcInsert.executeAndReturnKey(
+                new MapSqlParameterSource("start_at", startAt)
+        ).longValue();
     }
 
     public void deleteById(Long id) {
-        String sql = "DELETE FROM reservation_time WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+        String sql = "DELETE FROM reservation_time WHERE id = :id";
+        jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
     }
 }

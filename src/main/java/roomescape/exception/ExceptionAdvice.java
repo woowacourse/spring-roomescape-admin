@@ -3,6 +3,7 @@ package roomescape.exception;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -12,6 +13,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ExceptionAdvice {
+
+    private static final Map<Class<?>, String> ERROR_MESSAGES = Map.of(
+            LocalTime.class, "[ERROR] 시간 형식은 HH:mm 이어야 합니다.",
+            LocalDate.class, "[ERROR] 날짜 형식은 yyyy-MM-dd 이어야 합니다."
+    );
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> validation(RoomEscapeException e) {
@@ -37,15 +43,7 @@ public class ExceptionAdvice {
 
     private String resolveErrorMessage(HttpMessageNotReadableException e) {
         if (e.getCause() instanceof InvalidFormatException invalidFormatException) {
-            Class<?> targetType = invalidFormatException.getTargetType();
-
-            if (targetType.equals(LocalTime.class)) {
-                return "[ERROR] 시간 형식은 HH:mm 이어야 합니다.";
-            }
-
-            if (targetType.equals(LocalDate.class)) {
-                return "[ERROR] 날짜 형식은 yyyy-MM-dd 이어야 합니다.";
-            }
+            return ERROR_MESSAGES.getOrDefault(invalidFormatException.getTargetType(), e.getMessage());
         }
         return e.getMessage();
     }

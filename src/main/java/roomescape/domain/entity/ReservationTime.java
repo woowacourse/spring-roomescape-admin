@@ -31,4 +31,8 @@ public final class ReservationTime {
     public LocalTime getStartAt() {
         return startAt;
     }
+
+    public boolean isSameReservationTime(ReservationTime reservationTime) {
+        return startAt.equals(reservationTime.getStartAt());
+    }
 }

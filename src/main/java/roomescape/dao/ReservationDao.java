@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.ReservationReq;
+import roomescape.ReservationRequest;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
@@ -80,7 +80,7 @@ public class ReservationDao {
         return reservation;
     }
 
-    public Long insertWithKeyHolder(ReservationReq reservationReq) {
+    public Long insertWithKeyHolder(ReservationRequest reservationRequest) {
         String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -89,9 +89,9 @@ public class ReservationDao {
                     sql,
                     new String[]{"id"}
             );
-            ps.setString(1, reservationReq.name());
-            ps.setString(2, reservationReq.date().toString());
-            ps.setLong(3, reservationReq.timeId());
+            ps.setString(1, reservationRequest.name());
+            ps.setString(2, reservationRequest.date().toString());
+            ps.setLong(3, reservationRequest.timeId());
             return ps;
         }, keyHolder);
         Long id = keyHolder.getKey().longValue();

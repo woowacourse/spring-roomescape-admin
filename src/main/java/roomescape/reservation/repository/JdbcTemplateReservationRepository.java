@@ -1,23 +1,22 @@
 package roomescape.reservation.repository;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.time.domain.ReservationTime;
 
 @Repository
 public class JdbcTemplateReservationRepository implements ReservationRepository {
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNumber) -> Reservation.of(
             resultSet.getLong("id"),
             resultSet.getString("name"),
@@ -28,8 +27,11 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
             )
     );
 
-    public JdbcTemplateReservationRepository(JdbcTemplate jdbcTemplate) {
+    public JdbcTemplateReservationRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getJdbcTemplate())
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
@@ -42,7 +44,7 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
                 """;
 
         return jdbcTemplate.query(
-                sql,
+                sql, new MapSqlParameterSource(),
                 reservationRowMapper);
     }
 
@@ -50,15 +52,13 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
     public Optional<Reservation> findById(Long id) {
         String sql = """
                 SELECT r.id, r.name, r.date,
-                       rt.id AS time_id, rt.start_at
-                FROM reservation r
-                INNER JOIN reservation_time rt ON r.time_id = rt.id
-                WHERE r.id = ?
+                       rt.id AS time_id, rt.start_at FROM reservation r
+                INNER JOIN reservation_time rt ON r.time_id = rt.id WHERE r.id = :id
                 """;
 
+        SqlParameterSource params = new MapSqlParameterSource("id", id);
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
-                    reservationRowMapper, id));
+            return Optional.ofNullable(jdbcTemplate.queryForObject(sql, params, reservationRowMapper));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -66,23 +66,18 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
     @Override
     public Long save(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setString(1, reservation.name());
-            preparedStatement.setDate(2, Date.valueOf(reservation.date()));
-            preparedStatement.setLong(3, reservation.time().id());
-            return preparedStatement;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", reservation.name())
+                .addValue("date", reservation.date())
+                .addValue("time_id", reservation.time().id());
+        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     @Override
     public void delete(Long id) {
-        int deletedCount = jdbcTemplate.update("delete from reservation where id = ?", id);
+        String sql = "DELETE FROM reservation WHERE id = :id";
+        SqlParameterSource params = new MapSqlParameterSource("id", id);
+        int deletedCount = jdbcTemplate.update(sql, params);
         if (deletedCount == 0) {
             throw new IllegalStateException("예약을 삭제할 수 없습니다.");
         }
@@ -90,8 +85,12 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
     @Override
     public boolean existsByDateAndTimeId(LocalDate date, Long timeId) {
-        int count = jdbcTemplate.queryForObject("select count(*) from reservation where date = ? and time_id = ?",
-                Integer.class, date, timeId);
-        return count > 0;
+        String sql = "SELECT COUNT(*) FROM reservation WHERE DATE = :date AND time_id = :time_id";
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("date", date)
+                .addValue("time_id", timeId);
+
+        Integer count = jdbcTemplate.queryForObject(sql, params, Integer.class);
+        return count != null && count > 0;
     }
 }

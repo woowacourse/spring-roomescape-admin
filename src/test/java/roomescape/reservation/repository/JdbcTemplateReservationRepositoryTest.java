@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import roomescape.reservation.domain.Reservation;
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.repository.JdbcTemplateReservationTimeRepository;
@@ -22,7 +22,7 @@ class JdbcTemplateReservationRepositoryTest {
     private Long reservationId;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void setup() {

@@ -1,47 +1,49 @@
 package roomescape.time.repository;
 
-import java.sql.PreparedStatement;
-import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.time.domain.ReservationTime;
 
 @Repository
 public class JdbcTemplateReservationTimeRepository implements ReservationTimeRepository {
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
     private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNumber) -> ReservationTime.of(
             resultSet.getLong("id"),
             resultSet.getTime("start_at").toLocalTime()
     );
 
-    public JdbcTemplateReservationTimeRepository(JdbcTemplate jdbcTemplate) {
+    public JdbcTemplateReservationTimeRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate.getJdbcTemplate())
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";
 
-        return jdbcTemplate.query(sql,
-                reservationTimeRowMapper);
+        return jdbcTemplate.query(sql, new MapSqlParameterSource(), reservationTimeRowMapper);
     }
 
     @Override
     public Optional<ReservationTime> findById(Long id) {
-        String sql = "SELECT * FROM reservation_time WHERE id=?";
+        String sql = "SELECT * FROM reservation_time WHERE id=:id";
+
+        SqlParameterSource params = new MapSqlParameterSource("id", id);
 
         try {
             return Optional.ofNullable(
-                    jdbcTemplate.queryForObject(sql,
-                            reservationTimeRowMapper, id));
+                    jdbcTemplate.queryForObject(sql, params, reservationTimeRowMapper));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -49,31 +51,25 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
 
     @Override
     public Long save(ReservationTime reservationTime) {
-        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setTime(1, Time.valueOf(reservationTime.startAt()));
-            return preparedStatement;
-        }, keyHolder);
-
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        SqlParameterSource params = new MapSqlParameterSource("start_at", reservationTime.startAt());
+        return simpleJdbcInsert.executeAndReturnKey(params).longValue();
     }
 
     @Override
     public void delete(Long id) {
-        int deleteCount = jdbcTemplate.update("DELETE FROM reservation_time WHERE id=?", id);
+        String sql = "DELETE FROM reservation_time WHERE id=:id";
+        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
+        int deleteCount = jdbcTemplate.update(sql, params);
         if (deleteCount == 0) {
             throw new IllegalStateException("예약 시간을 삭제할 수 없습니다.");
         }
     }
 
     @Override
-    public boolean existsByStartAt(LocalTime localTime) {
-        String sql = "SELECT COUNT(*) FROM reservation_time WHERE start_at = ?";
-
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, localTime);
-        return count > 0;
+    public boolean existsByStartAt(LocalTime startAt) {
+        String sql = "SELECT COUNT(*) FROM reservation_time WHERE start_at = :start_at";
+        MapSqlParameterSource params = new MapSqlParameterSource("start_at", startAt);
+        Integer count = jdbcTemplate.queryForObject(sql, params, Integer.class);
+        return count != null && count > 0;
     }
 }

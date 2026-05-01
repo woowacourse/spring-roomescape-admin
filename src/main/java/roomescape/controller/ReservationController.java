@@ -22,7 +22,8 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponseDto> postReservation(
-            @RequestBody @Valid ReservationRequestDto reservationRequestDto) {
+            @RequestBody @Valid ReservationRequestDto reservationRequestDto
+    ) {
         return ResponseEntity.ok(reservationService.postReservation(reservationRequestDto));
     }
 

@@ -9,6 +9,7 @@ import roomescape.dto.ReservationRequest;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ReservationService {
@@ -33,6 +34,9 @@ public class ReservationService {
     }
 
     public void delete(Long id) {
-        reservationUpdatingRepository.delete(id);
+        int deletedRows = reservationUpdatingRepository.delete(id);
+        if (deletedRows == 0) {
+            throw new NoSuchElementException("존재하지 않는 예약입니다.");
+        }
     }
 }

@@ -22,11 +22,11 @@ class ReservationTimeRepository {
         return reservationTimeDao.save(startAt);
     }
 
-    int delete(Long id) {
+    int delete(long id) {
         return reservationTimeDao.delete(id);
     }
 
-    Optional<ReservationTime> findById(Long id) {
+    Optional<ReservationTime> findById(long id) {
         return reservationTimeDao.findById(id);
     }
 }

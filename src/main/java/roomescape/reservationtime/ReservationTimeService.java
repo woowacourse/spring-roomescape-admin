@@ -19,7 +19,7 @@ public class ReservationTimeService {
         return reservationTimeRepository.findAll();
     }
 
-    public ReservationTime findById(Long id) {
+    public ReservationTime findById(long id) {
         return reservationTimeRepository.findById(id)
                 .orElseThrow(() -> new ApiException(ErrorCode.RESERVATION_TIME_NOT_FOUND, id));
     }
@@ -30,7 +30,7 @@ public class ReservationTimeService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete(long id) {
         int affectedRow = reservationTimeRepository.delete(id);
 
         if (affectedRow == 0) {

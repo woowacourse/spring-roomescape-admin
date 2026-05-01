@@ -20,9 +20,12 @@ public class ReservationTimeService {
         return reservationTimeDao.findAll();
     }
 
+    @Transactional
     public ReservationTime create(ReservationTimeCreateCommand command) {
+        if (reservationTimeDao.existsByStartAt(command.startAt())) {
+            throw new IllegalArgumentException("이미 존재하는 예약 시간입니다.");
+        }
         Long generatedId = reservationTimeDao.save(command.startAt());
-
         return new ReservationTime(generatedId, command.startAt());
     }
 

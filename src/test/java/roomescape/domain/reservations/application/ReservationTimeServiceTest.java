@@ -33,7 +33,7 @@ class ReservationTimeServiceTest {
         reservationRepository = new FakeReservationRepository();
         reservationTimeRepository = new FakeReservationTimeRepository();
         reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
-        reservationTimeService = new ReservationTimeService(reservationTimeRepository);
+        reservationTimeService = new ReservationTimeService(reservationTimeRepository, reservationRepository);
     }
 
     private ReservationRequest createReservationRequest(ReservationTimeResponse time) {
@@ -138,6 +138,19 @@ class ReservationTimeServiceTest {
         // when & then
         assertThatThrownBy(() -> reservationTimeService.deleteTime(null))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("예약 시간 id가 참조되고 있으면 삭제할 때 예외가 발생한다")
+    void deleteTimeWithReferencedReservationTime() {
+        // given
+        ReservationTimeResponse savedTime = saveTime(LocalTime.of(10, 0));
+        ReservationRequest request = createReservationRequest(savedTime);
+        reservationService.saveReservation(request);
+
+        // when & then
+        assertThatThrownBy(() -> reservationTimeService.deleteTime(savedTime.id()))
+                .isInstanceOf(IllegalStateException.class);
     }
 
     @Test

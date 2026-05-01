@@ -20,7 +20,7 @@ import roomescape.repository.ReservationTimeEntityMapper;
 
 @JdbcTest
 @Import({ReservationEntityMapper.class, ReservationTimeEntityMapper.class})
-class ReservationServiceTest {
+class ReservationServiceImplTest {
 
     private static final String TESTER_NAME = "브라운";
     private static final String TEST_DATE = "2023-08-06";
@@ -34,12 +34,12 @@ class ReservationServiceTest {
 
     private ReservationDao repository;
     private ReservationTimeDao timeRepository;
-    private ReservationService service;
+    private ReservationServiceImpl service;
     private Long testTimeId;
 
     @Autowired
-    ReservationServiceTest(ReservationEntityMapper mapper, ReservationTimeEntityMapper timeMapper,
-                           JdbcTemplate jdbcTemplate) {
+    ReservationServiceImplTest(ReservationEntityMapper mapper, ReservationTimeEntityMapper timeMapper,
+                               JdbcTemplate jdbcTemplate) {
         this.mapper = mapper;
         this.timeMapper = timeMapper;
         this.jdbcTemplate = jdbcTemplate;
@@ -49,7 +49,7 @@ class ReservationServiceTest {
     void setUp() {
         repository = new ReservationDaoJdbcImplementation(jdbcTemplate, mapper);
         timeRepository = new ReservationTimeDaoJdbcImplementation(jdbcTemplate, timeMapper);
-        service = new ReservationService(repository, timeRepository);
+        service = new ReservationServiceImpl(repository, timeRepository);
 
         jdbcTemplate.update(INSERT_RESERVATION_TIME_QUERY, TEST_TIME_VALUE);
         testTimeId = jdbcTemplate.queryForObject(SELECT_SPECIFIC_RESERVATION_TIME_QUERY, Long.class, TEST_TIME_VALUE);

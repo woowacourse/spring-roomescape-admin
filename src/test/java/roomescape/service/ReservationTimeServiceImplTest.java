@@ -17,7 +17,7 @@ import roomescape.repository.ReservationTimeEntityMapper;
 
 @JdbcTest
 @Import(ReservationTimeEntityMapper.class)
-class ReservationTimeServiceTest {
+class ReservationTimeServiceImplTest {
 
     private static final String TEST_TIME = "15:40";
 
@@ -25,10 +25,10 @@ class ReservationTimeServiceTest {
     private final JdbcTemplate jdbcTemplate;
 
     private ReservationTimeDao repository;
-    private ReservationTimeService service;
+    private ReservationTimeServiceImpl service;
 
     @Autowired
-    ReservationTimeServiceTest(ReservationTimeEntityMapper mapper, JdbcTemplate jdbcTemplate) {
+    ReservationTimeServiceImplTest(ReservationTimeEntityMapper mapper, JdbcTemplate jdbcTemplate) {
         this.mapper = mapper;
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -36,7 +36,7 @@ class ReservationTimeServiceTest {
     @BeforeEach
     void setUp() {
         repository = new ReservationTimeDaoJdbcImplementation(jdbcTemplate, mapper);
-        service = new ReservationTimeService(repository);
+        service = new ReservationTimeServiceImpl(repository);
     }
 
     @Test
@@ -83,7 +83,7 @@ class ReservationTimeServiceTest {
     void delete_SpecificReservationTime_success() {
         ReservationTime saved = service.save(TEST_TIME);
         Assertions.assertDoesNotThrow(
-                () -> service.deleteSpecificReservationTime(saved.id())
+                () -> service.deleteById(saved.id())
         );
     }
 
@@ -92,7 +92,7 @@ class ReservationTimeServiceTest {
     void delete_SpecificReservationTime_exception_propagation() {
         long notExistReservationId = 100000L;
         assertThatThrownBy(
-                () -> service.deleteSpecificReservationTime(notExistReservationId)
+                () -> service.deleteById(notExistReservationId)
         ).isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("삭제 대상이 존재하지 않습니다");
     }

@@ -9,11 +9,13 @@ public class ReservationTime {
     private final String startAt;
 
     private ReservationTime(Long id, String startAt) {
+        validate(startAt);
         this.id = id;
         this.startAt = startAt;
     }
 
     private ReservationTime(String startAt) {
+        validate(startAt);
         this.id = null;
         this.startAt = startAt;
     }
@@ -28,5 +30,11 @@ public class ReservationTime {
 
     public static ReservationTime of(Long id, String startAt) {
         return new ReservationTime(id, startAt);
+    }
+
+    private static void validate(String startAt) {
+        if (startAt == null || startAt.isBlank()) {
+            throw new IllegalArgumentException("시간은 필수입니다.");
+        }
     }
 }

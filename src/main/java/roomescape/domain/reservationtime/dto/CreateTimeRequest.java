@@ -7,7 +7,7 @@ public record CreateTimeRequest(
 ) {
 
     public void validate() {
-        if (startAt == null) {
+        if (startAt == null || startAt.isBlank()) {
             throw new IllegalArgumentException("시간은 필수입니다.");
         }
     }

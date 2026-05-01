@@ -10,12 +10,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.reservation.exception.ReservationException;
-import roomescape.reservation.exception.ReservationErrorCode;
 import roomescape.reservationtime.ReservationTime;
 
 @Repository
-class ReservationDao {
+public class ReservationDao {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<Reservation> rowMapper = (rs, rowNum) -> new Reservation(
             rs.getLong("reservation_id"),
@@ -25,7 +23,7 @@ class ReservationDao {
     );
 
 
-    ReservationDao(JdbcTemplate jdbcTemplate) {
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -56,11 +54,7 @@ class ReservationDao {
 
     int delete(long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
-        int affectedRow = jdbcTemplate.update(sql, id);
-        if (affectedRow == 0) {
-            throw new ReservationException(ReservationErrorCode.NOT_FOUND);
-        }
-        return affectedRow;
+        return jdbcTemplate.update(sql, id);
     }
 
 }

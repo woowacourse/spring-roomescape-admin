@@ -41,11 +41,8 @@ class ReservationTimeServiceTest {
 
     @Test
     void 시간_생성_테스트() {
-        // given
-        ReservationTime time = new ReservationTime(null, "08:00");
-
         // when
-        ReservationTime result = reservationTimeService.create(time);
+        ReservationTime result = reservationTimeService.create("08:00");
 
         // then
         assertAll(
@@ -57,8 +54,8 @@ class ReservationTimeServiceTest {
     @Test
     void 전체_시간_조회_테스트() {
         // given
-        reservationTimeService.create(new ReservationTime(null, "08:00"));
-        reservationTimeService.create(new ReservationTime(null, "21:00"));
+        reservationTimeService.create("08:00");
+        reservationTimeService.create("21:00");
 
         // when
         List<ReservationTime> result = reservationTimeService.findAll();
@@ -70,7 +67,7 @@ class ReservationTimeServiceTest {
     @Test
     void 시간_삭제_테스트() {
         // given
-        ReservationTime created = reservationTimeService.create(new ReservationTime(null, "08:00"));
+        ReservationTime created = reservationTimeService.create("08:00");
 
         // when
         reservationTimeService.delete(created.getId());

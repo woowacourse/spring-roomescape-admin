@@ -19,8 +19,8 @@ public class ReservationTimeService {
         return reservationTimeDao.findAll();
     }
 
-    public ReservationTime create(ReservationTime reservationTime) {
-        Long id = reservationTimeDao.insert(reservationTime);
+    public ReservationTime create(String startAt) {
+        Long id = reservationTimeDao.insert(new ReservationTime(null, startAt));
         return reservationTimeDao.findBy(id);
     }
 

@@ -29,6 +29,6 @@ public class ReservationTimeRepository {
     }
 
     public int deleteReservationTime(long id) {
-        return reservationTimeDao.deleteReservation(id);
+        return reservationTimeDao.deleteReservationTime(id);
     }
 }

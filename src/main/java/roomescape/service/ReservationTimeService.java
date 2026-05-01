@@ -2,9 +2,10 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.controller.dto.ReservationTimeCreateRequestDto;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
+import roomescape.repository.dto.ReservationTimeSaveDto;
+import roomescape.service.dto.ReservationTimeCreateDto;
 
 @Service
 public class ReservationTimeService {
@@ -14,9 +15,10 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public ReservationTime save(ReservationTimeCreateRequestDto reservationTimeCreateRequestDto) {
-        String time = reservationTimeCreateRequestDto.getStartAt();
-        return reservationTimeRepository.save(time);
+    public ReservationTime save(ReservationTimeCreateDto dto) {
+        String time = dto.getStartAt();
+        ReservationTimeSaveDto repositoryDto = new ReservationTimeSaveDto(dto.getStartAt());
+        return reservationTimeRepository.save(repositoryDto);
     }
 
     public List<ReservationTime> findAll() {

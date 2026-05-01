@@ -9,6 +9,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
+import roomescape.repository.dto.ReservationTimeSaveDto;
 
 @Repository
 public class ReservationTimeRepository {
@@ -21,18 +22,18 @@ public class ReservationTimeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ReservationTime save(String time) {
+    public ReservationTime save(ReservationTimeSaveDto time) {
         String sql = "insert into reservation_time(start_at) values (?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement pstmt = connection.prepareStatement(sql, new String[]{"id"});
-            pstmt.setString(1, time);
+            pstmt.setString(1, time.getStartAt());
             return pstmt;
         }, keyHolder);
 
-        return new ReservationTime(keyHolder.getKey().longValue(), time);
+        return new ReservationTime(keyHolder.getKey().longValue(), time.getStartAt());
     }
 
     public Optional<ReservationTime> findById(long id) {

@@ -11,6 +11,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.controller.ReservationController;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
+import roomescape.repository.ReservationRepository;
+import roomescape.repository.ReservationTimeRepository;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -35,6 +38,12 @@ public class MissionStepTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ReservationRepository reservationRepository;
+
+    @Autowired
+    private ReservationTimeRepository reservationTimeRepository;
 
     @Autowired
     private ReservationController reservationController;
@@ -104,8 +113,8 @@ public class MissionStepTest {
 
     @Test
     void DB_조회_API_전환() {
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "12:19");
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", 1);
+        ReservationTime time = reservationTimeRepository.createReservationTime(new ReservationTime(null, "12:19"));
+        reservationRepository.createReservation(new Reservation(null, "브라운", "2023-08-05", time));
 
         List<Reservation> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -113,7 +122,7 @@ public class MissionStepTest {
                 .statusCode(200).extract()
                 .jsonPath().getList(".", Reservation.class);
 
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        Integer count = reservationRepository.findAll().size();
 
         assertThat(reservations.size()).isEqualTo(count);
     }
@@ -143,7 +152,7 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200);
 
-        Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        Integer count = reservationRepository.findAll().size();
         assertThat(count).isEqualTo(1);
 
         RestAssured.given().log().all()
@@ -151,7 +160,7 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200);
 
-        Integer countAfterDelete = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
+        Integer countAfterDelete = reservationRepository.findAll().size();
         assertThat(countAfterDelete).isEqualTo(0);
     }
 

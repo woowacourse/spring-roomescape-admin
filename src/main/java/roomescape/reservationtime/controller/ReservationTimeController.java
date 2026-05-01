@@ -17,7 +17,7 @@ import roomescape.reservationtime.service.ReservationTimeService;
 
 @RequiredArgsConstructor
 @RequestMapping("/times")
-@RestController()
+@RestController
 public class ReservationTimeController {
 
     private final ReservationTimeService reservationTimeService;

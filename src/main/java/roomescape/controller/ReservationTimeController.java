@@ -19,28 +19,28 @@ import java.util.List;
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private final ReservationTimeService service;
+    private final ReservationTimeService reservationTimeService;
 
     public ReservationTimeController(ReservationTimeService service) {
-        this.service = service;
+        this.reservationTimeService = service;
     }
 
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> create(@RequestBody ReservationTimeRequest request) {
         ReservationTime reservationTime = new ReservationTime(request.getStartAt());
-        ReservationTimeResponse response = service.create(reservationTime);
+        ReservationTimeResponse response = reservationTimeService.create(reservationTime);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponse>> findAll() {
-        List<ReservationTimeResponse> responses = service.findAll();
+        List<ReservationTimeResponse> responses = reservationTimeService.findAll();
         return ResponseEntity.ok(responses);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        int count = service.delete(id);
+        int count = reservationTimeService.delete(id);
         return ResponseEntity.ok().build();
     }
 }

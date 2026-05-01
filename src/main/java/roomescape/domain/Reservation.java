@@ -54,7 +54,7 @@ public class Reservation {
         );
     }
 
-    public Reservation withId(long id) {
+    public Reservation with(long id) {
         return new Reservation(
                 id,
                 this.name,

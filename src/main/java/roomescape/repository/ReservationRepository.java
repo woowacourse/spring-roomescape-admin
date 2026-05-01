@@ -32,7 +32,7 @@ public class ReservationRepository {
                 "time_id", reservation.getTimeId()
         ));
 
-        return reservation.withId(id.longValue());
+        return reservation.with(id.longValue());
     }
 
     public List<Reservation> findAll() {

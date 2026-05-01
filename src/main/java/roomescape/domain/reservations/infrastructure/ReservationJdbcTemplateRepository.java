@@ -96,6 +96,19 @@ public class ReservationJdbcTemplateRepository implements ReservationRepository 
     }
 
     @Override
+    public boolean existsByReservationTimeId(Long id) {
+        String sql = """
+            SELECT EXISTS (
+                SELECT 1
+                FROM reservation
+                WHERE time_id = ?
+            );
+        """;
+        Integer result = jdbcTemplate.queryForObject(sql, Integer.class, id);
+        return result != null && result == 1;
+    }
+
+    @Override
     public void deleteById(Long id) {
         jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
     }

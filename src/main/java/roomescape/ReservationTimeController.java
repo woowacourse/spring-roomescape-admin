@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/times")
 public class ReservationTimeController {
 
     private final ReservationTimeRepository reservationTimeRepository;
@@ -13,17 +14,17 @@ public class ReservationTimeController {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    @PostMapping("/times")
+    @PostMapping
     public ReservationTime addReservationTime(@RequestBody ReservationTimeSaveDto reservationTimeSaveDto) {
         return reservationTimeRepository.save(reservationTimeSaveDto.startAt());
     }
 
-    @GetMapping("/times")
+    @GetMapping
     public List<ReservationTime> getAllReservationTimes() {
         return reservationTimeRepository.findAll();
     }
 
-    @DeleteMapping("/times/{id}")
+    @DeleteMapping("/{id}")
     public void deleteReservationTime(@PathVariable Long id) {
         reservationTimeRepository.deleteById(id);
     }

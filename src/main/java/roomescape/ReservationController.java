@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationRepository reservationRepository;
@@ -13,12 +14,12 @@ public class ReservationController {
         this.reservationRepository = reservationRepository;
     }
 
-    @GetMapping("/reservations")
+    @GetMapping
     public List<Reservation> getAllReservations() {
         return reservationRepository.findAll();
     }
 
-    @PostMapping("/reservations")
+    @PostMapping
     public Reservation addReservation(@RequestBody ReservationSaveDto reservationSaveDto) {
         return reservationRepository.save(
                 reservationSaveDto.name(),
@@ -27,7 +28,7 @@ public class ReservationController {
         );
     }
 
-    @DeleteMapping("/reservations/{id}")
+    @DeleteMapping("/{id}")
     public void deleteReservation(@PathVariable Long id) {
         reservationRepository.deleteById(id);
     }

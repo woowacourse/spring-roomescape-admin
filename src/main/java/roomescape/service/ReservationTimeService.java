@@ -26,7 +26,7 @@ public class ReservationTimeService {
         return ReservationTime.withId(id, reservationTime);
     }
 
-    public void deleteReservationTime(Long id) {
-        reservationTimeDao.delete(id);
+    public int deleteReservationTime(Long id) {
+        return reservationTimeDao.delete(id);
     }
 }

@@ -119,6 +119,20 @@ public class MissionStepTest {
     }
 
     @Test
+    void 존재하지_않는_예약을_삭제하면_404를_반환한다() {
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(0));
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(404);
+    }
+
+    @Test
     void 데이터베이스_연동() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
@@ -194,6 +208,14 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
+
+    @Test
+    void 존재하지_않는_예약시간을_삭제하면_404를_반환한다() {
+        RestAssured.given().log().all()
+                .when().delete("/times/2")
+                .then().log().all()
+                .statusCode(404);
     }
 
     @Test

@@ -5,15 +5,19 @@ import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import roomescape.reservation.ReservationRepository;
 import roomescape.reservationtime.exception.ReservationTimeException;
 import roomescape.reservationtime.exception.ReservationTimeErrorCode;
 
 @Service
 public class ReservationTimeService {
     private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationRepository reservationRepository;
 
-    ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {
+    public ReservationTimeService(ReservationTimeRepository reservationTimeRepository,
+                                  ReservationRepository reservationRepository) {
         this.reservationTimeRepository = reservationTimeRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     public List<ReservationTime> findAll() {
@@ -36,10 +40,17 @@ public class ReservationTimeService {
 
     @Transactional
     public void delete(long id) {
+        int reservationCount = reservationRepository.countByTimeId(id);
+
+        if (reservationCount > 0) {
+            throw new ReservationTimeException(ReservationTimeErrorCode.HAS_RESERVATION);
+        }
+
         int affectedRow = reservationTimeRepository.delete(id);
 
         if (affectedRow == 0) {
             throw new ReservationTimeException(ReservationTimeErrorCode.NOT_FOUND);
         }
+
     }
 }

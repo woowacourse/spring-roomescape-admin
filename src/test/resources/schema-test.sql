@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS reservation_time (
     id BIGINT NOT NULL AUTO_INCREMENT,
-    start_at VARCHAR(255) NOT NULL,
+    start_at VARCHAR(255) NOT NULL UNIQUE,
     PRIMARY KEY (id)
 );
 
@@ -10,5 +10,6 @@ CREATE TABLE IF NOT EXISTS reservation (
     date VARCHAR(255) NOT NULL,
     time_id BIGINT,
     PRIMARY KEY (id),
-    FOREIGN KEY (time_id) REFERENCES reservation_time (id)
+    FOREIGN KEY (time_id) REFERENCES reservation_time (id),
+    CONSTRAINT unique_date_time UNIQUE (date, time_id)
 );

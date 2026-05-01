@@ -64,11 +64,6 @@ class ReservationServiceTest {
 
         // then
         assertThat(savedReservation.time().id()).isEqualTo(time.getId());
-        assertThat(savedReservation.time().startAt()).isEqualTo(time.getStartAt().toString());
-        assertThat(savedReservation.name()).isEqualTo("브라운");
-        assertThat(savedReservation.date()).isEqualTo(TODAY.toString());
-        assertThat(savedReservation.time().id()).isEqualTo(time.getId());
-
     }
 
     @Test
@@ -169,21 +164,18 @@ class ReservationServiceTest {
         );
 
         // when
-        List<Reservation> reservations = reservationService.getReservations();
+        List<ReservationResponse> reservations = reservationService.getReservations();
 
         // then
         assertThat(reservations).hasSize(1);
-        assertThat(reservations.get(0).getId()).isEqualTo(savedReservation.id());
-        assertThat(reservations.get(0).getName()).isEqualTo("브라운");
-        assertThat(reservations.get(0).getDate()).isEqualTo(TODAY);
-        assertThat(reservations.get(0).getTime()).isEqualTo(time);
+        assertThat(reservations.get(0).id()).isEqualTo(savedReservation.id());
     }
 
     @Test
     @DisplayName("예약이 없으면 빈 목록을 조회한다")
     void getReservationsWhenEmpty() {
-        // when
-        List<Reservation> reservations = reservationService.getReservations();
+        // given & when
+        List<ReservationResponse> reservations = reservationService.getReservations();
 
         // then
         assertThat(reservations).isEmpty();

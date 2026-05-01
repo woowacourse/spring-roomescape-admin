@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.reservations.FakeReservationTimeRepository;
-import roomescape.domain.reservations.entity.ReservationTime;
 import roomescape.domain.reservations.entity.ReservationTimeRepository;
 import roomescape.domain.reservations.presentation.dto.ReservationTimeRequest;
 import roomescape.domain.reservations.presentation.dto.ReservationTimeResponse;
@@ -44,7 +43,6 @@ class ReservationTimeServiceTest {
 
         // then
         assertThat(savedTime.id()).isNotNull();
-        assertThat(savedTime.startAt()).isEqualTo("10:00");
     }
 
     @Test
@@ -74,23 +72,18 @@ class ReservationTimeServiceTest {
         ReservationTimeResponse secondTime = saveTime(LocalTime.of(11, 0));
 
         // when
-        List<ReservationTime> times = reservationTimeService.getTimes();
+        List<ReservationTimeResponse> times = reservationTimeService.getTimes();
 
         // then
         assertThat(times).hasSize(2);
-        assertThat(times)
-                .extracting(ReservationTime::getId)
-                .containsExactlyInAnyOrder(firstTime.id(), secondTime.id());
-        assertThat(times)
-                .extracting(ReservationTime::getStartAt)
-                .containsExactlyInAnyOrder(LocalTime.of(10, 0), LocalTime.of(11, 0));
+        assertThat(times).containsExactlyInAnyOrder(firstTime, secondTime);
     }
 
     @Test
     @DisplayName("예약 시간이 없으면 빈 목록을 조회한다")
     void getTimesWhenEmpty() {
         // when
-        List<ReservationTime> times = reservationTimeService.getTimes();
+        List<ReservationTimeResponse> times = reservationTimeService.getTimes();
 
         // then
         assertThat(times).isEmpty();

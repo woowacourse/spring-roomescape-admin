@@ -37,7 +37,7 @@ public class ReservationTimeService {
 
     public void deleteTime(Long id) {
         if (id == null) {
-            throw new IllegalArgumentException("[ERROR] 예약 날짜 ID가 비어있습니다.");
+            throw new IllegalArgumentException("[ERROR] 예약 시간 ID가 비어있습니다.");
         }
         reservationTimeRepository.deleteById(id);
     }

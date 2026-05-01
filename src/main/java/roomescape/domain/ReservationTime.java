@@ -13,6 +13,8 @@ public class ReservationTime {
             Long id,
             LocalTime startAt
     ) {
+        validateStartAt(startAt);
+
         this.id = id;
         this.startAt = startAt;
     }
@@ -28,8 +30,6 @@ public class ReservationTime {
     public static ReservationTime create(
             LocalTime startAt
     ) {
-        validateStartAt(startAt);
-
         return new ReservationTime(
                 null,
                 startAt
@@ -53,7 +53,7 @@ public class ReservationTime {
         );
     }
 
-    private static void validateStartAt(LocalTime startAt) {
+    private void validateStartAt(LocalTime startAt) {
         if (startAt == null) {
             throw new InvalidReservationTimeException("예약 시간엔 시간 정보가 존재해야 합니다.");
         }

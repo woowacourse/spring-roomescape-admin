@@ -17,6 +17,10 @@ public class Reservation {
             LocalDate date,
             ReservationTime time
     ) {
+        validateName(name);
+        validateDate(date);
+        validateTime(time);
+
         this.id = id;
         this.name = name;
         this.date = date;
@@ -28,10 +32,6 @@ public class Reservation {
             LocalDate date,
             ReservationTime time
     ) {
-        validateName(name);
-        validateDate(date);
-        validateTime(time);
-
         return new Reservation(
                 null,
                 name,
@@ -79,23 +79,23 @@ public class Reservation {
         return time;
     }
 
-    public long getTimeId() {
+    public Long getTimeId() {
         return time.getId();
     }
 
-    private static void validateName(String name) {
+    private void validateName(String name) {
         if (!StringUtils.hasText(name)) {
             throw new InvalidReservationException("예약엔 이름이 존재해야 합니다.");
         }
     }
 
-    private static void validateDate(LocalDate date) {
+    private void validateDate(LocalDate date) {
         if (date == null) {
             throw new InvalidReservationException("예약엔 날짜가 존재해야 합니다.");
         }
     }
 
-    private static void validateTime(ReservationTime time) {
+    private void validateTime(ReservationTime time) {
         if (time == null) {
             throw new InvalidReservationException("예약엔 시간이 존재해야 합니다.");
         }

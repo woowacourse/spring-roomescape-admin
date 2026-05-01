@@ -9,11 +9,11 @@ import roomescape.reservation.dto.CreateReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservationtime.dao.ReservationTimeDao;
 import roomescape.reservationtime.domain.ReservationTime;
+import roomescape.reservationtime.exception.ReservationTimeException;
+import roomescape.reservationtime.exception.ReservationTimeExceptionCode;
 
 @Service
 public class ReservationService {
-
-    private static final String RESERVATION_TIME_NOT_EXISTS_MESSAGE = "존재하지 않는 예약 시간입니다.";
 
     private final ReservationDao reservationDao;
     private final ReservationTimeDao reservationTimeDao;
@@ -27,7 +27,7 @@ public class ReservationService {
     public ReservationResponse save(CreateReservationRequest request) {
         request.validate();
         ReservationTime reservationTime = reservationTimeDao.findById(request.timeId())
-                .orElseThrow(() -> new IllegalArgumentException(RESERVATION_TIME_NOT_EXISTS_MESSAGE));
+                .orElseThrow(() -> new ReservationTimeException(ReservationTimeExceptionCode.RESERVATION_NOT_EXISTS));
 
         Reservation reservation = request.toReservation(reservationTime);
         Reservation savedReservation = reservationDao.save(reservation);

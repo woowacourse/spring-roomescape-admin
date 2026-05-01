@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.dao.ReservationDao;
+import roomescape.reservation.exception.ReservationException;
+import roomescape.reservation.exception.ReservationExceptionCode;
 import roomescape.reservationtime.dao.ReservationTimeDao;
 import roomescape.reservationtime.domain.ReservationTime;
 import roomescape.reservationtime.dto.CreateReservationTimeRequest;
@@ -40,7 +42,7 @@ public class ReservationTimeService {
 
     private void validateReservationNotExistsBy(Long reservationTimeId) {
         if (reservationDao.existsByReservationTime(reservationTimeId)) {
-            throw new IllegalArgumentException("해당 시간에 예약이 존재합니다.");
+            throw new ReservationException(ReservationExceptionCode.RESERVATION_ALREADY_EXISTS);
         }
     }
 }

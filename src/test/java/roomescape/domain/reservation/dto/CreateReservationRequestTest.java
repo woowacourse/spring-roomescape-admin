@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
+import roomescape.support.RoomescapeException;
 
 class CreateReservationRequestTest {
 
@@ -18,7 +19,7 @@ class CreateReservationRequestTest {
 
         // when & then
         assertThatThrownBy(request::validate)
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(RoomescapeException.class)
             .hasMessage("이름은 비어 있을 수 없습니다.");
     }
 
@@ -33,7 +34,7 @@ class CreateReservationRequestTest {
 
         // when & then
         assertThatThrownBy(request::validate)
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(RoomescapeException.class)
             .hasMessage("이름은 비어 있을 수 없습니다.");
     }
 
@@ -48,7 +49,7 @@ class CreateReservationRequestTest {
 
         // when & then
         assertThatThrownBy(request::validate)
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(RoomescapeException.class)
             .hasMessage("날짜는 필수입니다.");
     }
 
@@ -63,7 +64,7 @@ class CreateReservationRequestTest {
 
         // when & then
         assertThatThrownBy(request::validate)
-            .isInstanceOf(IllegalArgumentException.class)
+            .isInstanceOf(RoomescapeException.class)
             .hasMessage("시간은 필수입니다.");
     }
 }

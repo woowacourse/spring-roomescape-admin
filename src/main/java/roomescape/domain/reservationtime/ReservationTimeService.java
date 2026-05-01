@@ -7,6 +7,8 @@ import roomescape.domain.reservation.ReservationRepository;
 import roomescape.domain.reservationtime.dto.CreateTimeRequest;
 import roomescape.domain.reservationtime.dto.CreateTimeResponse;
 import roomescape.domain.reservationtime.dto.ReservationTimeResponse;
+import roomescape.support.RoomescapeErrorCode;
+import roomescape.support.RoomescapeException;
 
 @Service
 @RequiredArgsConstructor
@@ -28,11 +30,11 @@ public class ReservationTimeService {
 
     public void deleteReservationTime(Long id) {
         if (reservationRepository.countByTimeId(id) > 0) {
-            throw new IllegalArgumentException("이미 예약이 존재할 경우 시간대를 삭제할 수 없습니다.");
+            throw new RoomescapeException(RoomescapeErrorCode.RESERVATION_TIME_IN_USE);
         }
         int deletedCount = reservationTimeRepository.deleteById(id);
         if (deletedCount == 0) {
-            throw new IllegalArgumentException("존재하지 않는 예약 시간대 입니다.");
+            throw new RoomescapeException(RoomescapeErrorCode.RESERVATION_TIME_NOT_EXIST);
         }
     }
 }

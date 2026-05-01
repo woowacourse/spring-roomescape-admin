@@ -8,6 +8,8 @@ import roomescape.domain.reservation.dto.CreateReservationResponse;
 import roomescape.domain.reservation.dto.ReservationResponse;
 import roomescape.domain.reservationtime.ReservationTime;
 import roomescape.domain.reservationtime.ReservationTimeRepository;
+import roomescape.support.RoomescapeErrorCode;
+import roomescape.support.RoomescapeException;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +20,7 @@ public class ReservationService {
 
     public CreateReservationResponse createReservation(CreateReservationRequest request) {
         ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId())
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간대 입니다."));
+            .orElseThrow(() -> new RoomescapeException(RoomescapeErrorCode.RESERVATION_TIME_NOT_EXIST));
         Reservation savedReservation = reservationRepository.save(request.toEntity(reservationTime));
         return CreateReservationResponse.from(savedReservation);
     }
@@ -32,7 +34,7 @@ public class ReservationService {
     public void deleteReservation(Long id) {
         int deletedCount = reservationRepository.deleteById(id);
         if (deletedCount == 0) {
-            throw new IllegalArgumentException("존재하지 않는 예약입니다.");
+            throw new RoomescapeException(RoomescapeErrorCode.RESERVATION_NOT_EXIST);
         }
     }
 }

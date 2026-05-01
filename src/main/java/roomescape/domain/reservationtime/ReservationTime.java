@@ -4,6 +4,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import lombok.Getter;
+import roomescape.support.RoomescapeErrorCode;
+import roomescape.support.RoomescapeException;
 
 @Getter
 public class ReservationTime {
@@ -37,15 +39,15 @@ public class ReservationTime {
 
     private static void validate(String startAt) {
         if (startAt == null || startAt.isBlank()) {
-            throw new IllegalArgumentException("시간은 필수입니다.");
+            throw new RoomescapeException(RoomescapeErrorCode.INVALID_RESERVATION_TIME);
         }
         if (startAt.length() != 5 || startAt.charAt(2) != ':') {
-            throw new IllegalArgumentException("시간은 HH:MM 형식이어야 합니다.");
+            throw new RoomescapeException(RoomescapeErrorCode.INVALID_RESERVATION_TIME_FORMAT);
         }
         try {
             LocalTime.parse(startAt, DateTimeFormatter.ofPattern("HH:mm"));
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("시간은 HH:MM 형식이어야 합니다.");
+            throw new RoomescapeException(RoomescapeErrorCode.INVALID_RESERVATION_TIME_FORMAT);
         }
     }
 }

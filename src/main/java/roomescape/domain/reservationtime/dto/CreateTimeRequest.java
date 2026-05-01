@@ -1,6 +1,8 @@
 package roomescape.domain.reservationtime.dto;
 
 import roomescape.domain.reservationtime.ReservationTime;
+import roomescape.support.RoomescapeErrorCode;
+import roomescape.support.RoomescapeException;
 
 public record CreateTimeRequest(
     String startAt
@@ -8,7 +10,7 @@ public record CreateTimeRequest(
 
     public void validate() {
         if (startAt == null || startAt.isBlank()) {
-            throw new IllegalArgumentException("시간은 필수입니다.");
+            throw new RoomescapeException(RoomescapeErrorCode.INVALID_RESERVATION_TIME);
         }
     }
 

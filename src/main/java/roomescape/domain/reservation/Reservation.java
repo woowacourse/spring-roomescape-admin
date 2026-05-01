@@ -3,6 +3,8 @@ package roomescape.domain.reservation;
 import java.time.LocalDate;
 import lombok.Getter;
 import roomescape.domain.reservationtime.ReservationTime;
+import roomescape.support.RoomescapeErrorCode;
+import roomescape.support.RoomescapeException;
 
 @Getter
 public class Reservation {
@@ -40,13 +42,13 @@ public class Reservation {
 
     private static void validate(String name, LocalDate date, ReservationTime time) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("이름은 비어 있을 수 없습니다.");
+            throw new RoomescapeException(RoomescapeErrorCode.INVALID_RESERVATION_NAME);
         }
         if (date == null) {
-            throw new IllegalArgumentException("날짜는 필수입니다.");
+            throw new RoomescapeException(RoomescapeErrorCode.INVALID_RESERVATION_DATE);
         }
         if (time == null) {
-            throw new IllegalArgumentException("시간은 필수입니다.");
+            throw new RoomescapeException(RoomescapeErrorCode.INVALID_RESERVATION_TIME);
         }
     }
 }

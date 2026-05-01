@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,9 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.dto.ReservationCreateRequestDto;
-import roomescape.domain.Reservation;
+import roomescape.controller.dto.ReservationResponseDto;
 import roomescape.service.ReservationService;
 import roomescape.service.dto.ReservationCreateDto;
+import roomescape.service.dto.ReservationDto;
 
 @RestController
 @RequestMapping("/reservations")
@@ -24,16 +26,24 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> findAll() {
-        List<Reservation> find = reservationService.findAll();
-        return ResponseEntity.ok(find);
+    public ResponseEntity<List<ReservationResponseDto>> findAll() {
+        List<ReservationDto> reservationList = reservationService.findAll();
+
+        List<ReservationResponseDto> response = reservationList.stream()
+                .map(dto -> new ReservationResponseDto(dto.getId(), dto.getName(), dto.getDate(), dto.getTimeId()))
+                .collect(Collectors.toList());
+        
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> create(@RequestBody ReservationCreateRequestDto dto) {
+    public ResponseEntity<ReservationResponseDto> create(@RequestBody ReservationCreateRequestDto dto) {
         ReservationCreateDto serviceDto = new ReservationCreateDto(dto.getName(), dto.getDate(), dto.getTimeId());
-        Reservation saved = reservationService.save(serviceDto);
-        return ResponseEntity.ok(saved);
+        ReservationDto saved = reservationService.save(serviceDto);
+
+        ReservationResponseDto responseDto = new ReservationResponseDto(saved.getId(), saved.getName(),
+                saved.getDate(), saved.getId());
+        return ResponseEntity.ok(responseDto);
     }
 
     @DeleteMapping("/{id}")

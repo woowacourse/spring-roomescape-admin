@@ -13,16 +13,16 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
     private Long sequence = 0L;
 
     @Override
-    public ReservationTime save(ReservationTime reservation) {
-        if (reservation.getId() == null) {
+    public ReservationTime save(ReservationTime reservationTime) {
+        if (reservationTime.getId() == null) {
             ReservationTime saved = ReservationTime.of(
                     sequence++,
-                    reservation.getStartAt()
+                    reservationTime.getStartAt()
             );
             store.put(saved.getId(), saved);
             return saved;
         }
-        return reservation;
+        return reservationTime;
     }
 
     @Override

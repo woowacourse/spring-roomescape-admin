@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.exception.ApiException;
-import roomescape.exception.ErrorCode;
+import roomescape.reservationtime.exception.DuplicateReservationTimeException;
+import roomescape.reservationtime.exception.ReservationTimeNotFoundException;
 
 @Service
 public class ReservationTimeService {
@@ -22,7 +22,7 @@ public class ReservationTimeService {
 
     public ReservationTime findById(long id) {
         return reservationTimeRepository.findById(id)
-                .orElseThrow(() -> new ApiException(ErrorCode.RESERVATION_TIME_NOT_FOUND, id));
+                .orElseThrow(() -> new ReservationTimeNotFoundException(id));
     }
 
     @Transactional
@@ -30,7 +30,7 @@ public class ReservationTimeService {
         try {
             return reservationTimeRepository.save(startAt);
         } catch (DataIntegrityViolationException e) {
-            throw new ApiException(ErrorCode.DUPLICATE_RESERVATION_TIME, startAt);
+            throw new DuplicateReservationTimeException(startAt.toString());
         }
     }
 
@@ -39,7 +39,7 @@ public class ReservationTimeService {
         int affectedRow = reservationTimeRepository.delete(id);
 
         if (affectedRow == 0) {
-            throw new ApiException(ErrorCode.RESERVATION_NOT_FOUND, id);
+            throw new ReservationTimeNotFoundException(id);
         }
     }
 }

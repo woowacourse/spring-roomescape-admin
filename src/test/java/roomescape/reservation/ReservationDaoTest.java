@@ -13,8 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import roomescape.exception.ApiException;
-import roomescape.exception.ErrorCode;
+import roomescape.reservation.exception.ReservationNotFoundException;
 import roomescape.reservationtime.ReservationTime;
 
 class ReservationDaoTest {
@@ -92,9 +91,7 @@ class ReservationDaoTest {
     @Test
     void 존재하지_않는_ID로_삭제하면_예외가_발생한다() {
         assertThatThrownBy(() -> reservationDao.delete(1L))
-                .isInstanceOf(ApiException.class)
-                .extracting(exception -> ((ApiException) exception).getErrorCode())
-                .isEqualTo(ErrorCode.RESERVATION_NOT_FOUND);
+                .isInstanceOf(ReservationNotFoundException.class);
     }
 
     private ReservationTime createReservationTime(LocalTime startAt) {

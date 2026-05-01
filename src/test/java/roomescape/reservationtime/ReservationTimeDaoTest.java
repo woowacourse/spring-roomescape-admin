@@ -12,8 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import roomescape.exception.ApiException;
-import roomescape.exception.ErrorCode;
+import roomescape.reservationtime.exception.ReservationTimeNotFoundException;
 
 class ReservationTimeDaoTest {
     private static final String TEST_PROPERTIES = "application-test.properties";
@@ -78,7 +77,7 @@ class ReservationTimeDaoTest {
         LocalTime time = LocalTime.of(15, 40);
         ReservationTime saved = reservationTimeDao.save(time);
 
-        ReservationTime found = reservationTimeDao.findById(saved.id());
+        ReservationTime found = reservationTimeDao.findById(saved.id()).orElseThrow();
 
         assertThat(found.id()).isEqualTo(saved.id());
         assertThat(found.startAt()).isEqualTo(time);
@@ -86,10 +85,7 @@ class ReservationTimeDaoTest {
 
     @Test
     void 존재하지_않는_ID로_조회하면_예외가_발생한다() {
-        assertThatThrownBy(() -> reservationTimeDao.findById(999L))
-                .isInstanceOf(ApiException.class)
-                .extracting(exception -> ((ApiException) exception).getErrorCode())
-                .isEqualTo(ErrorCode.RESERVATION_TIME_NOT_FOUND);
+        assertThat(reservationTimeDao.findById(999L)).isEmpty();
     }
 
     @Test
@@ -104,8 +100,6 @@ class ReservationTimeDaoTest {
     @Test
     void 존재하지_않는_ID로_삭제하면_예외가_발생한다() {
         assertThatThrownBy(() -> reservationTimeDao.delete(999L))
-                .isInstanceOf(ApiException.class)
-                .extracting(exception -> ((ApiException) exception).getErrorCode())
-                .isEqualTo(ErrorCode.RESERVATION_TIME_NOT_FOUND);
+                .isInstanceOf(ReservationTimeNotFoundException.class);
     }
 }

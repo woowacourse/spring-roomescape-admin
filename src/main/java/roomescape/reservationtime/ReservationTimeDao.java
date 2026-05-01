@@ -12,8 +12,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.exception.ApiException;
-import roomescape.exception.ErrorCode;
+import roomescape.reservationtime.exception.ReservationTimeNotFoundException;
 
 @Repository
 class ReservationTimeDao {
@@ -48,7 +47,11 @@ class ReservationTimeDao {
 
     int delete(long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.update(sql, id);
+        int affectedRow = jdbcTemplate.update(sql, id);
+        if (affectedRow == 0) {
+            throw new ReservationTimeNotFoundException(id);
+        }
+        return affectedRow;
     }
 
     public Optional<ReservationTime> findById(long id) {

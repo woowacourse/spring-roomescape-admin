@@ -7,7 +7,7 @@ public class Reservation {
 
     private static final int MAX_NAME_LENGTH = 50;
 
-    private Long id;
+    private final Long id;
     private final String name;
     private final LocalDate date;
     private final ReservationTime time;
@@ -22,6 +22,10 @@ public class Reservation {
 
     public Reservation(String name, LocalDate date, ReservationTime time) {
         this(null, name, date, time);
+    }
+
+    public Reservation withId(Long id) {
+        return new Reservation(id, name, date, time);
     }
 
     private void validateName(String name) {

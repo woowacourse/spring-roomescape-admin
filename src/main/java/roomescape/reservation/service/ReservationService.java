@@ -7,14 +7,19 @@ import roomescape.reservation.dto.CreateReservationRequest;
 import roomescape.reservation.dto.ReservationResultResponse;
 import roomescape.reservation.mapper.ReservationMapper;
 import roomescape.reservation.repository.ReservationRepository;
+import roomescape.time.domain.ReservationTime;
+import roomescape.time.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationService(ReservationRepository reservationRepository) {
+    public ReservationService(ReservationRepository reservationRepository,
+                              ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public List<ReservationResultResponse> findAllReservations() {
@@ -24,7 +29,8 @@ public class ReservationService {
     }
 
     public ReservationResultResponse reserve(CreateReservationRequest createReservationRequest) {
-        Reservation reservation = ReservationMapper.toReservation(createReservationRequest);
+        ReservationTime reservationTime = reservationTimeRepository.findById(createReservationRequest.getTimeId());
+        Reservation reservation = ReservationMapper.toReservation(createReservationRequest, reservationTime);
         Reservation saved = reservationRepository.save(reservation);
         return ReservationMapper.toReservationResultDto(saved);
     }

@@ -17,7 +17,7 @@ public class ReservationTimeRepository {
 
     public ReservationTime save(ReservationTime reservationTime) {
         Long id = reservationTimeDao.insert(ReservationTimeMapper.toReservationTimeEntity(reservationTime));
-        return new ReservationTime(id, reservationTime.getStartAt());
+        return reservationTime.withId(id);
     }
 
     public List<ReservationTime> findAll() {
@@ -32,5 +32,9 @@ public class ReservationTimeRepository {
         if (deletedCount == 0) {
             throw new IllegalArgumentException("존재하지 않는 ID입니다");
         }
+    }
+
+    public ReservationTime findById(Long id) {
+        return ReservationTimeMapper.toReservationTime(reservationTimeDao.findById(id));
     }
 }

@@ -13,8 +13,8 @@ public class ReservationMapper {
     private ReservationMapper() {
     }
 
-    public static Reservation toReservation(CreateReservationRequest base) {
-        return new Reservation(base.getName(), base.getDate(), new ReservationTime(base.getTimeId()));
+    public static Reservation toReservation(CreateReservationRequest base, ReservationTime reservationTime) {
+        return new Reservation(base.getName(), base.getDate(), reservationTime);
     }
 
     public static Reservation toReservation(ReservationEntity reservationEntity,

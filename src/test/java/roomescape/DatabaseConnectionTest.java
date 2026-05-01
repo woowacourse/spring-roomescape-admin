@@ -19,7 +19,7 @@ import roomescape.domain.Reservation;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class DatabaseTest {
+public class DatabaseConnectionTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 

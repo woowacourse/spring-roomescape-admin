@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationTimeRequest;
-import roomescape.servcie.ReservationService;
-import roomescape.servcie.ReservationTimeService;
+import roomescape.service.ReservationService;
+import roomescape.service.ReservationTimeService;
 
 @Component
 @Profile("console")

@@ -33,7 +33,7 @@ public class MissionStepTest {
                 .body(reservationTime)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
 
         Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
@@ -45,7 +45,7 @@ public class MissionStepTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
+                .statusCode(201)
                 .body("id", is(1));
 
         RestAssured.given().log().all()

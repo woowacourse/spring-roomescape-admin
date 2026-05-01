@@ -1,6 +1,8 @@
 package roomescape.reservation;
 
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +27,7 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ReservationResponseDTO create(@RequestBody ReservationRequestDTO reservationRequestDTO) {
+    public ResponseEntity<ReservationResponseDTO> create(@RequestBody ReservationRequestDTO reservationRequestDTO) {
         ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequestDTO.getTimeId());
         Reservation reservation = new Reservation(
                 null,
@@ -33,12 +35,13 @@ public class ReservationController {
                 reservationRequestDTO.getDate(),
                 reservationTime);
         Long id = reservationRepository.insert(reservation);
-        return new ReservationResponseDTO(
+        ReservationResponseDTO reservationResponseDTO = new ReservationResponseDTO(
                 id,
                 reservation.getName(),
                 reservation.getDate(),
                 reservation.getReservationTime()
         );
+        return new ResponseEntity(reservationResponseDTO, HttpStatus.CREATED);
     }
 
     @GetMapping

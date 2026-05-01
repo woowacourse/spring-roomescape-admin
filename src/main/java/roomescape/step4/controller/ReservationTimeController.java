@@ -21,16 +21,16 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTimeResponse> saveReservationTime(@RequestBody ReservationTimeRequest request) {
-        ReservationTime reservationTime = reservationTimeService.saveReservationTime(request);
+    public ResponseEntity<ReservationTimeResponse> save(@RequestBody ReservationTimeRequest request) {
+        ReservationTime reservationTime = reservationTimeService.save(request);
         ReservationTimeResponse response = ReservationTimeResponse.from(reservationTime);
 
         return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTimeResponse>> findAllReservationTimes() {
-        List<ReservationTime> reservationTimes = reservationTimeService.findAllReservationTimes();
+    public ResponseEntity<List<ReservationTimeResponse>> findAll() {
+        List<ReservationTime> reservationTimes = reservationTimeService.findAll();
         List<ReservationTimeResponse> response = reservationTimes.stream()
                 .map(ReservationTimeResponse::from)
                 .toList();
@@ -39,9 +39,9 @@ public class ReservationTimeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservationTime(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            reservationTimeService.deleteReservationTime(id);
+            reservationTimeService.delete(id);
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         }

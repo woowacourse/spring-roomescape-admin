@@ -21,8 +21,8 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponse>> findAllReservations() {
-        List<Reservation> reservations = reservationService.findAllReservations();
+    public ResponseEntity<List<ReservationResponse>> findAll() {
+        List<Reservation> reservations = reservationService.findAll();
         List<ReservationResponse> response = reservations.stream()
                 .map(ReservationResponse::from)
                 .toList();
@@ -31,17 +31,17 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> saveReservation(@RequestBody ReservationRequest request) {
-        Reservation reservation = reservationService.saveReservation(request);
+    public ResponseEntity<ReservationResponse> save(@RequestBody ReservationRequest request) {
+        Reservation reservation = reservationService.save(request);
         ReservationResponse response = ReservationResponse.from(reservation);
 
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            reservationService.deleteReservation(id);
+            reservationService.delete(id);
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         }

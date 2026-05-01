@@ -22,13 +22,13 @@ public class ReservationService {
         this.reservationTimeService = reservationTimeService;
     }
 
-    public List<Reservation> findAllReservations() {
+    public List<Reservation> findAll() {
         return reservationRepository.findAll();
     }
 
     @Transactional
-    public Reservation saveReservation(ReservationRequest request) {
-        ReservationTime reservationTime = reservationTimeService.findReservationTime(request.timeId());
+    public Reservation save(ReservationRequest request) {
+        ReservationTime reservationTime = reservationTimeService.find(request.timeId());
 
         Reservation reservation = new Reservation(
                 null,
@@ -40,7 +40,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public void deleteReservation(Long id) {
+    public void delete(Long id) {
         int deleted = reservationRepository.deleteById(id);
 
         if (deleted == 0) {

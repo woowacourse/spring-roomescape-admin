@@ -4,16 +4,21 @@ import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import util.TestDataInitializer;
+import roomescape.util.TestDataInitializer;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class MissionStep3Test {
+
+    @Autowired
+    private TestDataInitializer dataInitializer;
 
     @Test
     void 시간_관리_API() {
@@ -41,7 +46,7 @@ class MissionStep3Test {
 
     @Test
     void 예약과_시간_연결() {
-        TestDataInitializer.initializeReservationTime();
+        dataInitializer.initializeReservationTime(LocalTime.now());
 
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");

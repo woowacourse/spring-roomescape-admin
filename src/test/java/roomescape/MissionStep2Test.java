@@ -6,6 +6,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservation.dto.ReservationResultResponse;
-import util.TestDataInitializer;
+import roomescape.util.TestDataInitializer;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -23,6 +24,9 @@ class MissionStep2Test {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private TestDataInitializer dataInitializer;
 
     @Test
     void 데이터베이스_연동() {
@@ -37,7 +41,7 @@ class MissionStep2Test {
 
     @Test
     void DB_조회_API_전환() {
-        TestDataInitializer.initializeReservationTime();
+        dataInitializer.initializeReservationTime(LocalTime.now());
 
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05",
                 1);
@@ -55,7 +59,7 @@ class MissionStep2Test {
 
     @Test
     void DB_추가_삭제_API_전환() {
-        TestDataInitializer.initializeReservationTime();
+        dataInitializer.initializeReservationTime(LocalTime.now());
 
         Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");

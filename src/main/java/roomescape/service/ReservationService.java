@@ -8,7 +8,7 @@ import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ReservationService {
 
     private final ReservationDao reservationDao;
@@ -17,16 +17,17 @@ public class ReservationService {
         this.reservationDao = reservationDao;
     }
 
+    public List<Reservation> getReservations() {
+        return reservationDao.findAllReservations();
+    }
+
+    @Transactional
     public Reservation createReservation(ReservationReq reservationReq) {
         Long id = reservationDao.insertWithKeyHolder(reservationReq);
         return reservationDao.findReservationById(id);
     }
 
-    @Transactional(readOnly = true)
-    public List<Reservation> getReservations() {
-        return reservationDao.findAllReservations();
-    }
-
+    @Transactional
     public int deleteReservation(Long id) {
         return reservationDao.delete(id);
     }

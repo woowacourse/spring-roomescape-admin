@@ -36,8 +36,7 @@ public class MissionStep2Test {
     }
 
     @Test
-    @Disabled
-// 이유: Reservation 테이블 스키마 변경됨으로 인해 time 필드 사라짐
+    @Disabled(value = "Reservation 테이블 스키마 변경됨으로 인해 time 필드 사라짐")
     void DB_조회_API_전환() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time) VALUES (?, ?, ?)", "브라운", "2023-08-05", "15:40");
 
@@ -53,8 +52,7 @@ public class MissionStep2Test {
     }
 
     @Test
-    @Disabled
-// 이유: Reservation 테이블 스키마 변경됨으로 인해 time 필드 사라짐
+    @Disabled(value = "Reservation 테이블 스키마 변경됨으로 인해 time 필드 사라짐")
     void DB_추가_삭제_API_전환() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");

@@ -1,0 +1,126 @@
+package roomescape.reservationtime;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Properties;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import roomescape.reservation.ReservationDao;
+import roomescape.reservation.ReservationRepository;
+import roomescape.reservationtime.exception.ReservationTimeErrorCode;
+import roomescape.reservationtime.exception.ReservationTimeException;
+
+class ReservationTimeServiceTest {
+    private static final String TEST_PROPERTIES = "application-test.properties";
+
+    private ReservationTimeService reservationTimeService;
+    private JdbcTemplate jdbcTemplate;
+
+    @BeforeEach
+    void setUp() {
+        Properties properties = loadTestProperties();
+
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(properties.getProperty("spring.datasource.driver-class-name"));
+        dataSource.setUrl(properties.getProperty("spring.datasource.url"));
+        dataSource.setUsername(properties.getProperty("spring.datasource.username"));
+        dataSource.setPassword(properties.getProperty("spring.datasource.password"));
+
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        ReservationTimeDao reservationTimeDao = new ReservationTimeDao(jdbcTemplate);
+        ReservationTimeRepository reservationTimeRepository = new ReservationTimeRepository(reservationTimeDao);
+        ReservationDao reservationDao = new ReservationDao(jdbcTemplate);
+        ReservationRepository reservationRepository = new ReservationRepository(reservationDao);
+        reservationTimeService = new ReservationTimeService(reservationTimeRepository, reservationRepository);
+
+        jdbcTemplate.execute("RUNSCRIPT FROM 'classpath:reset-test.sql'");
+    }
+
+    private Properties loadTestProperties() {
+        Properties properties = new Properties();
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(TEST_PROPERTIES)) {
+            if (inputStream == null) {
+                throw new IllegalStateException("Test properties not found: " + TEST_PROPERTIES);
+            }
+            properties.load(inputStream);
+            return properties;
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to load test properties: " + TEST_PROPERTIES, e);
+        }
+    }
+
+    @Test
+    void 예약_시간을_등록할_수_있다() {
+        ReservationTime saved = reservationTimeService.save(LocalTime.of(10, 30));
+
+        ReservationTime found = reservationTimeService.findById(saved.id());
+
+        assertThat(found.startAt()).isEqualTo(LocalTime.of(10, 30));
+    }
+
+    @Test
+    void 예약_시간이_중복되면_예외가_발생한다() {
+        reservationTimeService.save(LocalTime.of(16, 0));
+
+        assertThatThrownBy(() -> reservationTimeService.save(LocalTime.of(16, 0)))
+                .isInstanceOf(ReservationTimeException.class)
+                .extracting(e -> ((ReservationTimeException) e).getErrorCode())
+                .isEqualTo(ReservationTimeErrorCode.DUPLICATE);
+    }
+
+    @Test
+    void 전체_예약_시간을_조회할_수_있다() {
+        reservationTimeService.save(LocalTime.of(9, 0));
+        reservationTimeService.save(LocalTime.of(11, 0));
+
+        assertThat(reservationTimeService.findAll())
+                .extracting(ReservationTime::startAt)
+                .containsExactly(LocalTime.of(9, 0), LocalTime.of(11, 0));
+    }
+
+    @Test
+    void 존재하지_않는_ID로_조회하면_예외가_발생한다() {
+        assertThatThrownBy(() -> reservationTimeService.findById(999L))
+                .isInstanceOf(ReservationTimeException.class)
+                .extracting(e -> ((ReservationTimeException) e).getErrorCode())
+                .isEqualTo(ReservationTimeErrorCode.NOT_FOUND);
+    }
+
+    @Test
+    void 예약을_삭제할_수_있다() {
+        ReservationTime saved = reservationTimeService.save(LocalTime.of(16, 0));
+
+        reservationTimeService.delete(saved.id());
+    }
+
+    @Test
+    void 예약이_있으면_삭제가_차단된다() {
+        ReservationTime saved = reservationTimeService.save(LocalTime.of(15, 40));
+        insertReservation("kim", LocalDate.of(2026, 5, 1), saved.id());
+
+        assertThatThrownBy(() -> reservationTimeService.delete(saved.id()))
+                .isInstanceOf(ReservationTimeException.class)
+                .extracting(e -> ((ReservationTimeException) e).getErrorCode())
+                .isEqualTo(ReservationTimeErrorCode.HAS_RESERVATION);
+    }
+
+    @Test
+    void 존재하지_않는_ID로_삭제하면_예외가_발생한다() {
+        assertThatThrownBy(() -> reservationTimeService.delete(999L))
+                .isInstanceOf(ReservationTimeException.class)
+                .extracting(e -> ((ReservationTimeException) e).getErrorCode())
+                .isEqualTo(ReservationTimeErrorCode.NOT_FOUND);
+    }
+
+    private void insertReservation(String name, LocalDate date, long timeId) {
+        String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, name, date, timeId);
+    }
+}

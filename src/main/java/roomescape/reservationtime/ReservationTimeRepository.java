@@ -7,26 +7,26 @@ import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 @Repository
-class ReservationTimeRepository {
+public class ReservationTimeRepository {
     private final ReservationTimeDao reservationTimeDao;
 
-    ReservationTimeRepository(ReservationTimeDao reservationTimeDao) {
+    public ReservationTimeRepository(ReservationTimeDao reservationTimeDao) {
         this.reservationTimeDao = reservationTimeDao;
     }
 
-    List<ReservationTime> findAll() {
+    public List<ReservationTime> findAll() {
         return reservationTimeDao.findAll();
     }
 
-    ReservationTime save(LocalTime startAt) {
+    public ReservationTime save(LocalTime startAt) {
         return reservationTimeDao.save(startAt);
     }
 
-    int delete(long id) {
+    public int delete(long id) {
         return reservationTimeDao.delete(id);
     }
 
-    Optional<ReservationTime> findById(long id) {
+    public Optional<ReservationTime> findById(long id) {
         return reservationTimeDao.findById(id);
     }
 }

@@ -16,14 +16,14 @@ import roomescape.reservationtime.exception.ReservationTimeException;
 import roomescape.reservationtime.exception.ReservationTimeErrorCode;
 
 @Repository
-class ReservationTimeDao {
+public class ReservationTimeDao {
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<ReservationTime> rowMapper = (rs, rowNum) -> new ReservationTime(
             rs.getLong("id"),
             rs.getObject("start_at", LocalTime.class)
     );
 
-    ReservationTimeDao(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

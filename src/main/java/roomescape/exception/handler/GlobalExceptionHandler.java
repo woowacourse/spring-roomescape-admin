@@ -6,10 +6,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import roomescape.exception.CustomException;
 import roomescape.exception.DataReferencedException;
 import roomescape.exception.NotFoundResourceException;
+import roomescape.exception.ReservationCommandException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler({NotFoundResourceException.class, DataReferencedException.class})
+    @ExceptionHandler({NotFoundResourceException.class, DataReferencedException.class, ReservationCommandException.class})
     public ResponseEntity<String> handleCustomException(CustomException customException) {
         return new ResponseEntity<>(customException.getMessage(), customException.getStatus());
     }

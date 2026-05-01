@@ -57,4 +57,10 @@ public class ReservationDao {
         return jdbcTemplate.update(sql, id);
     }
 
+    int countByTimeId(long timeId) {
+        String sql = "SELECT COUNT(*) FROM reservation WHERE time_id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, timeId);
+        return (count == null) ? 0 : count;
+    }
+
 }

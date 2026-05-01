@@ -6,21 +6,26 @@ import org.springframework.stereotype.Repository;
 import roomescape.reservationtime.ReservationTime;
 
 @Repository
-class ReservationRepository {
+public class ReservationRepository {
     private final ReservationDao reservationDao;
 
-    ReservationRepository(ReservationDao reservationDao) {
+    public ReservationRepository(ReservationDao reservationDao) {
         this.reservationDao = reservationDao;
     }
 
-    List<Reservation> findAll() {
+    public List<Reservation> findAll() {
         return reservationDao.findAll();
     }
 
-    Reservation save(String name, LocalDate date, ReservationTime time) {
+    public Reservation save(String name, LocalDate date, ReservationTime time) {
         return reservationDao.save(name, date, time);
     }
 
-    int delete(long id) {return reservationDao.delete(id);
+    public int delete(long id) {
+        return reservationDao.delete(id);
+    }
+
+    public int countByTimeId(long timeId) {
+        return reservationDao.countByTimeId(timeId);
     }
 }

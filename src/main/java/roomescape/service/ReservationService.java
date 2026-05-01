@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
@@ -24,16 +25,32 @@ public class ReservationService {
     }
 
     public Reservation create(String name, String date, Long timeId) {
-        ReservationTime time = reservationTimeDao.findBy(timeId);
+        validateId(timeId);
+        ReservationTime time = findReservationTime(timeId);
         Reservation reservation = new Reservation(null, name, date, time);
         Long id = reservationDao.insert(reservation);
         return reservationDao.findBy(id);
     }
 
     public void delete(Long id) {
+        validateId(id);
         int deletedCount = reservationDao.delete(id);
         if (deletedCount != 1) {
             throw new IllegalArgumentException("[ERROR] 삭제 요청 실패");
+        }
+    }
+
+    private void validateId(Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("[ERROR] id가 올바르지 않습니다.");
+        }
+    }
+
+    private ReservationTime findReservationTime(Long timeId) {
+        try {
+            return reservationTimeDao.findBy(timeId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("[ERROR] 존재하지 않는 예약 시간입니다.");
         }
     }
 }

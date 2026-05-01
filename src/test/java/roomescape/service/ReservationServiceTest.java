@@ -1,6 +1,9 @@
 package roomescape.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -78,8 +81,37 @@ class ReservationServiceTest {
 
     @Test
     void 존재하지_않는_예약_삭제시_예외_발생() {
+        // when & then
         assertThatThrownBy(() -> reservationService.delete(999L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("[ERROR] 삭제 요청 실패");
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(longs = {0, -1})
+    void 삭제하려는_id가_양수가_아니면_예외_발생(Long id) {
+        // when & then
+        assertThatThrownBy(() -> reservationService.delete(id))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] id가 올바르지 않습니다.");
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(longs = {0, -1})
+    void 예약_생성시_timeId가_양수가_아니면_예외_발생(Long timeId) {
+        // when & then
+        assertThatThrownBy(() -> reservationService.create("홍길동", "2026-05-02", timeId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] id가 올바르지 않습니다.");
+    }
+
+    @Test
+    void 존재하지_않는_timeId로_예약_생성시_예외_발생() {
+        // when & then
+        assertThatThrownBy(() -> reservationService.create("홍길동", "2026-05-02", 999L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 존재하지 않는 예약 시간입니다.");
     }
 }

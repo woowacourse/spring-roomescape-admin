@@ -2,6 +2,9 @@ package roomescape.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -81,5 +84,15 @@ class ReservationTimeServiceTest {
         assertThatThrownBy(() -> reservationTimeService.delete(999L))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("[ERROR] 삭제 요청 실패");
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(longs = {0, -1})
+    void 삭제하려는_id가_양수가_아니면_예외_발생(Long id) {
+        // when & then
+        assertThatThrownBy(() -> reservationTimeService.delete(id))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] id가 올바르지 않습니다.");
     }
 }

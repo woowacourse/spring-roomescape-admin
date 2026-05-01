@@ -3,6 +3,7 @@ package roomescape.dao;
 import java.sql.PreparedStatement;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -31,11 +32,7 @@ public class ReservationTimeDao {
 
     public List<ReservationTime> select() {
         final String sql = "select id, start_at from reservation_time;";
-        return jdbcTemplate.query(sql,
-                (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getLong("id"),
-                        resultSet.getString("start_at")
-                ));
+        return jdbcTemplate.query(sql,rowMapper());
     }
 
     public void delete(long id) {
@@ -45,10 +42,10 @@ public class ReservationTimeDao {
 
     public ReservationTime selectById(long id) {
         final String sql = "select * from reservation_time where id = ?;";
-        return jdbcTemplate.queryForObject(sql,
-                (resultSet,rowNum) -> new ReservationTime(
-                    resultSet.getLong("id"),
-                    resultSet.getString("start_at")
-                ), id);
+        return jdbcTemplate.queryForObject(sql, rowMapper(), id);
+    }
+
+    private RowMapper<ReservationTime> rowMapper() {
+        return (rs, rowNum) -> new ReservationTime(rs.getLong("id"), rs.getString("start_at"));
     }
 }

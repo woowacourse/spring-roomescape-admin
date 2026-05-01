@@ -24,14 +24,12 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
 
-    //res[pmse
     @PostMapping()
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody CreateReservationRequest request) {
         ReservationResponse response = reservationService.save(request);
         return ResponseEntity.ok(response);
     }
 
-    //read
     @GetMapping()
     public ResponseEntity<List<Reservation>> readReservations() {
         List<Reservation> reservations = reservationService.findAllReservations();

@@ -22,5 +22,4 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse("요청 처리 중 서버에 문제가 발생했습니다."));
     }
-
 }

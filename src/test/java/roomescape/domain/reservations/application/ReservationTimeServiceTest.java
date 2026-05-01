@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.global.exception.customException.ReservationTimeException;
 import roomescape.reservations.application.ReservationService;
 import roomescape.reservations.application.ReservationTimeService;
 import roomescape.domain.reservations.FakeReservationRepository;
@@ -70,7 +71,7 @@ class ReservationTimeServiceTest {
     void saveTimeWithNullRequest() {
         // when & then
         assertThatThrownBy(() -> reservationTimeService.saveTime(null))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ReservationTimeException.class);
     }
 
     @Test
@@ -81,7 +82,7 @@ class ReservationTimeServiceTest {
 
         // when & then
         assertThatThrownBy(() -> reservationTimeService.saveTime(request))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ReservationTimeException.class);
     }
 
     @Test
@@ -137,7 +138,7 @@ class ReservationTimeServiceTest {
     void deleteTimeWithNullId() {
         // when & then
         assertThatThrownBy(() -> reservationTimeService.deleteTime(null))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ReservationTimeException.class);
     }
 
     @Test
@@ -150,7 +151,7 @@ class ReservationTimeServiceTest {
 
         // when & then
         assertThatThrownBy(() -> reservationTimeService.deleteTime(savedTime.id()))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(ReservationTimeException.class);
     }
 
     @Test

@@ -9,6 +9,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.global.exception.customException.ReservationException;
+import roomescape.global.exception.customException.ReservationTimeException;
 import roomescape.reservations.application.ReservationService;
 import roomescape.domain.reservations.FakeReservationRepository;
 import roomescape.domain.reservations.FakeReservationTimeRepository;
@@ -78,7 +80,7 @@ class ReservationServiceTest {
 
         // when & then
         assertThatThrownBy(() -> reservationService.saveReservation(request))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ReservationTimeException.class);
     }
 
     @Test
@@ -86,7 +88,7 @@ class ReservationServiceTest {
     void saveReservationWithNullRequest() {
         // when & then
         assertThatThrownBy(() -> reservationService.saveReservation(null))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ReservationException.class);
     }
 
     @Test
@@ -102,7 +104,7 @@ class ReservationServiceTest {
 
         // when & then
         assertThatThrownBy(() -> reservationService.saveReservation(request))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ReservationException.class);
     }
 
     @Test
@@ -118,7 +120,7 @@ class ReservationServiceTest {
 
         // when & then
         assertThatThrownBy(() -> reservationService.saveReservation(request))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ReservationException.class);
     }
 
     @Test
@@ -134,7 +136,7 @@ class ReservationServiceTest {
 
         // when & then
         assertThatThrownBy(() -> reservationService.saveReservation(request))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ReservationException.class);
     }
 
     @Test
@@ -149,7 +151,7 @@ class ReservationServiceTest {
 
         // when & then
         assertThatThrownBy(() -> reservationService.saveReservation(request))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ReservationTimeException.class);
     }
 
     @Test
@@ -214,6 +216,6 @@ class ReservationServiceTest {
     void deleteReservationWithNullId() {
         // when & then
         assertThatThrownBy(() -> reservationService.deleteReservation(null))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ReservationException.class);
     }
 }

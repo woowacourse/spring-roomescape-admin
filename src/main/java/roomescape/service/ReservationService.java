@@ -9,28 +9,11 @@ import roomescape.repository.TimeRepository;
 
 import java.util.List;
 
-@Service
-public class ReservationService {
-    private final ReservationRepository reservationRepository;
-    private final TimeRepository timeRepository; // Time 조회를 위해 추가!
+public interface ReservationService {
 
-    public ReservationService(ReservationRepository reservationRepository, TimeRepository timeRepository) {
-        this.reservationRepository = reservationRepository;
-        this.timeRepository = timeRepository;
-    }
+    Reservation add(ReservationRequest request);
 
-    public Reservation add(ReservationRequest request) {
-        Time time = timeRepository.findById(request.getTimeId());
+    List<Reservation> findAllReservations();
 
-        Reservation reservation = new Reservation(request.getName(), request.getDate(), time);
-        return reservationRepository.add(reservation);
-    }
-
-    public List<Reservation> findAllReservations() {
-        return reservationRepository.findAllReservations();
-    }
-
-    public void deleteReservation(Long id) {
-        reservationRepository.remove(id);
-    }
+    void deleteReservation(Long id);
 }

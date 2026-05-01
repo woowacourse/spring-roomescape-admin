@@ -6,7 +6,6 @@ import roomescape.domain.Reservation;
 import roomescape.domain.Time;
 import roomescape.dto.ReservationRequest;
 import roomescape.repository.ReservationRepository;
-import roomescape.repository.TimeRepository;
 
 import java.util.List;
 
@@ -14,17 +13,16 @@ import java.util.List;
 @Service
 public class ReservationServiceImpl implements ReservationService{
     private final ReservationRepository reservationRepository;
-    private final TimeRepository timeRepository; // Time 조회를 위해 추가!
+    private final TimeService timeService;
 
-
-    public ReservationServiceImpl(ReservationRepository reservationRepository, TimeRepository timeRepository) {
+    public ReservationServiceImpl(ReservationRepository reservationRepository, TimeService timeService) {
         this.reservationRepository = reservationRepository;
-        this.timeRepository = timeRepository;
+        this.timeService = timeService;
     }
 
     @Override
     public Reservation add(ReservationRequest request) {
-        Time time = timeRepository.findById(request.getTimeId());
+        Time time = timeService.findById(request.getTimeId());
 
         Reservation reservation = new Reservation(request.getName(), request.getDate(), time);
         return reservationRepository.add(reservation);

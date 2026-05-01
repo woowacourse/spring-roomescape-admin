@@ -3,47 +3,31 @@ package roomescape.dao;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import roomescape.domain.Reservation.Reservation;
 import roomescape.domain.Reservation.ReservationCommand;
 import roomescape.domain.ReservationTime.ReservationTime;
 
-public class ReservationDaoTest {
+public class ReservationDaoTest extends BaseDaoTest {
     private ReservationDao reservationDao;
-    private JdbcTemplate jdbcTemplate;
 
-    @BeforeEach
-    void setUp() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setUrl("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1");
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    private final Reservation INIT_RESERVATION = new Reservation(1, "브라운", "2023-08-05", new ReservationTime(1, "10:00"));
 
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS reservation_time (" +
-                "id BIGINT AUTO_INCREMENT PRIMARY KEY, " +
-                "start_at VARCHAR(255) NOT NULL)");
+    @Override
+    protected void initTable() {
+        createReservationTimeTable();
+        createReservationTable();
 
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS reservation (" +
-                "id BIGINT AUTO_INCREMENT PRIMARY KEY, " +
-                "name VARCHAR(255) NOT NULL, " +
-                "date VARCHAR(255) NOT NULL, " +
-                "time_id BIGINT, " +
-                "FOREIGN KEY (time_id) REFERENCES reservation_time (id))");
-
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", 1);
+        insertReservationTime("10:00");
+        insertReservation("브라운", "2023-08-05", 1);
         this.reservationDao = new ReservationDao(jdbcTemplate);
     }
 
-    @AfterEach
-    void tearDown() {
-        jdbcTemplate.execute("DROP TABLE reservation");
-        jdbcTemplate.execute("DROP TABLE reservation_time");
+    @Override
+    protected void deleteTable() {
+        deleteReservationTable();
+        deleteReservationTimeTable();
     }
 
     @Test
@@ -51,7 +35,7 @@ public class ReservationDaoTest {
     void getReservationTest() {
         List<Reservation> reservations = reservationDao.getAllReservation();
 
-        assertThat(reservations).containsExactly(new Reservation(1, "브라운", "2023-08-05", new ReservationTime(1, "10:00")));
+        assertThat(reservations).containsExactly(INIT_RESERVATION);
     }
 
     @Test
@@ -60,7 +44,7 @@ public class ReservationDaoTest {
         reservationDao.deleteReservation(1);
         List<Reservation> reservations = reservationDao.getAllReservation();
 
-        assertThat(reservations).isNotIn(new Reservation(1, "브라운", "2023-08-05", new ReservationTime(1, "10:00")));
+        assertThat(reservations).isNotIn(INIT_RESERVATION);
     }
 
     @Test

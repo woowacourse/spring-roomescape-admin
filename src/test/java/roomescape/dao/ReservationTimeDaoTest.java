@@ -4,37 +4,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Optional;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import roomescape.domain.ReservationTime.ReservationTime;
 import roomescape.domain.ReservationTime.ReservationTimeCommand;
 
-public class ReservationTimeDaoTest {
+public class ReservationTimeDaoTest extends BaseDaoTest {
     private ReservationTimeDao reservationTimeDao;
-    private JdbcTemplate jdbcTemplate;
 
-    @BeforeEach
-    void setUp() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setUrl("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1");
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    @Override
+    protected void initTable() {
+        createReservationTimeTable();
+        insertReservationTime("10:00");
 
-        jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS reservation_time (" +
-                "id BIGINT AUTO_INCREMENT PRIMARY KEY, " +
-                "start_at VARCHAR(255) NOT NULL)");
-
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
         this.reservationTimeDao = new ReservationTimeDao(jdbcTemplate);
     }
 
-    @AfterEach
-    void tearDown() {
-        jdbcTemplate.execute("DROP TABLE reservation_time");
+    @Override
+    protected void deleteTable() {
+        deleteReservationTimeTable();
     }
 
     @Test

@@ -145,7 +145,7 @@ public class MissionStepTest {
     void 예약과_시간_연결() {
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
-        reservation.put("date", "2023-08-05");
+        reservation.put("date", "2026-12-25");
         reservation.put("timeId", 1);
 
         RestAssured.given().log().all()

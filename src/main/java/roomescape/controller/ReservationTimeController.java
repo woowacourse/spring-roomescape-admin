@@ -27,8 +27,7 @@ public class ReservationTimeController {
 
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> create(@RequestBody ReservationTimeRequest request) {
-        ReservationTime reservationTime = new ReservationTime(request.getStartAt());
-        ReservationTimeResponse response = reservationTimeService.create(reservationTime);
+        ReservationTimeResponse response = reservationTimeService.create(request);
         return ResponseEntity.ok(response);
     }
 

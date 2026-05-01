@@ -29,7 +29,7 @@ class ReservationTimeRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        timeRepository = new ReservationTimeRepository(jdbcTemplate);
+        this.timeRepository = new ReservationTimeRepository(jdbcTemplate);
     }
 
     @Nested

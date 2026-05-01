@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationTimeRequest;
+import roomescape.service.dto.ReservationTimeCreateCommand;
 
 @Service
 public class ReservationTimeService {
@@ -18,9 +18,10 @@ public class ReservationTimeService {
         return reservationTimeDao.findAll();
     }
 
-    public ReservationTime create(ReservationTimeRequest request) {
-        Long generatedId = reservationTimeDao.save(request.startAt());
-        return request.toEntity(generatedId);
+    public ReservationTime create(ReservationTimeCreateCommand command) {
+        Long generatedId = reservationTimeDao.save(command.startAt());
+
+        return new ReservationTime(generatedId, command.startAt());
     }
 
     public void delete(Long id) {

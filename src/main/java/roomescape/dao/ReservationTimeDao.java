@@ -1,5 +1,6 @@
 package roomescape.dao;
 
+import java.time.LocalTime;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,7 +18,7 @@ public class ReservationTimeDao {
     private final RowMapper<ReservationTime> rowMapper = (rs, rowNum) ->
             new ReservationTime(
                     rs.getLong("id"),
-                    rs.getString("start_at")
+                    rs.getObject("start_at", LocalTime.class)
             );
 
     public ReservationTimeDao(DataSource dataSource) {
@@ -37,7 +38,7 @@ public class ReservationTimeDao {
         return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("id", id), rowMapper);
     }
 
-    public Long save(String startAt) {
+    public Long save(LocalTime startAt) {
         return simpleJdbcInsert.executeAndReturnKey(
                 new MapSqlParameterSource("start_at", startAt)
         ).longValue();

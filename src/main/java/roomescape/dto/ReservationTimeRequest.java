@@ -1,10 +1,12 @@
 package roomescape.dto;
 
-import roomescape.domain.ReservationTime;
+import java.time.LocalTime;
+import roomescape.service.dto.ReservationTimeCreateCommand;
 
-public record ReservationTimeRequest(String startAt) {
-
-    public ReservationTime toEntity(Long id) {
-        return new ReservationTime(id, this.startAt);
+public record ReservationTimeRequest(
+        String startAt
+) {
+    public ReservationTimeCreateCommand toCommand() {
+        return new ReservationTimeCreateCommand(LocalTime.parse(this.startAt));
     }
 }

@@ -1,12 +1,13 @@
 package roomescape.global.exception.customException;
 
+import roomescape.global.exception.ErrorCode;
+
 public class ReservationException extends RuntimeException {
 
-    public ReservationException(String message) {
-        super(message);
-    }
+    private final ErrorCode errorCode;
 
-    public ReservationException(String message, Throwable cause) {
-        super(message, cause);
+    public ReservationException(ErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.errorCode = errorCode;
     }
 }

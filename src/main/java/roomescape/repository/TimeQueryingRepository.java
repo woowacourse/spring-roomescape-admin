@@ -26,4 +26,9 @@ public class TimeQueryingRepository {
         String sql = "select id, start_at from reservation_time";
         return jdbcTemplate.query(sql, reservationTimeRowMapper);
     }
+
+    public ReservationTime findById(Long id) {
+        String sql = "select id, start_at from reservation_time where id = ?";
+        return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, id);
+    }
 }

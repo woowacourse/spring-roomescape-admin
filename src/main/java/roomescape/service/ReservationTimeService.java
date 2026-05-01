@@ -21,6 +21,14 @@ public class ReservationTimeService {
         return timeQueryingRepository.findAll();
     }
 
+    public ReservationTime findById(Long id) {
+        try {
+            return timeQueryingRepository.findById(id);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("존재하지 않는 예약 시간입니다.");
+        }
+    }
+
     public ReservationTime save(ReservationTime reservationTime) {
         Long id = timeUpdatingRepository.insert(reservationTime);
         return ReservationTime.toEntity(reservationTime, id);

@@ -4,6 +4,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -24,15 +26,7 @@ public class ReservationRepository {
                 "SELECT r.id, r.name, r.date, t.id AS time_id, t.start_at AS start_at " +
                         "FROM reservation r " +
                         "JOIN reservation_time t ON r.time_id = t.id ",
-                (rs, rowNum) -> new Reservation(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        LocalDate.parse(rs.getString("date")),
-                        new ReservationTime(
-                                rs.getLong("time_id"),
-                                LocalTime.parse(rs.getString("start_at"))
-                        )
-                )
+                (rs, rowNum) -> getReservation(rs)
         );
     }
 
@@ -63,16 +57,20 @@ public class ReservationRepository {
                         "FROM reservation r " +
                         "JOIN reservation_time t ON r.time_id = t.id " +
                         "WHERE r.id = ?",
-                (rs, rowNum) -> new Reservation(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        LocalDate.parse(rs.getString("date")),
-                        new ReservationTime(
-                                rs.getLong("time_id"),
-                                LocalTime.parse(rs.getString("start_at"))
-                        )
-                ),
+                (rs, rowNum) -> getReservation(rs),
                 id
+        );
+    }
+
+    private static Reservation getReservation(ResultSet rs) throws SQLException {
+        return new Reservation(
+                rs.getLong("id"),
+                rs.getString("name"),
+                LocalDate.parse(rs.getString("date")),
+                new ReservationTime(
+                        rs.getLong("time_id"),
+                        LocalTime.parse(rs.getString("start_at"))
+                )
         );
     }
 }

@@ -4,6 +4,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
@@ -33,10 +35,7 @@ public class ReservationTimeRepository {
     public List<ReservationTime> findAll() {
         return jdbcTemplate.query(
                 "SELECT id, start_at FROM reservation_time",
-                ((rs, rowNum) -> new ReservationTime(
-                        rs.getLong("id"),
-                        LocalTime.parse(rs.getString("start_at"))
-                ))
+                ((rs, rowNum) -> getReservationTime(rs))
         );
     }
 
@@ -50,11 +49,15 @@ public class ReservationTimeRepository {
     private ReservationTime findById(long id) {
         return jdbcTemplate.queryForObject(
                 "SELECT id, start_at FROM reservation_time WHERE id = ?",
-                (rs, rowNum) -> new ReservationTime(
-                        rs.getLong("id"),
-                        LocalTime.parse(rs.getString("start_at"))
-                ),
+                (rs, rowNum) -> getReservationTime(rs),
                 id
+        );
+    }
+
+    private static ReservationTime getReservationTime(ResultSet rs) throws SQLException {
+        return new ReservationTime(
+                rs.getLong("id"),
+                LocalTime.parse(rs.getString("start_at"))
         );
     }
 }

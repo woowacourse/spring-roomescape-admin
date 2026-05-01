@@ -27,13 +27,17 @@ public class ReservationService {
     }
 
     public ReservationResponseDto save(ReservationCreateRequestDto request) {
-        ReservationTime time = reservationTimeRepository.findById(request.timeId());
+        ReservationTime time = reservationTimeRepository.findById(request.timeId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간입니다. timeId=" + request.timeId()));
         Reservation newReservation = reservationRepository.save(request.toEntity(time));
 
         return ReservationResponseDto.from(newReservation);
     }
 
-    public void deleteById(Long id) {
-        reservationRepository.deleteById(id);
+    public void deleteById(long id) {
+        int deleteCount = reservationRepository.deleteById(id);
+        if (deleteCount == 0) {
+            throw new IllegalArgumentException("존재하지 않는 예약 id 입니다. id = " + id);
+        }
     }
 }

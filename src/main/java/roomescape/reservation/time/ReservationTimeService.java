@@ -26,7 +26,10 @@ public class ReservationTimeService {
         return ReservationTimeResponseDto.from(reservationTimeRepository.save(request.toEntity()));
     }
 
-    public void deleteById(Long id) {
-        reservationTimeRepository.deleteById(id);
+    public void deleteById(long id) {
+        int deleteCount = reservationTimeRepository.deleteById(id);
+        if (deleteCount == 0) {
+            throw new IllegalArgumentException("존재하지 않는 예약 시간 id 입니다 id = " + id);
+        }
     }
 }

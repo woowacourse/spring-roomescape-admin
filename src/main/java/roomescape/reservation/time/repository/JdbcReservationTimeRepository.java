@@ -8,6 +8,7 @@ import roomescape.reservation.time.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
@@ -18,14 +19,14 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTime findById(Long timeId) {
+    public Optional<ReservationTime> findById(long timeId) {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
 
-        return jdbcTemplate.queryForObject(sql,
+        return jdbcTemplate.query(sql,
                 (resultSet, rowNum) -> ReservationTime.of(
                         resultSet.getLong("id"),
                         resultSet.getTime("start_at").toLocalTime()
-                ), timeId);
+                ), timeId).stream().findFirst();
     }
 
     @Override
@@ -61,8 +62,9 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public void deleteById(Long id) {
+    public int deleteById(long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
-        jdbcTemplate.update(sql, id);
+
+        return jdbcTemplate.update(sql, id);
     }
 }

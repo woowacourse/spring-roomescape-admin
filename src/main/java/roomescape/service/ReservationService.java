@@ -25,8 +25,8 @@ public class ReservationService {
 
     @Transactional
     public ReservationResponse create(ReservationRequest request) {
-        ReservationTime time = reservationTimeRepository.findById(request.getTimeId());
-        Reservation reservation = new Reservation(request.getName(), request.getDate(), time);
+        ReservationTime time = reservationTimeRepository.findById(request.timeId());
+        Reservation reservation = new Reservation(request.name(), request.date(), time);
         Long id = reservationRepository.create(reservation);
         return ReservationResponse.from(new Reservation(id, reservation.getName(), reservation.getDate(), time));
     }

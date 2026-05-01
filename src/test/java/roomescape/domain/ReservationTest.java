@@ -29,7 +29,7 @@ class ReservationTest {
     void 동일_id_동일_객체_테스트() {
         // given
         Reservation reservation1 = new Reservation(1L, "제임스", "2026-04-30", new ReservationTime(1L, "12:30"));
-        Reservation reservation2 = new Reservation(1L, "제임스", "2026-04-30", new ReservationTime(1L, "12:30"));
+        Reservation reservation2 = new Reservation(1L, "포비", "2026-05-01", new ReservationTime(2L, "12:30"));
 
         // when, then
         assertThat(reservation1).isEqualTo(reservation2);
@@ -39,7 +39,7 @@ class ReservationTest {
     void 다른_id_다른_객체_테스트() {
         // given
         Reservation reservation1 = new Reservation(1L, "제임스", "2026-04-30", new ReservationTime(1L, "12:30"));
-        Reservation reservation2 = new Reservation(2L, "포비", "2026-04-30", new ReservationTime(1L, "12:30"));
+        Reservation reservation2 = new Reservation(2L, "제임스", "2026-04-30", new ReservationTime(1L, "12:30"));
 
         // when, then
         assertThat(reservation1).isNotEqualTo(reservation2);

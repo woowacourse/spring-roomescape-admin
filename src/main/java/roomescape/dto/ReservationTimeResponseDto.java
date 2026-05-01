@@ -7,7 +7,7 @@ import roomescape.domain.ReservationTime;
 public record ReservationTimeResponseDto(
         Long id,
         @JsonFormat(pattern = "HH:mm")
-        LocalTime start_at
+        LocalTime startAt
 ) {
     public static ReservationTimeResponseDto from(ReservationTime reservationTime) {
         if (reservationTime == null) {

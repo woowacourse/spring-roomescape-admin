@@ -1,4 +1,4 @@
-package roomescape.global.exception;
+package roomescape.global.exception.customException;
 
 public class ReservationException extends RuntimeException {
 

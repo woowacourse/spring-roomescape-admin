@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -16,6 +17,10 @@ import roomescape.time.domain.ReservationTime;
 @Repository
 public class JdbcTemplateReservationTimeRepository implements ReservationTimeRepository {
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNumber) -> ReservationTime.of(
+            resultSet.getLong("id"),
+            resultSet.getTime("start_at").toLocalTime()
+    );
 
     public JdbcTemplateReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -26,10 +31,7 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
         String sql = "SELECT * FROM reservation_time";
 
         return jdbcTemplate.query(sql,
-                (resultSet, rowNumber) -> ReservationTime.of(
-                        resultSet.getLong("id"),
-                        resultSet.getTime("start_at").toLocalTime()
-                ));
+                reservationTimeRowMapper);
     }
 
     @Override
@@ -39,10 +41,7 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
         try {
             return Optional.ofNullable(
                     jdbcTemplate.queryForObject(sql,
-                            (resultSet, row) -> ReservationTime.of(
-                                    resultSet.getLong("id"),
-                                    resultSet.getTime("start_at").toLocalTime()
-                            ), id));
+                            reservationTimeRowMapper, id));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

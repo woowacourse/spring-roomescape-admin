@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -17,6 +18,15 @@ import roomescape.time.domain.ReservationTime;
 @Repository
 public class JdbcTemplateReservationRepository implements ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNumber) -> Reservation.of(
+            resultSet.getLong("id"),
+            resultSet.getString("name"),
+            resultSet.getDate("date").toLocalDate(),
+            ReservationTime.of(
+                    resultSet.getLong("time_id"),
+                    resultSet.getTime("start_at").toLocalTime()
+            )
+    );
 
     public JdbcTemplateReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -33,14 +43,7 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
         return jdbcTemplate.query(
                 sql,
-                (resultSet, rowNumber) -> Reservation.of(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getDate("date").toLocalDate(),
-                        ReservationTime.of(
-                                resultSet.getLong("time_id"),
-                                resultSet.getTime("start_at").toLocalTime()
-                        )));
+                reservationRowMapper);
     }
 
     @Override
@@ -55,15 +58,7 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
 
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(sql,
-                    (resultSet, rowNumber) -> Reservation.of(
-                            resultSet.getLong("id"),
-                            resultSet.getString("name"),
-                            resultSet.getDate("date").toLocalDate(),
-                            ReservationTime.of(
-                                    resultSet.getLong("time_id"),
-                                    resultSet.getTime("start_at").toLocalTime()
-                            )
-                    ), id));
+                    reservationRowMapper, id));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -94,9 +89,9 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
     }
 
     @Override
-    public boolean existsByDateAndTimeId(LocalDate date, Long aLong) {
+    public boolean existsByDateAndTimeId(LocalDate date, Long timeId) {
         int count = jdbcTemplate.queryForObject("select count(*) from reservation where date = ? and time_id = ?",
-                Integer.class, date, aLong);
+                Integer.class, date, timeId);
         return count > 0;
     }
 }

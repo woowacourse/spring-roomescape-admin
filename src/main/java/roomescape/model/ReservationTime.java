@@ -7,7 +7,7 @@ public class ReservationTime {
     private Long id;
     private LocalTime startTime;
 
-    public ReservationTime() {}
+    protected ReservationTime() {}
 
     public ReservationTime(LocalTime startTime) {
         this.id = null;

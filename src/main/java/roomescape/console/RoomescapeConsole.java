@@ -1,13 +1,12 @@
 package roomescape.console;
 
+import java.util.List;
+import java.util.Scanner;
 import roomescape.controller.dto.ReservationRequest;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
-
-import java.util.List;
-import java.util.Scanner;
 
 public class RoomescapeConsole {
 
@@ -28,7 +27,9 @@ public class RoomescapeConsole {
         while (true) {
             System.out.print("> ");
             String line = scanner.nextLine().trim();
-            if (line.isEmpty()) continue;
+            if (line.isEmpty()) {
+                continue;
+            }
 
             try {
                 String[] parts = line.split("\\s+");
@@ -91,8 +92,6 @@ public class RoomescapeConsole {
     }
 
     private void handleReservationAdd(String[] parts) {
-        // 계층분리가 약간 덜되어 새어나간 지점 !! 콘솔이 웹 DTO인 ReservationRequest를 만들어 넘긴다.
-        // 현재 DTO는 웹 계층의 것인데 콘솔이 알게됨.
         ReservationRequest request = new ConsoleReservationRequest(
                 parts[1], parts[2], Long.parseLong(parts[3])
         );

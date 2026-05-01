@@ -61,8 +61,8 @@ public class ReservationDao {
         return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }
 
-    public void deleteById(Long id) {
+    public int deleteById(Long id) {
         String sql = "DELETE FROM reservation WHERE id = :id";
-        jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
+        return jdbcTemplate.update(sql, new MapSqlParameterSource("id", id));
     }
 }

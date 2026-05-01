@@ -41,7 +41,7 @@ public class ReservationTimeService {
     @Transactional
     public ReservationTimeResponse delete(Long id) {
         ReservationTime reservationTime = reservationTimeRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 예약입니다."));
+                .orElseThrow(() -> new IllegalStateException("존재하지 않는 예약 시간입니다."));
         reservationTimeRepository.delete(id);
         return ReservationTimeResponse.from(reservationTime);
     }

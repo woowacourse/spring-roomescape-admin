@@ -72,7 +72,7 @@ class ReservationTimeServiceTest {
     void deleteNotExist() {
         assertThatThrownBy(() -> reservationTimeService.delete(999L))
                 .isInstanceOf(IllegalStateException.class)
-                .hasMessage("존재하지 않는 예약입니다.");
+                .hasMessage("존재하지 않는 예약 시간입니다.");
     }
 
     @Test

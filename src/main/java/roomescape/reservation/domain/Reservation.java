@@ -1,6 +1,7 @@
 package roomescape.reservation.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import roomescape.time.domain.ReservationTime;
 
@@ -18,7 +19,15 @@ public class Reservation {
     }
 
     public static Reservation create(String name, LocalDate date, ReservationTime time) {
+        validateDateTime(date, time);
         return new Reservation(null, name, date, time);
+    }
+
+    private static void validateDateTime(LocalDate date, ReservationTime time) {
+        if (LocalDateTime.of(date, time.startAt())
+                .isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("과거 날짜/시간으로는 예약할 수 없습니다.");
+        }
     }
 
     public static Reservation of(Long id, String name, LocalDate date, ReservationTime time) {

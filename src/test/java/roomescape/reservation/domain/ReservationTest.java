@@ -1,5 +1,6 @@
 package roomescape.reservation.domain;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -93,5 +94,17 @@ class ReservationTest {
 
         //then
         assertNotEquals(reservation1, reservation2);
+    }
+
+    @Test
+    @DisplayName("과거 날짜로 예약 생성 시 예외 발생한다.")
+    void create_before_now() {
+        //given & then
+        LocalDate pastDate = LocalDate.now().minusDays(1);
+
+        //then
+        assertThatThrownBy(() -> Reservation.create("한다", pastDate, ReservationTime.of(1L, LocalTime.of(10, 0))))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("과거 날짜/시간으로는 예약할 수 없습니다.");
     }
 }

@@ -34,10 +34,6 @@ public class RoomReservationService {
     }
 
     public void deleteReservation(long id) {
-        int deletedCount = reservationRepository.deleteReservation(id);
-
-        if(deletedCount == 0) {
-            throw new NotFoundResourceException(ErrorMessage.RESERVATION_NOT_FOUND);
-        }
+        reservationRepository.deleteReservation(id);
     }
 }

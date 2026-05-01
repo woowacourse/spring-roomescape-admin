@@ -28,7 +28,7 @@ public class ReservationTimeRepository {
         return Collections.unmodifiableList(reservationTimeDao.getAllReservationTime());
     }
 
-    public int deleteReservationTime(long id) {
-        return reservationTimeDao.deleteReservationTime(id);
+    public void deleteReservationTime(long id) {
+        reservationTimeDao.deleteReservationTime(id);
     }
 }

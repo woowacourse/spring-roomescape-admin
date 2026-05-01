@@ -25,7 +25,7 @@ public class ReservationRepository {
         return new Reservation(id, reservationCommand.name(), reservationCommand.date(), reservationTime);
     }
 
-    public int deleteReservation(long id) {
-        return reservationDao.deleteReservation(id);
+    public void deleteReservation(long id) {
+        reservationDao.deleteReservation(id);
     }
 }

@@ -65,9 +65,9 @@ public class ReservationTimeDao {
         return jdbcTemplate.query(SELECT_ALL_SQL, MAPPER);
     }
 
-    public int deleteReservationTime(long id) {
+    public void deleteReservationTime(long id) {
         try {
-            return jdbcTemplate.update(DELETE_SPECIFIC_ID_SQL, id);
+            jdbcTemplate.update(DELETE_SPECIFIC_ID_SQL, id);
         } catch(DataIntegrityViolationException e) {
             throw new DataReferencedException(ErrorMessage.CANNOT_DELETE_RESERVATION_TIME_IN_USE);
         }

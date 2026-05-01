@@ -74,7 +74,7 @@ public class ReservationDao {
         return key.longValue();
     }
 
-    public int deleteReservation(long id) {
-        return jdbcTemplate.update(DELETE_SPECIFIC_ID_SQL, id);
+    public void deleteReservation(long id) {
+        jdbcTemplate.update(DELETE_SPECIFIC_ID_SQL, id);
     }
 }

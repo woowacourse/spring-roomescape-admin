@@ -48,6 +48,6 @@ public class ReservationTimeController {
     public ResponseEntity<Void> deleteReservationTime(@PathVariable("id") long id) {
         reservationTimeService.deleteReservationTime(id);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

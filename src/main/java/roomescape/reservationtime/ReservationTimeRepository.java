@@ -35,9 +35,9 @@ public class ReservationTimeRepository {
         return keyHolder.getKey().longValue();
     }
 
-    public int delete(Long id) {
+    public void delete(Long id) {
         String sql = "delete from reservation_time where id = ?";
-        return jdbcTemplate.update(sql, Long.valueOf(id));
+        jdbcTemplate.update(sql, id);
     }
 
     public List<ReservationTime> findAllReservationTimes() {

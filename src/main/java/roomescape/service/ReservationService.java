@@ -30,7 +30,7 @@ public class ReservationService {
     public Reservation save(ReservationRequest request) {
         ReservationTime time = reservationTimeService.findById(request.getTimeId());
         Long id = reservationUpdatingRepository.insert(request);
-        return new Reservation(id, request.getName(), LocalDate.parse(request.getDate()), time);
+        return Reservation.create(id, request.getName(), LocalDate.parse(request.getDate()), time);
     }
 
     public void delete(Long id) {

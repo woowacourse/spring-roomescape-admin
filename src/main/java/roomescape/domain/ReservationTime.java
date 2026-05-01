@@ -15,6 +15,9 @@ public class ReservationTime {
     }
 
     public ReservationTime(LocalTime startAt) {
+        if (startAt == null) {
+            throw new IllegalArgumentException("예약 시간은 필수입니다.");
+        }
         this.startAt = startAt;
     }
 

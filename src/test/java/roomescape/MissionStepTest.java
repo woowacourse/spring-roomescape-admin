@@ -108,7 +108,7 @@ public class MissionStepTest {
                 .when().post("/reservations")
                 .then().statusCode(200);
 
-        List<Reservation> reservations = RestAssured.given().log().all()
+        List<?> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200).extract()
@@ -199,7 +199,7 @@ public class MissionStepTest {
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("reservationsResponse.size()", is(1));
     }
 
     @Autowired

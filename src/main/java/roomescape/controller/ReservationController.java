@@ -1,12 +1,11 @@
 package roomescape.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ReservationResponse;
-import roomescape.dto.ReservationTimeCreateRequest;
-import roomescape.dto.ReservationTimeResponse;
 import roomescape.service.ReservationService;
 
 import java.util.List;
@@ -15,6 +14,7 @@ import java.util.List;
 public class ReservationController {
     private final ReservationService reservationService;
 
+    @Autowired
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
@@ -34,21 +34,5 @@ public class ReservationController {
         reservationService.deleteReservation(id);
         return ResponseEntity.ok()
                 .build();
-    }
-
-    @PostMapping("/times")
-    public ResponseEntity<ReservationTimeResponse> createReservationTime(@RequestBody ReservationTimeCreateRequest request) {
-        return ResponseEntity.ok(reservationService.createReservationTime(request));
-    }
-
-    @GetMapping("/times")
-    public ResponseEntity<List<ReservationTimeResponse>> readAllReservationTime() {
-        return ResponseEntity.ok(reservationService.readAllReservationTime());
-    }
-
-    @DeleteMapping("/times/{id}")
-    public ResponseEntity<Void> deleteReservationTime(@PathVariable Long id) {
-        reservationService.deleteReservationTime(id);
-        return ResponseEntity.ok().build();
     }
 }

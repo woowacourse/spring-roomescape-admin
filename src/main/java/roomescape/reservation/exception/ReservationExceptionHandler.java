@@ -1,6 +1,5 @@
 package roomescape.reservation.exception;
 
-import java.time.LocalDateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,26 +9,23 @@ import roomescape.exception.ErrorResponse;
 @RestControllerAdvice(basePackages = "roomescape.reservation")
 public class ReservationExceptionHandler {
 
-    @ExceptionHandler(DuplicateReservationException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateReservation(DuplicateReservationException e) {
-        ErrorResponse response = new ErrorResponse(
-                e.getMessage(),
-                LocalDateTime.now()
-        );
+    @ExceptionHandler(ReservationException.class)
+    public ResponseEntity<ErrorResponse> handleReservationException(ReservationException e) {
+        System.err.println("[ERROR] " + e.getMessage());
+
+        HttpStatus status = mapToHttpStatus(e.getErrorCode());
+        ErrorResponse response = new ErrorResponse(e.getUserMessage());
+
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .status(status)
                 .body(response);
     }
 
-    @ExceptionHandler(ReservationNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleReservationNotFound(ReservationNotFoundException e) {
-        ErrorResponse response = new ErrorResponse(
-                e.getMessage(),
-                LocalDateTime.now()
-        );
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(response);
+    private HttpStatus mapToHttpStatus(ReservationErrorCode errorCode) {
+        return switch (errorCode) {
+            case DUPLICATE -> HttpStatus.BAD_REQUEST;
+            case NOT_FOUND -> HttpStatus.NOT_FOUND;
+        };
     }
 }
 

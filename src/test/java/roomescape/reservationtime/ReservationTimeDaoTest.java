@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import roomescape.reservationtime.exception.ReservationTimeNotFoundException;
+import roomescape.reservationtime.exception.ReservationTimeException;
 
 class ReservationTimeDaoTest {
     private static final String TEST_PROPERTIES = "application-test.properties";
@@ -100,6 +100,6 @@ class ReservationTimeDaoTest {
     @Test
     void 존재하지_않는_ID로_삭제하면_예외가_발생한다() {
         assertThatThrownBy(() -> reservationTimeDao.delete(999L))
-                .isInstanceOf(ReservationTimeNotFoundException.class);
+                .isInstanceOf(ReservationTimeException.class);
     }
 }

@@ -31,7 +31,7 @@ public class ReservationService {
             request.date(),
             time
         );
-        Reservation saved = reservationRepository.create(reservation);
+        Reservation saved = reservationRepository.save(reservation);
         return ReservationResponse.from(saved);
     }
 

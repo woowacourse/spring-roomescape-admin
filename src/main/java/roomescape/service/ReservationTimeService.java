@@ -22,7 +22,7 @@ public class ReservationTimeService {
         ReservationTime time = ReservationTime.of(
             request.startAt()
         );
-        ReservationTime saved = timeRepository.create(time);
+        ReservationTime saved = timeRepository.save(time);
         return TimeResponse.from(saved);
     }
 

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
@@ -28,9 +30,9 @@ public class ReservationTimeRepository {
             .usingGeneratedKeyColumns("id");
     }
 
-    public ReservationTime create(ReservationTime time) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("start_at", time.getStartAt());
+    public ReservationTime save(ReservationTime time) {
+        SqlParameterSource parameters = new MapSqlParameterSource()
+            .addValue("start_at", time.getStartAt());
         Long id = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
         return ReservationTime.of(id, time.getStartAt());
     }

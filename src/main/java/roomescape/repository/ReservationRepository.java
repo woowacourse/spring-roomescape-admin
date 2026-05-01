@@ -1,11 +1,10 @@
 package roomescape.repository;
 
-import java.sql.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
@@ -34,11 +33,11 @@ public class ReservationRepository {
             .usingGeneratedKeyColumns("id");
     }
 
-    public Reservation create(Reservation reservation) {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("name", reservation.getName());
-        parameters.put("date", Date.valueOf(reservation.getDate()));
-        parameters.put("time_id", reservation.getTime().getId());
+    public Reservation save(Reservation reservation) {
+        SqlParameterSource parameters = new MapSqlParameterSource()
+            .addValue("name", reservation.getName())
+            .addValue("date", reservation.getDate())
+            .addValue("time_id", reservation.getTime().getId());
         Long id = simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
         return Reservation.of(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }

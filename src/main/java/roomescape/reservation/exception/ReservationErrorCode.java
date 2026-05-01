@@ -1,17 +1,27 @@
 package roomescape.reservation.exception;
 
-public enum ReservationErrorCode {
-    DUPLICATE("해당 날짜의 해당 시간은 이미 예약되었습니다"),
-    NOT_FOUND("예약을 찾을 수 없습니다");
+import org.springframework.http.HttpStatus;
 
+public enum ReservationErrorCode {
+    DUPLICATE(HttpStatus.BAD_REQUEST, "해당 날짜의 해당 시간은 이미 예약되었습니다"),
+    NOT_FOUND(HttpStatus.NOT_FOUND, "예약을 찾을 수 없습니다");
+
+    private final HttpStatus status;
     private final String message;
 
-    ReservationErrorCode(String message) {
+    ReservationErrorCode(HttpStatus status, String message) {
+        this.status = status;
         this.message = message;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
     }
 
     public String getMessage() {
         return message;
     }
 }
+
+
 

@@ -39,6 +39,6 @@ public class ReservationController {
             @PathVariable Long id
     ) {
         reservationService.deleteReservation(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

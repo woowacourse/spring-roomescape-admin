@@ -47,6 +47,15 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
     }
 
     @Override
+    public ReservationTime read(Long id) {
+        String sql = "SELECT * FROM `reservation_time` WHERE `id` = id";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            LocalTime startAt = rs.getTime("start_at").toLocalTime();
+            return new ReservationTime(id, startAt);
+        }).getFirst();
+    }
+
+    @Override
     public void delete(Long id) {
         String sql = "DELETE FROM `reservation_time` WHERE `id` = ?";
         jdbcTemplate.update(sql, id);

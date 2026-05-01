@@ -1,7 +1,9 @@
 package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,12 +14,15 @@ import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import roomescape.domain.ReservationTime;
+import roomescape.exception.InUseTimeException;
 
 @JdbcTest
 class ReservationTimeRepositoryTest {
 
     private static final long DEFAULT_ID = 1;
     private static final long NOT_EXIST_ID = 999;
+    private static final String DEFAULT_RESERVATION_NAME = "name";
+    private static final LocalDate DEFAULT_RESERVATION_DATE = LocalDate.of(2025, 1, 1);
     private static final LocalTime DEFAULT_START_AT = LocalTime.of(1, 1);
 
     @Autowired
@@ -136,6 +141,25 @@ class ReservationTimeRepositoryTest {
             boolean deleted = timeRepository.delete(NOT_EXIST_ID);
 
             assertThat(deleted).isFalse();
+        }
+
+        @Test
+        void 다른_테이블에서_참조_중인_레코드라면_예외를_던진다() {
+            // given
+            insertReservationTime(DEFAULT_ID, DEFAULT_START_AT);
+
+            String insertReservationSql = "INSERT INTO reservation(name, date, time_id)"
+                    + " VALUES (?, ?, ?)";
+            jdbcTemplate.update(insertReservationSql,
+                    DEFAULT_RESERVATION_NAME,
+                    DEFAULT_RESERVATION_DATE,
+                    DEFAULT_ID
+            );
+
+            // when & then
+            assertThatThrownBy(() -> timeRepository.delete(DEFAULT_ID))
+                    .isInstanceOf(InUseTimeException.class)
+                    .hasMessage("사용중이지 않은 시간만 제거할 수 있습니다. id = " + DEFAULT_ID);
         }
     }
 

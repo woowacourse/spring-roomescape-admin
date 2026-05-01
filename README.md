@@ -21,18 +21,9 @@
 | 필드     | 타입          | 설명 |
 |--------|-------------|-----|
 | `id`   | `Long`      | 예약 ID |
-| `user` | `User`      | 예약자 |
+| `name` | `String`    | 예약자 이름 |
 | `date` | `LocalDate` | 예약 날짜 |
 | `time` | `LocalTime` | 예약 시간 |
-
-#### User
-
-사용자 정보를 관리한다.
-
-| 필드 | 타입       | 설명 |
-|------|----------|------|
-| `id` | `Long`   | 사용자 ID |
-| `userName` | `String` | 사용자 이름 |
 
 #### ReservationTime
 

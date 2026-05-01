@@ -1,6 +1,7 @@
 package roomescape;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
@@ -66,8 +67,8 @@ class MissionStepTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
+                .statusCode(201)
+                .header("Location", endsWith("/reservations/1"));
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -131,7 +132,8 @@ class MissionStepTest {
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201)
+                .header("Location", endsWith("/reservations/1"));
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(count).isEqualTo(1);
@@ -155,7 +157,8 @@ class MissionStepTest {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201)
+                        .header("Location", endsWith("/times/1"));
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -184,7 +187,8 @@ class MissionStepTest {
                 .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201)
+                .header("Location", endsWith("/reservations/1"));
 
         RestAssured.given().log().all()
                 .when().get("/reservations")

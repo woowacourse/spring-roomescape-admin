@@ -38,12 +38,9 @@ public class ReservationTimeRepository {
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            return new ReservationTime(
-                    rs.getLong("id"),
-                    LocalTime.parse(rs.getString("start_at"))
-            );
-        });
+        return jdbcTemplate.query(sql, (rs, rowNum) -> new ReservationTime(
+                rs.getLong("id"),
+                LocalTime.parse(rs.getString("start_at"))));
     }
 
     public int deleteById(Long id) {
@@ -55,11 +52,10 @@ public class ReservationTimeRepository {
     public ReservationTime findById(Long id) {
         String sql = "SELECT * FROM reservation_time where id = ?";
 
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
-            return new ReservationTime(
+        return jdbcTemplate.queryForObject(sql,
+                (rs, rowNum) -> new ReservationTime(
                     rs.getLong("id"),
                     LocalTime.parse(rs.getString("start_at"))
-            );
-        }, id);
+            ), id);
     }
 }

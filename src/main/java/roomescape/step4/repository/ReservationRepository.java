@@ -26,15 +26,14 @@ public class ReservationRepository {
                 "FROM reservation_v2 r " +
                 "JOIN reservation_time rt ON r.time_id = rt.id";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            return new Reservation(
-                    rs.getLong("id"),
-                    rs.getString("name"),
-                    LocalDate.parse(rs.getString("date")),
-                    new ReservationTime(
-                            rs.getLong("time_id"),
-                            LocalTime.parse(rs.getString("start_at"))));
-        });
+        return jdbcTemplate.query(sql,
+                (rs, rowNum) -> new Reservation(
+                        rs.getLong("id"),
+                        rs.getString("name"),
+                        LocalDate.parse(rs.getString("date")),
+                        new ReservationTime(
+                                rs.getLong("time_id"),
+                                LocalTime.parse(rs.getString("start_at")))));
     }
 
     public Reservation save(Reservation reservation) {

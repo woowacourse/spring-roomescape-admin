@@ -2,9 +2,11 @@ package roomescape.domain.reservation.service;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.reservation.entity.ReservationTime;
+import roomescape.domain.reservation.exception.ReservationTimeDeleteConflictException;
 import roomescape.domain.reservation.repository.ReservationTimeRepository;
 import roomescape.domain.reservation.request.ReservationTimeCreateRequest;
 import roomescape.domain.reservation.response.ReservationTimeResponse;
@@ -39,6 +41,10 @@ public class ReservationTimeService {
 
     @Transactional
     public void deleteReservationTimeBy(Long id) {
-        reservationTimeRepository.deleteById(id);
+        try {
+            reservationTimeRepository.deleteById(id);
+        } catch (DataIntegrityViolationException exception) {
+            throw new ReservationTimeDeleteConflictException(exception);
+        }
     }
 }

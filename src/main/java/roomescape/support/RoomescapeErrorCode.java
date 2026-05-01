@@ -11,7 +11,6 @@ public enum RoomescapeErrorCode {
     INVALID_RESERVATION_TIME_FORMAT(HttpStatus.BAD_REQUEST, "시간은 HH:MM 형식이어야 합니다."),
     RESERVATION_TIME_NOT_EXIST(HttpStatus.NOT_FOUND, "존재하지 않는 예약 시간대 입니다."),
     RESERVATION_TIME_IN_USE(HttpStatus.CONFLICT, "이미 예약이 존재하는 시간대는 삭제할 수 없습니다."),
-    RESERVATION_NOT_EXIST(HttpStatus.NOT_FOUND, "존재하지 않는 예약입니다."),
     ;
 
     private final HttpStatus httpStatus;

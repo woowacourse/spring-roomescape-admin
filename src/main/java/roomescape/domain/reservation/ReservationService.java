@@ -2,6 +2,7 @@ package roomescape.domain.reservation;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import roomescape.domain.reservation.dto.CreateReservationRequest;
 import roomescape.domain.reservation.dto.CreateReservationResponse;
@@ -11,6 +12,7 @@ import roomescape.domain.reservationtime.ReservationTimeRepository;
 import roomescape.support.RoomescapeErrorCode;
 import roomescape.support.RoomescapeException;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReservationService {
@@ -34,7 +36,7 @@ public class ReservationService {
     public void deleteReservation(Long id) {
         int deletedCount = reservationRepository.deleteById(id);
         if (deletedCount == 0) {
-            throw new RoomescapeException(RoomescapeErrorCode.RESERVATION_NOT_EXIST);
+            log.info("이미 삭제된 예약 삭제 요청이 들어왔습니다. reservationId={}", id);
         }
     }
 }

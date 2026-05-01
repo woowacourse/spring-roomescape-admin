@@ -4,6 +4,7 @@ import roomescape.reservation.Reservation;
 import roomescape.reservation.time.ReservationTime;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record ReservationResponseDto(
         Long id,
@@ -18,5 +19,11 @@ public record ReservationResponseDto(
                 reservation.getDate(),
                 reservation.getTime()
         );
+    }
+
+    public static List<ReservationResponseDto> from(List<Reservation> reservations) {
+        return reservations.stream()
+                .map(ReservationResponseDto::from)
+                .toList();
     }
 }

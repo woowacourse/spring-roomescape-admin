@@ -2,7 +2,6 @@ package roomescape.reservation;
 
 import org.springframework.stereotype.Service;
 import roomescape.reservation.dto.ReservationCreateRequestDto;
-import roomescape.reservation.dto.ReservationResponseDto;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.reservation.time.ReservationTime;
 import roomescape.reservation.time.repository.ReservationTimeRepository;
@@ -19,19 +18,15 @@ public class ReservationService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public List<ReservationResponseDto> findAll() {
-        List<Reservation> reservations = reservationRepository.findAll();
-        return reservations.stream()
-                .map(ReservationResponseDto::from)
-                .toList();
+    public List<Reservation> findAll() {
+        return reservationRepository.findAll();
     }
 
-    public ReservationResponseDto save(ReservationCreateRequestDto request) {
+    public Reservation save(ReservationCreateRequestDto request) {
         ReservationTime time = reservationTimeRepository.findById(request.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간입니다. timeId=" + request.timeId()));
-        Reservation newReservation = reservationRepository.save(request.toEntity(time));
 
-        return ReservationResponseDto.from(newReservation);
+        return reservationRepository.save(request.toEntity(time));
     }
 
     public void deleteById(long id) {

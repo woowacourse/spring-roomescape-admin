@@ -1,6 +1,8 @@
 package roomescape.exception;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -35,15 +37,13 @@ public class ExceptionAdvice {
 
     private String resolveErrorMessage(HttpMessageNotReadableException e) {
         if (e.getCause() instanceof InvalidFormatException invalidFormatException) {
-            String fieldName = invalidFormatException.getPath()
-                    .getFirst()
-                    .getFieldName();
+            Class<?> targetType = invalidFormatException.getTargetType();
 
-            if (fieldName.equals("startAt")) {
+            if (targetType.equals(LocalTime.class)) {
                 return "[ERROR] 시간 형식은 HH:mm 이어야 합니다.";
             }
 
-            if (fieldName.equals("date")) {
+            if (targetType.equals(LocalDate.class)) {
                 return "[ERROR] 날짜 형식은 yyyy-MM-dd 이어야 합니다.";
             }
         }

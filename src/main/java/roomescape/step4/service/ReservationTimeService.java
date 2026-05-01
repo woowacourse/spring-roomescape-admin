@@ -2,7 +2,6 @@ package roomescape.step4.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.step2.ReservationRepository;
 import roomescape.step4.domain.ReservationTime;
 import roomescape.step4.dto.ReservationTimeRequest;
 import roomescape.step4.repository.ReservationTimeRepository;
@@ -16,7 +15,7 @@ public class ReservationTimeService {
 
     private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationTimeService(ReservationTimeRepository reservationTimeRepository, ReservationRepository reservationRepository) {
+    public ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 

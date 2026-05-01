@@ -8,6 +8,7 @@ public class ReservationTime {
     private final LocalTime startAt;
 
     private ReservationTime(Long id, LocalTime startAt) {
+        validateStartAt(startAt);
         this.id = id;
         this.startAt = startAt;
     }
@@ -16,7 +17,8 @@ public class ReservationTime {
         return new ReservationTime(null, startAt);
     }
 
-    public static ReservationTime of(long timeId, LocalTime startAt) {
+    public static ReservationTime of(Long timeId, LocalTime startAt) {
+        validateId(timeId);
         return new ReservationTime(timeId, startAt);
     }
 
@@ -43,6 +45,18 @@ public class ReservationTime {
             return false;
         }
 
-        return that.id.equals(this.id) || this == that;
+        return Objects.equals(this.id, that.id) || this == that;
+    }
+
+    private static void validateStartAt(LocalTime startAt) {
+        if (startAt == null) {
+            throw new IllegalArgumentException("예약 시작 시간은 필수입니다.");
+        }
+    }
+
+    private static void validateId(Long timeId) {
+        if (timeId == null) {
+            throw new IllegalArgumentException("예약 시간 ID는 필수입니다.");
+        }
     }
 }

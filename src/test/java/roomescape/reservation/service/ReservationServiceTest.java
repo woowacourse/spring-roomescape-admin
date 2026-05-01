@@ -34,8 +34,8 @@ class ReservationServiceTest {
         this.reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
 
         timeId = reservationTimeRepository.save(ReservationTime.create(LocalTime.of(15, 40)));
-        reservationService.create(new CreateReservationRequest("한다", LocalDate.of(2023, 8, 5), timeId));
-        reservationService.create(new CreateReservationRequest("판다", LocalDate.of(2023, 10, 5), timeId));
+        reservationService.create(new CreateReservationRequest("한다", LocalDate.now().plusWeeks(1), timeId));
+        reservationService.create(new CreateReservationRequest("판다", LocalDate.now().plusWeeks(2), timeId));
     }
 
     @Test
@@ -52,7 +52,7 @@ class ReservationServiceTest {
     @DisplayName("예약을 추가한다.")
     void create() {
         //given & when
-        reservationService.create(new CreateReservationRequest("브라운", LocalDate.of(2023, 1, 1), timeId));
+        reservationService.create(new CreateReservationRequest("브라운", LocalDate.now().plusWeeks(4), timeId));
 
         //then
         assertThat(reservationService.findAll().size()).isEqualTo(3);
@@ -62,7 +62,8 @@ class ReservationServiceTest {
     @DisplayName("존재하지 않는 예약 시간이면 예외를 발생한다.")
     void create_does_not_exist_reservation_time() {
         assertThatThrownBy(
-                () -> reservationService.create(new CreateReservationRequest("브라운", LocalDate.of(2023, 1, 1), 999L)))
+                () -> reservationService.create(
+                        new CreateReservationRequest("브라운", LocalDate.now().plusWeeks(1), 999L)))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("존재하지 않는 예약 시간입니다.");
     }
@@ -72,7 +73,7 @@ class ReservationServiceTest {
     void delete() {
         //given
         ReservationResponse reservationResponse = reservationService.create(
-                new CreateReservationRequest("브라운", LocalDate.of(2023, 1, 1), timeId));
+                new CreateReservationRequest("브라운", LocalDate.now().plusWeeks(4), timeId));
         Long id = reservationResponse.id();
 
         //when

@@ -33,8 +33,8 @@ class JdbcTemplateReservationRepositoryTest {
         ReservationTime reservationTime = jdbcTemplateReservationTimeRepository.findById(timeId).get();
 
         reservationId = jdbcTemplateReservationRepository.save(
-                Reservation.create("한다", LocalDate.of(2023, 8, 5), reservationTime));
-        jdbcTemplateReservationRepository.save(Reservation.create("판다", LocalDate.of(2023, 10, 5), reservationTime));
+                Reservation.create("한다", LocalDate.now().plusWeeks(1), reservationTime));
+        jdbcTemplateReservationRepository.save(Reservation.create("판다", LocalDate.now().plusWeeks(1), reservationTime));
     }
 
     @Test
@@ -49,7 +49,7 @@ class JdbcTemplateReservationRepositoryTest {
         //given & when
         ReservationTime reservationTime = jdbcTemplateReservationTimeRepository.findById(timeId).get();
         jdbcTemplateReservationRepository.save(
-                Reservation.create("새로운사람", LocalDate.of(2023, 6, 5), reservationTime));
+                Reservation.create("새로운사람", LocalDate.now().plusWeeks(3), reservationTime));
 
         //then
         assertThat(jdbcTemplateReservationRepository.findAll().size()).isEqualTo(3);

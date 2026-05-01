@@ -16,7 +16,7 @@ class ReservationTest {
 
     @BeforeEach
     void setup() {
-        reservation = Reservation.of(1L, "한다", LocalDate.of(2023, 8, 5),
+        reservation = Reservation.of(1L, "한다", LocalDate.now().plusMonths(1),
                 ReservationTime.of(1L, LocalTime.of(15, 40)));
     }
 
@@ -50,7 +50,7 @@ class ReservationTest {
     @DisplayName("예약날짜를 가져온다.")
     void getDate() {
         //given
-        LocalDate expected = LocalDate.of(2023, 8, 5);
+        LocalDate expected = LocalDate.now().plusMonths(1);
 
         //when
         LocalDate actual = reservation.date();
@@ -76,7 +76,7 @@ class ReservationTest {
     @DisplayName("두 예약 객체의 동등성을 비교한다.")
     void equals() {
         //given & when
-        Reservation otherReservation = Reservation.of(1L, "한다", LocalDate.of(2023, 8, 5),
+        Reservation otherReservation = Reservation.of(1L, "한다", LocalDate.now().plusMonths(1),
                 ReservationTime.of(1L, LocalTime.of(15, 40)));
 
         //then
@@ -87,9 +87,9 @@ class ReservationTest {
     @DisplayName("아직 DB에 추가되지 않은 예약끼리와는 동등하지 않다.")
     void equals_null_id() {
         //given & when
-        Reservation reservation1 = Reservation.create("한다", LocalDate.now(),
+        Reservation reservation1 = Reservation.create("한다", LocalDate.now().plusWeeks(1),
                 ReservationTime.of(1L, LocalTime.of(10, 0)));
-        Reservation reservation2 = Reservation.create("한다", LocalDate.now(),
+        Reservation reservation2 = Reservation.create("한다", LocalDate.now().plusWeeks(1),
                 ReservationTime.of(1L, LocalTime.of(10, 0)));
 
         //then
@@ -106,5 +106,44 @@ class ReservationTest {
         assertThatThrownBy(() -> Reservation.create("한다", pastDate, ReservationTime.of(1L, LocalTime.of(10, 0))))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("과거 날짜/시간으로는 예약할 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("예약자명이 유효하지 않은 경우 생성 시 예외가 발생한다.")
+    void validateName() {
+        assertThatThrownBy(() -> Reservation.of(2L, null, LocalDate.now().plusWeeks(1),
+                ReservationTime.of(1L, LocalTime.of(10, 0))))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("예약자 이름은 필수입니다.");
+
+        assertThatThrownBy(
+                () -> Reservation.of(2L, "", LocalDate.now().plusWeeks(1), ReservationTime.of(1L, LocalTime.of(10, 0))))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("예약자 이름은 필수입니다.");
+    }
+
+    @Test
+    @DisplayName("예약 시간이 유효하지 않은 경우 생성 시 예외가 발생한다.")
+    void validateTime() {
+        assertThatThrownBy(() -> Reservation.of(2L, "한다", LocalDate.now().plusWeeks(1), null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("예약 시간은 필수입니다.");
+    }
+
+    @Test
+    @DisplayName("예약 날짜가 유효하지 않은 경우 생성 시 예외가 발생한다.")
+    void validateDate() {
+        assertThatThrownBy(() -> Reservation.of(2L, "한다", null, ReservationTime.of(1L, LocalTime.of(10, 0))))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("예약 날짜는 필수입니다.");
+    }
+
+    @Test
+    @DisplayName("예약 ID가 유효하지 않은 경우 생성 시 예외가 발생한다.")
+    void validateId() {
+        assertThatThrownBy(() -> Reservation.of(null, "한다", LocalDate.now().plusWeeks(1),
+                ReservationTime.of(1L, LocalTime.of(10, 0))))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("예약 ID는 필수입니다.");
     }
 }

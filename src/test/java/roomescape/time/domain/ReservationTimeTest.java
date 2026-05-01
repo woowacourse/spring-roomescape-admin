@@ -1,5 +1,6 @@
 package roomescape.time.domain;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -62,5 +63,13 @@ class ReservationTimeTest {
 
         //then
         assertNotEquals(reservationTime1, reservationTime2);
+    }
+
+    @Test
+    @DisplayName("예약 시작 시간이 유효하지 않은 경우 예외가 발생한다.")
+    void validate_startAt() {
+        assertThatThrownBy(() -> ReservationTime.of(1L, null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("예약 시작 시간은 필수입니다.");
     }
 }

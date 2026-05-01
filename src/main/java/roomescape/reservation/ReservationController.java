@@ -31,7 +31,6 @@ public class ReservationController {
     public ReservationResponseDTO create(@RequestBody ReservationRequestDTO reservationRequestDTO) {
         ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequestDTO.getTimeId());
         Reservation reservation = new Reservation(
-                null,
                 reservationRequestDTO.getName(),
                 reservationRequestDTO.getDate(),
                 reservationTime);

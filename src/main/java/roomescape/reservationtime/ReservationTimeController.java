@@ -17,6 +17,7 @@ public class ReservationTimeController {
 
     private final ReservationTimeRepository reservationTimeRepository;
 
+
     public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
         this.reservationTimeRepository = reservationTimeRepository;
     }
@@ -24,7 +25,9 @@ public class ReservationTimeController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ReservationTimeResponseDTO create(@RequestBody ReservationTimeRequestDTO reservationTimeRequestDTO) {
-        ReservationTime reservationTime = new ReservationTime(null, reservationTimeRequestDTO.getStartAt());
+        System.out.println("hihi");
+        ReservationTime reservationTime = new ReservationTime(reservationTimeRequestDTO.getStartAt());
+        System.out.println("reservationTime = " + reservationTime);
         Long id = reservationTimeRepository.insert(reservationTime);
         return new ReservationTimeResponseDTO(
                 id,

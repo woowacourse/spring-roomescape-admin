@@ -1,11 +1,11 @@
 package roomescape.repository;
 
-import static roomescape.repository.rowmapper.RowMapperUtils.RESERVATION_TIME_ROW_MAPPER;
-
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
@@ -37,7 +37,7 @@ public class ReservationTimeRepository {
         String findSql = "SELECT *"
                 + " FROM reservation_time";
 
-        return jdbcTemplate.query(findSql, RESERVATION_TIME_ROW_MAPPER);
+        return jdbcTemplate.query(findSql, reservationTimeRowMapper());
     }
 
     public ReservationTime findById(long id) {
@@ -47,7 +47,7 @@ public class ReservationTimeRepository {
 
         return jdbcTemplate.queryForObject(
                 findSql,
-                RESERVATION_TIME_ROW_MAPPER,
+                reservationTimeRowMapper(),
                 id
         );
     }
@@ -68,5 +68,14 @@ public class ReservationTimeRepository {
         if (deletedCount < 1) {
             throw new EntityNotFoundException("존재하지 않는 시간 id입니다.");
         }
+    }
+
+    private RowMapper<ReservationTime> reservationTimeRowMapper() {
+        return (resultSet, rowNum) -> {
+            long id = resultSet.getLong("id");
+            LocalTime startAt = resultSet.getObject("start_at", LocalTime.class);
+
+            return ReservationTime.retrieve(id, startAt);
+        };
     }
 }

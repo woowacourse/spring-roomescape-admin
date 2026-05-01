@@ -2,7 +2,6 @@ package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static roomescape.repository.rowmapper.RowMapperUtils.RESERVATION_ROW_MAPPER;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -14,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -79,7 +79,7 @@ class ReservationRepositoryTest {
                     + " FROM reservation r"
                     + " JOIN reservation_time rt"
                     + " ON r.time_id = rt.id";
-            List<Reservation> foundReservations = jdbcTemplate.query(selectSql, RESERVATION_ROW_MAPPER);
+            List<Reservation> foundReservations = jdbcTemplate.query(selectSql, reservationRowMapper());
 
             assertThat(foundReservations).hasSize(1);
             assertThat(foundReservations.getFirst()).isEqualTo(persistedReservation);
@@ -170,5 +170,19 @@ class ReservationRepositoryTest {
                 id.longValue(),
                 startAt
         );
+    }
+
+    private RowMapper<Reservation> reservationRowMapper() {
+        return (resultSet, rowNum) -> {
+            long timeId = resultSet.getLong("time_id");
+            LocalTime startAt = resultSet.getObject("start_at", LocalTime.class);
+
+            return Reservation.retrieve(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                    resultSet.getObject("date", LocalDate.class),
+                    ReservationTime.retrieve(timeId, startAt)
+            );
+        };
     }
 }

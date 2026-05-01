@@ -7,6 +7,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import roomescape.controller.dto.TimeRequest;
@@ -47,10 +49,11 @@ public class ReservationTimeControllerTest {
     void createTime() {
         TimeRequest timeRequest = new TimeRequest("10:00");
 
-        TimeResponse timeResponse = reservationTimeController.create(timeRequest);
+        ResponseEntity<TimeResponse> timeResponse = reservationTimeController.create(timeRequest);
 
-        assertThat(timeResponse.id()).isEqualTo(1L);
-        assertThat(timeResponse.startAt()).isEqualTo("10:00");
+        assertThat(timeResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(timeResponse.getBody().id()).isEqualTo(1L);
+        assertThat(timeResponse.getBody().startAt()).isEqualTo("10:00");
     }
 
     @Test
@@ -59,23 +62,25 @@ public class ReservationTimeControllerTest {
         reservationTimeController.create(new TimeRequest("10:00"));
         reservationTimeController.create(new TimeRequest("11:00"));
 
-        List<TimeResponse> timeResponses = reservationTimeController.findAll();
+        ResponseEntity<List<TimeResponse>> times = reservationTimeController.findAll();
 
-        assertThat(timeResponses).hasSize(2);
+        assertThat(times.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        assertThat(timeResponses.get(0).id()).isEqualTo(1L);
-        assertThat(timeResponses.get(0).startAt()).isEqualTo("10:00");
-
-        assertThat(timeResponses.get(1).id()).isEqualTo(2L);
-        assertThat(timeResponses.get(1).startAt()).isEqualTo("11:00");
+        assertThat(times.getBody()).hasSize(2);
+        assertThat(times.getBody().get(0).id()).isEqualTo(1L);
+        assertThat(times.getBody().get(0).startAt()).isEqualTo("10:00");
+        assertThat(times.getBody().get(1).id()).isEqualTo(2L);
+        assertThat(times.getBody().get(1).startAt()).isEqualTo("11:00");
     }
 
     @Test
     @DisplayName("아무 시간도 없는 상태에서 시간을 조회한다.")
     void findAllTimes_Before_Create() {
-        List<TimeResponse> times = reservationTimeController.findAll();
+        ResponseEntity<List<TimeResponse>> times = reservationTimeController.findAll();
 
-        assertThat(times).isEmpty();
+        assertThat(times.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        assertThat(times.getBody()).isEmpty();
     }
 
     @Test
@@ -84,13 +89,16 @@ public class ReservationTimeControllerTest {
         reservationTimeController.create(new TimeRequest("10:00"));
         reservationTimeController.create(new TimeRequest("11:00"));
 
-        reservationTimeController.delete(1L);
+        ResponseEntity<Void> deleteResponse = reservationTimeController.delete(1L);
 
-        List<TimeResponse> times = reservationTimeController.findAll();
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(deleteResponse.getBody()).isNull();
 
-        assertThat(times).hasSize(1);
-        assertThat(times.get(0).id()).isEqualTo(2L);
-        assertThat(times.get(0).startAt()).isEqualTo("11:00");
+        ResponseEntity<List<TimeResponse>> times = reservationTimeController.findAll();
+
+        assertThat(times.getBody()).hasSize(1);
+        assertThat(times.getBody().get(0).id()).isEqualTo(2L);
+        assertThat(times.getBody().get(0).startAt()).isEqualTo("11:00");
     }
 
     @Test

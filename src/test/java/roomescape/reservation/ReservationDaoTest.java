@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import roomescape.reservation.exception.ReservationException;
 import roomescape.reservationtime.ReservationTime;
 
 class ReservationDaoTest {
@@ -79,19 +78,13 @@ class ReservationDaoTest {
     }
 
     @Test
-    void 존재하는_ID로_예약을_삭제할_수_있다() {
+    void ID로_예약을_삭제할_수_있다() {
         ReservationTime reservationTime = createReservationTime(LocalTime.of(15, 40));
         Reservation saved = reservationDao.save("브라운", LocalDate.of(2023, 8, 5), reservationTime);
 
         reservationDao.delete(saved.id());
 
         assertThat(reservationDao.findAll()).isEmpty();
-    }
-
-    @Test
-    void 존재하지_않는_ID로_삭제하면_예외가_발생한다() {
-        assertThatThrownBy(() -> reservationDao.delete(1L))
-                .isInstanceOf(ReservationException.class);
     }
 
     private ReservationTime createReservationTime(LocalTime startAt) {

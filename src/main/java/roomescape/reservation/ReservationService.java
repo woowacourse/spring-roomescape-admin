@@ -8,21 +8,25 @@ import org.springframework.transaction.annotation.Transactional;
 import roomescape.reservation.exception.ReservationException;
 import roomescape.reservation.exception.ReservationErrorCode;
 import roomescape.reservationtime.ReservationTime;
-import roomescape.reservationtime.ReservationTimeService;
+import roomescape.reservationtime.ReservationTimeRepository;
+import roomescape.reservationtime.exception.ReservationTimeErrorCode;
+import roomescape.reservationtime.exception.ReservationTimeException;
 
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
-    private final ReservationTimeService reservationTimeService;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    ReservationService(ReservationRepository reservationRepository, ReservationTimeService reservationTimeService) {
+    public ReservationService(ReservationRepository reservationRepository,
+                              ReservationTimeRepository reservationTimeRepository) {
         this.reservationRepository = reservationRepository;
-        this.reservationTimeService = reservationTimeService;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @Transactional
     public Reservation createReservation(String name, LocalDate date, long timeId) {
-        ReservationTime reservationTime = reservationTimeService.findById(timeId);
+        ReservationTime reservationTime = reservationTimeRepository.findById(timeId)
+                .orElseThrow(() -> new ReservationTimeException(ReservationTimeErrorCode.NOT_FOUND));
         try {
             return reservationRepository.save(name, date, reservationTime);
         } catch (DataIntegrityViolationException e) {

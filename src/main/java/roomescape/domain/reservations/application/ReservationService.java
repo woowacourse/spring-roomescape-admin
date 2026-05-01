@@ -39,8 +39,11 @@ public class ReservationService {
         return ReservationResponse.from(savedReservation);
     }
 
-    public List<Reservation> getReservations() {
-        return reservationRepository.findAll();
+    public List<ReservationResponse> getReservations() {
+        List<Reservation> reservations = reservationRepository.findAll();
+        return reservations.stream()
+                .map(ReservationResponse::from)
+                .toList();
     }
 
     public void deleteReservation(Long id) {

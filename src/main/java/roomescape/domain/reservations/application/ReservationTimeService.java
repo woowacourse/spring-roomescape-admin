@@ -28,8 +28,11 @@ public class ReservationTimeService {
         return ReservationTimeResponse.from(savedReservationTime);
     }
 
-    public List<ReservationTime> getTimes() {
-        return reservationTimeRepository.findAll();
+    public List<ReservationTimeResponse> getTimes() {
+        List<ReservationTime> times = reservationTimeRepository.findAll();
+        return times.stream()
+                .map(ReservationTimeResponse::from)
+                .toList();
     }
 
     public void deleteTime(Long id) {

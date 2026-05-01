@@ -1,19 +1,18 @@
 package roomescape.controller;
 
 import java.util.List;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import roomescape.domain.ReservationTime;
+import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.dto.TimeRequest;
 import roomescape.controller.dto.TimeResponse;
+import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
-@Controller
+@RestController
 public class ReservationTimeController {
     private final ReservationTimeRepository reservationTimeRepository;
 
@@ -22,7 +21,6 @@ public class ReservationTimeController {
     }
 
     @PostMapping("/times")
-    @ResponseBody
     public TimeResponse create(@RequestBody TimeRequest request) {
         ReservationTime savedReservationTime = reservationTimeRepository.save(request.startAt());
 
@@ -30,7 +28,6 @@ public class ReservationTimeController {
     }
 
     @GetMapping("/times")
-    @ResponseBody
     public List<TimeResponse> findAll() {
         return reservationTimeRepository.findAll()
                 .stream()
@@ -40,7 +37,6 @@ public class ReservationTimeController {
 
 
     @DeleteMapping("/times/{id}")
-    @ResponseBody
     public void delete(@PathVariable Long id) {
         reservationTimeRepository.deleteById(id);
     }

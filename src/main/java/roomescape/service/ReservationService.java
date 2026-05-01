@@ -1,13 +1,12 @@
 package roomescape.service;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.controller.dto.ReservationRequest;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
-
-import java.util.List;
+import roomescape.service.dto.ReservationCreateCommand;
 
 @Service
 public class ReservationService {
@@ -27,11 +26,11 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public Reservation create(ReservationRequest request) {
-        ReservationTime time = reservationTimeRepository.findById(request.getTimeId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다: " + request.getTimeId()));
+    public Reservation create(ReservationCreateCommand command) {
+        ReservationTime time = reservationTimeRepository.findById(command.getTimeId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다: " + command.getTimeId()));
 
-        Reservation reservation = new Reservation(null, request.getName(), request.getDate(), time);
+        Reservation reservation = new Reservation(null, command.getName(), command.getDate(), time);
         return reservationRepository.save(reservation);
     }
 

@@ -1,5 +1,8 @@
 package roomescape.repository;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -7,9 +10,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-
-import java.sql.PreparedStatement;
-import java.util.List;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
@@ -35,10 +35,10 @@ public class JdbcReservationRepository implements ReservationRepository {
         RowMapper<Reservation> rowMapper = (rs, rowNum) -> new Reservation(
                 rs.getLong("reservation_id"),
                 rs.getString("reservation_name"),
-                rs.getString("reservation_date"),
+                rs.getDate("reservation_date").toLocalDate(),
                 new ReservationTime(
                         rs.getLong("time_id"),
-                        rs.getString("time_start_at")
+                        rs.getTime("time_start_at").toLocalTime()
                 )
         );
         return jdbcTemplate.query(sql, rowMapper);
@@ -51,7 +51,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate());
+            ps.setDate(2, Date.valueOf(reservation.getDate()));
             ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);

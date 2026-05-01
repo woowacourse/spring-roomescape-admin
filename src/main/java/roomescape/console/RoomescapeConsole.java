@@ -1,12 +1,15 @@
 package roomescape.console;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Scanner;
-import roomescape.controller.dto.ReservationRequest;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
+import roomescape.service.dto.ReservationCreateCommand;
+import roomescape.service.dto.ReservationTimeCreateCommand;
 
 public class RoomescapeConsole {
 
@@ -70,8 +73,8 @@ public class RoomescapeConsole {
     }
 
     private void handleTimeAdd(String[] parts) {
-        ReservationTime input = new ReservationTime(null, parts[1]);
-        ReservationTime saved = reservationTimeService.create(input);
+        ReservationTimeCreateCommand command = new ReservationTimeCreateCommand(LocalTime.parse(parts[1]));
+        ReservationTime saved = reservationTimeService.create(command);
         System.out.printf("등록됨: id=%d, startAt=%s%n", saved.getId(), saved.getStartAt());
     }
 
@@ -92,10 +95,11 @@ public class RoomescapeConsole {
     }
 
     private void handleReservationAdd(String[] parts) {
-        ReservationRequest request = new ConsoleReservationRequest(
-                parts[1], parts[2], Long.parseLong(parts[3])
+        ReservationCreateCommand command = new ReservationCreateCommand(
+                parts[1], LocalDate.parse(parts[2]), Long.parseLong(parts[3])
         );
-        Reservation saved = reservationService.create(request);
+
+        Reservation saved = reservationService.create(command);
         System.out.printf("등록됨: id=%d, name=%s, date=%s, time=%s%n",
                 saved.getId(), saved.getName(), saved.getDate(), saved.getTime().getStartAt());
     }

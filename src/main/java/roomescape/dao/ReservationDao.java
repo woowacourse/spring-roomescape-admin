@@ -22,25 +22,27 @@ public class ReservationDao {
     }
 
     public List<Reservation> findAllReservations() {
-        String sql = "SELECT\n"
-                + "    r.id as reservation_id,\n"
-                + "    r.name,\n"
-                + "    r.date,\n"
-                + "    t.id as time_id,\n"
-                + "    t.start_at as time_value\n"
-                + "FROM reservation as r\n"
-                + "INNER JOIN reservation_time as t\n"
-                + "  ON r.time_id = t.id";
+        String sql = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at
+                FROM reservation as r
+                INNER JOIN reservation_time as t
+                  ON r.time_id = t.id
+                """;
         List<Reservation> reservations = jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> {
                     Reservation reservation = new Reservation(
                             resultSet.getLong("reservation_id"),
                             resultSet.getString("name"),
-                            resultSet.getDate("date").toLocalDate(),
+                            LocalDate.parse(resultSet.getString("date")),
                             new ReservationTime(
                                     resultSet.getLong("time_id"),
-                                    resultSet.getTime("time_value").toLocalTime()
+                                    LocalTime.parse(resultSet.getString("start_at"))
                             )
                     );
                     return reservation;
@@ -49,16 +51,18 @@ public class ReservationDao {
     }
 
     public Reservation findReservationById(Long id) {
-        String sql = "SELECT\n"
-                + "    r.id as reservation_id,\n"
-                + "    r.name,\n"
-                + "    r.date,\n"
-                + "    t.id as time_id,\n"
-                + "    t.start_at as time_value\n"
-                + "FROM reservation as r\n"
-                + "INNER JOIN reservation_time as t\n"
-                + "  ON r.time_id = t.id\n"
-                + "WHERE r.id = ?";
+        String sql = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at
+                FROM reservation as r
+                INNER JOIN reservation_time as t
+                  ON r.time_id = t.id
+                WHERE r.id = ?
+                """;
         Reservation reservation = jdbcTemplate.queryForObject(
                 sql,
                 (resultSet, rowNum) -> {

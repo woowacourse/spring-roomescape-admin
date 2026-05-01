@@ -91,4 +91,18 @@ class ReservationServiceTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage("존재하지 않는 예약입니다.");
     }
+
+    @Test
+    @DisplayName("이미 존재하는 예약 생성 시 예외를 발생한다.")
+    void create_duplicate_reservation() {
+        //given & when
+        reservationService.create(new CreateReservationRequest("브라운", LocalDate.now().plusWeeks(4), timeId));
+
+        //then
+        assertThatThrownBy(
+                () -> reservationService.create(
+                        new CreateReservationRequest("브라운", LocalDate.now().plusWeeks(4), timeId)))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessage("이미 존재하는 예약 날짜/시간 입니다.");
+    }
 }

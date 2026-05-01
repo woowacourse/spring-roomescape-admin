@@ -64,4 +64,13 @@ class JdbcTemplateReservationRepositoryTest {
         //then
         assertThat(jdbcTemplateReservationRepository.findAll().size()).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("예약 날짜와 시간 ID 정보로 존재하는지 확인한다.")
+    void exitsByDateAndTimeId() {
+        assertThat(
+                jdbcTemplateReservationRepository.existsByDateAndTimeId(LocalDate.now().plusWeeks(1), timeId)).isTrue();
+        assertThat(jdbcTemplateReservationRepository.existsByDateAndTimeId(LocalDate.now().plusWeeks(3),
+                timeId)).isFalse();
+    }
 }

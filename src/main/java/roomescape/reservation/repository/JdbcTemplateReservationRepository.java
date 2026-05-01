@@ -2,6 +2,7 @@ package roomescape.reservation.repository;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -90,5 +91,12 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
         if (deletedCount == 0) {
             throw new IllegalStateException("예약을 삭제할 수 없습니다.");
         }
+    }
+
+    @Override
+    public boolean existsByDateAndTimeId(LocalDate date, Long aLong) {
+        int count = jdbcTemplate.queryForObject("select count(*) from reservation where date = ? and time_id = ?",
+                Integer.class, date, aLong);
+        return count > 0;
     }
 }

@@ -33,12 +33,21 @@ public class ReservationService {
         ReservationTime reservationTime = reservationTimeRepository.findById(createReservationRequest.timeId())
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 예약 시간입니다."));
 
+        validateDuplicateReservation(createReservationRequest);
+
         Long id = reservationRepository.save(
                 Reservation.create(createReservationRequest.name(), createReservationRequest.date(),
                         reservationTime));
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("예약 생성에 실패했습니다."));
         return ReservationResponse.from(reservation);
+    }
+
+    private void validateDuplicateReservation(CreateReservationRequest createReservationRequest) {
+        if (reservationRepository.existsByDateAndTimeId(createReservationRequest.date(),
+                createReservationRequest.timeId())) {
+            throw new IllegalStateException("이미 존재하는 예약 날짜/시간 입니다.");
+        }
     }
 
     @Transactional

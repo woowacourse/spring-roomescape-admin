@@ -9,7 +9,7 @@ import roomescape.service.ReservationService;
 
 import java.util.List;
 
-@Controller
+@RestController
 public class ReservationController {
     private final ReservationService reservationService;
 

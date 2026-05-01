@@ -8,7 +8,7 @@ import roomescape.service.ReservationTimeService;
 
 import java.util.List;
 
-@Controller
+@RestController
 public class ReservationTimeController {
     private final ReservationTimeService reservationTimeService;
 

@@ -44,19 +44,4 @@ public class ReservationQueryingRepository {
         """;
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
-
-    public Reservation findById(Long id) {
-        String sql = """
-        SELECT
-            r.id as id,
-            r.name as name,
-            r.date as date,
-            t.id as time_id,
-            t.start_at as start_at
-        FROM reservation r
-        INNER JOIN reservation_time t ON r.time_id = t.id
-        WHERE r.id = ?
-        """;
-        return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
-    }
 }

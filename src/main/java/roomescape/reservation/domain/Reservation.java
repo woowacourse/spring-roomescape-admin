@@ -60,7 +60,7 @@ public class Reservation {
             return false;
         }
 
-        return Objects.equals(this.id, that.id) || this == that;
+        return Objects.equals(this.id, that.id);
     }
 
     private static void validate(String name, LocalDate date, ReservationTime time) {

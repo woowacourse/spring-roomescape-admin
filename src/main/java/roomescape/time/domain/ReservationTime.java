@@ -45,7 +45,7 @@ public class ReservationTime {
             return false;
         }
 
-        return Objects.equals(this.id, that.id) || this == that;
+        return Objects.equals(this.id, that.id);
     }
 
     private static void validateStartAt(LocalTime startAt) {

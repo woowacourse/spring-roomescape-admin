@@ -8,8 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.ReservationTime;
 import roomescape.dao.ReservationTimeDao;
+import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationTimeRequest;
 
 @RestController
 public class ReservationTimeController {
@@ -21,8 +22,8 @@ public class ReservationTimeController {
     }
 
     @PostMapping("/times")
-    public ResponseEntity<ReservationTime> insertTimes(@RequestBody ReservationTime reservationTime) {
-        return ResponseEntity.ok(reservationTimeDao.insert(reservationTime));
+    public ResponseEntity<ReservationTime> insertTimes(@RequestBody ReservationTimeRequest reservationTimeRequest) {
+        return ResponseEntity.ok(reservationTimeDao.insert(reservationTimeRequest));
     }
 
     @GetMapping("/times")

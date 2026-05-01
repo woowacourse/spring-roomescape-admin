@@ -12,7 +12,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.time.ReservationTime;
-import roomescape.domain.user.User;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
@@ -28,7 +27,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-            ps.setString(1, reservation.getUser().getName());
+            ps.setString(1, reservation.getName());
             ps.setString(2, reservation.getDate().toString());
             ps.setLong(3, reservation.getTime().getId());
             return ps;
@@ -45,7 +44,7 @@ public class JdbcReservationRepository implements ReservationRepository {
                 """;
         return jdbcTemplate.query(sql, (rs, rowNum) -> new Reservation(
                 rs.getLong("id"),
-                new User(rs.getLong("id"), rs.getString("name")), LocalDate.parse(rs.getString("date")),
+                rs.getString("name"), LocalDate.parse(rs.getString("date")),
                 new ReservationTime(rs.getLong("time_id"), LocalTime.parse(rs.getString("start_at")))
         ));
     }

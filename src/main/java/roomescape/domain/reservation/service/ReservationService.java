@@ -7,7 +7,6 @@ import roomescape.domain.reservation.dto.ReservationRequestDTO;
 import roomescape.domain.reservation.repository.ReservationRepository;
 import roomescape.domain.time.ReservationTime;
 import roomescape.domain.time.repository.ReservationTimeRepository;
-import roomescape.domain.user.User;
 
 @Service
 public class ReservationService {
@@ -22,9 +21,9 @@ public class ReservationService {
 
     public Reservation create(ReservationRequestDTO requestDTO) {
         ReservationTime time = reservationTimeRepository.findById(requestDTO.getTimeId());
-        Reservation reservation = new Reservation(null, new User(null, requestDTO.getName()), requestDTO.getDate(), time);
+        Reservation reservation = new Reservation(null, requestDTO.getName(), requestDTO.getDate(), time);
         Long id = reservationRepository.save(reservation);
-        return new Reservation(id, reservation.getUser(), reservation.getDate(), reservation.getTime());
+        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     public List<Reservation> read() {

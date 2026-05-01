@@ -60,7 +60,7 @@ public class ReservationTimeRepository {
 
             return isDeleted(deletedRowCount);
         } catch (DataIntegrityViolationException exception) {
-            throw new InUseTimeException("사용중이지 않은 시간만 제거할 수 있습니다.");
+            throw new InUseTimeException("사용중이지 않은 시간만 제거할 수 있습니다. id = " + id);
         }
     }
 

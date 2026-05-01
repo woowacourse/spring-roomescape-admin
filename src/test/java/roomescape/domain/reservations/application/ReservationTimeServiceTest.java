@@ -3,25 +3,45 @@ package roomescape.domain.reservations.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import roomescape.domain.reservations.FakeReservationRepository;
 import roomescape.domain.reservations.FakeReservationTimeRepository;
+import roomescape.domain.reservations.entity.ReservationRepository;
+import roomescape.domain.reservations.entity.ReservationTime;
 import roomescape.domain.reservations.entity.ReservationTimeRepository;
+import roomescape.domain.reservations.presentation.dto.ReservationRequest;
+import roomescape.domain.reservations.presentation.dto.ReservationResponse;
 import roomescape.domain.reservations.presentation.dto.ReservationTimeRequest;
 import roomescape.domain.reservations.presentation.dto.ReservationTimeResponse;
 
 class ReservationTimeServiceTest {
 
+    private static final LocalDate TODAY = LocalDate.now();
+
+    private ReservationRepository reservationRepository;
+    private ReservationService reservationService;
     private ReservationTimeRepository reservationTimeRepository;
     private ReservationTimeService reservationTimeService;
 
     @BeforeEach
     void setUp() {
+        reservationRepository = new FakeReservationRepository();
         reservationTimeRepository = new FakeReservationTimeRepository();
+        reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
         reservationTimeService = new ReservationTimeService(reservationTimeRepository);
+    }
+
+    private ReservationRequest createReservationRequest(ReservationTimeResponse time) {
+        return new ReservationRequest(
+                "브라운",
+                TODAY,
+                time.id()
+        );
     }
 
     private ReservationTimeRequest createReservationTimeRequest() {
@@ -118,5 +138,20 @@ class ReservationTimeServiceTest {
         // when & then
         assertThatThrownBy(() -> reservationTimeService.deleteTime(null))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("예약 시간 id가 예약에서 참조되고 있는지 확인 기능")
+    void existsByReservationTimeId() {
+        // given
+        ReservationTimeResponse savedTime = saveTime(LocalTime.of(10, 0));
+        ReservationRequest request = createReservationRequest(savedTime);
+        reservationService.saveReservation(request);
+
+        // when
+        boolean exists = reservationRepository.existsByReservationTimeId(savedTime.id());
+
+        // then
+        assertThat(exists).isTrue();
     }
 }

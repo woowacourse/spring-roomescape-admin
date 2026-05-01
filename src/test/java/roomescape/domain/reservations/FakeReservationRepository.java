@@ -40,6 +40,15 @@ public class FakeReservationRepository implements ReservationRepository {
     }
 
     @Override
+    public boolean existsByReservationTimeId(Long reservationTimeId) {
+        return store.values().stream()
+                .anyMatch(reservation -> reservation.getTime()
+                        .getId()
+                        .equals(reservationTimeId)
+                );
+    }
+
+    @Override
     public void deleteById(Long id) {
         store.remove(id);
     }

@@ -5,10 +5,12 @@ import java.time.LocalTime;
 
 public class Reservation {
 
-    private final Long id;
-    private final String name;
-    private final LocalDate date;
-    private final ReservationTime time;
+    private Long id;
+    private String name;
+    private LocalDate date;
+    private ReservationTime time;
+
+    public Reservation() {}
 
     public Reservation(String name, LocalDate date, ReservationTime time) {
         this(null, name, date, time);

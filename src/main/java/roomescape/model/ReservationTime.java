@@ -4,8 +4,10 @@ import java.time.LocalTime;
 
 public class ReservationTime {
 
-    private final Long id;
-    private final LocalTime startTime;
+    private Long id;
+    private LocalTime startTime;
+
+    public ReservationTime() {}
 
     public ReservationTime(LocalTime startTime) {
         this.id = null;

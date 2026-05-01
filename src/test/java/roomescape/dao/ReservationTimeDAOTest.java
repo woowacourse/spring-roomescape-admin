@@ -22,10 +22,6 @@ public class ReservationTimeDAOTest {
     @BeforeEach
     void setup() {
         reservationTimeDAO = new ReservationTimeDAO(jdbcTemplate);
-        jdbcTemplate.execute("DROP TABLE reservation IF EXISTS");
-        jdbcTemplate.execute("DROP TABLE reservation_time IF EXISTS");
-        jdbcTemplate.execute("CREATE TABLE reservation_time(" +
-                "id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, start_at VARCHAR(255))");
 
         jdbcTemplate.update("INSERT INTO reservation_time(start_at) VALUES (?)", "15:00");
         jdbcTemplate.update("INSERT INTO reservation_time(start_at) VALUES (?)", "16:00");
@@ -41,7 +37,9 @@ public class ReservationTimeDAOTest {
 
     @Test
     void findReservationTimeById() {
-        ReservationTime reservationTime = reservationTimeDAO.findReservationTimeById(1L);
+        List<ReservationTime> reservationTimes = reservationTimeDAO.findAllReservationTime();
+        Long id = reservationTimes.getFirst().getId();
+        ReservationTime reservationTime = reservationTimeDAO.findReservationTimeById(id);
 
         assertThat(reservationTime).isNotNull();
         assertThat(reservationTime.getStartAt()).isEqualTo("15:00");
@@ -70,7 +68,9 @@ public class ReservationTimeDAOTest {
 
     @Test
     void delete() {
-        int rowNum = reservationTimeDAO.delete(1L);
+        List<ReservationTime> reservationTimes = reservationTimeDAO.findAllReservationTime();
+        Long id = reservationTimes.getFirst().getId();
+        int rowNum = reservationTimeDAO.delete(id);
 
         assertThat(rowNum).isEqualTo(1);
     }

@@ -15,7 +15,7 @@ import roomescape.time.domain.ReservationTime;
 import roomescape.time.repository.JdbcTemplateReservationTimeRepository;
 
 @JdbcTest
-class JdbcTemplateReservationRepositoryTest {
+class ReservationRepositoryTest {
     private JdbcTemplateReservationRepository jdbcTemplateReservationRepository;
     private JdbcTemplateReservationTimeRepository jdbcTemplateReservationTimeRepository;
     private Long timeId;

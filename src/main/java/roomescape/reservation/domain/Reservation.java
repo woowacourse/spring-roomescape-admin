@@ -5,12 +5,15 @@ import roomescape.time.domain.ReservationTime;
 
 public class Reservation {
 
+    private static final int MAX_NAME_LENGTH = 50;
+
+    private Long id;
     private final String name;
     private final LocalDate date;
     private final ReservationTime time;
-    private Long id;
 
     public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
+        validateName(name);
         this.id = id;
         this.name = name;
         this.date = date;
@@ -18,11 +21,14 @@ public class Reservation {
     }
 
     public Reservation(String name, LocalDate date, ReservationTime time) {
-        this.name = name;
-        this.date = date;
-        this.time = time;
+        this(null, name, date, time);
     }
 
+    private void validateName(String name) {
+        if (name.length() > MAX_NAME_LENGTH) {
+            throw new IllegalArgumentException("이름의 길이는 " + MAX_NAME_LENGTH + "를 넘을 수 없습니다.");
+        }
+    }
 
     public Long getId() {
         return id;

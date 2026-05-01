@@ -3,6 +3,8 @@ package roomescape.dao;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -54,17 +56,22 @@ public class ReservationTimeDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public ReservationTime findById(long id) {
+    public Optional<ReservationTime> findById(long id) {
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
 
-        return jdbcTemplate.queryForObject(sql,
-                (resultSet, rowNum) -> {
-                    ReservationTime time = new ReservationTime(
-                            resultSet.getLong("id"),
-                            resultSet.getString("start_at")
-                    );
+        try {
+            ReservationTime reservationTime = jdbcTemplate.queryForObject(sql,
+                    (resultSet, rowNum) -> {
+                        ReservationTime time = new ReservationTime(
+                                resultSet.getLong("id"),
+                                resultSet.getString("start_at")
+                        );
 
-                    return time;
-                }, id);
+                        return time;
+                    }, id);
+            return Optional.ofNullable(reservationTime);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

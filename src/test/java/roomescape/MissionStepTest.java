@@ -30,23 +30,19 @@ import static org.hamcrest.Matchers.is;
 public class MissionStepTest {
     @LocalServerPort
     int port;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private ReservationRepository reservationRepository;
+    @Autowired
+    private ReservationTimeRepository reservationTimeRepository;
+    @Autowired
+    private ReservationController reservationController;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
     }
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    private ReservationRepository reservationRepository;
-
-    @Autowired
-    private ReservationTimeRepository reservationTimeRepository;
-
-    @Autowired
-    private ReservationController reservationController;
 
     @Test
     void 예약_조회() {
@@ -75,18 +71,26 @@ public class MissionStepTest {
         params.put("date", "2023-08-05");
         params.put("time_id", timeId);
 
-        RestAssured.given().log().all()
+        Reservation test = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(200).extract()
+                .jsonPath().getObject(".", Reservation.class);
 
-        RestAssured.given().log().all()
+        List<Reservation> all = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
+                .statusCode(200).extract()
+                .jsonPath().getList(".", Reservation.class);
+
+        assertThat(all).hasSize(1);
+        Reservation reservation = all.getFirst();
+        assertThat(reservation.getId()).isEqualTo(test.getId());
+        assertThat(reservation.getName()).isEqualTo(test.getName());
+        assertThat(reservation.getDate()).isEqualTo(test.getDate());
+        assertThat(reservation.getTime()).isEqualTo(test.getTime());
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")

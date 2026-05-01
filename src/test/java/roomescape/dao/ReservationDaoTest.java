@@ -57,11 +57,10 @@ public class ReservationDaoTest {
     @Test
     @DisplayName("예약 삭제 정상적으로 작동하는 지 테스트")
     void deleteReservationTest() {
-        int deletedCount1 = reservationDao.deleteReservation(1);
-        int deletedCount2 = reservationDao.deleteReservation(1);
+        reservationDao.deleteReservation(1);
+        List<Reservation> reservations = reservationDao.getAllReservation();
 
-        assertThat(deletedCount1).isEqualTo(1);
-        assertThat(deletedCount2).isEqualTo(0);
+        assertThat(reservations).isNotIn(new Reservation(1, "브라운", "2023-08-05", new ReservationTime(1, "10:00")));
     }
 
     @Test

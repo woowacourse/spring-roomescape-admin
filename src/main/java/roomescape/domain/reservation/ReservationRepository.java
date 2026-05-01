@@ -44,7 +44,12 @@ public class ReservationRepository {
             return ps;
         }, keyHolder);
         long id = extractId(keyHolder);
-        return Reservation.createWithId(id, reservation);
+        return Reservation.of(
+            id,
+            reservation.getName(),
+            reservation.getDate(),
+            reservation.getTime()
+        );
     }
 
     public List<Reservation> findAll() {

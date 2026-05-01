@@ -40,7 +40,12 @@ class ReservationTest {
         );
 
         // when
-        Reservation reservationWithId = Reservation.createWithId(1L, reservation);
+        Reservation reservationWithId = Reservation.of(
+            1L,
+            reservation.getName(),
+            reservation.getDate(),
+            reservation.getTime()
+        );
 
         // then
         assertSoftly(softly -> {

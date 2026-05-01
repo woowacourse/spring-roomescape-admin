@@ -29,15 +29,6 @@ public class Reservation {
         );
     }
 
-    public static Reservation createWithId(long id, Reservation reservation) {
-        return new Reservation(
-            id,
-            reservation.getName(),
-            reservation.getDate(),
-            reservation.getTime()
-        );
-    }
-
     public static Reservation of(
         long id,
         String name,

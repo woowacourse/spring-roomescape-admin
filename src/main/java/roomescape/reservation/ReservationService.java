@@ -20,7 +20,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public Reservation createReservation(String name, LocalDate date, Long timeId) {
+    public Reservation createReservation(String name, LocalDate date, long timeId) {
         ReservationTime reservationTime = reservationTimeService.findById(timeId);
         return reservationRepository.save(name, date, reservationTime);
     }
@@ -30,7 +30,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public void deleteReservation(Long id) {
+    public void deleteReservation(long id) {
         int affectedRow = reservationRepository.delete(id);
 
         if (affectedRow == 0) {

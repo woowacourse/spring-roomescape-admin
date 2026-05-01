@@ -20,7 +20,7 @@ public class ReservationTimeService {
 
     public ReservationTime createReservationTime(ReservationTime reservationTime) {
         Long generatedId = reservationTimeDAO.insertWithKeyHolder(reservationTime);
-        return ReservationTime.toEntity(reservationTime, generatedId);
+        return new ReservationTime(generatedId, reservationTime.getStartAt());
     }
 
     public void deleteReservationTime(Long id) {

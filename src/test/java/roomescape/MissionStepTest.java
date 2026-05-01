@@ -13,18 +13,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.hamcrest.core.Is;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservation.presentation.ReservationController;
 import roomescape.reservation.repository.dto.Reservation;
 import roomescape.time.repository.TimeEntity;
 import roomescape.time.repository.TimesRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class MissionStepTest {
 
     @Autowired
@@ -33,6 +32,15 @@ class MissionStepTest {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private ReservationController reservationController;
+
+    @BeforeEach
+    void beforeEach() {
+        jdbcTemplate.update("DELETE FROM reservation");
+        jdbcTemplate.update("DELETE FROM reservation_time");
+
+        jdbcTemplate.update("ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.update("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
+    }
 
     @Test
     void 예약_조회() {

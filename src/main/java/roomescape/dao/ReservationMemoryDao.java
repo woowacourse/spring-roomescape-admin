@@ -25,7 +25,7 @@ public class ReservationMemoryDao implements ReservationDao {
     }
 
     @Override
-    public void deleteReservation(Long id) {
+    public void deleteReservation(long id) {
         Reservation reservation = reservations.stream()
                 .filter(it -> Objects.equals(it.getId(), id))
                 .findFirst()

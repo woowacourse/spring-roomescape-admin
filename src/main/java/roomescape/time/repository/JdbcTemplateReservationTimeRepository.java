@@ -2,6 +2,7 @@ package roomescape.time.repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -67,5 +68,13 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
         if (deleteCount == 0) {
             throw new IllegalStateException("예약 시간을 삭제할 수 없습니다.");
         }
+    }
+
+    @Override
+    public boolean existsByStartAt(LocalTime localTime) {
+        String sql = "SELECT COUNT(*) FROM reservation_time WHERE start_at = ?";
+
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, localTime);
+        return count > 0;
     }
 }

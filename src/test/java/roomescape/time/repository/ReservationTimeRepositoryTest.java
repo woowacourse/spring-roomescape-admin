@@ -56,4 +56,10 @@ class ReservationTimeRepositoryTest {
         assertThat(jdbcTemplateReservationTimeRepository.findAll().size()).isEqualTo(1);
     }
 
+    @Test
+    @DisplayName("예약 시작 시간 값으로 예약 시간이 존재하는지 확인한다.")
+    void existsByStartAt() {
+        assertThat(jdbcTemplateReservationTimeRepository.existsByStartAt(LocalTime.of(15, 40))).isTrue();
+        assertThat(jdbcTemplateReservationTimeRepository.existsByStartAt(LocalTime.of(12, 0))).isFalse();
+    }
 }

@@ -26,7 +26,7 @@ class ReservationTimeRepositoryTest {
         timeId = jdbcTemplateReservationTimeRepository.save(ReservationTime.create(
                 LocalTime.of(15, 40)));
         jdbcTemplateReservationTimeRepository.save(ReservationTime.create(
-                LocalTime.of(15, 40)));
+                LocalTime.of(16, 0)));
     }
 
     @Test

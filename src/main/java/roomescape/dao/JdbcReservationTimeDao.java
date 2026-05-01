@@ -1,6 +1,8 @@
 package roomescape.dao;
 
 import java.sql.PreparedStatement;
+import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -25,7 +27,7 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
-            preparedStatement.setString(1, requestDto.startAt());
+            preparedStatement.setTime(1, Time.valueOf(requestDto.startAt()));
 
             return preparedStatement;
         }, keyHolder);
@@ -39,7 +41,7 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
         String sql = "SELECT * FROM `reservation_time`";
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long id = rs.getLong("id");
-            String startAt = rs.getString("start_at");
+            LocalTime startAt = rs.getTime("start_at").toLocalTime();
             return new ReservationTime(id, startAt);
         });
     }

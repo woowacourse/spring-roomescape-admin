@@ -1,6 +1,9 @@
 package roomescape.dao;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,7 +32,7 @@ public class JdbcReservationDao implements ReservationDao {
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(reservationSql, new String[]{"id"});
             preparedStatement.setString(1, requestDto.name());
-            preparedStatement.setString(2, requestDto.date());
+            preparedStatement.setDate(2, Date.valueOf(requestDto.date()));
             preparedStatement.setLong(3, requestDto.timeId());
 
             return preparedStatement;
@@ -37,7 +40,8 @@ public class JdbcReservationDao implements ReservationDao {
 
         Long id = keyHolder.getKey().longValue();
         ReservationTime reservationTime = jdbcTemplate.queryForObject(reservationTimeSql,
-                (rs, rowNum) -> new ReservationTime(rs.getLong("id"), rs.getString("start_at")), requestDto.timeId());
+                (rs, rowNum) -> new ReservationTime(rs.getLong("id"), rs.getTime("start_at").toLocalTime()),
+                requestDto.timeId());
         return new Reservation(id, requestDto.name(), requestDto.date(), reservationTime);
     }
 
@@ -48,9 +52,9 @@ public class JdbcReservationDao implements ReservationDao {
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long id = rs.getLong("id");
             String name = rs.getString("name");
-            String date = rs.getString("date");
+            LocalDate date = rs.getDate("date").toLocalDate();
             Long timeId = rs.getLong("time_id");
-            String timeValue = rs.getString("time_value");
+            LocalTime timeValue = rs.getTime("time_value").toLocalTime();
 
             ReservationTime reservationTime = new ReservationTime(timeId, timeValue);
             return new Reservation(id, name, date, reservationTime);

@@ -27,7 +27,7 @@ public class ReservationService {
     public ReservationResponse save(CreateReservationRequest request) {
         request.validate();
         ReservationTime reservationTime = reservationTimeDao.findById(request.timeId())
-                .orElseThrow(() -> new ReservationTimeException(ReservationTimeExceptionCode.RESERVATION_NOT_EXISTS));
+                .orElseThrow(() -> new ReservationTimeException(ReservationTimeExceptionCode.RESERVATION_TIME_NOT_EXISTS));
 
         Reservation reservation = request.toReservation(reservationTime);
         Reservation savedReservation = reservationDao.save(reservation);

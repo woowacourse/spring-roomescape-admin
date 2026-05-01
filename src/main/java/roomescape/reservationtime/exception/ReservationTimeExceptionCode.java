@@ -5,7 +5,7 @@ import roomescape.exception.ExceptionCode;
 
 public enum ReservationTimeExceptionCode implements ExceptionCode {
 
-    RESERVATION_NOT_EXISTS(HttpStatus.BAD_REQUEST, "존재하지 않는 예약 시간입니다."),
+    RESERVATION_TIME_NOT_EXISTS(HttpStatus.BAD_REQUEST, "존재하지 않는 예약 시간입니다."),
     ;
     private final HttpStatus httpStatus;
     private final String message;

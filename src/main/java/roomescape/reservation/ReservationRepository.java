@@ -65,4 +65,9 @@ public class ReservationRepository {
         String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    public boolean existsByTimeId(Long timeId) {
+        String sql = "SELECT EXISTS (SELECT * FROM reservation WHERE time_id = ?)";
+        return jdbcTemplate.queryForObject(sql, Boolean.class, timeId);
+    }
 }

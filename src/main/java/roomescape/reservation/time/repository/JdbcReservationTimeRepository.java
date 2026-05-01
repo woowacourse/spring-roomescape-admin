@@ -51,7 +51,11 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
             return ps;
         }, keyHolder);
 
-        Long timeId = keyHolder.getKey().longValue();
+        Number key = keyHolder.getKey();
+        if (key == null) {
+            throw new IllegalStateException("reservation_time 저장 후 생성된 ID를 반환받지 못했습니다.");
+        }
+        long timeId = key.longValue();
 
         return ReservationTime.of(timeId, reservationTime.getStartAt());
     }

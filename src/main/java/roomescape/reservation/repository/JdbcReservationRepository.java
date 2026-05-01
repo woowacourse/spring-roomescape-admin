@@ -48,7 +48,12 @@ public class JdbcReservationRepository implements ReservationRepository {
             return ps;
         }, keyHolder);
 
-        long reservationId = keyHolder.getKey().longValue();
+
+        Number key = keyHolder.getKey();
+        if (key == null) {
+            throw new IllegalStateException("reservation 저장 후 생성된 ID를 반환받지 못했습니다.");
+        }
+        long reservationId = key.longValue();
 
         return Reservation.of(reservationId, reservation.getName(), reservation.getDate(), reservation.getTime());
     }

@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -47,8 +48,9 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTime findById(Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         String sql = "select * from reservation_time where id = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        List<ReservationTime> reservationTimes = jdbcTemplate.query(sql, rowMapper, id);
+        return reservationTimes.stream().findFirst();
     }
 }

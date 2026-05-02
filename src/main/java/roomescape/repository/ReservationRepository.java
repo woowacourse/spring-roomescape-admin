@@ -29,7 +29,7 @@ public class ReservationRepository {
                         resultSet.getLong("reservation_id"),
                         resultSet.getString("name"),
                         resultSet.getString("date"),
-                        new ReservationTime(resultSet.getLong("time_id"), resultSet.getString("start_at"))));
+                        ReservationTime.of(resultSet.getLong("time_id"), resultSet.getString("start_at"))));
     }
 
     public Reservation save(ReservationSaveDto dto, ReservationTime find) {

@@ -13,7 +13,7 @@ import roomescape.repository.dto.ReservationTimeSaveDto;
 @Repository
 public class ReservationTimeRepository {
     private static final RowMapper<ReservationTime> RESERVATION_TIME_ROW_MAPPER = (resultSet, rowNum) ->
-            new ReservationTime(resultSet.getLong("id"), resultSet.getString("start_at"));
+            ReservationTime.of(resultSet.getLong("id"), resultSet.getString("start_at"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -32,7 +32,7 @@ public class ReservationTimeRepository {
 
         long generatedKey = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
-        return new ReservationTime(generatedKey, time.getStartAt());
+        return ReservationTime.of(generatedKey, time.getStartAt());
     }
 
     public Optional<ReservationTime> findById(long id) {

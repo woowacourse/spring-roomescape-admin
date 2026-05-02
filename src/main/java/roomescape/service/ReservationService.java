@@ -27,7 +27,7 @@ public class ReservationService {
 
         List<ReservationDto> response = reservations.stream()
                 .map(reservation -> new ReservationDto(reservation.getId(), reservation.getName(),
-                        reservation.getDate(), reservation.getTime().getId()))
+                        reservation.getDate().getDate().toString(), reservation.getTime().getId()))
                 .collect(Collectors.toList());
         return response;
     }
@@ -39,7 +39,8 @@ public class ReservationService {
         ReservationSaveDto repositoryDto = new ReservationSaveDto(dto.getName(), dto.getDate(), dto.getTimeId());
         Reservation save = reservationRepository.save(repositoryDto, find);
 
-        return new ReservationDto(save.getId(), save.getName(), save.getDate(), save.getTime().getId());
+        return new ReservationDto(save.getId(), save.getName(), save.getDate().getDate().toString(),
+                save.getTime().getId());
     }
 
     public void deleteById(long id) {

@@ -21,13 +21,14 @@ public class ReservationTimeService {
         ReservationTimeSaveDto repositoryDto = new ReservationTimeSaveDto(dto.getStartAt());
 
         ReservationTime save = reservationTimeRepository.save(repositoryDto);
-        return new ReservationTimeDto(save.getId(), save.getStartAt());
+        return new ReservationTimeDto(save.getId(), save.getStartAt().toString());
     }
 
     public List<ReservationTimeDto> findAll() {
         List<ReservationTime> found = reservationTimeRepository.findAll();
         List<ReservationTimeDto> response = found.stream()
-                .map(reservationTime -> new ReservationTimeDto(reservationTime.getId(), reservationTime.getStartAt()))
+                .map(reservationTime -> new ReservationTimeDto(reservationTime.getId(),
+                        reservationTime.getStartAt().toString()))
                 .collect(Collectors.toList());
         return response;
     }

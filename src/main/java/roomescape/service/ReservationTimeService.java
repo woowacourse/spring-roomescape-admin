@@ -37,10 +37,9 @@ public class ReservationTimeService {
     }
 
     public void deleteById(long id) {
-        reservationRepository.findByReservationTimeId(id)
-            .ifPresent(reservation -> {
-                throw new IllegalArgumentException("해당 시간을 사용하는 예약이 존재합니다. timeId: " + id);
-            });
+        if (reservationRepository.existByReservationTimeId(id)) {
+            throw new IllegalArgumentException("해당 시간을 사용하는 예약이 존재합니다.");
+        }
         repository.deleteById(id);
     }
 }

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.Reservation;
 
@@ -35,9 +34,8 @@ public class MemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Optional<Reservation> findByReservationTimeId(long reservationTimeId) {
+    public boolean existByReservationTimeId(long reservationTimeId) {
         return reservations.values().stream()
-            .filter(r -> r.getTimeId() == reservationTimeId)
-            .findFirst();
+            .anyMatch(reservation -> reservation.getTimeId() == reservationTimeId);
     }
 }

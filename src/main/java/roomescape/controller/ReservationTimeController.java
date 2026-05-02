@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,15 +24,17 @@ public class ReservationTimeController {
     }
 
     @GetMapping("/times")
-    public ResponseEntity<List<ReservationTime>> read() {
-        List<ReservationTime> reservationTimeList = timeService.findAll();
-        return ResponseEntity.ok().body(reservationTimeList);
+    public ResponseEntity<List<ReservationTimeResponse>> read() {
+        List<ReservationTimeResponse> reservationTimes = timeService.findAll().stream()
+                .map(ReservationTimeResponse::from)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(reservationTimes);
     }
 
     @PostMapping("/times")
     public ResponseEntity<ReservationTimeResponse> post(@RequestBody ReservationTimeRequest request) {
         ReservationTime time = timeService.create(request.startAt());
-        return ResponseEntity.ok(ReservationTimeResponse.from(time.getId(), time.getStartAt()));
+        return ResponseEntity.ok(ReservationTimeResponse.from(time));
     }
 
     @DeleteMapping("/times/{id}")

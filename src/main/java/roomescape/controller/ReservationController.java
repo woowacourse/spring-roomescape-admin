@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,15 +17,17 @@ import roomescape.service.ReservationService;
 @RestController
 public class ReservationController {
 
-    private ReservationService reservationService;
+    private final ReservationService reservationService;
 
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> read() {
-        List<Reservation> reservations = reservationService.read();
+    public ResponseEntity<List<ReservationResponse>> read() {
+        List<ReservationResponse> reservations = reservationService.findAll().stream()
+                .map(ReservationResponse::from)
+                .collect(Collectors.toList());
         return ResponseEntity.ok().body(reservations);
     }
 

@@ -9,7 +9,7 @@ public record ReservationResponse(Long id, String name, LocalDate date, Reservat
                 reservation.getId(),
                 reservation.getName(),
                 reservation.getDate(),
-                ReservationTimeResponse.from(reservation.getTime().getId(), reservation.getTime().getStartAt())
+                ReservationTimeResponse.from(reservation.getTime())
         );
     }
 }

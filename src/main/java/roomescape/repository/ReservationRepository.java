@@ -1,10 +1,9 @@
 package roomescape.repository;
 
-import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -13,9 +12,13 @@ import roomescape.repository.dto.ReservationSaveDto;
 @Repository
 public class ReservationRepository {
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     public List<Reservation> findAll() {
@@ -30,18 +33,15 @@ public class ReservationRepository {
     }
 
     public Reservation save(ReservationSaveDto dto, ReservationTime find) {
-        String sql = "insert into reservation(name, date, time_id) values (?, ?, ?)";
+        Map<String, Object> params = Map.of(
+                "name", dto.getName(),
+                "date", dto.getDate(),
+                "time_id", find.getId()
+        );
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> {
-            PreparedStatement pstmt = connection.prepareStatement(sql, new String[]{"id"});
+        long generatedKey = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
-            pstmt.setString(1, dto.getName());
-            pstmt.setString(2, dto.getDate());
-            pstmt.setLong(3, find.getId());
-            return pstmt;
-        }, keyHolder);
-        return new Reservation(keyHolder.getKey().longValue(), dto.getName(), dto.getDate(), find);
+        return new Reservation(generatedKey, dto.getName(), dto.getDate(), find);
     }
 
     public void deleteById(Long id) {

@@ -26,15 +26,15 @@ public class ReservationController {
 
     @ResponseBody
     @PostMapping("/reservations")
-    public ReservationCreateResponse create(@RequestBody ReservationRequest request) {
+    public ResponseEntity<ReservationCreateResponse> create(@RequestBody ReservationRequest request) {
         Reservation reservation = reservationService.create(request);
-        return ReservationCreateResponse.from(reservation);
+        return ResponseEntity.ok(ReservationCreateResponse.from(reservation));
     }
 
     @ResponseBody
     @GetMapping("/reservations")
-    public List<ReservationResponse> findAll() {
-        return reservationService.findAll();
+    public ResponseEntity<List<ReservationResponse>> findAll() {
+        return ResponseEntity.ok(reservationService.findAll());
     }
 
     @DeleteMapping("/reservations/{id}")

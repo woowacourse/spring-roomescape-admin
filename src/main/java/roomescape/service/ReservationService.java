@@ -38,7 +38,7 @@ public class ReservationService {
     }
 
     @Transactional
-    public void cancelAllReservation(long id) {
+    public void cancelReservation(long id) {
         reservationRepository.delete(id);
     }
 

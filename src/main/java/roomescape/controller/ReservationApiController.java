@@ -43,7 +43,7 @@ public class ReservationApiController {
             @Positive(message = "예약 취소 식별자는 양수여야 합니다.")
             Long id
     ) {
-        reservationService.cancelAllReservation(id);
+        reservationService.cancelReservation(id);
         return ResponseEntity.noContent().build();
     }
 

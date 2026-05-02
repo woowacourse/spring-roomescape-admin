@@ -58,7 +58,7 @@ public class ReservationConsoleController implements CommandLineRunner {
 
     private void cancelAllReservation() {
         Long id = Long.parseLong(ConsoleView.readInput("삭제할 예약 ID: "));
-        reservationService.cancelAllReservation(id);
+        reservationService.cancelReservation(id);
         ConsoleView.printMessage("예약이 삭제되었습니다.");
     }
 

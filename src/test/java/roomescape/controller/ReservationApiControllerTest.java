@@ -96,7 +96,7 @@ class ReservationApiControllerTest {
                 .when().delete("/reservations/1")
                 .then().log().all()
                 .status(HttpStatus.NO_CONTENT);
-        verify(reservationService, times(1)).cancelAllReservation(anyLong());
+        verify(reservationService, times(1)).cancelReservation(anyLong());
     }
     
     @Test

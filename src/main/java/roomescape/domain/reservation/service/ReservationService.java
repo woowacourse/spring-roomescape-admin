@@ -21,9 +21,9 @@ public class ReservationService {
     }
 
     public Reservation create(ReservationRequestDTO requestDTO) {
-        validateDate(requestDTO.getDate());
-        ReservationTime time = reservationTimeRepository.findById(requestDTO.getTimeId());
-        Reservation reservation = new Reservation(null, requestDTO.getName(), requestDTO.getDate(), time);
+        validateDate(requestDTO.date());
+        ReservationTime time = reservationTimeRepository.findById(requestDTO.timeId());
+        Reservation reservation = new Reservation(null, requestDTO.name(), requestDTO.date(), time);
         return reservationRepository.save(reservation);
     }
 

@@ -80,7 +80,7 @@ public class ReservationAPITest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.jsonPath().getList("", ReservationResponseDTO.class))
                 .hasSize(1)
-                .extracting(ReservationResponseDTO::getName)
+                .extracting(ReservationResponseDTO::name)
                 .containsExactly("brown");
     }
 

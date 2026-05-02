@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -21,7 +22,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Long save(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -35,8 +36,40 @@ public class JdbcReservationRepository implements ReservationRepository {
             return ps;
         }, keyHolder);
 
-        return keyHolder.getKey().longValue();
+        return findById(keyHolder.getKey().longValue()).stream().findFirst()
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 데이터입니다."));
     }
+
+    @Override
+    public Optional<Reservation> findById(Long id) {
+        String sql = """
+                    select r.id as reservation_id,   
+                    r.name, r.date, 
+                    t.id as reservation_time_id,
+                    t.start_at as time_value
+                    from reservation as r 
+                    inner join reservation_time as t 
+                    on r.time_id = t.id
+                """;
+
+        List<Reservation> results = jdbcTemplate.query(
+                sql,
+                (resultSet, rowNum) -> {
+                    ReservationTime time = new ReservationTime(
+                            resultSet.getLong("reservation_time_id"),
+                            LocalTime.parse(resultSet.getString("time_value"))
+                    );
+                    return new Reservation(
+                            resultSet.getLong("reservation_id"),
+                            resultSet.getString("name"),
+                            LocalDate.parse(resultSet.getString("date")),
+                            time
+                    );
+                }, id
+        );
+        return results.stream().findFirst();
+    }
+
     @Override
     public List<Reservation> findAll() {
         String sql = """
@@ -66,6 +99,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
         );
     }
+
     @Override
     public void delete(Long id) {
         jdbcTemplate.update("delete from reservation where id = ?", id);

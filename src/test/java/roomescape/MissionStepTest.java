@@ -7,17 +7,12 @@ import io.restassured.http.ContentType;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Test
     void 시간_관리_API() {
@@ -49,6 +44,16 @@ public class MissionStepTest {
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");
         reservation.put("timeId", 1);
+
+        Map<String, Object> time = new HashMap<>();
+        time.put("startAt", "23:30");
+
+        RestAssured.given().log().all()
+            .contentType(ContentType.JSON)
+            .body(time)
+            .when().post("/times")
+            .then().log().all()
+            .statusCode(200);
 
         RestAssured.given().log().all()
             .contentType(ContentType.JSON)

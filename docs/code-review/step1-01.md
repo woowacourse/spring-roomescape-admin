@@ -1,3 +1,56 @@
+# Reply
+
+### `인사말`
+
+안녕하세요 웨지! 요청이 늦어져 죄송합니다.  
+다양한 피드백과 지적, 칭찬 말씀까지 너무나 감사드립니다!  
+제가 생각했던 부분도, 놓치고 있던 부분도 많아  
+실속있고 효과적인 피드백 반영을 진행할 수 있었어요.
+
+### `본문`
+
+## 어떤 부분에 집중하여 리뷰해야 할까요?
+
+### 이전 미션에서 배운 내용 반영
+
+Repository / DAO 인터페이스 분리나  
+DDD 관점의 엔티티 / 애그리거트 루트 판별 등  
+저번 미션에서 학습한 내용을 많이 참조했어요.
+
+답변으로 남긴 내용만으로 근거있는 설명이나 설득이 되었을까요?
+
+---
+
+### 장황해지는 답변
+
+생각의 과정까지 풀어서 쓰다 보니 답변이 전반적으로 장황해진 것 같아 아쉽네요.  
+사고의 흐름 전체보단 일목요연하게 의견과 근거를 제시하는 것이 바람직할까요?
+
+### `마치며`
+
+귀한 연휴 중에도 꼼꼼하게 또 친절하게 리뷰해 주셔서 다시금 감사드려요.  
+그러면서도 답변을 너무 길게 작성해버린게 아닌가 걱정스럽네요 😢
+
+대략적인 요지와 흐름만 확인하셔서 피드백 주셔도  
+지적해주신 내용 개선하고 칭찬해주신 내용 강화해서  
+웨지의 시간과 노력의 투자가 보람있을 수 있도록 노력하겠습니다!  
+항상 감사합니다! 오늘도 평안한 휴일 되세요! ♥️
+
+[피드백/답변 정리 문서]()
+
+- ### [📝 Feedback 01](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171918749)
+- ### [📝 Feedback 02](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171920507)
+- ### [📝 Feedback 03](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171925031)
+- ### [📝 Feedback 04](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171928189)
+- ### [📝 Feedback 05](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171932731)
+- ### [📝 Feedback 06](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171933999)
+- ### [📝 Feedback 07](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171937953)
+- ### [📝 Feedback 08](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171939298)
+- ### [📝 Feedback 09](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171968584)
+- ### [📝 Feedback 10](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171986529)
+- ### [📝 Feedback 11](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171987469)
+- ### [📝 Feedback 12](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171989344)
+
 # 🛠️ 기능/구현
 
 ### 📝 Feedback 01
@@ -292,6 +345,12 @@ SRP, 이론적 DDD 준수를 일부 포기하더라도
 > 단위 테스트가 없네요. 다음 리뷰 때 단위테스트 구현해서 요청주셔요.
 
 ### 💬 Apply 06
+
+#### 테스트 구현
+
+TDD 는 못하더라도 완성된 로직에 대한 테스트는 필수적일텐데  
+항상 후순위로 미루다가 구현하지 못하곤 하네요.  
+부분적으로라도 테스트를 병행해서 더 완성도 있게 개발할 수 있도록 노력하겠습니다.
 
 ### 📝 Feedback 07
 

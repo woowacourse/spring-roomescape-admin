@@ -52,9 +52,9 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    int delete(long id) {
+    void delete(long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
-        return jdbcTemplate.update(sql, id);
+        jdbcTemplate.update(sql, id);
     }
 
     int countByTimeId(long timeId) {

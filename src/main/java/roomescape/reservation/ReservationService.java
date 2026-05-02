@@ -40,10 +40,6 @@ public class ReservationService {
 
     @Transactional
     public void deleteReservation(long id) {
-        int affectedRow = reservationRepository.delete(id);
-
-        if (affectedRow == 0) {
-            throw new ReservationException(ReservationErrorCode.NOT_FOUND);
-        }
+        reservationRepository.delete(id);
     }
 }

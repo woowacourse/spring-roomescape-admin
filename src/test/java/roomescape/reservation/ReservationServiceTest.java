@@ -1,6 +1,7 @@
 package roomescape.reservation;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
@@ -67,7 +68,7 @@ class ReservationServiceTest {
 
     @Test
     void 예약을_등록할_수_있다() {
-        ReservationTime time = reservationTimeService.save(LocalTime.of(10, 0));
+        ReservationTime time = reservationTimeService.createReservationTime(LocalTime.of(10, 0));
 
         Reservation saved = reservationService.createReservation("브라운", LocalDate.of(2026, 5, 1), time.id());
 
@@ -86,7 +87,7 @@ class ReservationServiceTest {
 
     @Test
     void 예약이_중복되면_예외가_발생한다() {
-        ReservationTime time = reservationTimeService.save(LocalTime.of(11, 0));
+        ReservationTime time = reservationTimeService.createReservationTime(LocalTime.of(11, 0));
 
         reservationService.createReservation("브라운", LocalDate.of(2026, 5, 1), time.id());
 
@@ -98,8 +99,8 @@ class ReservationServiceTest {
 
     @Test
     void 전체_예약을_조회할_수_있다() {
-        ReservationTime firstTime = reservationTimeService.save(LocalTime.of(12, 0));
-        ReservationTime secondTime = reservationTimeService.save(LocalTime.of(13, 0));
+        ReservationTime firstTime = reservationTimeService.createReservationTime(LocalTime.of(12, 0));
+        ReservationTime secondTime = reservationTimeService.createReservationTime(LocalTime.of(13, 0));
 
         reservationService.createReservation("브라운", LocalDate.of(2026, 5, 1), firstTime.id());
         reservationService.createReservation("코니", LocalDate.of(2026, 5, 2), secondTime.id());
@@ -114,7 +115,7 @@ class ReservationServiceTest {
 
     @Test
     void 예약을_삭제할_수_있다() {
-        ReservationTime time = reservationTimeService.save(LocalTime.of(14, 0));
+        ReservationTime time = reservationTimeService.createReservationTime(LocalTime.of(14, 0));
         Reservation saved = reservationService.createReservation("브라운", LocalDate.of(2026, 5, 1), time.id());
 
         reservationService.deleteReservation(saved.id());
@@ -123,10 +124,8 @@ class ReservationServiceTest {
     }
 
     @Test
-    void 존재하지_않는_ID로_삭제하면_예외가_발생한다() {
-        assertThatThrownBy(() -> reservationService.deleteReservation(999L))
-                .isInstanceOf(ReservationException.class)
-                .extracting(e -> ((ReservationException) e).getErrorCode())
-                .isEqualTo(ReservationErrorCode.NOT_FOUND);
+    void 존재하지_않는_ID로_삭제해도_예외가_발생하지_않는다() {
+        assertThatCode(() -> reservationService.deleteReservation(999L))
+                .doesNotThrowAnyException();
     }
 }

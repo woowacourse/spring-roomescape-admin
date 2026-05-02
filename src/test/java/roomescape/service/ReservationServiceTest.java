@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.domain.Reservation;
-import roomescape.request.ReservationRequest;
+import roomescape.request.ReservationCommand;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,7 +33,7 @@ class ReservationServiceTest {
 
     @Test
     void 예약을_저장하면_id가_채워진_도메인을_반환한다() {
-        ReservationRequest request = new ReservationRequest("브라운", LocalDate.of(2026, 5, 3), TIME_ID);
+        ReservationCommand request = new ReservationCommand("브라운", LocalDate.of(2026, 5, 3), TIME_ID);
 
         Reservation saved = reservationService.saveReservation(request);
 

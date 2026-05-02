@@ -5,7 +5,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
-import roomescape.request.ReservationRequest;
+import roomescape.request.ReservationCommand;
 
 import java.util.List;
 
@@ -27,9 +27,9 @@ public class ReservationService {
         reservationRepository.deleteById(id);
     }
 
-    public Reservation saveReservation(ReservationRequest request) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId());
-        Reservation reservation = request.toReservation(reservationTime);
+    public Reservation saveReservation(ReservationCommand command) {
+        ReservationTime reservationTime = reservationTimeRepository.findById(command.timeId());
+        Reservation reservation = command.toReservation(reservationTime);
         return reservationRepository.addReservation(reservation);
     }
 }

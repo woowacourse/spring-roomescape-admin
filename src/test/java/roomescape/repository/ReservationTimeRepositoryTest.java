@@ -25,12 +25,14 @@ class ReservationTimeRepositoryTest {
 
         jdbcTemplate = new JdbcTemplate(dataSource);
 
+        jdbcTemplate.execute("DROP TABLE IF EXISTS reservation");
         jdbcTemplate.execute("DROP TABLE IF EXISTS reservation_time");
         jdbcTemplate.execute("""
                 CREATE TABLE reservation_time (
                     id BIGINT NOT NULL AUTO_INCREMENT,
                     start_at VARCHAR(255) NOT NULL,
-                    PRIMARY KEY (id)
+                    PRIMARY KEY (id),
+                    UNIQUE (start_at)
                 )
                 """);
 

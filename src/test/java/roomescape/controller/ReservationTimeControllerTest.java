@@ -37,7 +37,18 @@ public class ReservationTimeControllerTest {
                 CREATE TABLE reservation_time (
                     id BIGINT NOT NULL AUTO_INCREMENT,
                     start_at VARCHAR(255) NOT NULL,
-                    PRIMARY KEY (id)
+                    PRIMARY KEY (id),
+                    UNIQUE (start_at)
+                )
+                """);
+        jdbcTemplate.execute("""
+                CREATE TABLE reservation (
+                    id      BIGINT       NOT NULL AUTO_INCREMENT,
+                    name    VARCHAR(255) NOT NULL,
+                    date    VARCHAR(255) NOT NULL,
+                    time_id BIGINT,
+                    PRIMARY KEY (id),
+                    FOREIGN KEY (time_id) REFERENCES reservation_time (id)
                 )
                 """);
 
@@ -56,6 +67,15 @@ public class ReservationTimeControllerTest {
         assertThat(timeResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(timeResponse.getBody().id()).isEqualTo(1L);
         assertThat(timeResponse.getBody().startAt()).isEqualTo("10:00");
+    }
+
+    @Test
+    @DisplayName("이미 존재하는 시간은 추가할 수 없다.")
+    void createDuplicateTime() {
+        reservationTimeController.create(new TimeRequest("10:00"));
+
+        assertThatThrownBy(() -> reservationTimeController.create(new TimeRequest("10:00")))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -108,5 +128,20 @@ public class ReservationTimeControllerTest {
     void deleteTime_NotFound() {
         assertThatThrownBy(() -> reservationTimeController.delete(1L))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("예약에 사용 중인 시간은 삭제할 수 없다.")
+    void deleteTime_UsedByReservation() {
+        reservationTimeController.create(new TimeRequest("10:00"));
+        jdbcTemplate.update(
+                "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
+                "브라운",
+                "2026-04-29",
+                1L
+        );
+
+        assertThatThrownBy(() -> reservationTimeController.delete(1L))
+                .isInstanceOf(IllegalStateException.class);
     }
 }

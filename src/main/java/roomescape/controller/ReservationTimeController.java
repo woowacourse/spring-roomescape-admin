@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dao.ReservationTimeDAO;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
@@ -19,8 +18,8 @@ public class ReservationTimeController {
 
     private final ReservationTimeService timeService;
 
-    public ReservationTimeController(ReservationTimeDAO reservationTimeDAO) {
-        this.timeService = new ReservationTimeService(reservationTimeDAO);
+    public ReservationTimeController(ReservationTimeService timeService) {
+        this.timeService = timeService;
     }
 
     @GetMapping("/times")

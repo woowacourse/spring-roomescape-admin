@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dao.ReservationDAO;
-import roomescape.dao.ReservationTimeDAO;
 import roomescape.domain.Reservation;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
@@ -20,8 +18,8 @@ public class ReservationController {
 
     private ReservationService reservationService;
 
-    public ReservationController(ReservationDAO reservationDAO, ReservationTimeDAO reservationTimeDAO) {
-        this.reservationService = new ReservationService(reservationDAO, reservationTimeDAO);
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @GetMapping("/reservations")

@@ -1,12 +1,11 @@
 package roomescape.repository;
 
-import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
@@ -19,9 +18,13 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
             );
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     public JdbcReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
@@ -31,18 +34,11 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public ReservationTime save(ReservationTime reservationTime) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO reservation_time (start_at) VALUES (?)",
-                    new String[]{"id"}
-            );
-            ps.setString(1, reservationTime.startAt());
-            return ps;
-        }, keyHolder);
-
-        Long generatedId = keyHolder.getKey().longValue();
+        Map<String, Object> params = Map.of(
+                "start_at", reservationTime.startAt()
+        );
+        Number generatedKey = jdbcInsert.executeAndReturnKey(params);
+        Long generatedId = generatedKey.longValue();
         return new ReservationTime(
                 generatedId,
                 reservationTime.startAt()

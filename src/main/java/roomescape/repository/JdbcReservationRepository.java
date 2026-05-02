@@ -1,11 +1,10 @@
 package roomescape.repository;
 
-import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -24,9 +23,13 @@ public class JdbcReservationRepository implements ReservationRepository {
             );
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
     @Override
@@ -41,20 +44,13 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
-                    new String[]{"id"}
-            );
-            ps.setString(1, reservation.name());
-            ps.setString(2, reservation.date());
-            ps.setLong(3, reservation.reservationTime().id());
-            return ps;
-        }, keyHolder);
-
-        Long generatedId = keyHolder.getKey().longValue();
+        Map<String, Object> params = Map.of(
+                "name", reservation.name(),
+                "date", reservation.date(),
+                "time_id", reservation.reservationTime().id()
+        );
+        Number generatedKey = jdbcInsert.executeAndReturnKey(params);
+        Long generatedId = generatedKey.longValue();
         return new Reservation(
                 generatedId,
                 reservation.name(),

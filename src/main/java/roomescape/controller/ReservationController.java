@@ -2,6 +2,7 @@ package roomescape.controller;
 
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +19,7 @@ import roomescape.dto.Reservation.AddReservationRequest;
 import roomescape.service.RoomReservationService;
 
 @RestController
+@Profile("web")
 @RequestMapping("/reservations")
 public class ReservationController {
     private final RoomReservationService roomReservationService;

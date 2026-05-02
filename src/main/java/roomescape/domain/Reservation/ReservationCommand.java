@@ -6,6 +6,8 @@ import roomescape.exception.ErrorMessage;
 import roomescape.exception.ReservationCommandException;
 
 public record ReservationCommand(String name, String date, long timeId) {
+    private static final int MAX_NAME_LENGTH = 20;
+
     public ReservationCommand {
         validate(name, date, timeId);
     }
@@ -21,7 +23,7 @@ public record ReservationCommand(String name, String date, long timeId) {
             throw new ReservationCommandException(ErrorMessage.INVALID_NAME_BLANK);
         }
 
-        if (name.length() > 20) {
+        if (name.length() > MAX_NAME_LENGTH) {
             throw new ReservationCommandException(ErrorMessage.INVALID_NAME_LENGTH);
         }
     }

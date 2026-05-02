@@ -30,10 +30,10 @@ public class MissionStepTest {
             .when().get("/times")
             .then().log().all()
             .statusCode(200)
-            .body("size()", is(1));
+            .body("size()", is(3));
 
         RestAssured.given().log().all()
-            .when().delete("/times/1")
+            .when().delete("/times/3")
             .then().log().all()
             .statusCode(200);
     }
@@ -44,16 +44,6 @@ public class MissionStepTest {
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");
         reservation.put("timeId", 1);
-
-        Map<String, Object> time = new HashMap<>();
-        time.put("startAt", "23:30");
-
-        RestAssured.given().log().all()
-            .contentType(ContentType.JSON)
-            .body(time)
-            .when().post("/times")
-            .then().log().all()
-            .statusCode(200);
 
         RestAssured.given().log().all()
             .contentType(ContentType.JSON)
@@ -68,5 +58,4 @@ public class MissionStepTest {
             .statusCode(200)
             .body("size()", is(1));
     }
-
 }

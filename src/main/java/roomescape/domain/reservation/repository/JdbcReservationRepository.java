@@ -37,7 +37,6 @@ public class JdbcReservationRepository implements ReservationRepository {
     public Reservation save(Reservation reservation) {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        saveTimeIfAbsent(reservation.getTimeId());
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
@@ -76,22 +75,6 @@ public class JdbcReservationRepository implements ReservationRepository {
                 LocalTime.parse(rs.getString("start_at"))
             )
         );
-    }
-
-    private void saveTimeIfAbsent(Long timeId) {
-        Integer count = jdbcTemplate.queryForObject(
-            "SELECT COUNT(1) FROM reservation_time WHERE id = ?",
-            Integer.class,
-            timeId
-        );
-
-        if (count == 0) {
-            jdbcTemplate.update(
-                "INSERT INTO reservation_time (id, start_at) VALUES (?, ?)",
-                timeId,
-                "10:00"
-            );
-        }
     }
 
     @Override

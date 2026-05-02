@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 class ReservationTimeDaoTest {
 
@@ -131,6 +132,50 @@ class ReservationTimeDaoTest {
             Assertions.assertThat(actual)
                     .usingRecursiveComparison()
                     .isEqualTo(savedTime);
+        }
+
+    }
+
+    @Nested
+    class Select {
+
+        @Test
+        void 존재하는_ID로_단건_조회하면_Optional로_반환한다() {
+            // given
+            ReservationTime saved = reservationTimeDao.insert(reservationTime);
+
+            // when
+            Optional<ReservationTime> result = reservationTimeDao.select(saved.getId());
+
+            // then
+            Assertions.assertThat(result).isPresent();
+        }
+
+        @Test
+        void 저장된_값과_존재하는_ID로_단건_조회한_값의_모든필드가_일치한다() {
+            // given
+            ReservationTime saved = reservationTimeDao.insert(reservationTime);
+
+            // when
+            ReservationTime actual = reservationTimeDao.select(saved.getId()).orElseThrow();
+
+            // then
+            Assertions.assertThat(actual)
+                    .usingRecursiveComparison()
+                    .isEqualTo(saved);
+        }
+
+        @Test
+        void 존재하지_않는_ID로_단건_조회하면_빈Optional을_반환한다() {
+            // given
+            Long wrongId = Long.MIN_VALUE;
+
+            // when
+            Optional<ReservationTime> actual = reservationTimeDao.select(wrongId);
+
+            // then
+            Assertions.assertThat(actual)
+                    .isEmpty();
         }
 
     }

@@ -2,5 +2,5 @@ package roomescape.repository;
 
 import roomescape.domain.ReservationTime;
 
-public interface ReservationTimeRepository extends MyRepository<ReservationTime> {
+public interface ReservationTimeRepository extends CommonRepository<ReservationTime> {
 }

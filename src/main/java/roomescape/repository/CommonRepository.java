@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MyRepository<T> {
+public interface CommonRepository<T> {
     List<T> findAll();
 
     T findById(long id);

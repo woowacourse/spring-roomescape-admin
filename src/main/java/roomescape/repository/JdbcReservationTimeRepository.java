@@ -16,6 +16,11 @@ import roomescape.domain.ReservationTime;
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
+    private final RowMapper<ReservationTime> reservationTimeRowMapper = (rs, rowNum) ->
+        new ReservationTime(
+            rs.getLong("id"),
+            rs.getTime("start_at").toLocalTime()
+        );
 
     public JdbcReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -36,12 +41,6 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
             id);
         return reservationTimes.stream().findFirst();
     }
-
-    private final RowMapper<ReservationTime> reservationTimeRowMapper = (rs, rowNum) ->
-        new ReservationTime(
-            rs.getLong("id"),
-            rs.getTime("start_at").toLocalTime()
-        );
 
     @Override
     public ReservationTime save(ReservationTime reservationTime) {

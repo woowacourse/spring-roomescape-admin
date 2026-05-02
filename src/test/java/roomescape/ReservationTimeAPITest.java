@@ -1,5 +1,6 @@
 package roomescape;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import io.restassured.RestAssured;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
@@ -39,6 +41,18 @@ public class ReservationTimeAPITest {
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(204);
+    }
+
+    @DisplayName("시작 시간 없이 예약 시간을 생성하는 경우, 400을 반환한다.")
+    @Test
+    void 잘못된_요청으로_시간_생성_시_400_반환_테스트() {
+        var response = RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(Map.of())
+                .when().post("/times")
+                .then().log().all().extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @DisplayName("예약과 시간이 올바르게 연결된다.")

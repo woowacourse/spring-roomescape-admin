@@ -45,6 +45,24 @@ public class ReservationAPITest {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
+    @DisplayName("예약자 이름 없이 예약을 생성하는 경우, 400을 반환한다.")
+    @Test
+    void 잘못된_요청으로_예약_생성_시_400_반환() {
+        var body = Map.of(
+                "date", LocalDate.now().toString(),
+                "timeId", 1L
+        );
+
+        var response = RestAssured
+                .given().log().all()
+                .body(body)
+                .contentType(ContentType.JSON)
+                .when().post("/reservations")
+                .then().log().all().extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
     @DisplayName("생성된 예약 정보를 조회한다.")
     @Test
     void 예약_조회_테스트() {

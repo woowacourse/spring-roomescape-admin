@@ -10,7 +10,7 @@ class ReservationTimeTest {
 
     @Test
     void 시간_형식_Domain_정상테스트() {
-        ReservationTime time = new ReservationTime(1L, "10:10");
+        ReservationTime time = new ReservationTime("10:10");
         assertThat(time.getStartAt()).isEqualTo("10:10");
     }
 
@@ -18,7 +18,7 @@ class ReservationTimeTest {
     @Test
     void 시간_형식_Domain_예외테스트() {
         assertThrows(IllegalArgumentException.class, () -> {
-            new ReservationTime(1L,"1kjfl");
+            new ReservationTime("1kjfl");
         });
     }
 

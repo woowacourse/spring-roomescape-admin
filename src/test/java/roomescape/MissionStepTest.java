@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +18,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import roomescape.controller.ReservationController;
-import roomescape.domain.Reservation;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -166,5 +166,52 @@ public class MissionStepTest {
         }
 
         assertThat(isJdbcTemplateInjected).isFalse();
+    }
+
+    @DisplayName("이름은 255자 이하여야한다.")
+    @Test
+    void 이름_길이_API_예외테스트() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "rVwYd5kXoP9nZgM2uQjS8iTbLcF7eAvH1tNlRkXpM6wYzO4uE3vI9sZgU8qTj1dFcXvNm7wYbPpA6sWkU9uO3IvR2tZnXgL6qT5cM3lH2kPjQ4vDzA6sI8fNf5Oq1tZkUvA8vPwWc6tYzX1pX2uPZqG0qJcM3nLs6uE1sK0bDfU7f6r7pGkM4fVzP4L0sYkWtq1pP3iY7vsdkhfklasjdlkasjdlkasjdlkjasljdlasjdlkasjdljaslkdjlkasjdlkasjdJ2nMcF5");
+        params.put("date", "2023-08-05");
+        params.put("timeId", 1L);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @DisplayName("시작 시간은 시간 형식에 맞아야한다.")
+    @Test
+    void 시작날짜_형식_API_예외테스트() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("startAt", "10:100");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @DisplayName("날짜는 날짜 형식에 맞아야한다.")
+    @Test
+    void 날짜_형식_API_예외테스트() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "rVwYd5kXoP9nZgM2uQjS8iTbLcF7eAvH1tNlRkXpM6wYzO4uE3vI9sZgU8qTj1dFcXvNm7wYbPpA6sWkU9uO3IvR2tZnXgL6qT5cM3lH2kPjQ4vDzA6sI8fNf5Oq1tZkUvA8vPwWc6tYzX1pX2uPZqG0qJcM3nLs6uE1sK0bDfU7f6r7pGkM4fVzP4L0sYkWtq1pP3iY7vsdkhfklasjdlkasjdlkasjdlkjasljdlasjdlkasjdljaslkdjlkasjdlkasjdJ2nMcF5");
+        params.put("date", "2023-108-05");
+        params.put("timeId", 1L);
+
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
     }
 }

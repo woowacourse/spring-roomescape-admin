@@ -12,7 +12,7 @@ class ReservationTest {
 
     @BeforeEach
     void setUp() {
-        ReservationTime time = new ReservationTime(1L, "10:10");
+        ReservationTime time = new ReservationTime("10:10");
         this.time=time;
     }
 
@@ -22,7 +22,6 @@ class ReservationTest {
 
         assertThat(reservation.getName()).isEqualTo("브라운");
         assertThat(reservation.getDate()).isEqualTo("2021-02-21");
-        assertThat(reservation.getTime().getId()).isEqualTo(1L);
         assertThat(reservation.getTime().getStartAt()).isEqualTo("10:10");
     }
 

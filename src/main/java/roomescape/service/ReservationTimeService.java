@@ -4,7 +4,9 @@ import org.springframework.stereotype.Service;
 import roomescape.repository.TimeQueryingRepository;
 import roomescape.repository.TimeUpdatingRepository;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationTimeRequest;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -29,12 +31,14 @@ public class ReservationTimeService {
         }
     }
 
-    public ReservationTime save(ReservationTime reservationTime) {
-        if (timeQueryingRepository.existsByStartAt(reservationTime.getStartAt())) {
+    public ReservationTime save(ReservationTimeRequest request) {
+        LocalTime startAt = LocalTime.parse(request.getStartAt());
+        if (timeQueryingRepository.existsByStartAt(startAt)) {
             throw new IllegalArgumentException("이미 존재하는 예약 시간입니다.");
         }
+        ReservationTime reservationTime = new ReservationTime(null, startAt);
         Long id = timeUpdatingRepository.insert(reservationTime);
-        return ReservationTime.toEntity(reservationTime, id);
+        return new ReservationTime(id, startAt);
     }
 
     public void delete(Long id) {

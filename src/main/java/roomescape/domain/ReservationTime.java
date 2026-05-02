@@ -10,10 +10,6 @@ public class ReservationTime {
     @JsonFormat(pattern = "HH:mm")
     private LocalTime startAt;
 
-    public ReservationTime() {
-
-    }
-
     private void validate(LocalTime startAt) {
         if (startAt == null) {
             throw new IllegalArgumentException("예약 시간은 필수입니다.");

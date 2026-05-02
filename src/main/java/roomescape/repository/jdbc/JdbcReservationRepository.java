@@ -4,6 +4,7 @@ import static roomescape.repository.jdbc.ReservationEntityMapper.RESERVATION_ROW
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -12,13 +13,10 @@ import roomescape.domain.Reservation;
 import roomescape.repository.ReservationRepository;
 
 @Repository
+@RequiredArgsConstructor
 public class JdbcReservationRepository implements ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
-
-    public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public Reservation save(Reservation reservation) {

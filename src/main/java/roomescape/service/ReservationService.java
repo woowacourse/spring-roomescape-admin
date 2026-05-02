@@ -2,6 +2,7 @@ package roomescape.service;
 
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -15,16 +16,11 @@ import roomescape.service.result.ReservationResult;
 @Service
 @Transactional(readOnly = true)
 @Validated
+@RequiredArgsConstructor
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
     private final ReservationTimeRepository reservationTimeRepository;
-
-    public ReservationService(ReservationRepository reservationRepository,
-                              ReservationTimeRepository reservationTimeRepository) {
-        this.reservationRepository = reservationRepository;
-        this.reservationTimeRepository = reservationTimeRepository;
-    }
 
     @Transactional
     public ReservationResult reserve(@NotNull(message = "예약 정보가 비어있습니다.") ReservationCommand request) {

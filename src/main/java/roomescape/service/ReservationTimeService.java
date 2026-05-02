@@ -2,6 +2,7 @@ package roomescape.service;
 
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -13,13 +14,10 @@ import roomescape.service.result.ReservationTimeResult;
 @Service
 @Transactional(readOnly = true)
 @Validated
+@RequiredArgsConstructor
 public class ReservationTimeService {
 
     private final ReservationTimeRepository reservationTimeRepository;
-
-    public ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
-    }
 
     @Transactional
     public ReservationTimeResult register(

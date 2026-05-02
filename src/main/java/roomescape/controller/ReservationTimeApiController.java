@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,13 +21,10 @@ import roomescape.service.result.ReservationTimeResult;
 @RestController
 @RequestMapping("/times")
 @Validated
+@RequiredArgsConstructor
 public class ReservationTimeApiController {
 
     private final ReservationTimeService reservationTimeService;
-
-    public ReservationTimeApiController(ReservationTimeService reservationTimeService) {
-        this.reservationTimeService = reservationTimeService;
-    }
 
     @PostMapping
     public ResponseEntity<ReservationTimeResult> register(@Valid @RequestBody ReservationTimeCommand request) {

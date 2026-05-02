@@ -5,6 +5,7 @@ import static roomescape.repository.jdbc.ReservationTimeEntityMapper.RESERVATION
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -14,13 +15,11 @@ import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
 @Repository
+@RequiredArgsConstructor
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public JdbcReservationTimeRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
     @Override
     public ReservationTime save(ReservationTime reservationTime) {
         KeyHolder keyHolder = new GeneratedKeyHolder();

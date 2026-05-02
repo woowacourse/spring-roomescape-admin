@@ -2,22 +2,18 @@ package roomescape.controller.console;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
 import roomescape.service.command.ReservationCommand;
 import roomescape.service.command.ReservationTimeCommand;
 
+@RequiredArgsConstructor
 public class ReservationConsoleController implements CommandLineRunner {
 
     private final ReservationService reservationService;
     private final ReservationTimeService reservationTimeService;
-
-    public ReservationConsoleController(ReservationService reservationService,
-                                        ReservationTimeService reservationTimeService) {
-        this.reservationService = reservationService;
-        this.reservationTimeService = reservationTimeService;
-    }
 
     @Override
     public void run(String... args) throws Exception {

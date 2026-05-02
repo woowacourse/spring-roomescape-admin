@@ -11,6 +11,7 @@ import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
 public class MemoryReservationTimeRepository implements ReservationTimeRepository {
+
     private final List<ReservationTime> reservationTimes = new CopyOnWriteArrayList<>();
     private final AtomicLong counter = new AtomicLong(1);
 

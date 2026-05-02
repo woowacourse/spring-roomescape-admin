@@ -52,7 +52,7 @@ public class ReservationTimeRepository {
     public ReservationTime save(final ReservationTime newReservationTime) {
         final long newTimeId = insertReservationTime(newReservationTime);
 
-        return findById(newTimeId);
+        return newReservationTime.saved(newTimeId);
     }
 
     public void delete(final Long timeId) {

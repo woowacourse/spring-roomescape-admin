@@ -21,7 +21,7 @@ import java.util.List;
 public class ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    
+
     public List<Reservation> findAll() {
         final String sql = """
                 SELECT
@@ -41,32 +41,10 @@ public class ReservationRepository {
                 .toList();
     }
 
-    public Reservation findById(final Long reservationId) {
-        final String sql = """
-                SELECT
-                r.id AS reservation_id,
-                r.name AS reservation_name,
-                r.date AS reservation_date,
-                t.id AS time_id,
-                t.start_at AS time_start_at
-                FROM reservation r
-                JOIN reservation_time t ON r.time_id = t.id
-                WHERE r.id = ?
-                """;
-
-        final ReservationWithTimeEntity reservationWithTimeEntity = jdbcTemplate.queryForObject(
-                sql,
-                this::mapToEntity,
-                reservationId
-        );
-
-        return toDomain(reservationWithTimeEntity);
-    }
-
     public Reservation save(final Reservation newReservation) {
         final long newReservationId = insertReservation(newReservation);
 
-        return findById(newReservationId);
+        return newReservation.saved(newReservationId);
     }
 
     public void deleteById(final Long reservationId) {

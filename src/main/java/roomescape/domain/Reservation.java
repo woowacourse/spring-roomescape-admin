@@ -29,6 +29,15 @@ public class Reservation {
         );
     }
 
+    public Reservation saved(final Long id) {
+        return new Reservation(
+                id,
+                name,
+                date,
+                time
+        );
+    }
+
     public static Reservation restore(final Long id, final String name, final LocalDate date, final ReservationTime time) {
         return new Reservation(
                 id,

@@ -23,6 +23,13 @@ public class ReservationTime {
         );
     }
 
+    public ReservationTime saved(final Long id) {
+        return new ReservationTime(
+                id,
+                startAt
+        );
+    }
+
     public static ReservationTime restore(final Long id, final LocalTime startAt) {
         return new ReservationTime(id, startAt);
     }

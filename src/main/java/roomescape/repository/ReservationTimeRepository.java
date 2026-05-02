@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ReservationTimeRepository {
-    ReservationTime addTime(ReservationTimeRequest request);
+    ReservationTime addTime(ReservationTime reservationTime);
 
     List<ReservationTime> findAllReservationTimes();
 

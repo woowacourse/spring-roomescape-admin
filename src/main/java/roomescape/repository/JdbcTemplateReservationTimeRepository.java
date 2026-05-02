@@ -20,18 +20,18 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
     }
 
     @Override
-    public ReservationTime addTime(ReservationTimeRequest request) {
+    public ReservationTime addTime(ReservationTime reservationTime) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(conn -> {
             PreparedStatement preparedStatement = conn.prepareStatement(
                     "INSERT INTO reservation_time(start_at) VALUES (?)", PreparedStatement.RETURN_GENERATED_KEYS);
-            preparedStatement.setTime(1, java.sql.Time.valueOf(request.startAt()));
+            preparedStatement.setTime(1, java.sql.Time.valueOf(reservationTime.startAt()));
             return preparedStatement;
         }, keyHolder);
 
         return new ReservationTime(
                 Objects.requireNonNull(keyHolder.getKey()).longValue(),
-                request.startAt());
+                reservationTime.startAt());
     }
 
     @Override

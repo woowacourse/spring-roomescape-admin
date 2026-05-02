@@ -25,7 +25,7 @@ public class ThirdMissionStepTest {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -36,7 +36,7 @@ public class ThirdMissionStepTest {
         RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
     }
 
     @Test
@@ -50,19 +50,50 @@ public class ThirdMissionStepTest {
                 .contentType(ContentType.JSON)
                 .body("{\"startAt\": \"10:00\"}")
                 .when().post("/times")
-                .then().statusCode(200);
+                .then().statusCode(201);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
+
+    @Test
+    void 이름이_비어있으면_예약_생성_실패() {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "");
+        params.put("date", "2026-04-29");
+        params.put("timeId", 1L);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    void 날짜가_없으면_예약_생성_실패() {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "홍길동");
+        params.put("timeId", 1L);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
     }
 }

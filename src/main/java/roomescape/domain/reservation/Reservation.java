@@ -33,10 +33,6 @@ public class Reservation {
         if (date == null) {
             throw new IllegalArgumentException("[ERROR] 예약 날짜는 필수입니다.");
         }
-
-        if (date.isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("[ERROR] 예약 날짜는 오늘 이후여야 합니다.");
-        }
     }
 
     private void validateTime(ReservationTime time) {

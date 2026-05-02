@@ -23,7 +23,7 @@ public class ReservationDAO {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
-        long id = jdbcTemplate.update(connection -> {
+        jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, name);
             ps.setString(2, date);
@@ -37,7 +37,7 @@ public class ReservationDAO {
                 timeId
         );
 
-        return Reservation.of(id, name, date, time);
+        return Reservation.of(keyHolder.getKey().longValue(), name, date, time);
     }
 
     public List<Reservation> findAll() {

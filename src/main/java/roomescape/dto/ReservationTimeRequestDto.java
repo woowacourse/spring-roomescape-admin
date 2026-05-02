@@ -6,9 +6,8 @@ import roomescape.domain.ReservationTime;
 public record ReservationTimeRequestDto(
         LocalTime startAt
 ) {
-    public ReservationTime toEntity(Long id) {
+    public ReservationTime toEntity() {
         return ReservationTime.builder()
-                .id(id)
                 .startAt(this.startAt)
                 .build();
     }

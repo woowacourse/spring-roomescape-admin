@@ -9,8 +9,15 @@ public final class ReservationTime {
     private final LocalTime startAt;
 
     public ReservationTime(Long id, LocalTime startAt) {
+        validateStartAt(startAt);
         this.id = id;
         this.startAt = startAt;
+    }
+
+    private void validateStartAt(LocalTime startAt) {
+        if (startAt == null) {
+            throw new IllegalArgumentException("시작 시간은 필수 입력값입니다.");
+        }
     }
 
     public ReservationTime(LocalTime startAt) {

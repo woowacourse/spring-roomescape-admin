@@ -61,13 +61,13 @@ public class ReservationTimeRepository {
         return newReservationTime.saved(newTimeId);
     }
 
-    public void delete(final Long timeId) {
+    public boolean delete(final Long timeId) {
         final String sql = """
                 DELETE FROM reservation_time
                 WHERE id = ?
                 """;
 
-        jdbcTemplate.update(sql, timeId);
+        return jdbcTemplate.update(sql, timeId) > 0;
     }
 
 

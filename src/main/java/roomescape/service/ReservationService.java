@@ -44,6 +44,10 @@ public class ReservationService {
     }
 
     public void delete(final Long reservationId) {
-        reservationRepository.deleteById(reservationId);
+        final boolean deleted = reservationRepository.deleteById(reservationId);
+
+        if (!deleted) {
+            throw new IllegalArgumentException("존재하지 않는 예약입니다.");
+        }
     }
 }

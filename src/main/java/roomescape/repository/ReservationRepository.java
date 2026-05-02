@@ -47,13 +47,13 @@ public class ReservationRepository {
         return newReservation.saved(newReservationId);
     }
 
-    public void deleteById(final Long reservationId) {
+    public boolean deleteById(final Long reservationId) {
         final String sql = """
                 DELETE FROM reservation
                 WHERE id = ?
                 """;
 
-        jdbcTemplate.update(sql, reservationId);
+        return jdbcTemplate.update(sql, reservationId) > 0;
     }
 
 

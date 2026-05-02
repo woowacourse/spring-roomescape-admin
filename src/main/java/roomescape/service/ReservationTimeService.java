@@ -36,6 +36,10 @@ public class ReservationTimeService {
     }
 
     public void delete(final Long timeId) {
-        reservationTimeRepository.delete(timeId);
+        final boolean deleted = reservationTimeRepository.delete(timeId);
+
+        if (!deleted) {
+            throw new IllegalArgumentException("존재하지 않는 예약 시간입니다.");
+        }
     }
 }

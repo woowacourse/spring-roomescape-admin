@@ -26,12 +26,12 @@ public class ReservationTimeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long insert(ReservationTimeEntity reservationTimeEntity) {
+    public Long insert(LocalTime startAt) {
         String sql = "insert into reservation_time (start_at) values (?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement pstm = connection.prepareStatement(sql, new String[]{"id"});
-            pstm.setString(1, String.valueOf(reservationTimeEntity.getStartAt()));
+            pstm.setString(1, String.valueOf(startAt));
             return pstm;
         }, keyHolder);
 

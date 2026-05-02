@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.dto.CreateResrvationTimeRequest;
 import roomescape.time.dto.ReservationTimeResponse;
-import roomescape.time.mapper.ReservationTimeMapper;
 import roomescape.time.repository.ReservationTimeRepository;
+import roomescape.time.repository.dto.CreateReservationTimeParams;
 
 @Service
 public class ReservationTimeService {
@@ -17,9 +17,10 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public ReservationTimeResponse addReservationTime(CreateResrvationTimeRequest createResrvationTimeRequest) {
-        ReservationTime reservationTime = ReservationTimeMapper.toReservationTime(createResrvationTimeRequest);
-        ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
+    public ReservationTimeResponse addReservationTime(CreateResrvationTimeRequest request) {
+        CreateReservationTimeParams params = new CreateReservationTimeParams(request.getStartAt());
+        ReservationTime savedReservationTime = reservationTimeRepository.save(params);
+
         return ReservationTimeResponse.from(savedReservationTime);
     }
 

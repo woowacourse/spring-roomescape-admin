@@ -4,12 +4,8 @@ import java.time.LocalTime;
 
 public class ReservationTimeEntity {
 
+    private final Long id;
     private final LocalTime startAt;
-    private Long id;
-
-    public ReservationTimeEntity(LocalTime startAt) {
-        this.startAt = startAt;
-    }
 
     public ReservationTimeEntity(Long id, LocalTime startAt) {
         this.id = id;

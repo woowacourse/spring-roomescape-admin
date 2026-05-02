@@ -31,14 +31,14 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
-    public Long insert(ReservationEntity reservationEntity) {
+    public Long insert(String name, LocalDate date, Long timeId) {
         String sql = "insert into reservation (name, date, time_id) values (?,?,?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement pstm = connection.prepareStatement(sql, new String[]{"id"});
-            pstm.setString(1, reservationEntity.getName());
-            pstm.setString(2, String.valueOf(reservationEntity.getDate()));
-            pstm.setString(3, String.valueOf(reservationEntity.getTimeId()));
+            pstm.setString(1, name);
+            pstm.setString(2, String.valueOf(date));
+            pstm.setString(3, String.valueOf(timeId));
             return pstm;
         }, keyHolder);
 

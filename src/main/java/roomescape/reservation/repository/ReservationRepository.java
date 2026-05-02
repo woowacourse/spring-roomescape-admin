@@ -5,7 +5,10 @@ import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.mapper.ReservationMapper;
 import roomescape.reservation.repository.dao.ReservationDao;
+import roomescape.reservation.repository.dto.CreateReservationParams;
+import roomescape.reservation.repository.entity.ReservationEntity;
 import roomescape.time.repository.dao.ReservationTimeDao;
+import roomescape.time.repository.entity.ReservationTimeEntity;
 
 @Repository
 public class ReservationRepository {
@@ -26,9 +29,11 @@ public class ReservationRepository {
                 ).toList();
     }
 
-    public Reservation save(Reservation reservation) {
-        Long id = reservationDao.insert(ReservationMapper.toReservationEntity(reservation));
-        return reservation.withId(id);
+    public Reservation save(CreateReservationParams params) {
+        Long id = reservationDao.insert(params.name(), params.date(), params.timeId());
+        ReservationEntity reservationEntity = new ReservationEntity(id, params.name(), params.date(), params.timeId());
+        ReservationTimeEntity reservationTimeEntity = reservationTimeDao.findById(params.timeId());
+        return ReservationMapper.toReservation(reservationEntity, reservationTimeEntity);
     }
 
     public void delete(Long id) {

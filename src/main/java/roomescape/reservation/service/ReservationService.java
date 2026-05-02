@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.CreateReservationRequest;
 import roomescape.reservation.dto.ReservationResponse;
-import roomescape.reservation.mapper.ReservationMapper;
 import roomescape.reservation.repository.ReservationRepository;
+import roomescape.reservation.repository.dto.CreateReservationParams;
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.repository.ReservationTimeRepository;
 
@@ -28,11 +28,12 @@ public class ReservationService {
                 .toList();
     }
 
-    public ReservationResponse reserve(CreateReservationRequest createReservationRequest) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(createReservationRequest.getTimeId());
-        Reservation reservation = ReservationMapper.toReservation(createReservationRequest, reservationTime);
-        Reservation saved = reservationRepository.save(reservation);
-        return ReservationResponse.from(saved);
+    public ReservationResponse reserve(CreateReservationRequest request) {
+        ReservationTime time = reservationTimeRepository.findById(request.getTimeId());
+        CreateReservationParams params = new CreateReservationParams(request.getName(), request.getDate(), time.getId());
+        Reservation reservation = reservationRepository.save(params);
+
+        return ReservationResponse.from(reservation);
     }
 
     public void cancelReservation(Long id) {

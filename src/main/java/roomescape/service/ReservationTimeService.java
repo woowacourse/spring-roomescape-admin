@@ -26,10 +26,7 @@ public class ReservationTimeService {
 
     public void delete(Long id) {
         validateId(id);
-        int deletedCount = reservationTimeDao.delete(id);
-        if (deletedCount != 1) {
-            throw new IllegalArgumentException("[ERROR] 삭제 요청 실패");
-        }
+        reservationTimeDao.delete(id);
     }
 
     private void validateId(Long id) {

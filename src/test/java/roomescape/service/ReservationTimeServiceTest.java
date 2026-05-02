@@ -79,13 +79,6 @@ class ReservationTimeServiceTest {
         assertThat(reservationTimeService.findAll()).isEmpty();
     }
 
-    @Test
-    void 존재하지_않는_시간_삭제시_예외_발생() {
-        assertThatThrownBy(() -> reservationTimeService.delete(999L))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 삭제 요청 실패");
-    }
-
     @ParameterizedTest
     @NullSource
     @ValueSource(longs = {0, -1})

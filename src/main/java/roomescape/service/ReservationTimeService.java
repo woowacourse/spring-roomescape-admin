@@ -4,16 +4,21 @@ import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.dto.ReservationTimeResponseDto;
 import roomescape.entity.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
 @Service
-@RequiredArgsConstructor
 public class ReservationTimeService {
 
     private final ReservationTimeRepository reservationTimeRepository;
 
+    public ReservationTimeService(final ReservationTimeRepository reservationTimeRepository) {
+        this.reservationTimeRepository = reservationTimeRepository;
+    }
+
+    @Transactional
     public List<ReservationTimeResponseDto> getAllReservationTimes() {
         return reservationTimeRepository.findAll()
             .stream()
@@ -21,6 +26,7 @@ public class ReservationTimeService {
             .toList();
     }
 
+    @Transactional
     public ReservationTimeResponseDto createReservationTime(final LocalTime startAt) {
         final ReservationTime reservationTime = ReservationTime.builder()
             .startAt(startAt)
@@ -29,6 +35,7 @@ public class ReservationTimeService {
         return ReservationTimeResponseDto.from(reservationTimeRepository.save(reservationTime));
     }
 
+    @Transactional
     public void removeReservationTime(final long id) {
         reservationTimeRepository.deleteById(id);
     }

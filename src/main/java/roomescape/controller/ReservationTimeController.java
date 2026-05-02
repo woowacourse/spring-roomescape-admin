@@ -12,10 +12,13 @@ import roomescape.service.ReservationTimeService;
 
 @RestController
 @RequestMapping("/times")
-@RequiredArgsConstructor
 public class ReservationTimeController {
 
     private final ReservationTimeService reservationTimeService;
+
+    public ReservationTimeController(final ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
+    }
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponseDto>> getReservationTimes() {

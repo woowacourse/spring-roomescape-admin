@@ -21,8 +21,8 @@ public class Reservation {
         return name.getValue();
     }
 
-    public String getDate() {
-        return date.toString();
+    public ReservationDate getDate() {
+        return date;
     }
 
     public ReservationTime getTime() {

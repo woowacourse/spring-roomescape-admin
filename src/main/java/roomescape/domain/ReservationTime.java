@@ -15,7 +15,7 @@ public class ReservationTime {
         return id;
     }
 
-    public String getStartAt() {
-        return startAt.toString();
+    public LocalTime getStartAt() {
+        return startAt;
     }
 }

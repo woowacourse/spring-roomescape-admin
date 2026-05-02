@@ -1,7 +1,6 @@
 package roomescape.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +38,6 @@ public class ReservationApiController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> cancelReservation(
             @PathVariable
-            @NotNull(message = "취소할 예약 식별자는 필수 값입니다.")
             @Positive(message = "식별자는 양수여야 합니다.")
             Long id
     ) {

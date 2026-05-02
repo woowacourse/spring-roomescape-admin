@@ -15,27 +15,30 @@ import roomescape.repository.ReservationTimeRepository;
 @Repository
 public class H2ReservationTimeRepository implements ReservationTimeRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final RowMapper<ReservationTime> rowMapper = (rs, rowNum) ->
-            new ReservationTime(
-                    rs.getLong("id"),
-                    LocalTime.parse(rs.getString("start_at")));
 
     public H2ReservationTimeRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public static RowMapper<ReservationTime> rowMapper() {
+        return (rs, rowNum) ->
+                new ReservationTime(
+                        rs.getLong("id"),
+                        LocalTime.parse(rs.getString("start_at")));
     }
 
     @Override
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";
 
-        return jdbcTemplate.query(sql, rowMapper);
+        return jdbcTemplate.query(sql, rowMapper());
     }
 
     @Override
     public ReservationTime findById(long id) {
         String sql = "SELECT * FROM reservation_time WHERE id = :id";
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
-        return jdbcTemplate.queryForObject(sql, params, rowMapper);
+        return jdbcTemplate.queryForObject(sql, params, rowMapper());
     }
 
     @Override
@@ -65,4 +68,5 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, params, Boolean.class));
     }
+
 }

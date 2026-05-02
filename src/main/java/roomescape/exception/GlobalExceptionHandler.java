@@ -11,12 +11,18 @@ public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    private final ErrorStatusMapper errorStatusMapper;
+
+    public GlobalExceptionHandler(ErrorStatusMapper errorStatusMapper) {
+        this.errorStatusMapper = errorStatusMapper;
+    }
+
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<ErrorResponse> handleDomainException(DomainException exception) {
         ErrorCode errorCode = exception.getErrorCode();
 
         return ResponseEntity
-                .status(errorCode.httpStatus())
+                .status(errorStatusMapper.map(errorCode))
                 .body(new ErrorResponse(errorCode.message()));
     }
 

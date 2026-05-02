@@ -2,10 +2,10 @@ package roomescape.mission;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import roomescape.fixture.ReservationFixture;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,19 +15,6 @@ import static org.hamcrest.Matchers.is;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class MissionStep1Test {
-
-    @BeforeEach
-    void 예약_시간_생성() {
-        Map<String, String> reservationTimeParams = new HashMap<>();
-        reservationTimeParams.put("startAt", "10:00");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservationTimeParams)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(201);
-    }
 
     @Test
     void 예약_조회() {
@@ -40,10 +27,12 @@ class MissionStep1Test {
 
     @Test
     void 예약_추가_및_삭제() {
+        Long timeId = ReservationFixture.generateReservationTime("10:00:00");
+
         Map<String, Object> reservationParams = new HashMap<>();
         reservationParams.put("name", "브라운");
         reservationParams.put("date", "2023-08-05");
-        reservationParams.put("timeId", 1);
+        reservationParams.put("timeId", timeId);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

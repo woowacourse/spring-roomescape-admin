@@ -2,13 +2,13 @@ package roomescape.mission;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationDetailDto;
+import roomescape.fixture.ReservationFixture;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -25,19 +25,6 @@ class MissionStep2Test {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @BeforeEach
-    void 예약_시간_생성() {
-        Map<String, String> reservationTimeParams = new HashMap<>();
-        reservationTimeParams.put("startAt", "10:00");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservationTimeParams)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(201);
-    }
-
     @Test
     void 데이터베이스_연동() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
@@ -51,7 +38,8 @@ class MissionStep2Test {
 
     @Test
     void DB_조회_API_전환() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", 1);
+        Long timeId = ReservationFixture.generateReservationTime("10:00:00");
+        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", timeId);
 
         List<ReservationDetailDto> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -66,10 +54,12 @@ class MissionStep2Test {
 
     @Test
     void DB_추가_삭제_API_전환() {
+        Long timeId = ReservationFixture.generateReservationTime("10:00:00");
+
         Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
         params.put("date", "2023-08-05");
-        params.put("timeId", 1);
+        params.put("timeId", timeId);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

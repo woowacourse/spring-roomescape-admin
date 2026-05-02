@@ -86,6 +86,41 @@ public class ReservationTimeServiceTest {
 
     }
 
+    @Nested
+    class Deregister {
+
+        @Test
+        void 존재하는_ID로_삭제하면_저장소에서_제거된다() {
+            // given
+            List<ReservationTime> emptyReservationTimes = List.of();
+            ReservationTimeService service = new ReservationTimeService(
+                    new TestReservationTimeDao(emptyReservationTimes)
+            );
+            ReservationTime savedReservationTime = service.register(time);
+
+            // when
+            service.deregister(savedReservationTime.getId());
+
+            // then
+            Assertions.assertThat(service.readAll())
+                    .isEmpty();
+        }
+
+        @Test
+        void 존재하지_않는_ID로_삭제하면_예외가_발생한다() {
+            // given
+            ReservationTimeService service = new ReservationTimeService(
+                    new TestReservationTimeDao(new ArrayList<>())
+            );
+
+            // when & then
+            Assertions.assertThatThrownBy(() -> service.deregister(Long.MIN_VALUE))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("[ERROR] 존재하지 않는 id 이므로, ReservationTime을 삭제할 수 없습니다.");
+        }
+
+    }
+
     private ReservationTimeService generateReservationService(List<ReservationTime> times) {
         TestReservationTimeDao testReservationTimeDao = new TestReservationTimeDao(times);
         return new ReservationTimeService(testReservationTimeDao);

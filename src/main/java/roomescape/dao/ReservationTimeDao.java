@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public class ReservationTimeDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<ReservationTime> actorRowMapper = (resultSet, rowNum) -> {
         ReservationTime reservationTime = new ReservationTime(

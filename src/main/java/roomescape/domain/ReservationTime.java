@@ -7,8 +7,8 @@ import java.time.format.DateTimeParseException;
 public class ReservationTime {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
-    private Long id;
-    private String startAt;
+    private final Long id;
+    private final String startAt;
 
     public ReservationTime(Long id, String startAt) {
         validateTime(startAt);

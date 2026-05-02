@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private ReservationTimeService service;
+    private final ReservationTimeService service;
 
     public ReservationTimeController(ReservationTimeService service) {
         this.service = service;
@@ -28,7 +28,7 @@ public class ReservationTimeController {
 
     @PostMapping
     public ReservationTimeResponse createReservationTime(@RequestBody ReservationTimeRequest request) {
-        ReservationTime reservationTime = service.create(request.getStartAt());
+        ReservationTime reservationTime = service.create(request.startAt());
         return ReservationTimeResponse.from(reservationTime);
     }
 

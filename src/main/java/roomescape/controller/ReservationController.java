@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private ReservationService service;
+    private final ReservationService service;
 
     public ReservationController(ReservationService service) {
         this.service = service;
@@ -29,9 +29,9 @@ public class ReservationController {
     @PostMapping
     public ReservationResponse createReservation(@RequestBody ReservationRequest request) {
         Reservation reservation = service.create(
-                request.getName(),
-                request.getDate(),
-                request.getTimeId());
+                request.name(),
+                request.date(),
+                request.timeId());
         return ReservationResponse.from(reservation);
     }
 

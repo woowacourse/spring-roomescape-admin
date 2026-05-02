@@ -7,10 +7,10 @@ import java.time.format.DateTimeParseException;
 public class Reservation {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    private Long id;
-    private String name;
-    private String date;
-    private ReservationTime time;
+    private final Long id;
+    private final String name;
+    private final String date;
+    private final ReservationTime time;
 
     public Reservation(Long id, String name, String date, ReservationTime time) {
         validateName(name);

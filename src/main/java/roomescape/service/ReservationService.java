@@ -12,8 +12,8 @@ import java.util.List;
 @Service
 public class ReservationService {
 
-    private ReservationDao reservationDao;
-    private ReservationTimeDao reservationTimeDao;
+    private final ReservationDao reservationDao;
+    private final ReservationTimeDao reservationTimeDao;
 
     public ReservationService(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
         this.reservationDao = reservationDao;

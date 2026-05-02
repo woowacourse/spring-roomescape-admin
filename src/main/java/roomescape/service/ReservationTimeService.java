@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public class ReservationTimeService {
 
-    private ReservationTimeDao reservationTimeDao;
+    private final ReservationTimeDao reservationTimeDao;
 
     public ReservationTimeService(ReservationTimeDao reservationTimeDao) {
         this.reservationTimeDao = reservationTimeDao;

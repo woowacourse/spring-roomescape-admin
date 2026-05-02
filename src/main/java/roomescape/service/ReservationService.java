@@ -29,8 +29,9 @@ public class ReservationService {
 
     public Reservation save(ReservationRequest request) {
         ReservationTime time = reservationTimeService.findById(request.getTimeId());
-        Long id = reservationUpdatingRepository.insert(request);
-        return Reservation.create(id, request.getName(), LocalDate.parse(request.getDate()), time);
+        Reservation reservation = Reservation.create(null, request.getName(), LocalDate.parse(request.getDate()), time);
+        Long id = reservationUpdatingRepository.insert(reservation);
+        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     public void delete(Long id) {

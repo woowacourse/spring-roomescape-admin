@@ -7,8 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
+import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationUpdatingRepository;
-import roomescape.dto.ReservationRequest;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -51,9 +55,10 @@ public class UpdatingDaoTest {
     @DisplayName("새로운 예약을 추가하면 생성된 ID를 반환한다")
     void insert() {
         Long timeId = jdbcTemplate.queryForObject("SELECT id FROM reservation_time LIMIT 1", Long.class);
-        ReservationRequest request = new ReservationRequest("가현", "2026-05-01", timeId);
+        ReservationTime time = new ReservationTime(timeId, LocalTime.parse("15:30:00"));
+        Reservation reservation = new Reservation(null, "가현", LocalDate.parse("2026-05-01"), time);
 
-        Long generatedId = reservationUpdatingRepository.insert(request);
+        Long generatedId = reservationUpdatingRepository.insert(reservation);
 
         assertThat(generatedId).isNotNull();
         Integer count = jdbcTemplate.queryForObject("SELECT count(*) FROM reservation WHERE id = ?", Integer.class, generatedId);

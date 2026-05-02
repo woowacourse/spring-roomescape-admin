@@ -1,13 +1,15 @@
-package roomescape.time.dto;
+package roomescape.time.controller.dto;
 
 import roomescape.time.domain.ReservationTime;
+
+import java.time.LocalTime;
 
 public class ReservationTimeResponseDto {
 
     private final Long id;
-    private final String startAt;
+    private final LocalTime startAt;
 
-    public ReservationTimeResponseDto(Long id, String startAt) {
+    public ReservationTimeResponseDto(Long id, LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
     }
@@ -20,7 +22,7 @@ public class ReservationTimeResponseDto {
         return id;
     }
 
-    public String getStartAt() {
+    public LocalTime getStartAt() {
         return startAt;
     }
 }

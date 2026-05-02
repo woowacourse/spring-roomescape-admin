@@ -6,8 +6,6 @@ public class Time {
     private Long id;
     private LocalTime startAt;
 
-    public Time() {
-    }
 
     public Time(Long id, LocalTime startAt) {
         this.id = id;

@@ -16,8 +16,9 @@ import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
-public class ReservationDaoTest {
+class ReservationDaoTest {
 
     private static final int hour = 10;
     private static final int minute = 0;
@@ -88,12 +89,71 @@ public class ReservationDaoTest {
         @Test
         void 두_번_삽입해도_서로_다른_ID가_부여된다() {
             // when
-            Reservation first  = reservationDao.insert(new Reservation(name, date, generateReservationTime()));
-            Reservation second = reservationDao.insert(new Reservation(name, date, generateReservationTime()));
+            Reservation reservation = new Reservation(name, date, generateReservationTime());
+            Reservation first  = reservationDao.insert(reservation);
+            Reservation second = reservationDao.insert(reservation);
 
             // then
             Assertions.assertThat(first.getId())
                     .isNotEqualTo(second.getId());
+        }
+
+    }
+
+    @Nested
+    class SelectAll {
+
+        @Test
+        void 저장된_예약이_없으면_빈리스트를_반환한다() {
+            List<Reservation> actual = reservationDao.selectAll();
+
+            Assertions.assertThat(actual)
+                    .isEmpty();
+        }
+
+        @Test
+        void 저장된_예약이_1개이면_조회시_크기가_1인_리스트를_반환한다() {
+            // given
+            Reservation reservation = new Reservation(name, date, generateReservationTime());
+            reservationDao.insert(reservation);
+
+            // when
+            List<Reservation> actual = reservationDao.selectAll();
+
+            // then
+            Assertions.assertThat(actual)
+                    .hasSize(1);
+        }
+
+        @Test
+        void 저장된_예약이_여러개이면_조회시_저장된_개수만큼_반환한다() {
+            // given
+            Reservation reservation = new Reservation(name, date, generateReservationTime());
+            reservationDao.insert(reservation);
+            reservationDao.insert(reservation);
+            reservationDao.insert(reservation);
+
+            // when
+            List<Reservation> actual = reservationDao.selectAll();
+
+            // then
+            Assertions.assertThat(actual)
+                    .hasSize(3);
+        }
+
+        @Test
+        void 삽입한_예약을_조회하면_모든_필드가_일치한다() {
+            // given
+            Reservation expected = reservationDao.insert(new Reservation(name, date, generateReservationTime()));
+
+            // when
+            Reservation actual = reservationDao.selectAll()
+                    .getFirst();
+
+            // then
+            Assertions.assertThat(actual)
+                    .usingRecursiveComparison()
+                    .isEqualTo(expected);
         }
 
     }

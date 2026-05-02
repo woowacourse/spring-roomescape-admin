@@ -33,17 +33,23 @@ public class ReservationQueryingDao {
     };
 
     public Reservation findReservationById(long id) {
-        String sql = "select r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at " +
-                "from reservation as r " +
-                "inner join reservation_time as t on r.time_id = t.id " +
-                "where r.id = ?";
+        String sql = """
+                select r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at
+                from reservation as r
+                inner join reservation_time as t on r.time_id = t.id
+                where r.id = ?
+                """;
+        
+        
         return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
     public List<Reservation> findAllReservations() {
-        String sql = "select r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at " +
-                "from reservation as r " +
-                "inner join reservation_time as t on r.time_id = t.id";
+        String sql = """
+                select r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at
+                from reservation as r
+                inner join reservation_time as t on r.time_id = t.id
+                """;
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 }

@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import roomescape.dto.ReservationRequestDto;
 
-@Getter
 @Builder
 public class Reservation {
 
@@ -23,4 +22,19 @@ public class Reservation {
         this.timeId = timeId;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public long getTimeId() {
+        return timeId;
+    }
 }

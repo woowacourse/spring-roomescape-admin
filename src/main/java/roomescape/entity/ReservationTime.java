@@ -1,11 +1,9 @@
 package roomescape.entity;
 
 import lombok.Builder;
-import lombok.Getter;
 
 import java.time.LocalTime;
 
-@Getter
 @Builder
 public class ReservationTime {
 
@@ -17,4 +15,11 @@ public class ReservationTime {
         this.startAt = startAt;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public LocalTime getStartAt() {
+        return startAt;
+    }
 }

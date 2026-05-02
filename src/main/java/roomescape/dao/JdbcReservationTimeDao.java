@@ -51,9 +51,10 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
         return reservationTime.toEntity(id);
     }
 
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         String sql = "delete from reservation_time where id = ?";
-        jdbcTemplate.update(sql, id);
+        int deletedRow = jdbcTemplate.update(sql, id);
+        return deletedRow > 0;
     }
 
 }

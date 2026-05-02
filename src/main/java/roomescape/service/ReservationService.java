@@ -30,7 +30,10 @@ public class ReservationService {
     }
 
     public void cancel(Long id) {
-        reservationDao.delete(id);
+        boolean isDeleted = reservationDao.delete(id);
+        if (!isDeleted) {
+            throw new IllegalArgumentException("[ERROR] 존재하지 않는 id 이므로, Reservation을 삭제할 수 없습니다.");
+        }
     }
 
     private ReservationTime readReservationTime(Long id) {

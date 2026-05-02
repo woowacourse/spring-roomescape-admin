@@ -10,6 +10,6 @@ public interface ReservationDao {
 
     Reservation insert(Reservation reservation);
 
-    void delete(Long id);
+    boolean delete(Long id);
 
 }

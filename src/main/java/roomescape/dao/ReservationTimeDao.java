@@ -13,6 +13,6 @@ public interface ReservationTimeDao {
 
     ReservationTime insert(ReservationTime reservationTime);
 
-    void delete(Long id);
+    boolean delete(Long id);
 
 }

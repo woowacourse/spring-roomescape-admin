@@ -25,7 +25,10 @@ public class ReservationTimeService {
     }
 
     public void deregister(Long id) {
-        reservationTimeDao.delete(id);
+        boolean isDeleted = reservationTimeDao.delete(id);
+        if (!isDeleted) {
+            throw new IllegalArgumentException("[ERROR] 존재하지 않는 id 이므로, ReservationTime을 삭제할 수 없습니다.");
+        }
     }
 
 }

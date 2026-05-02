@@ -28,8 +28,7 @@ public class ReservationTimeController {
 
         TimeResponse timeResponse = TimeResponse.from(savedReservationTime);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(timeResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(timeResponse);
     }
 
     @GetMapping("/times")

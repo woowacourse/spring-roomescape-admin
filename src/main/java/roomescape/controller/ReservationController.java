@@ -29,9 +29,7 @@ public class ReservationController {
                 .map(ReservationResponse::from)
                 .toList();
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(reservationResponses);
+        return ResponseEntity.ok(reservationResponses);
     }
 
     @PostMapping("/reservations")
@@ -44,17 +42,13 @@ public class ReservationController {
 
         ReservationResponse reservationResponse = ReservationResponse.from(savedReservation);
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(reservationResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(reservationResponse);
     }
 
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         reservationService.deleteById(id);
 
-        return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .build();
+        return ResponseEntity.noContent().build();
     }
 }

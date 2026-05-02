@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,8 +29,14 @@ public class ReservationTimeController {
 
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> addReservationTime(@RequestBody ReservationTimeRequest request) {
-        ReservationTimeResponse reservationTimeResponse = reservationTimeRepository.addTime(request);
-        return ResponseEntity.created(URI.create(DEFAULT_PATH + request.startAt())).body(reservationTimeResponse);
+        ReservationTime reservationTime = reservationTimeRepository.addTime(request);
+        ReservationTimeResponse reservationTimeResponse = ReservationTimeResponse.from(reservationTime);
+        return ResponseEntity.created(getLocation(request)).body(reservationTimeResponse);
+    }
+
+    @NonNull
+    private static URI getLocation(ReservationTimeRequest request) {
+        return URI.create(DEFAULT_PATH + request.startAt());
     }
 
     @GetMapping

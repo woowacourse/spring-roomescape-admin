@@ -6,7 +6,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 import roomescape.request.ReservationTimeRequest;
-import roomescape.response.ReservationTimeResponse;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -21,7 +20,7 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
     }
 
     @Override
-    public ReservationTimeResponse addTime(ReservationTimeRequest request) {
+    public ReservationTime addTime(ReservationTimeRequest request) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(conn -> {
             PreparedStatement preparedStatement = conn.prepareStatement(
@@ -30,7 +29,7 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
             return preparedStatement;
         }, keyHolder);
 
-        return new ReservationTimeResponse(
+        return new ReservationTime(
                 Objects.requireNonNull(keyHolder.getKey()).longValue(),
                 request.startAt());
     }

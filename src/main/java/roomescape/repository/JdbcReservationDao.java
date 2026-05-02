@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -68,7 +69,7 @@ public class JdbcReservationDao implements ReservationDao {
         return (rs, rowNum) -> new Reservation(
                 rs.getLong("r_id"),
                 rs.getString("name"),
-                rs.getString("date"),
+                rs.getObject("date", LocalDate.class),
                 rs.getLong("t_id")
         );
     }
@@ -77,7 +78,7 @@ public class JdbcReservationDao implements ReservationDao {
         return (rs, rowNum) -> new ReservationJoinedDto(
                 rs.getLong("r_id"),
                 rs.getString("name"),
-                rs.getString("date"),
+                rs.getObject("date", LocalDate.class),
                 rs.getLong("t_id"),
                 rs.getString("start_at")
         );

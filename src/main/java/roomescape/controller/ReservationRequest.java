@@ -1,4 +1,6 @@
 package roomescape.controller;
 
-public record ReservationRequest(String name, String date, long timeId) {
+import java.time.LocalDate;
+
+public record ReservationRequest(String name, LocalDate date, Long timeId) {
 }

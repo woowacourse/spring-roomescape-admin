@@ -1,14 +1,21 @@
 package roomescape.repository.dto;
 
+import roomescape.domain.ReservationTime;
+import roomescape.service.dto.ReservationCreateDto;
+
 public class ReservationSaveDto {
     private final String name;
     private final String date;
-    private final Long timeId;
+    private final ReservationTime reservationTime;
 
-    public ReservationSaveDto(String name, String date, Long timeId) {
+    public ReservationSaveDto(String name, String date, ReservationTime reservationTime) {
         this.name = name;
         this.date = date;
-        this.timeId = timeId;
+        this.reservationTime = reservationTime;
+    }
+
+    public static ReservationSaveDto toDto(ReservationCreateDto dto, ReservationTime reservationTime) {
+        return new ReservationSaveDto(dto.getName(), dto.getDate(), reservationTime);
     }
 
     public String getName() {
@@ -19,7 +26,7 @@ public class ReservationSaveDto {
         return date;
     }
 
-    public Long getTimeId() {
-        return timeId;
+    public ReservationTime getReservationTime() {
+        return reservationTime;
     }
 }

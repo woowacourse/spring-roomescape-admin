@@ -27,20 +27,20 @@ public class ReservationTimeController {
 
     @PostMapping
     public ResponseEntity<ReservationTimeResponseDto> create(@RequestBody ReservationTimeCreateRequestDto dto) {
-        ReservationTimeCreateDto serviceDto = new ReservationTimeCreateDto(dto.getStartAt());
+        ReservationTimeCreateDto serviceDto = ReservationTimeCreateDto.toDto(dto);
+
         ReservationTimeDto reservationTime = reservationTimeService.save(serviceDto);
 
-        ReservationTimeResponseDto response = new ReservationTimeResponseDto(reservationTime.getId(),
-                reservationTime.getStartAt());
+        ReservationTimeResponseDto response = ReservationTimeResponseDto.toDto(reservationTime);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping
     public ResponseEntity<List<ReservationTimeResponseDto>> findAll() {
         List<ReservationTimeDto> found = reservationTimeService.findAll();
+
         List<ReservationTimeResponseDto> response = found.stream()
-                .map(reservationTimeDto -> new ReservationTimeResponseDto(reservationTimeDto.getId(),
-                        reservationTimeDto.getStartAt()))
+                .map(ReservationTimeResponseDto::toDto)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(response);

@@ -32,16 +32,16 @@ public class ReservationRepository {
                         ReservationTime.of(resultSet.getLong("time_id"), resultSet.getString("start_at"))));
     }
 
-    public Reservation save(ReservationSaveDto dto, ReservationTime find) {
+    public Reservation save(ReservationSaveDto dto) {
         Map<String, Object> params = Map.of(
                 "name", dto.getName(),
                 "date", dto.getDate(),
-                "time_id", find.getId()
+                "time_id", dto.getReservationTime().getId()
         );
 
         long generatedKey = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
-        return new Reservation(generatedKey, dto.getName(), dto.getDate(), find);
+        return new Reservation(generatedKey, dto.getName(), dto.getDate(), dto.getReservationTime());
     }
 
     public void deleteById(Long id) {

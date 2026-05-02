@@ -1,5 +1,7 @@
 package roomescape.service.dto;
 
+import roomescape.controller.dto.ReservationCreateRequestDto;
+
 public class ReservationCreateDto {
     private final String name;
     private final String date;
@@ -9,6 +11,10 @@ public class ReservationCreateDto {
         this.name = name;
         this.date = date;
         this.timeId = timeId;
+    }
+
+    public static ReservationCreateDto toDto(ReservationCreateRequestDto dto) {
+        return new ReservationCreateDto(dto.getName(), dto.getDate(), dto.getTimeId());
     }
 
     public String getName() {

@@ -30,19 +30,19 @@ public class ReservationController {
         List<ReservationDto> reservationList = reservationService.findAll();
 
         List<ReservationResponseDto> response = reservationList.stream()
-                .map(dto -> new ReservationResponseDto(dto.getId(), dto.getName(), dto.getDate(), dto.getTimeId()))
+                .map(ReservationResponseDto::toDto)
                 .collect(Collectors.toList());
-        
+
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
     public ResponseEntity<ReservationResponseDto> create(@RequestBody ReservationCreateRequestDto dto) {
-        ReservationCreateDto serviceDto = new ReservationCreateDto(dto.getName(), dto.getDate(), dto.getTimeId());
+        ReservationCreateDto serviceDto = ReservationCreateDto.toDto(dto);
+        
         ReservationDto saved = reservationService.save(serviceDto);
 
-        ReservationResponseDto responseDto = new ReservationResponseDto(saved.getId(), saved.getName(),
-                saved.getDate(), saved.getId());
+        ReservationResponseDto responseDto = ReservationResponseDto.toDto(saved);
         return ResponseEntity.ok(responseDto);
     }
 

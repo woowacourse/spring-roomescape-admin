@@ -18,19 +18,19 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeDto save(ReservationTimeCreateDto dto) {
-        ReservationTimeSaveDto repositoryDto = new ReservationTimeSaveDto(dto.getStartAt());
+        ReservationTimeSaveDto repositoryDto = ReservationTimeSaveDto.toDto(dto);
 
         ReservationTime save = reservationTimeRepository.save(repositoryDto);
-        return new ReservationTimeDto(save.getId(), save.getStartAt().toString());
+
+        return ReservationTimeDto.toDto(save);
     }
 
     public List<ReservationTimeDto> findAll() {
-        List<ReservationTime> found = reservationTimeRepository.findAll();
-        List<ReservationTimeDto> response = found.stream()
-                .map(reservationTime -> new ReservationTimeDto(reservationTime.getId(),
-                        reservationTime.getStartAt().toString()))
+        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
+
+        return reservationTimes.stream()
+                .map(ReservationTimeDto::toDto)
                 .collect(Collectors.toList());
-        return response;
     }
 
     public void deleteById(long id) {

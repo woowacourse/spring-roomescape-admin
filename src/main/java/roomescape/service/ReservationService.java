@@ -13,6 +13,7 @@ import roomescape.service.dto.ReservationDto;
 
 @Service
 public class ReservationService {
+    public static final String TIME_SLOT_DOES_NOT_EXISTS = "조회된 타임 슬롯이 없습니다.";
     private final ReservationRepository reservationRepository;
     private final ReservationTimeRepository reservationTimeRepository;
 
@@ -25,22 +26,19 @@ public class ReservationService {
     public List<ReservationDto> findAll() {
         List<Reservation> reservations = reservationRepository.findAll();
 
-        List<ReservationDto> response = reservations.stream()
-                .map(reservation -> new ReservationDto(reservation.getId(), reservation.getName(),
-                        reservation.getDate().getDate().toString(), reservation.getTime().getId()))
+        return reservations.stream()
+                .map(ReservationDto::toDto)
                 .collect(Collectors.toList());
-        return response;
     }
 
     public ReservationDto save(ReservationCreateDto dto) {
-        ReservationTime find = reservationTimeRepository.findById(dto.getTimeId())
-                .orElseThrow(() -> new IllegalArgumentException("조회된 타임 슬롯이 없습니다."));
+        ReservationTime reservationTime = reservationTimeRepository.findById(dto.getTimeId())
+                .orElseThrow(() -> new IllegalArgumentException(TIME_SLOT_DOES_NOT_EXISTS));
 
-        ReservationSaveDto repositoryDto = new ReservationSaveDto(dto.getName(), dto.getDate(), dto.getTimeId());
-        Reservation save = reservationRepository.save(repositoryDto, find);
+        ReservationSaveDto repositoryDto = ReservationSaveDto.toDto(dto, reservationTime);
+        Reservation save = reservationRepository.save(repositoryDto);
 
-        return new ReservationDto(save.getId(), save.getName(), save.getDate().getDate().toString(),
-                save.getTime().getId());
+        return ReservationDto.toDto(save);
     }
 
     public void deleteById(long id) {

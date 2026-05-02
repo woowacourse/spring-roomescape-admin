@@ -14,4 +14,10 @@ public class GlobalExceptionHandler {
                 .body("요청한 시간이 예약되어 있어 삭제할 수 없습니다");
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> illegalArgumentExceptionHandle(DataIntegrityViolationException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(e.getMessage());
+    }
+
 }

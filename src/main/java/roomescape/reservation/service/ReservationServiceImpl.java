@@ -28,7 +28,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Reservation save(ReservationSaveServiceDto reservation) {
-        ReservationTime time = findTimeOrNull(reservation.getTimeId());
+        ReservationTime time = findTime(reservation.getTimeId());
         Reservation newReservation = new Reservation(
                 reservation.getName(),
                 reservation.getDate(),
@@ -37,9 +37,9 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationRepository.save(newReservation);
     }
 
-    private ReservationTime findTimeOrNull(Long timeId) {
+    private ReservationTime findTime(Long timeId) {
         if (timeId == null) {
-            return null;
+            throw new IllegalArgumentException("예약 시간은 필수입니다.");
         }
         return timeService.findById(timeId);
     }

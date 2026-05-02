@@ -42,7 +42,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         Number id = reservationInsert.executeAndReturnKey(new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
                 .addValue("date", reservation.getDate())
-                .addValue("time_id", reservation.getTime() == null ? null : reservation.getTime().getId()));
+                .addValue("time_id", reservation.getTime().getId()));
         return reservation.withId(id.longValue());
     }
 

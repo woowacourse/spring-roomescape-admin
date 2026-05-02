@@ -134,4 +134,20 @@ public class MissionStepTest {
                 .body("[0].time.startAt", is("10:00"));
     }
 
+    @Test
+    void 예약_시간이_없으면_400_에러_응답() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400)
+                .body("code", is("INVALID_REQUEST"))
+                .body("message", is("예약 시간은 필수입니다."));
+    }
+
 }

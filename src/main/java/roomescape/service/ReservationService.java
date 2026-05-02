@@ -38,8 +38,8 @@ public class ReservationService {
         return reservationQueryingDao.findReservationById(generatedId);
     }
 
-    public void update(Reservation newReservation, Long id) {
-        reservationUpdatingDao.save(id, newReservation);
+    public void update(ReservationRequest newReservationReq, Long id) {
+        reservationUpdatingDao.save(id, newReservationReq);
     }
 
     public void delete(Long id) {

@@ -16,9 +16,9 @@ public class ReservationUpdatingDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(Long id, Reservation reservation) {
+    public void save(Long id, ReservationRequest reservationReq) {
         String sql = "update reservation SET name = ?, date = ?, time_id = ? where id = ?";
-        jdbcTemplate.update(sql, reservation.getName(), reservation.getDate(), reservation.getTime().getId(), id);
+        jdbcTemplate.update(sql, reservationReq.getName(), reservationReq.getDate(), reservationReq.getTimeId(), id);
     }
 
     public int delete(Long id) {

@@ -10,54 +10,32 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.reservationtime.ReservationTime;
-import roomescape.reservationtime.ReservationTimeRepository;
 
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
 
-    private final ReservationRepository reservationRepository;
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationService reservationService;
 
-    public ReservationController(ReservationRepository reservationRepository,
-                                 ReservationTimeRepository reservationTimeRepository) {
-        this.reservationRepository = reservationRepository;
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ReservationResponseDTO create(@RequestBody ReservationRequestDTO reservationRequestDTO) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequestDTO.getTimeId());
-        Reservation reservation = new Reservation(
-                reservationRequestDTO.getName(),
-                reservationRequestDTO.getDate(),
-                reservationTime);
-        Long id = reservationRepository.insert(reservation);
-        return new ReservationResponseDTO(
-                id,
-                reservation.getName(),
-                reservation.getDate(),
-                reservation.getReservationTime()
-        );
+        return reservationService.createReservation(reservationRequestDTO);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ReservationResponseDTO> read() {
-        return reservationRepository.findAllReservations().stream()
-                .map(reservation -> new ReservationResponseDTO(
-                        reservation.getId(),
-                        reservation.getName(),
-                        reservation.getDate(),
-                        reservation.getReservationTime()
-                )).toList();
+        return reservationService.findReservations();
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void delete(@PathVariable long id) {
-        reservationRepository.delete(id);
+    public void delete(@PathVariable Long id) {
+        reservationService.deleteReservation(id);
     }
 }

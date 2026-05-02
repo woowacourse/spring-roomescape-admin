@@ -15,38 +15,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/times")
 public class ReservationTimeController {
 
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
-
-    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ReservationTimeResponseDTO create(@RequestBody ReservationTimeRequestDTO reservationTimeRequestDTO) {
-        System.out.println("hihi");
-        ReservationTime reservationTime = new ReservationTime(reservationTimeRequestDTO.getStartAt());
-        System.out.println("reservationTime = " + reservationTime);
-        Long id = reservationTimeRepository.insert(reservationTime);
-        return new ReservationTimeResponseDTO(
-                id,
-                reservationTime.getStartAt());
+        return reservationTimeService.createReservationTime(reservationTimeRequestDTO);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ReservationTimeResponseDTO> read() {
-        return reservationTimeRepository.findAllReservationTimes().stream()
-                .map(reservationTime -> new ReservationTimeResponseDTO(
-                        reservationTime.getId(),
-                        reservationTime.getStartAt()
-                )).toList();
+        return reservationTimeService.findReservationTimes();
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable long id) {
-        reservationTimeRepository.delete(id);
+        reservationTimeService.deleteReservationTime(id);
     }
 }

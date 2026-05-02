@@ -158,6 +158,37 @@ class ReservationDaoTest {
 
     }
 
+    @Nested
+    class Delete {
+
+        @Test
+        void 존재하는_Id로_삭제하면_true를_반환한다() {
+            // given
+            Reservation saved = reservationDao.insert(new Reservation(name, date, generateReservationTime()));
+
+            // when
+            boolean actual = reservationDao.delete(saved.getId());
+
+            // then
+            Assertions.assertThat(actual)
+                    .isTrue();
+        }
+
+        @Test
+        void 존재하지않는_Id로_삭제하면_false를_반환한다() {
+            // given
+            Long wrongId = Long.MIN_VALUE;
+
+            // when
+            boolean actual = reservationDao.delete(wrongId);
+
+            // then
+            Assertions.assertThat(actual)
+                    .isFalse();
+        }
+
+    }
+
     private static DataSource generateDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.h2.Driver");

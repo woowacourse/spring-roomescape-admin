@@ -8,29 +8,29 @@ import roomescape.domain.ReservationTime;
 @Repository
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
 
-    private final JdbcReservationTimeDao jdbcReservationTimeDao;
+    private final ReservationTimeDao reservationTimeDao;
 
-    public JdbcReservationTimeRepository(JdbcReservationTimeDao jdbcReservationTimeDao) {
-        this.jdbcReservationTimeDao = jdbcReservationTimeDao;
+    public JdbcReservationTimeRepository(ReservationTimeDao reservationTimeDao) {
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     @Override
     public List<ReservationTime> findAll() {
-        return jdbcReservationTimeDao.findAll();
+        return reservationTimeDao.findAll();
     }
 
     @Override
     public ReservationTime findById(long id) {
-        return jdbcReservationTimeDao.findById(id);
+        return reservationTimeDao.findById(id);
     }
 
     @Override
     public long save(LocalTime startAt) {
-        return jdbcReservationTimeDao.insert(startAt);
+        return reservationTimeDao.insert(startAt);
     }
 
     @Override
     public void deleteById(long id) {
-        jdbcReservationTimeDao.deleteById(id);
+        reservationTimeDao.deleteById(id);
     }
 }

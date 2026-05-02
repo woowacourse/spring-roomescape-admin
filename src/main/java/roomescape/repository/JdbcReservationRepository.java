@@ -7,34 +7,34 @@ import roomescape.domain.Reservation;
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
 
-    private final JdbcReservationDao jdbcReservationDao;
+    private final ReservationDao reservationDao;
 
-    public JdbcReservationRepository(JdbcReservationDao jdbcReservationDao) {
-        this.jdbcReservationDao = jdbcReservationDao;
+    public JdbcReservationRepository(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
     }
 
     @Override
     public List<ReservationJoinedDto> findAllJoinedDto() {
-        return jdbcReservationDao.findAll();
+        return reservationDao.findAll();
     }
 
     @Override
     public Reservation findById(long id) {
-        return jdbcReservationDao.findById(id);
+        return reservationDao.findById(id);
     }
 
     @Override
     public ReservationJoinedDto findJoinedDtoById(long id) {
-        return jdbcReservationDao.findJoinedDtoById(id);
+        return reservationDao.findJoinedDtoById(id);
     }
 
     @Override
     public long save(Reservation reservation) {
-        return jdbcReservationDao.insert(reservation);
+        return reservationDao.insert(reservation);
     }
 
     @Override
     public void deleteById(long id) {
-        jdbcReservationDao.deleteById(id);
+        reservationDao.deleteById(id);
     }
 }

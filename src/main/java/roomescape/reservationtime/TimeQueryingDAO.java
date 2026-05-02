@@ -19,7 +19,7 @@ public class TimeQueryingDAO {
     private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) -> {
         ReservationTime reservationTime = new ReservationTime(
                 resultSet.getLong("id"),
-                LocalTime.parse(resultSet.getString("start_at"))
+                resultSet.getObject("start_at", LocalTime.class)
         );
         return reservationTime;
     };

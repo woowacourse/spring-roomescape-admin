@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationTimeRequest;
+import roomescape.controller.ReservationTimeRequest;
 
 @Repository
 public class JdbcReservationTimeDao implements ReservationTimeDao {

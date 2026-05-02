@@ -1,7 +1,7 @@
 package roomescape.util;
 
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationTimeResponse;
+import roomescape.controller.ReservationTimeResponse;
 
 public class ReservationTimeMapper {
 

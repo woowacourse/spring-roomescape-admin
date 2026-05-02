@@ -2,9 +2,9 @@ package roomescape.repository;
 
 import java.util.List;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationTimeRequest;
+import roomescape.controller.ReservationTimeRequest;
 
-public interface TimeRepository {
+public interface ReservationTimeRepository {
 
     List<ReservationTime> findAll();
 

@@ -3,14 +3,14 @@ package roomescape.repository;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationTimeRequest;
+import roomescape.controller.ReservationTimeRequest;
 
 @Repository
-public class JdbcTimeRepository implements TimeRepository {
+public class JdbcReservationTimeRepository implements ReservationTimeRepository {
 
     private final JdbcReservationTimeDao jdbcReservationTimeDao;
 
-    public JdbcTimeRepository(JdbcReservationTimeDao jdbcReservationTimeDao) {
+    public JdbcReservationTimeRepository(JdbcReservationTimeDao jdbcReservationTimeDao) {
         this.jdbcReservationTimeDao = jdbcReservationTimeDao;
     }
 

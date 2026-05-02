@@ -3,7 +3,7 @@ package roomescape.repository;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationRequest;
+import roomescape.controller.ReservationRequest;
 
 @Repository
 public interface ReservationRepository {

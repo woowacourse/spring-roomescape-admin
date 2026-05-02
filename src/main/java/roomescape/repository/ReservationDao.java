@@ -2,7 +2,7 @@ package roomescape.repository;
 
 import java.util.List;
 import roomescape.domain.Reservation;
-import roomescape.dto.ReservationRequest;
+import roomescape.controller.ReservationRequest;
 
 public interface ReservationDao {
 

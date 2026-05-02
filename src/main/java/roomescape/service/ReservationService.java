@@ -1,16 +1,13 @@
 package roomescape.service;
 
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.TimeDao;
-import roomescape.dao.vo.ReservationRow;
 import roomescape.dao.vo.ReservationRows;
 import roomescape.domain.Reservation;
 import roomescape.domain.Time;
-import roomescape.service.command.CreateReservationCommand;
+import roomescape.dto.ReservationRequestDto;
 
 import java.util.List;
 
@@ -31,11 +28,11 @@ public class ReservationService {
         return reservationRows.toReservations();
     }
 
-    public Reservation create(CreateReservationCommand command) {
-        Time timeById = timeDao.findById(command.getTimeId())
+    public Reservation create(ReservationRequestDto reservationRequest) {
+        Time timeById = timeDao.findById(reservationRequest.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다.")).toTime();
 
-        Reservation reservation = new Reservation(command.getName(), command.getDate(), timeById);
+        Reservation reservation = new Reservation(reservationRequest.name(), reservationRequest.date(), timeById);
         Long id = reservationDao.insert(reservation);
 
         return reservationDao.findById(id)

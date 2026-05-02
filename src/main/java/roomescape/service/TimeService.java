@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.dao.TimeDao;
 import roomescape.domain.Time;
-import roomescape.service.command.CreateTimeCommand;
+import roomescape.dto.TimeRequestDto;
 
 import java.util.List;
 
@@ -23,8 +23,8 @@ public class TimeService {
         return timeDao.findAll().toTimes();
     }
 
-    public Time create(CreateTimeCommand command) {
-        Time time = new Time(command.getTime());
+    public Time create(TimeRequestDto timeRequest) {
+        Time time = new Time(timeRequest.startAt());
         Long id = timeDao.insert(time);
 
         return timeDao.findById(id)

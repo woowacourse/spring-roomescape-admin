@@ -8,13 +8,10 @@ import org.springframework.stereotype.Repository;
 import roomescape.dao.vo.ReservationRow;
 import roomescape.dao.vo.ReservationRows;
 import roomescape.domain.Reservation;
-import roomescape.domain.Time;
-import roomescape.dto.ReservationRequestDto;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -22,11 +19,6 @@ import java.util.Optional;
 public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
-
-    public ReservationDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     private final RowMapper<ReservationRow> rowMapper = (resultSet, rowNum) -> {
         ReservationRow row = new ReservationRow(
                 resultSet.getLong("id"),
@@ -38,6 +30,10 @@ public class ReservationDao {
 
         return row;
     };
+
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public ReservationRows findAll() {
         String sql = """
@@ -53,7 +49,7 @@ public class ReservationDao {
         return new ReservationRows(jdbcTemplate.query(sql, rowMapper));
     }
 
-    public Optional<ReservationRow> findById(Long id){
+    public Optional<ReservationRow> findById(Long id) {
         String sql = """
                 SELECT
                     r.id,

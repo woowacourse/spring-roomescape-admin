@@ -2,7 +2,6 @@ package roomescape.dao.vo;
 
 import roomescape.domain.Reservation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ReservationRows {

@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalTime;
 
-public record TimeRequestDto (
+public record TimeRequestDto(
         @NotNull LocalTime startAt
-){
+) {
 }

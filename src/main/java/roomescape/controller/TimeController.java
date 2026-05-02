@@ -10,11 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Time;
-import roomescape.dao.TimeDao;
 import roomescape.dto.TimeRequestDto;
 import roomescape.dto.TimeResponseDto;
 import roomescape.service.TimeService;
-import roomescape.service.command.CreateTimeCommand;
 
 import java.util.List;
 
@@ -29,8 +27,7 @@ public class TimeController {
 
     @PostMapping
     public ResponseEntity<TimeResponseDto> create(@Valid @RequestBody TimeRequestDto timeRequest) {
-        CreateTimeCommand command = CreateTimeCommand.from(timeRequest);
-        Time time = timeService.create(command);
+        Time time = timeService.create(timeRequest);
         return ResponseEntity.ok(TimeResponseDto.from(time));
     }
 
@@ -43,7 +40,7 @@ public class TimeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@Valid @PathVariable Long id){
+    public ResponseEntity<Void> delete(@Valid @PathVariable Long id) {
         timeService.delete(id);
         return ResponseEntity.ok().build();
     }

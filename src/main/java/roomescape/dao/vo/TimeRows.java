@@ -11,7 +11,7 @@ public class TimeRows {
         this.timeRows = timeRows;
     }
 
-    public List<Time> toTimes(){
+    public List<Time> toTimes() {
         return timeRows.stream()
                 .map(TimeRow::toTime)
                 .toList();

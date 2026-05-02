@@ -11,18 +11,12 @@ import roomescape.domain.Time;
 
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Repository
 public class TimeDao {
     private final JdbcTemplate jdbcTemplate;
-
-    public TimeDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
     private final RowMapper<TimeRow> rowMapper = (resultSet, rowNum) -> {
         TimeRow row = new TimeRow(
                 resultSet.getLong("id"),
@@ -31,6 +25,10 @@ public class TimeDao {
 
         return row;
     };
+
+    public TimeDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public Long insert(Time time) {
         KeyHolder keyHolder = new GeneratedKeyHolder();

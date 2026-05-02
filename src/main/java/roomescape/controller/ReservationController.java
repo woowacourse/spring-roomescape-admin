@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import roomescape.service.ReservationService;
 import roomescape.dto.ReservationCreateReqDto;
 import roomescape.dto.ReservationResDto;
+import roomescape.service.command.ReservationCommand;
 
 import java.util.List;
 
@@ -21,8 +22,12 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResDto> createReservation(@RequestBody ReservationCreateReqDto dto) {
-
-        ReservationResDto reservation = reservationService.createReservation(dto);
+        ReservationCommand command = new ReservationCommand(
+                dto.getName(),
+                dto.getDate(),
+                dto.getTimeId()
+        );
+        ReservationResDto reservation = reservationService.createReservation(command);
         return new ResponseEntity<>(reservation, HttpStatus.OK);
     }
 

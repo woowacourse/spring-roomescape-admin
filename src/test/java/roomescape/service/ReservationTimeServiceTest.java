@@ -5,11 +5,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import roomescape.dto.ReservationCreateReqDto;
-import roomescape.dto.ReservationTimeCreateReqDto;
 import roomescape.dto.ReservationTimeResDto;
 import roomescape.repository.ReservationDao;
 import roomescape.repository.ReservationTimeDao;
+import roomescape.service.command.ReservationCommand;
+import roomescape.service.command.ReservationTimeCommand;
 
 import javax.sql.DataSource;
 import java.time.LocalDate;
@@ -64,10 +64,10 @@ class ReservationTimeServiceTest {
     void 시간_생성_정상() {
         // given
         LocalTime time = LocalTime.of(15, 40);
-        ReservationTimeCreateReqDto reservationTimeCreateReqDto = new ReservationTimeCreateReqDto(time);
+        ReservationTimeCommand command = new ReservationTimeCommand(time);
 
         // when
-        ReservationTimeResDto savedTime = reservationTimeService.createTime(reservationTimeCreateReqDto);
+        ReservationTimeResDto savedTime = reservationTimeService.createTime(command);
 
         // then
         Assertions.assertEquals(time, savedTime.getStartAt());
@@ -77,12 +77,12 @@ class ReservationTimeServiceTest {
     void 시간_목록_조회_정상() {
         // given
         LocalTime time = LocalTime.of(15, 40);
-        ReservationTimeCreateReqDto reservationTimeCreateReqDto = new ReservationTimeCreateReqDto(time);
-        reservationTimeService.createTime(reservationTimeCreateReqDto);
+        ReservationTimeCommand command = new ReservationTimeCommand(time);
+        reservationTimeService.createTime(command);
 
         LocalTime time2 = LocalTime.of(18, 20);
-        ReservationTimeCreateReqDto reservationTimeCreateReqDto2 = new ReservationTimeCreateReqDto(time2);
-        reservationTimeService.createTime(reservationTimeCreateReqDto2);
+        ReservationTimeCommand command2 = new ReservationTimeCommand(time2);
+        reservationTimeService.createTime(command2);
 
         // when
         List<ReservationTimeResDto> reservationTimeResDtos = reservationTimeService.getTimes();
@@ -98,8 +98,8 @@ class ReservationTimeServiceTest {
     void 시간_삭제_정상() {
         // given
         LocalTime time = LocalTime.of(15, 40);
-        ReservationTimeCreateReqDto reservationTimeCreateReqDto = new ReservationTimeCreateReqDto(time);
-        ReservationTimeResDto savedTime = reservationTimeService.createTime(reservationTimeCreateReqDto);
+        ReservationTimeCommand command = new ReservationTimeCommand(time);
+        ReservationTimeResDto savedTime = reservationTimeService.createTime(command);
 
         // when
         reservationTimeService.deleteTime(savedTime.getId());
@@ -113,13 +113,13 @@ class ReservationTimeServiceTest {
     void 시간_삭제_에러() {
         // given
         LocalTime time = LocalTime.of(15, 40);
-        ReservationTimeCreateReqDto reservationTimeCreateReqDto = new ReservationTimeCreateReqDto(time);
-        ReservationTimeResDto savedTime = reservationTimeService.createTime(reservationTimeCreateReqDto);
+        ReservationTimeCommand command = new ReservationTimeCommand(time);
+        ReservationTimeResDto savedTime = reservationTimeService.createTime(command);
 
         String name = "브라운";
         LocalDate date = LocalDate.of(2023, 7, 4);
 
-        reservationService.createReservation(new ReservationCreateReqDto(name, date, savedTime.getId()));
+        reservationService.createReservation(new ReservationCommand(name, date, savedTime.getId()));
 
         // when && then
         Assertions.assertThrows(IllegalStateException.class, () -> reservationTimeService.deleteTime(savedTime.getId()));

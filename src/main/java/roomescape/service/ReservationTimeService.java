@@ -3,10 +3,10 @@ package roomescape.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationTimeCreateReqDto;
 import roomescape.dto.ReservationTimeResDto;
 import roomescape.repository.ReservationDao;
 import roomescape.repository.ReservationTimeDao;
+import roomescape.service.command.ReservationTimeCommand;
 
 import java.util.List;
 
@@ -23,8 +23,8 @@ public class ReservationTimeService {
     }
 
     @Transactional
-    public ReservationTimeResDto createTime(ReservationTimeCreateReqDto dto) {
-        ReservationTime time = ReservationTime.create(dto.getStartAt());
+    public ReservationTimeResDto createTime(ReservationTimeCommand command) {
+        ReservationTime time = ReservationTime.create(command.getStartAt());
         ReservationTime savedTime = timeDao.save(time);
         return ReservationTimeResDto.from(savedTime);
     }

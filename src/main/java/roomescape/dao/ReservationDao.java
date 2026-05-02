@@ -12,5 +12,5 @@ public interface ReservationDao {
 
     List<Reservation> readAll();
 
-    void delete(Long id);
+    int delete(Long id);
 }

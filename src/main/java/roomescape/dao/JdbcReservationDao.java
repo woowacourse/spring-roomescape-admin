@@ -72,9 +72,9 @@ public class JdbcReservationDao implements ReservationDao {
     }
 
     @Override
-    public void delete(Long id) {
+    public int delete(Long id) {
         String sql = "DELETE FROM `reservation` WHERE `id` = ?";
 
-        jdbcTemplate.update(sql, id);
+        return jdbcTemplate.update(sql, id);
     }
 }

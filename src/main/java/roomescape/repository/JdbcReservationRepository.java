@@ -49,7 +49,8 @@ public class JdbcReservationRepository implements ReservationRepository {
                     t.start_at as time_value
                     from reservation as r 
                     inner join reservation_time as t 
-                    on r.time_id = t.id
+                    on r.time_id = t.id 
+                    where r.id = ?
                 """;
 
         List<Reservation> results = jdbcTemplate.query(

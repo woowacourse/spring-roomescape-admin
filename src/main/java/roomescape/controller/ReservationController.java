@@ -15,7 +15,7 @@ import roomescape.dto.ReservationResponseDTO;
 import roomescape.service.ReservationService;
 
 @Controller
-@RequestMapping("/reservation")
+@RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationService reservationService;
@@ -37,7 +37,6 @@ public class ReservationController {
         ReservationResponseDTO saved = reservationService.addReservation(request);
         return ResponseEntity.ok(saved);
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

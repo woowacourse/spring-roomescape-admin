@@ -22,9 +22,7 @@ public class ReservationService {
     }
 
     public List<ReservationResponse> findAll() {
-        return reservationDAO.findAll().stream()
-                .map(ReservationResponse::from)
-                .collect(Collectors.toList());
+        return reservationDAO.findAll();
     }
 
     public void delete(Long id) {

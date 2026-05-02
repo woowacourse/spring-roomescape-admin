@@ -1,6 +1,7 @@
 package roomescape.dao;
 
 import java.util.List;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -41,6 +42,10 @@ public class ReservationTimeDAO {
     }
 
     public void delete(Long id) {
-        jdbcTemplate.update("delete from reservation_time where id = ?", id);
+        try {
+            jdbcTemplate.update("delete from reservation_time where id = ?", id);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException("[ERROR] 해당 시간에 예약이 존재하여 삭제할 수 없습니다.");
+        }
     }
 }

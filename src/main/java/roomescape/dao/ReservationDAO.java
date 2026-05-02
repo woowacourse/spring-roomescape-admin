@@ -2,6 +2,7 @@ package roomescape.dao;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -9,6 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.response.ReservationResponse;
 
 @Repository
 public class ReservationDAO {
@@ -40,7 +42,7 @@ public class ReservationDAO {
         return Reservation.of(keyHolder.getKey().longValue(), name, date, time);
     }
 
-    public List<Reservation> findAll() {
+    public List<ReservationResponse> findAll() {
         String sql = "select r.id, r.name, r.date, t.id as time_id, t.start_at "
                 + "from reservation r inner join reservation_time t on r.time_id = t.id";
 
@@ -51,7 +53,9 @@ public class ReservationDAO {
                 ReservationTime.of(resultSet.getLong("time_id"), resultSet.getString("start_at"))
         );
 
-        return jdbcTemplate.query(sql, rowMapper);
+        return jdbcTemplate.query(sql, rowMapper).stream()
+                .map(ReservationResponse::from)
+                .collect(Collectors.toList());
     }
 
     public void delete(Long id) {

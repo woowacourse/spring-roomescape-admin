@@ -1,9 +1,7 @@
 package roomescape.dao;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -13,6 +11,7 @@ import roomescape.domain.ReservationTime;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.time.LocalTime;
+import java.util.List;
 
 class ReservationTimeDaoTest {
 
@@ -46,36 +45,94 @@ class ReservationTimeDaoTest {
         );
     }
 
-    @Test
-    void 예약시간_삽입시_생성되는_ID가_양수이다() {
-        // when
-        ReservationTime actual = reservationTimeDao.insert(reservationTime);
+    @Nested
+    class Insert {
 
-        // then
-        Assertions.assertThat(actual.getId())
-                .isNotNull()
-                .isPositive();
+        @Test
+        void 예약시간_삽입시_생성되는_ID가_양수이다() {
+            // when
+            ReservationTime actual = reservationTimeDao.insert(reservationTime);
+
+            // then
+            Assertions.assertThat(actual.getId())
+                    .isNotNull()
+                    .isPositive();
+        }
+
+        @Test
+        void 삽입하면_반환된_시작_시간이_입력값과_일치한다() {
+            // when
+            ReservationTime actual = reservationTimeDao.insert(reservationTime);
+
+            // then
+            Assertions.assertThat(actual.getStartAt())
+                    .isEqualTo(time);
+        }
+
+        @Test
+        void 두_번_삽입해도_서로_다른_ID가_부여된다() {
+            // when
+            ReservationTime first  = reservationTimeDao.insert(reservationTime);
+            ReservationTime second = reservationTimeDao.insert(reservationTime);
+
+            // then
+            Assertions.assertThat(first.getId())
+                    .isNotEqualTo(second.getId());
+        }
+
     }
 
-    @Test
-    void 삽입하면_반환된_시작_시간이_입력값과_일치한다() {
-        // when
-        ReservationTime actual = reservationTimeDao.insert(reservationTime);
+    @Nested
+    class SelectAll {
 
-        // then
-        Assertions.assertThat(actual.getStartAt())
-                .isEqualTo(time);
-    }
+        @Test
+        void 저장된_시간이_없으면_빈리스트를_반환한다() {
+            List<ReservationTime> actual = reservationTimeDao.selectAll();
 
-    @Test
-    void 두_번_삽입해도_서로_다른_ID가_부여된다() {
-        // when
-        ReservationTime first  = reservationTimeDao.insert(reservationTime);
-        ReservationTime second = reservationTimeDao.insert(reservationTime);
+            Assertions.assertThat(actual)
+                    .isEmpty();
+        }
 
-        // then
-        Assertions.assertThat(first.getId())
-                .isNotEqualTo(second.getId());
+        @Test
+        void 저장된_시간이_1개이면_조회시_크기가_1인_리스트를_반환한다() {
+            // given
+            reservationTimeDao.insert(reservationTime);
+
+            // when
+            List<ReservationTime> actual = reservationTimeDao.selectAll();
+
+            // then
+            Assertions.assertThat(actual)
+                    .hasSize(1);
+        }
+
+        @Test
+        void 저장된_시간이_여러개이면_조회시_저장된_개수만큼_반환한다() {
+            // given
+            reservationTimeDao.insert(reservationTime);
+            reservationTimeDao.insert(reservationTime);
+            reservationTimeDao.insert(reservationTime);
+
+            // when
+            List<ReservationTime> actual = reservationTimeDao.selectAll();
+
+            // then
+            Assertions.assertThat(actual)
+                    .hasSize(3);
+        }
+
+        @Test
+        void 삽입한_예약_시간을_조회하면_모든_필드가_일치한다() {
+            ReservationTime savedTime = reservationTimeDao.insert(reservationTime);
+
+            ReservationTime actual = reservationTimeDao.selectAll()
+                    .getFirst();
+
+            Assertions.assertThat(actual)
+                    .usingRecursiveComparison()
+                    .isEqualTo(savedTime);
+        }
+
     }
 
     private static DataSource generateDataSource() {

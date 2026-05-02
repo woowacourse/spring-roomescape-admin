@@ -68,6 +68,16 @@ public class MissionStepTest {
     }
 
     @Test
+    void 없는_예약_삭제시_404_에러_응답() {
+        RestAssured.given().log().all()
+            .when().delete("/reservations/999")
+            .then().log().all()
+            .statusCode(404)
+            .body("code", is("RESERVATION_NOT_FOUND"))
+            .body("message", is("예약이 존재하지 않습니다. id=999"));
+    }
+
+    @Test
     void 시간_관리_API() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");

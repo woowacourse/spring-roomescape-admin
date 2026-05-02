@@ -7,5 +7,5 @@ import roomescape.reservation.service.dto.ReservationSaveServiceDto;
 public interface ReservationService {
     List<Reservation> getReservations();
     Reservation save(ReservationSaveServiceDto reservation);
-    boolean deleteById(long id);
+    void deleteById(long id);
 }

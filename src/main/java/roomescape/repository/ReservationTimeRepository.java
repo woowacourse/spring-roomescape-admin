@@ -18,41 +18,30 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReservationTimeRepository {
 
-    private static final String FIND_TIME_BY_ID = """
-            SELECT id, start_at
-            FROM reservation_time
-            WHERE id = ?
-            """;
-
-    private static final String FIND_ALL_TIME = """
-            SELECT id, start_at
-            FROM reservation_time
-            ORDER BY id
-            """;
-
-    private static final String INSERT_TIME = """
-            INSERT INTO reservation_time (start_at)
-            VALUES (?)
-            """;
-
-    private static final String DELETE_TIME_BY_ID = """
-            DELETE FROM reservation_time
-            WHERE id = ?
-            """;
-
     private final JdbcTemplate jdbcTemplate;
 
-
     public List<ReservationTime> findAll() {
-        return jdbcTemplate.query(FIND_ALL_TIME, this::mapToEntity)
+        final String sql = """
+                SELECT id, start_at
+                FROM reservation_time
+                ORDER BY id
+                """;
+
+        return jdbcTemplate.query(sql, this::mapToEntity)
                 .stream()
                 .map(this::toDomain)
                 .toList();
     }
 
     public ReservationTime findById(final Long timeId) {
+        final String sql = """
+                SELECT id, start_at
+                FROM reservation_time
+                WHERE id = ?
+                """;
+
         ReservationTimeEntity entity = jdbcTemplate.queryForObject(
-                FIND_TIME_BY_ID,
+                sql,
                 this::mapToEntity,
                 timeId
         );
@@ -67,16 +56,26 @@ public class ReservationTimeRepository {
     }
 
     public void delete(final Long timeId) {
-        jdbcTemplate.update(DELETE_TIME_BY_ID, timeId);
+        final String sql = """
+                DELETE FROM reservation_time
+                WHERE id = ?
+                """;
+
+        jdbcTemplate.update(sql, timeId);
     }
 
 
     private long insertReservationTime(final ReservationTime newReservationTime) {
+        final String sql = """
+                INSERT INTO reservation_time (start_at)
+                VALUES (?)
+                """;
+
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(
-                    INSERT_TIME,
+                    sql,
                     Statement.RETURN_GENERATED_KEYS
             );
 
@@ -97,6 +96,9 @@ public class ReservationTimeRepository {
     }
 
 
+    /**
+     * 엔티티 - 도메인 매핑 메서드
+     */
     private ReservationTimeEntity mapToEntity(final ResultSet resultSet, final int rowNum) throws SQLException {
         return new ReservationTimeEntity(
                 resultSet.getLong("id"),

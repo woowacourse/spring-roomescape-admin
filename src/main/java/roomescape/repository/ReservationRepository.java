@@ -20,53 +20,42 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReservationRepository {
 
-    private static final String FIND_RESERVATION_BY_ID = """
-            SELECT
-            r.id AS reservation_id,
-            r.name AS reservation_name,
-            r.date AS reservation_date,
-            t.id AS time_id,
-            t.start_at AS time_start_at
-            FROM reservation r
-            JOIN reservation_time t ON r.time_id = t.id
-            WHERE r.id = ?
-            """;
-
-    private static final String FIND_ALL_RESERVATION = """
-            SELECT
-                r.id AS reservation_id,
-                r.name AS reservation_name,
-                r.date AS reservation_date,
-                t.id AS time_id,
-                t.start_at AS time_start_at
-            FROM reservation r
-            JOIN reservation_time t ON r.time_id = t.id
-            ORDER BY r.id
-            """;
-
-    private static final String INSERT_RESERVATION = """
-            INSERT INTO reservation (name, date, time_id)
-            VALUES (?, ?, ?)
-            """;
-
-    private static final String DELETE_RESERVATION_BY_ID = """
-            DELETE FROM reservation
-            WHERE id = ?
-            """;
-
     private final JdbcTemplate jdbcTemplate;
-
-
+    
     public List<Reservation> findAll() {
-        return jdbcTemplate.query(FIND_ALL_RESERVATION, this::mapToEntity)
+        final String sql = """
+                SELECT
+                    r.id AS reservation_id,
+                    r.name AS reservation_name,
+                    r.date AS reservation_date,
+                    t.id AS time_id,
+                    t.start_at AS time_start_at
+                FROM reservation r
+                JOIN reservation_time t ON r.time_id = t.id
+                ORDER BY r.id
+                """;
+
+        return jdbcTemplate.query(sql, this::mapToEntity)
                 .stream()
                 .map(this::toDomain)
                 .toList();
     }
 
     public Reservation findById(final Long reservationId) {
+        final String sql = """
+                SELECT
+                r.id AS reservation_id,
+                r.name AS reservation_name,
+                r.date AS reservation_date,
+                t.id AS time_id,
+                t.start_at AS time_start_at
+                FROM reservation r
+                JOIN reservation_time t ON r.time_id = t.id
+                WHERE r.id = ?
+                """;
+
         final ReservationWithTimeEntity reservationWithTimeEntity = jdbcTemplate.queryForObject(
-                FIND_RESERVATION_BY_ID,
+                sql,
                 this::mapToEntity,
                 reservationId
         );
@@ -81,16 +70,26 @@ public class ReservationRepository {
     }
 
     public void deleteById(final Long reservationId) {
-        jdbcTemplate.update(DELETE_RESERVATION_BY_ID, reservationId);
+        final String sql = """
+                DELETE FROM reservation
+                WHERE id = ?
+                """;
+
+        jdbcTemplate.update(sql, reservationId);
     }
 
 
     private long insertReservation(final Reservation newReservation) {
+        final String sql = """
+                INSERT INTO reservation (name, date, time_id)
+                VALUES (?, ?, ?)
+                """;
+
         final KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(
-                    INSERT_RESERVATION,
+                    sql,
                     Statement.RETURN_GENERATED_KEYS
             );
 
@@ -113,6 +112,9 @@ public class ReservationRepository {
     }
 
 
+    /**
+     * 엔티티 - 도메인 매핑 메서드
+     */
     private ReservationWithTimeEntity mapToEntity(
             final ResultSet resultSet,
             final int rowNum

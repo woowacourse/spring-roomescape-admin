@@ -1,7 +1,9 @@
 package roomescape.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
@@ -30,6 +32,12 @@ public class ReservationTimeService {
     }
 
     public void deleteReservationTime(Long id) {
-        reservationTimeDao.delete(id);
+        try {
+            reservationTimeDao.delete(id);
+        } catch (NoSuchElementException e) {
+            throw new IllegalArgumentException("존재하지 않는 시간입니다.");
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException("해당 시간에 예약이 있어 삭제할 수 없습니다.");
+        }
     }
 }

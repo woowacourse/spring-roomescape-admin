@@ -24,6 +24,8 @@ class ReservationTimeDaoTest {
     void cleanUp() {
         jdbcTemplate.execute("DELETE FROM reservation");
         jdbcTemplate.execute("DELETE FROM reservation_time");
+        jdbcTemplate.execute("ALTER TABLE reservation_time ALTER COLUMN id RESTART WITH 1");
+        jdbcTemplate.execute("ALTER TABLE reservation ALTER COLUMN id RESTART WITH 1");
     }
 
     @Test

@@ -3,7 +3,9 @@ package roomescape.dao;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -53,7 +55,14 @@ public class ReservationTimeDao {
     public void delete(Long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
 
-        jdbcTemplate.update(sql, id);
+        try {
+            int rowAffected = jdbcTemplate.update(sql, id);
+            if (rowAffected == 0) {
+                throw new NoSuchElementException();
+            }
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityViolationException("해당 시간에 예약이 있어 삭제할 수 없습니다.");
+        }
     }
 
     public Optional<ReservationTime> findById(long id) {

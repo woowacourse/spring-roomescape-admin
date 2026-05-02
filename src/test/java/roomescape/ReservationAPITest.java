@@ -17,7 +17,7 @@ import roomescape.domain.reservation.dto.ReservationResponseDTO;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ReservationTest {
+public class ReservationAPITest {
     @DisplayName("예약자 이름, 날짜, 시간으로 예약을 생성한다.")
     @Test
     void 예약_생성_테스트() {

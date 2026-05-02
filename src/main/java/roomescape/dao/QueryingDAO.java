@@ -20,7 +20,6 @@ public class QueryingDAO {
         return jdbcTemplate.queryForObject(
                 sql,
                 (resultSet, rowNum) -> new ReservationTime(
-                            resultSet.getLong("id"),
                             resultSet.getString("start_at")
                     ),
                 reservationId
@@ -43,7 +42,6 @@ public class QueryingDAO {
                 sql,
                 (resultSet, rowNum) -> {
                     ReservationTime reservationTime = new ReservationTime(
-                            resultSet.getLong("time_id"),
                             resultSet.getString("time_value")
                     );
                     Reservation reservation = new Reservation(
@@ -61,7 +59,6 @@ public class QueryingDAO {
                 sql,
                 (resultSet, rowNum) -> {
                     ReservationTime reservationTime = new ReservationTime(
-                            resultSet.getLong("id"),
                             resultSet.getString("start_at")
                     );
                     return reservationTime;

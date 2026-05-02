@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import roomescape.dao.QueryingDAO;
-import roomescape.dao.UpdatingDAO;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.TimeCreateRequest;
 import roomescape.dto.TimeCreateResponse;
@@ -30,23 +28,18 @@ public class TimeController {
     public TimeCreateResponse createTime(
             @RequestBody TimeCreateRequest request
     ){
-        UpdatingDAO dao = reservationService.getUpdatingDAO();
-        Long id = dao.insertWithKeyHolder(request.startAt());
-        return new TimeCreateResponse(id,request.startAt());
+        return reservationService.createTime(request.startAt());
     }
 
     @GetMapping
-    public List<ReservationTime> readAll() {
-        QueryingDAO dao = reservationService.getQueryingDAO();
-        return dao.findAllTimes();
-
+    public List<ReservationTime> readAllTimes() {
+        return reservationService.readAllTimes();
     }
 
     @DeleteMapping("/{id}")
     public void deleteTime(
             @PathVariable("id") Long id
     ) {
-        UpdatingDAO dao = reservationService.getUpdatingDAO();
-        dao.deleteTime(Long.valueOf(id));
+        reservationService.deleteTime(id);
     }
 }

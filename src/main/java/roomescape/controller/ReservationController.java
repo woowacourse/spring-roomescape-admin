@@ -10,13 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import roomescape.dao.QueryingDAO;
-import roomescape.dao.UpdatingDAO;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ReservationCreateResponse;
-import roomescape.dto.TimeCreateResponse;
 import roomescape.service.ReservationService;
 
 @RestController
@@ -29,33 +25,19 @@ public class ReservationController {
     }
 
     @GetMapping
-    public List<Reservation> read() {
-        QueryingDAO dao = reservationService.getQueryingDAO();
-        return dao.findAllReservations();
+    public List<Reservation> readAllReservations() {
+        return reservationService.readAllReservations();
     }
 
     @PostMapping
-    public ReservationCreateResponse create(
+    public ReservationCreateResponse createReservation(
             @RequestBody ReservationCreateRequest request
     ) {
-        UpdatingDAO dao = reservationService.getUpdatingDAO();
-        QueryingDAO queryingDAO = reservationService.getQueryingDAO();
-        ReservationTime reservationTime = queryingDAO.findTimeById(request.timeId());
-        Reservation newReservation = new Reservation(request.name(), request.date(), reservationTime);
-
-        Long id = dao.insertWithKeyHolder(newReservation);
-        TimeCreateResponse timeResponse = new TimeCreateResponse(reservationTime.getId(), reservationTime.getStartAt());
-        ReservationCreateResponse response = new ReservationCreateResponse(
-                id,
-                newReservation.getName(),
-                newReservation.getDate(),
-                timeResponse);
-        return response;
+        return reservationService.createReservation(request);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id) {
-        UpdatingDAO dao = reservationService.getUpdatingDAO();
-        dao.delete(Long.valueOf(id));
+    public void deleteReservation(@PathVariable("id") Long id) {
+        reservationService.deleteReservation(id);
     }
 }

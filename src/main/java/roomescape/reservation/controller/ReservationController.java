@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.reservation.dto.CreateReservationRequest;
-import roomescape.reservation.dto.ReservationResultResponse;
+import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.service.ReservationService;
 
 @RestController
@@ -24,15 +24,15 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResultResponse>> getReservations() {
-        List<ReservationResultResponse> reservations = reservationService.findAllReservations();
+    public ResponseEntity<List<ReservationResponse>> getReservations() {
+        List<ReservationResponse> reservations = reservationService.findAllReservations();
         return ResponseEntity.ok(reservations);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResultResponse> createReservations(
+    public ResponseEntity<ReservationResponse> createReservations(
             @RequestBody CreateReservationRequest createReservationRequest) {
-        ReservationResultResponse reservedRoomId = reservationService.reserve(createReservationRequest);
+        ReservationResponse reservedRoomId = reservationService.reserve(createReservationRequest);
         return ResponseEntity.ok(reservedRoomId);
     }
 

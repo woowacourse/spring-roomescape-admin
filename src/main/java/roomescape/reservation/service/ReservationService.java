@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.CreateReservationRequest;
-import roomescape.reservation.dto.ReservationResultResponse;
+import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.mapper.ReservationMapper;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.time.domain.ReservationTime;
@@ -22,13 +22,13 @@ public class ReservationService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public List<ReservationResultResponse> findAllReservations() {
+    public List<ReservationResponse> findAllReservations() {
         return reservationRepository.findAll().stream()
                 .map(ReservationMapper::toReservationResultDto)
                 .toList();
     }
 
-    public ReservationResultResponse reserve(CreateReservationRequest createReservationRequest) {
+    public ReservationResponse reserve(CreateReservationRequest createReservationRequest) {
         ReservationTime reservationTime = reservationTimeRepository.findById(createReservationRequest.getTimeId());
         Reservation reservation = ReservationMapper.toReservation(createReservationRequest, reservationTime);
         Reservation saved = reservationRepository.save(reservation);

@@ -2,12 +2,14 @@ package roomescape.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.dto.ReservationTimeResponseDto;
 import roomescape.entity.Reservation;
+import roomescape.entity.ReservationTime;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 
@@ -27,9 +29,10 @@ public class ReservationService {
     public List<ReservationResponseDto> getAllReservations() {
         final List<ReservationResponseDto> reservationResponseDtos = new ArrayList<>();
         for (final Reservation reservation : reservationRepository.findAll()) {
+            final ReservationTime reservationTime = reservationTimeRepository.findById(reservation.getTimeId())
+                .orElseThrow(() -> new NoSuchElementException("해당 예약 시간 데이터가 존재하지 않습니다."));
             final ReservationTimeResponseDto reservationTimeResponseDto =
-                ReservationTimeResponseDto.from(
-                    reservationTimeRepository.findById(reservation.getTimeId()));
+                ReservationTimeResponseDto.from(reservationTime);
             reservationResponseDtos.add(
                 ReservationResponseDto.from(reservation, reservationTimeResponseDto));
         }
@@ -45,12 +48,11 @@ public class ReservationService {
             .date(reservationRequestDto.date())
             .timeId(reservationRequestDto.timeId())
             .build();
-        final ReservationTimeResponseDto reservationTimeResponseDto =
-            ReservationTimeResponseDto.from(
-                reservationTimeRepository.findById(reservationRequestDto.timeId()));
+        final ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequestDto.timeId())
+            .orElseThrow(() -> new NoSuchElementException("해당 예약 시간 데이터가 존재하지 않습니다."));
+        final ReservationTimeResponseDto reservationTimeResponseDto = ReservationTimeResponseDto.from(reservationTime);
 
-        return ReservationResponseDto.from(reservationRepository.save(reservation),
-            reservationTimeResponseDto);
+        return ReservationResponseDto.from(reservationRepository.save(reservation), reservationTimeResponseDto);
     }
 
     @Transactional

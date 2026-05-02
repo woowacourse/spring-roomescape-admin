@@ -2,8 +2,10 @@ package roomescape.repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -28,19 +30,20 @@ public class ReservationTimeRepositoryImpl implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTime findById(final long id) {
-        try {
-            final String sql = String.format("SELECT id, start_at FROM %s WHERE id = :id", TABLE_NAME);
-            final SqlParameterSource parameters = new MapSqlParameterSource("id", id);
+    public Optional<ReservationTime> findById(final long id) {
+        final String sql = String.format("SELECT id, start_at FROM %s WHERE id = :id", TABLE_NAME);
+        final SqlParameterSource parameters = new MapSqlParameterSource("id", id);
 
-            return jdbcTemplate.queryForObject(
+        try {
+            final ReservationTime reservationTime = jdbcTemplate.queryForObject(
                 sql,
                 parameters,
                 (resultSet, rowNum) -> new ReservationTime(
                     resultSet.getLong("id"),
                     resultSet.getTime("start_at").toLocalTime()));
-        } catch (DataAccessException e) {
-            throw new IllegalArgumentException("해당 id를 가진 시간이 존재하지 않습니다.");
+            return Optional.ofNullable(reservationTime);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
         }
     }
 

@@ -2,6 +2,7 @@ package roomescape.dao;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,7 +29,7 @@ public class ReservationDao {
                 LocalDate.parse(resultSet.getString("date")),
                 new ReservationTime(
                         resultSet.getLong("time_id"),
-                        ReservationTime.parse(resultSet.getString("time_value"))
+                        LocalTime.parse(resultSet.getString("time_value"))
                 )
         );
         return reservation;

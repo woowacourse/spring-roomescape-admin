@@ -1,6 +1,7 @@
 package roomescape.dao;
 
 import java.sql.PreparedStatement;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,7 +22,7 @@ public class ReservationTimeDao {
     private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) -> {
         ReservationTime reservationTime = new ReservationTime(
                 resultSet.getLong("id"),
-                ReservationTime.parse(resultSet.getString("start_at"))
+                LocalTime.parse(resultSet.getString("start_at"))
         );
         return reservationTime;
     };

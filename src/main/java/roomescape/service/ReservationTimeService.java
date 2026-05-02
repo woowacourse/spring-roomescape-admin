@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationTimeDao;
@@ -28,7 +29,7 @@ public class ReservationTimeService {
     public ReservationTimeResponse createReservationTime(ReservationTimeRequest request) {
         ReservationTime newReservationTime = new ReservationTime(
                 null,
-                ReservationTime.parse(request.startAt())
+                LocalTime.parse(request.startAt())
         );
 
         Long generatedId = reservationTimeDao.insertReservationTime(newReservationTime);

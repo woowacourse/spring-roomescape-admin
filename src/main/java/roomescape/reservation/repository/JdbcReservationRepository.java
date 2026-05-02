@@ -9,6 +9,8 @@ import roomescape.reservation.domain.Reservation;
 import roomescape.time.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
@@ -17,13 +19,13 @@ public class JdbcReservationRepository implements ReservationRepository {
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
         ReservationTime time = new ReservationTime(
                 resultSet.getLong("time_id"),
-                resultSet.getString("start_at")
+                resultSet.getObject("start_at", LocalTime.class)
         );
 
         return new Reservation(
                 resultSet.getLong("id"),
                 resultSet.getString("name"),
-                resultSet.getString("date"),
+                resultSet.getObject("date", LocalDate.class),
                 time
         );
     };
@@ -42,7 +44,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate());
+            ps.setObject(2, reservation.getDate());
             ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);

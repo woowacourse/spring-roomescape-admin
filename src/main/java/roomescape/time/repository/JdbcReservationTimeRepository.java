@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import roomescape.time.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
@@ -16,7 +17,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) ->
             new ReservationTime(
                 resultSet.getLong("id"),
-                resultSet.getString("start_at")
+                resultSet.getObject("start_at", LocalTime.class)
     );
 
     private final JdbcTemplate jdbcTemplate;
@@ -31,7 +32,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, reservationTime.getStartAt());
+            ps.setObject(1, reservationTime.getStartAt());
             return ps;
         }, keyHolder);
 

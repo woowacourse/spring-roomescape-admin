@@ -2,6 +2,7 @@ package roomescape.time.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ class JdbcReservationTimeRepositoryTest {
     @Test
     @DisplayName("새로운 시간 정보를 저장하고 반환된 객체의 ID를 확인한다.")
     void saveTest() {
-        ReservationTime time = ReservationTime.create("10:00");
+        ReservationTime time = ReservationTime.create(LocalTime.of(10, 0));
 
         ReservationTime savedTime = reservationTimeRepository.save(time);
 
@@ -34,7 +35,7 @@ class JdbcReservationTimeRepositoryTest {
     @Test
     @DisplayName("ID를 통해 저장된 시간 정보를 정확히 조회한다.")
     void findByIdTest() {
-        ReservationTime savedTime = reservationTimeRepository.save(ReservationTime.create("11:00"));
+        ReservationTime savedTime = reservationTimeRepository.save(ReservationTime.create(LocalTime.of(11, 0)));
 
         ReservationTime foundTime = reservationTimeRepository.findById(savedTime.getId());
 
@@ -45,8 +46,8 @@ class JdbcReservationTimeRepositoryTest {
     @Test
     @DisplayName("존재하는 모든 시간 목록을 리스트로 조회한다.")
     void findAllTest() {
-        reservationTimeRepository.save(ReservationTime.create("10:00"));
-        reservationTimeRepository.save(ReservationTime.create("11:00"));
+        reservationTimeRepository.save(ReservationTime.create(LocalTime.of(10, 0)));
+        reservationTimeRepository.save(ReservationTime.create(LocalTime.of(11, 0)));
 
         List<ReservationTime> times = reservationTimeRepository.findAll();
 
@@ -57,7 +58,7 @@ class JdbcReservationTimeRepositoryTest {
     @Test
     @DisplayName("특정 ID의 데이터 존재 여부를 boolean으로 반환한다.")
     void existsByIdTest() {
-        ReservationTime savedTime = reservationTimeRepository.save(ReservationTime.create("12:00"));
+        ReservationTime savedTime = reservationTimeRepository.save(ReservationTime.create(LocalTime.of(12, 0)));
 
         boolean exists = reservationTimeRepository.existsById(savedTime.getId());
         boolean notExists = reservationTimeRepository.existsById(999L);
@@ -69,7 +70,7 @@ class JdbcReservationTimeRepositoryTest {
     @Test
     @DisplayName("ID를 지정하여 데이터를 삭제하면 더 이상 조회되지 않는다.")
     void deleteByIdTest() {
-        ReservationTime savedTime = reservationTimeRepository.save(ReservationTime.create("13:00"));
+        ReservationTime savedTime = reservationTimeRepository.save(ReservationTime.create(LocalTime.of(13, 0)));
 
         reservationTimeRepository.deleteById(savedTime.getId());
 

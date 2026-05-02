@@ -1,6 +1,5 @@
 package roomescape.service;
 
-import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
@@ -10,23 +9,25 @@ import roomescape.domain.Reservation;
 import roomescape.dto.request.ReservationRequest;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.response.ReservationResponse;
-import roomescape.dto.response.ReservationTimeResponse;
+import roomescape.service.mapper.ReservationMapper;
 
 @Service
 public class ReservationService {
     private final ReservationDao reservationDao;
     private final ReservationTimeDao reservationTimeDao;
+    private final ReservationMapper reservationMapper;
 
-    public ReservationService(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
+    public ReservationService(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao, ReservationMapper reservationMapper) {
         this.reservationDao = reservationDao;
         this.reservationTimeDao = reservationTimeDao;
+        this.reservationMapper = reservationMapper;
     }
 
     public List<ReservationResponse> findAllReservations() {
         List<Reservation> reservations = reservationDao.findAll();
 
         return reservations.stream()
-                .map(this::convertToResponse)
+                .map(reservationMapper::toResponse)
                 .toList();
     }
 
@@ -42,26 +43,10 @@ public class ReservationService {
 
         Reservation savedReservation = reservationDao.insertReservation(newReservation);
 
-        return convertToResponse(savedReservation);
+        return reservationMapper.toResponse(savedReservation);
     }
 
     public void deleteReservation(Long id) {
         reservationDao.deleteById(id);
-    }
-
-    private ReservationResponse convertToResponse(Reservation reservation) {
-        return new ReservationResponse(
-                reservation.getId(),
-                reservation.getName().toString(),
-                reservation.getDate().toString(),
-                convertToResponse(reservation.getTime())
-        );
-    }
-
-    private ReservationTimeResponse convertToResponse(ReservationTime reservationTime) {
-        return new ReservationTimeResponse(
-                reservationTime.getId(),
-                reservationTime.getStartAt().toString()
-        );
     }
 }

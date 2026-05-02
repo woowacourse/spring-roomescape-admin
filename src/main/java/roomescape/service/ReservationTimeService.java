@@ -7,22 +7,25 @@ import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationTimeRequest;
 import roomescape.dto.response.ReservationTimeResponse;
+import roomescape.service.mapper.ReservationMapper;
 
 @Service
 public class ReservationTimeService {
     private final ReservationTimeDao reservationTimeDao;
     private final ReservationDao reservationDao;
+    private final ReservationMapper reservationMapper;
 
-    public ReservationTimeService(ReservationTimeDao reservationTimeDao, ReservationDao reservationDao) {
+    public ReservationTimeService(ReservationTimeDao reservationTimeDao, ReservationDao reservationDao, ReservationMapper reservationMapper) {
         this.reservationTimeDao = reservationTimeDao;
         this.reservationDao = reservationDao;
+        this.reservationMapper = reservationMapper;
     }
 
     public List<ReservationTimeResponse> findAllReservationTimes() {
         List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
 
         return reservationTimes.stream()
-                .map(this::convertToResponse)
+                .map(reservationMapper::toResponse)
                 .toList();
     }
 
@@ -34,7 +37,7 @@ public class ReservationTimeService {
 
         ReservationTime savedReservationTime = reservationTimeDao.insertReservationTime(newReservationTime);
 
-        return convertToResponse(savedReservationTime);
+        return reservationMapper.toResponse(savedReservationTime);
     }
 
     public void deleteReservationTime(Long id) {
@@ -45,12 +48,5 @@ public class ReservationTimeService {
         }
 
         reservationTimeDao.deleteById(id);
-    }
-
-    private ReservationTimeResponse convertToResponse(ReservationTime reservationTime) {
-        return new ReservationTimeResponse(
-                reservationTime.getId(),
-                reservationTime.getStartAt().toString()
-        );
     }
 }

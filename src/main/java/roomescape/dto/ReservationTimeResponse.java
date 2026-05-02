@@ -5,7 +5,7 @@ import roomescape.domain.ReservationTime;
 
 public record ReservationTimeResponse(Long id, String startAt) {
 
-    public static ReservationTimeResponse toDto(ReservationTime reservationTime) {
+    public static ReservationTimeResponse from(ReservationTime reservationTime) {
         return new ReservationTimeResponse(
             reservationTime.id(),
             reservationTime.startAt().format(DateTimeFormatter.ofPattern("HH:mm"))

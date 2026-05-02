@@ -27,14 +27,14 @@ public class ReservationTimeController {
     @GetMapping
     public List<ReservationTimeResponse> getAllReservationTimes() {
         return reservationTimeService.getAll().stream()
-            .map(ReservationTimeResponse::toDto)
+            .map(ReservationTimeResponse::from)
             .toList();
     }
 
     @PostMapping
     public ReservationTimeResponse addReservationTime(@Valid @RequestBody ReservationTimeRequest request) {
         ReservationTime reservationTime = reservationTimeService.add(request);
-        return ReservationTimeResponse.toDto(reservationTime);
+        return ReservationTimeResponse.from(reservationTime);
     }
 
     @DeleteMapping("{id}")

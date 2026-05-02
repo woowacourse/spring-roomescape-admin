@@ -5,12 +5,12 @@ import roomescape.domain.Reservation;
 
 public record ReservationResponse(Long id, String name, String date, ReservationTimeResponse time) {
 
-    public static ReservationResponse toDto(Reservation reservation) {
+    public static ReservationResponse from(Reservation reservation) {
         return new ReservationResponse(
             reservation.id(),
             reservation.name(),
             reservation.date().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-            ReservationTimeResponse.toDto(reservation.time())
+            ReservationTimeResponse.from(reservation.time())
         );
     }
 }

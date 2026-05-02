@@ -1,6 +1,6 @@
 package roomescape.repository.jdbc;
 
-import static roomescape.repository.jdbc.RoomescapeMapper.RESERVATION_TIME_MAPPER;
+import static roomescape.repository.jdbc.ReservationTimeEntityMapper.RESERVATION_TIME_MAPPER;
 
 import java.sql.PreparedStatement;
 import java.util.List;

@@ -4,7 +4,7 @@ import org.springframework.jdbc.core.RowMapper;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
-public final class RoomescapeMapper {
+public final class ReservationEntityMapper {
 
     public static final RowMapper<Reservation> RESERVATION_ROW_MAPPER = (rs, rowNum) -> {
         ReservationTime time = new ReservationTime(
@@ -18,10 +18,6 @@ public final class RoomescapeMapper {
                 time
         );
     };
-    public static final RowMapper<ReservationTime> RESERVATION_TIME_MAPPER = (rs, rowNum) -> new ReservationTime(
-            rs.getLong("id"),
-            rs.getTime("start_at").toLocalTime()
-    );
 
-    private RoomescapeMapper() {}
+    private ReservationEntityMapper() {}
 }

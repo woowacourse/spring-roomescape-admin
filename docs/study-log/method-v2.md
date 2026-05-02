@@ -106,7 +106,7 @@ prompt 5
 
 예약 추가 요청·응답 예시
 
-POST /reservations HTTP/1.1 Content-Type: application/json { "name": "브라운", "date": "2023-08-05", "reservationTime": "15:40" }
+POST /reservations HTTP/1.1 Content-Type: application/json { "name": "브라운", "date": "2026-08-05", "reservationTime": "15:40" }
 ```
 
 ---

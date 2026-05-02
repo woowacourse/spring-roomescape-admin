@@ -129,7 +129,7 @@ Content-Type: application/json
 
 {
     "name": "브라운",
-    "date": "2023-08-05",
+    "date": "2026-08-05",
     "time": "15:40"
 }
 ```
@@ -141,7 +141,7 @@ Content-Type: application/json
 {
     "id": 1,
     "name": "브라운",
-    "date": "2023-08-05",
+    "date": "2026-08-05",
     "time": "15:40"
 }
 ```
@@ -154,7 +154,7 @@ Content-Type: application/json
 
 {
     "name": "브라운",
-    "date": "2023-08-05",
+    "date": "2026-08-05",
     "timeId": 1
 }
 ```
@@ -166,7 +166,7 @@ Content-Type: application/json
 {
     "id": 1,
     "name": "브라운",
-    "date": "2023-08-05",
+    "date": "2026-08-05",
     "time": {
         "id": 1,
         "startAt": "10:00"

@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,7 +15,7 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 @Repository
-public class JdbcReservationDao implements ReservationDao {
+public class JdbcReservationRepository implements ReservationRepository {
     private static final String FIND_ALL_SQL = """
             SELECT
                 r.id AS reservation_id,
@@ -54,7 +54,7 @@ public class JdbcReservationDao implements ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public JdbcReservationDao(JdbcTemplate jdbcTemplate) {
+    public JdbcReservationRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -64,7 +64,7 @@ public class JdbcReservationDao implements ReservationDao {
     }
 
     @Override
-    public Reservation create(String name, String date, ReservationTime time) {
+    public Reservation save(String name, String date, ReservationTime time) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         int rowCount = insert(name, date, time, keyHolder);
@@ -75,7 +75,7 @@ public class JdbcReservationDao implements ReservationDao {
     }
 
     @Override
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         int deletedRowCount = jdbcTemplate.update(DELETE_SQL, id);
 
         if (deletedRowCount == 0) {

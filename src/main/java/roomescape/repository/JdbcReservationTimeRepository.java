@@ -1,4 +1,4 @@
-package roomescape.dao;
+package roomescape.repository;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,7 +15,7 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 @Repository
-public class JdbcReservationTimeDao implements ReservationTimeDao {
+public class JdbcReservationTimeRepository implements ReservationTimeRepository {
     private static final String FIND_ALL_SQL = """
             SELECT id, start_at
             FROM reservation_time
@@ -45,12 +45,12 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public JdbcReservationTimeDao(JdbcTemplate jdbcTemplate) {
+    public JdbcReservationTimeRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public ReservationTime create(String startAt) {
+    public ReservationTime save(String startAt) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         int rowCount = insert(startAt, keyHolder);
@@ -66,7 +66,7 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
     }
 
     @Override
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         int deletedRowCount = jdbcTemplate.update(DELETE_SQL, id);
 
         if (deletedRowCount == 0) {

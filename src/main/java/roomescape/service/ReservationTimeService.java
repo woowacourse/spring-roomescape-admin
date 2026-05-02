@@ -2,31 +2,31 @@ package roomescape.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.dao.ReservationTimeDao;
+import roomescape.repository.ReservationTimeRepository;
 import roomescape.domain.ReservationTime;
 
 import java.util.List;
 
 @Service
 public class ReservationTimeService {
-    private final ReservationTimeDao reservationTimeDao;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationTimeService(ReservationTimeDao reservationTimeDao){
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationTimeService(ReservationTimeRepository reservationTimeRepository){
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @Transactional
     public ReservationTime create(String startAt) {
-        return reservationTimeDao.create(startAt);
+        return reservationTimeRepository.save(startAt);
     }
 
     @Transactional(readOnly = true)
     public List<ReservationTime> findAll() {
-        return reservationTimeDao.findAll();
+        return reservationTimeRepository.findAll();
     }
 
     @Transactional
     public void delete(Long id){
-        reservationTimeDao.delete(id);
+        reservationTimeRepository.deleteById(id);
     }
 }

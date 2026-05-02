@@ -29,8 +29,8 @@ public class ReservationTimeController {
     }
 
     @GetMapping("/times")
-    public List<ReservationTimeResponseDTO> read() {
-        return reservationTimeService.read().stream()
+    public List<ReservationTimeResponseDTO> getAll() {
+        return reservationTimeService.getAll().stream()
                 .map(ReservationTimeResponseDTO::from)
                 .collect(Collectors.toList());
     }

@@ -20,7 +20,7 @@ public class ReservationTimeService {
         return new ReservationTime(id, reservationTime.getStartAt());
     }
 
-    public List<ReservationTime> read() {
+    public List<ReservationTime> getAll() {
         return reservationTimeRepository.findAll();
     }
 

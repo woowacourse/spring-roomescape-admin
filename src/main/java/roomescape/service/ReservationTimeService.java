@@ -1,13 +1,28 @@
 package roomescape.service;
 
 import java.util.List;
+import org.springframework.stereotype.Service;
 import roomescape.entity.ReservationTime;
+import roomescape.repository.ReservationTimeRepository;
 
-public interface ReservationTimeService {
+@Service
+public class ReservationTimeService {
 
-    List<ReservationTime> findAll();
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    ReservationTime save(ReservationTime reservationTime);
+    public ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {
+        this.reservationTimeRepository = reservationTimeRepository;
+    }
 
-    void delete(Long id);
+    public List<ReservationTime> findAll() {
+        return reservationTimeRepository.findAll();
+    }
+
+    public ReservationTime save(ReservationTime reservationTime) {
+        return reservationTimeRepository.save(reservationTime);
+    }
+
+    public void delete(Long id) {
+        reservationTimeRepository.delete(id);
+    }
 }

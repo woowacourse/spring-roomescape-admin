@@ -62,7 +62,12 @@ public class JdbcReservationDao implements ReservationDao {
         }, keyHolder);
 
         long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
-        return reservation.toEntity(id);
+        return new Reservation(
+                id,
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
+        );
     }
 
     @Override

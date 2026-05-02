@@ -17,9 +17,7 @@ public class Reservation {
     }
 
     public Reservation(String name, LocalDate date, ReservationTime time) {
-        this.name = name;
-        this.date = date;
-        this.time = time;
+        this(null, name, date, time);
     }
 
     public Long getId() {
@@ -36,15 +34,6 @@ public class Reservation {
 
     public ReservationTime getTime() {
         return time;
-    }
-
-    public Reservation toEntity(Long id) {
-        return new Reservation(
-                id,
-                this.getName(),
-                this.date,
-                this.time
-        );
     }
 
 }

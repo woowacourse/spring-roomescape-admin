@@ -4,9 +4,11 @@ import org.springframework.stereotype.Service;
 import roomescape.reservation.ReservationQueryingDao;
 import roomescape.reservation.Reservation;
 import roomescape.reservation.ReservationRequest;
+import roomescape.reservation.ReservationResponse;
 import roomescape.reservation.ReservationUpdatingDao;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservationService {
@@ -19,8 +21,16 @@ public class ReservationService {
         this.reservationUpdatingDao = reservationUpdatingDao;
     }
 
-    public List<Reservation> read() {
-        return reservationQueryingDao.findAllReservations();
+    public List<ReservationResponse> read() {
+        List<Reservation> reservations = reservationQueryingDao.findAllReservations();
+         return reservations.stream()
+                .map(reservation -> new ReservationResponse(
+                        reservation.getId(),
+                        reservation.getName(),
+                        reservation.getDate(),
+                        reservation.getTime().getStartAt()
+                ))
+                .toList();
     }
 
     public Reservation create(ReservationRequest reservationReq) {

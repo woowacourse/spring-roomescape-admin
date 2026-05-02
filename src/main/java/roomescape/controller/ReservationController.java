@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import roomescape.reservation.Reservation;
 import roomescape.reservation.ReservationRequest;
+import roomescape.reservation.ReservationResponse;
 import roomescape.service.ReservationService;
 
 import java.util.List;
@@ -24,8 +25,8 @@ public class ReservationController {
     }
 
     @GetMapping("/reservations")
-    public ResponseEntity<List<Reservation>> read() {
-        List<Reservation> reservations = reservationService.read();
+    public ResponseEntity<List<ReservationResponse>> read() {
+        List<ReservationResponse> reservations = reservationService.read();
         return ResponseEntity.ok().body(reservations);
     }
 

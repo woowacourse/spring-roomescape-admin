@@ -49,7 +49,7 @@ public class RoomEscapeConsoleController implements CommandLineRunner {
             case 1 -> showAllReservations();
             case 2 -> addReservation();
             case 3 -> deleteReservation();
-            default -> {  }
+            default -> {}
         }
     }
 

@@ -3,6 +3,7 @@ package roomescape.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,9 +60,9 @@ class ReservationServiceTest {
     @DisplayName("같은 날짜와 시간으로 예약을 중복 생성할 수 없다.")
     void throwException_When_CreateDuplicateReservation() {
         insertTime("10:00");
-        reservationService.create("브라운", "2026-04-29", 1L);
+        reservationService.create("브라운", LocalDate.of(2026, 4, 29), 1L);
 
-        assertThatThrownBy(() -> reservationService.create("리사", "2026-04-29", 1L))
+        assertThatThrownBy(() -> reservationService.create("리사", LocalDate.of(2026, 4, 29), 1L))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -69,9 +70,9 @@ class ReservationServiceTest {
     @DisplayName("같은 시간이라도 다른 날짜이면 예약을 생성할 수 있다.")
     void createReservation_When_SameTimeDifferentDate() {
         insertTime("10:00");
-        reservationService.create("브라운", "2026-04-29", 1L);
+        reservationService.create("브라운", LocalDate.of(2026, 4, 29), 1L);
 
-        Reservation reservation = reservationService.create("리사", "2026-04-30", 1L);
+        Reservation reservation = reservationService.create("리사", LocalDate.of(2026, 4, 30), 1L);
 
         assertThat(reservation.getId()).isEqualTo(2L);
         assertThat(reservation.getName()).isEqualTo("리사");
@@ -82,7 +83,7 @@ class ReservationServiceTest {
     @Test
     @DisplayName("존재하지 않는 시간으로 예약을 생성할 수 없다.")
     void throwException_When_CreateReservationWithNotFoundTime() {
-        assertThatThrownBy(() -> reservationService.create("브라운", "2026-04-29", 1L))
+        assertThatThrownBy(() -> reservationService.create("브라운", LocalDate.of(2026, 4, 29), 1L))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -90,14 +91,14 @@ class ReservationServiceTest {
     @ValueSource(longs = {0L, -1L})
     @DisplayName("잘못된 시간 ID로 예약을 생성할 수 없다.")
     void throwException_When_CreateReservationWithInvalidTimeId(Long timeId) {
-        assertThatThrownBy(() -> reservationService.create("브라운", "2026-04-29", timeId))
+        assertThatThrownBy(() -> reservationService.create("브라운", LocalDate.of(2026, 4, 29), timeId))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     @DisplayName("시간 ID가 null이면 예약을 생성할 수 없다.")
     void throwException_When_CreateReservationWithNullTimeId() {
-        assertThatThrownBy(() -> reservationService.create("브라운", "2026-04-29", null))
+        assertThatThrownBy(() -> reservationService.create("브라운", LocalDate.of(2026, 4, 29), null))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 

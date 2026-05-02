@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -62,7 +63,7 @@ public class ReservationRepository {
                 (resultSet, rowNum) -> new Reservation(
                         resultSet.getLong("reservation_id"),
                         new Name(resultSet.getString("name")),
-                        ReservationDate.from(resultSet.getString("date")),
+                        new ReservationDate(LocalDate.parse(resultSet.getString("date"))),
                         ReservationTime.from(
                                 resultSet.getLong("time_id"),
                                 resultSet.getString("start_at")

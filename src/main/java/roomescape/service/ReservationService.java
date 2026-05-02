@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -23,9 +24,9 @@ public class ReservationService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public Reservation create(String nameValue, String dateValue, Long timeId) {
+    public Reservation create(String nameValue, LocalDate dateValue, Long timeId) {
         Name name = new Name(nameValue);
-        ReservationDate date = ReservationDate.from(dateValue);
+        ReservationDate date = new ReservationDate(dateValue);
         ReservationTime time = findReservationTime(timeId);
 
         if (reservationRepository.hasReservationAt(date, time)) {

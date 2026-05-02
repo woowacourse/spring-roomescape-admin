@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -59,7 +60,7 @@ class ReservationRepositoryTest {
     void save() {
         ReservationTime time = saveTime("10:00");
 
-        Reservation reservation = saveReservation("브라운", "2026-04-29", time);
+        Reservation reservation = saveReservation("브라운", LocalDate.of(2026, 4, 29), time);
 
         assertThat(reservation.getId()).isEqualTo(1L);
         assertThat(reservation.getName()).isEqualTo("브라운");
@@ -74,8 +75,8 @@ class ReservationRepositoryTest {
         ReservationTime firstTime = saveTime("10:00");
         ReservationTime secondTime = saveTime("11:00");
 
-        saveReservation("브라운", "2026-04-29", firstTime);
-        saveReservation("리사", "2026-04-30", secondTime);
+        saveReservation("브라운", LocalDate.of(2026, 4, 29), firstTime);
+        saveReservation("리사", LocalDate.of(2026, 4, 30), secondTime);
 
         List<Reservation> reservations = reservationRepository.findAll();
 
@@ -90,7 +91,7 @@ class ReservationRepositoryTest {
     @DisplayName("저장된 예약을 삭제한다.")
     void deleteById() {
         ReservationTime time = saveTime("10:00");
-        Reservation reservation = saveReservation("브라운", "2026-04-29", time);
+        Reservation reservation = saveReservation("브라운", LocalDate.of(2026, 4, 29), time);
 
         reservationRepository.deleteById(reservation.getId());
 
@@ -101,11 +102,11 @@ class ReservationRepositoryTest {
         return reservationTimeRepository.save(ReservationTime.from(null, startAt));
     }
 
-    private Reservation saveReservation(String name, String date, ReservationTime time) {
+    private Reservation saveReservation(String name, LocalDate date, ReservationTime time) {
         Reservation reservation = new Reservation(
                 null,
                 new Name(name),
-                ReservationDate.from(date),
+                new ReservationDate(date),
                 time
         );
         return reservationRepository.save(reservation);

@@ -3,6 +3,7 @@ package roomescape.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -65,7 +66,7 @@ class ReservationControllerTest {
         insertTime("10:00");
         ReservationRequest request = new ReservationRequest(
                 "브라운",
-                "2026-04-29",
+                LocalDate.of(2026, 4, 29),
                 1L
         );
 
@@ -93,8 +94,8 @@ class ReservationControllerTest {
     void findAllReservations_After_Create() {
         insertTime("10:00");
         insertTime("11:00");
-        reservationController.create(new ReservationRequest("브라운", "2026-04-29", 1L));
-        reservationController.create(new ReservationRequest("리사", "2026-04-30", 2L));
+        reservationController.create(new ReservationRequest("브라운", LocalDate.of(2026, 4, 29), 1L));
+        reservationController.create(new ReservationRequest("리사", LocalDate.of(2026, 4, 30), 2L));
 
         ResponseEntity<List<ReservationResponse>> reservations = reservationController.findAll();
 
@@ -119,8 +120,8 @@ class ReservationControllerTest {
     void deleteReservation_After_Create() {
         insertTime("10:00");
         insertTime("11:00");
-        reservationController.create(new ReservationRequest("브라운", "2026-04-29", 1L));
-        reservationController.create(new ReservationRequest("리사", "2026-04-30", 2L));
+        reservationController.create(new ReservationRequest("브라운", LocalDate.of(2026, 4, 29), 1L));
+        reservationController.create(new ReservationRequest("리사", LocalDate.of(2026, 4, 30), 2L));
 
         ResponseEntity<Void> response = reservationController.delete(1L);
 

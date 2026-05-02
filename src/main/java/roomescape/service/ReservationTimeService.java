@@ -3,28 +3,28 @@ package roomescape.service;
 import java.time.LocalTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.dao.ReservationTimeDAO;
+import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
 
 @Service
 public class ReservationTimeService {
 
-    private final ReservationTimeDAO timeDAO;
+    private final ReservationTimeDao timeDao;
 
-    public ReservationTimeService(ReservationTimeDAO timeDAO) {
-        this.timeDAO = timeDAO;
+    public ReservationTimeService(ReservationTimeDao timeDao) {
+        this.timeDao = timeDao;
     }
 
-    public List<ReservationTime> read() {
-        return timeDAO.read();
+    public List<ReservationTime> findAll() {
+        return timeDao.read();
     }
 
     public ReservationTime create(LocalTime startAt) {
         ReservationTime time = new ReservationTime(startAt);
-        return timeDAO.create(time);
+        return timeDao.create(time);
     }
 
     public int delete(Long id) {
-        return timeDAO.delete(id);
+        return timeDao.delete(id);
     }
 }

@@ -13,13 +13,13 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
 @Repository
-public class ReservationDAO {
+public class ReservationDao {
     private static final RowMapper<Reservation> rowMapper = (rs, rowNum) -> {
         return new Reservation(
-                rs.getLong("id"),
+                rs.getLong("reservation_id"),
                 rs.getString("name"),
                 LocalDate.parse(rs.getString("date")),
-                new ReservationTime(rs.getLong("id"),
+                new ReservationTime(rs.getLong("time_id"),
                         LocalTime.parse(rs.getString("start_at"), DateTimeFormatter.ofPattern("HH:mm")))
         );
     };
@@ -27,14 +27,14 @@ public class ReservationDAO {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public ReservationDAO(JdbcTemplate jdbcTemplate) {
+    public ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("reservation")
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<Reservation> findAll() {
+    public List<Reservation> read() {
         String sql = "select r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at as start_at from reservation r inner join reservation_time t on r.time_id = t.id";
         return jdbcTemplate.query(sql, rowMapper);
     }

@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
@@ -23,6 +24,11 @@ public class ReservationTimeService {
     }
 
     public void delete(Long id) {
-        reservationTimeDao.delete(id);
+        try {
+            reservationTimeDao.read(id);
+            reservationTimeDao.delete(id);
+        } catch (NoSuchElementException exception) {
+            throw new IllegalArgumentException("[ERROR] 해당 id의 예약 시간이 존재하지 않습니다.");
+        }
     }
 }

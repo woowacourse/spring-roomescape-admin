@@ -33,6 +33,11 @@ public class ReservationService {
     }
 
     public void delete(Long id) {
-        reservationDao.delete(id);
+        try {
+            reservationDao.read(id);
+            reservationDao.delete(id);
+        } catch (NoSuchElementException exception) {
+            throw new IllegalArgumentException("[ERROR] 해당 id의 예약이 존재하지 않습니다.");
+        }
     }
 }

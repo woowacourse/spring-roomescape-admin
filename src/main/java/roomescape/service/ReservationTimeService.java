@@ -27,7 +27,7 @@ public class ReservationTimeService {
     public ReservationTimeResponse createReservationTime(ReservationTimeRequest request) {
         ReservationTime newReservationTime = new ReservationTime(
                 null,
-                LocalTime.parse(request.startAt())
+                request.startAt()
         );
 
         ReservationTime savedReservationTime = reservationTimeDao.insertReservationTime(newReservationTime);

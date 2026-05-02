@@ -36,7 +36,7 @@ public class ReservationService {
         Reservation newReservation = new Reservation(
                 null,
                 Name.parse(request.name()),
-                LocalDate.parse(request.date()),
+                request.date(),
                 reservationTime
         );
 

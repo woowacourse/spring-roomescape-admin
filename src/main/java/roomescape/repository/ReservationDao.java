@@ -47,26 +47,7 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
-    public Reservation findById(Long id) {
-        String sql = """
-                        SELECT r.id AS reservation_id,
-                               r.name,
-                               r.date,
-                               t.id AS time_id,
-                               t.start_at AS time_value
-                        FROM reservation AS r
-                        JOIN reservation_time AS t
-                        ON r.time_id = t.id
-                        WHERE r.id = ?
-                """;
-        try {
-            return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("존재하지 않는 예약입니다.");
-        }
-    }
-
-    public Long save(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -78,7 +59,12 @@ public class ReservationDao {
             preparedStatement.setLong(3, reservation.time().id());
             return preparedStatement;
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return new Reservation(
+                keyHolder.getKey().longValue(),
+                reservation.name(),
+                reservation.date(),
+                reservation.time()
+        );
     }
 
     public void deleteById(Long id) {

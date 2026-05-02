@@ -27,7 +27,7 @@ public class ReservationTimeDao {
         return reservationTime;
     };
 
-    public Long save(ReservationTime reservationTime) {
+    public ReservationTime save(ReservationTime reservationTime) {
         String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -38,7 +38,10 @@ public class ReservationTimeDao {
             preparedStatement.setString(1, String.valueOf(reservationTime.startAt()));
             return preparedStatement;
         }, keyHolder);
-        return keyHolder.getKey().longValue();
+        return new ReservationTime(
+                keyHolder.getKey().longValue(),
+                reservationTime.startAt()
+        );
     }
 
     public List<ReservationTime> findAll() {

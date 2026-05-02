@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ReservationResponse;
+import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
 import roomescape.repository.ReservationDao;
 import roomescape.repository.ReservationTimeDao;
@@ -27,8 +28,8 @@ public class ReservationService {
 
     public ReservationResponse saveReservation(ReservationCreateRequest request) {
         ReservationTime reservationTime = reservationTimeDao.findById(request.timeId());
-        Long id = reservationDao.save(request.toEntity(reservationTime));
-        return ReservationResponse.fromEntity(reservationDao.findById(id));
+        Reservation reservation = reservationDao.save(request.toEntity(reservationTime));
+        return ReservationResponse.fromEntity(reservation);
     }
 
     public void deleteReservation(Long id) {

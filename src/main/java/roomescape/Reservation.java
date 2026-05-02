@@ -9,14 +9,14 @@ public class Reservation {
     private final LocalDate date;
     private final ReservationTime time;
 
-    Reservation(Long id, String name, LocalDate date, ReservationTime time) {
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    Reservation(String name, LocalDate date, ReservationTime time) {
+    public Reservation(String name, LocalDate date, ReservationTime time) {
         this.id = null;
         this.name = name;
         this.date = date;

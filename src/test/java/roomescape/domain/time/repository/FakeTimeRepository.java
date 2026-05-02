@@ -2,6 +2,7 @@ package roomescape.domain.time.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import roomescape.domain.time.domain.Time;
 
 public class FakeTimeRepository implements TimeRepository {
@@ -24,13 +25,13 @@ public class FakeTimeRepository implements TimeRepository {
     @Override
     public Time findTimeById(Long id) {
         return times.stream()
-            .filter(time -> time.getId().equals(id))
+            .filter(time -> Objects.equals(time.getId(), id))
             .findFirst()
             .orElse(null);
     }
 
     @Override
     public void deleteTimeById(Long id) {
-        times.removeIf(time -> time.getId().equals(id));
+        times.removeIf(time -> Objects.equals(time.getId(), id));
     }
 }

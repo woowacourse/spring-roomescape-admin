@@ -2,7 +2,6 @@ package roomescape.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,29 +25,25 @@ public class ReservationTimeController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTimeResponseDto> create(@RequestBody ReservationTimeCreateRequestDto dto) {
+    public ReservationTimeResponseDto create(@RequestBody ReservationTimeCreateRequestDto dto) {
         ReservationTimeCreateDto serviceDto = ReservationTimeCreateDto.toDto(dto);
 
         ReservationTimeDto reservationTime = reservationTimeService.save(serviceDto);
 
-        ReservationTimeResponseDto response = ReservationTimeResponseDto.toDto(reservationTime);
-        return ResponseEntity.ok(response);
+        return ReservationTimeResponseDto.toDto(reservationTime);
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTimeResponseDto>> findAll() {
+    public List<ReservationTimeResponseDto> findAll() {
         List<ReservationTimeDto> found = reservationTimeService.findAll();
 
-        List<ReservationTimeResponseDto> response = found.stream()
+        return found.stream()
                 .map(ReservationTimeResponseDto::toDto)
                 .collect(Collectors.toList());
-
-        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable long id) {
+    public void delete(@PathVariable long id) {
         reservationTimeService.deleteById(id);
-        return ResponseEntity.ok().build();
     }
 }

@@ -2,7 +2,6 @@ package roomescape.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,30 +25,25 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponseDto>> findAll() {
+    public List<ReservationResponseDto> findAll() {
         List<ReservationDto> reservationList = reservationService.findAll();
 
-        List<ReservationResponseDto> response = reservationList.stream()
+        return reservationList.stream()
                 .map(ReservationResponseDto::toDto)
                 .collect(Collectors.toList());
-
-        return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponseDto> create(@RequestBody ReservationCreateRequestDto dto) {
+    public ReservationResponseDto create(@RequestBody ReservationCreateRequestDto dto) {
         ReservationCreateDto serviceDto = ReservationCreateDto.toDto(dto);
-        
+
         ReservationDto saved = reservationService.save(serviceDto);
 
-        ReservationResponseDto responseDto = ReservationResponseDto.toDto(saved);
-        return ResponseEntity.ok(responseDto);
+        return ReservationResponseDto.toDto(saved);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public void delete(@PathVariable Long id) {
         reservationService.deleteById(id);
-
-        return ResponseEntity.ok().build();
     }
 }

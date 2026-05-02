@@ -33,8 +33,4 @@ public class ReservationTimeController {
         return ResponseEntity.ok().build();
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
 }

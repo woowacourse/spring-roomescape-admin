@@ -2,6 +2,7 @@ package roomescape.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.dao.ReservationRepository;
 
@@ -16,11 +17,10 @@ public class FakeReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation findById(Long id) {
+    public Optional<Reservation> findById(Long id) {
         return reservations.stream()
                 .filter(reservation -> reservation.getId().equals(id))
-                .findFirst()
-                .orElseThrow();
+                .findFirst();
     }
 
     @Override

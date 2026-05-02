@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -47,7 +48,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation findById(Long id) {
+    public Optional<Reservation> findById(Long id) {
         String sql = """
                 SELECT r.id as reservation_id,
                        r.name,
@@ -59,7 +60,7 @@ public class JdbcReservationRepository implements ReservationRepository {
                 WHERE r.id = ?
                 """;
 
-        return jdbcTemplate.queryForObject(sql, (rs, ronNum) -> new Reservation(
+        List<Reservation> reservations = jdbcTemplate.query(sql, (rs, ronNum) -> new Reservation(
                 rs.getLong("reservation_id"),
                 rs.getString("name"),
                 LocalDate.parse(rs.getString("date")),
@@ -67,6 +68,8 @@ public class JdbcReservationRepository implements ReservationRepository {
                         rs.getLong("time_id"),
                         LocalTime.parse(rs.getString("start_at")))
         ), id);
+
+        return reservations.stream().findFirst();
     }
 
     @Override

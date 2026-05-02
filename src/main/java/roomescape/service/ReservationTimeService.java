@@ -9,6 +9,8 @@ import roomescape.dto.ReservationTimeRequest;
 @Service
 public class ReservationTimeService {
 
+    public static final String NOT_EXIST_TIME = "존재하지 않는 예약 시간입니다.";
+    
     private final ReservationTimeRepository reservationTimeRepository;
 
     public ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {
@@ -20,7 +22,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTime findReservationTime(Long id) {
-        return reservationTimeRepository.findById(id);
+        return reservationTimeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(NOT_EXIST_TIME));
     }
 
     public ReservationTime createReservationTime(ReservationTimeRequest request) {

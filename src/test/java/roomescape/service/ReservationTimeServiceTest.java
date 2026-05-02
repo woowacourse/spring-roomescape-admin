@@ -1,10 +1,9 @@
 package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 import java.time.LocalTime;
-import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Test;
 import roomescape.dao.ReservationTimeRepository;
 import roomescape.domain.FakeReservationTimeRepository;
@@ -71,7 +70,8 @@ class ReservationTimeServiceTest {
         Long deleteId = 1L;
         reservationTimeService.deleteReservationTime(deleteId);
 
-        assertThatThrownBy(() -> reservationTimeService.findReservationTime(deleteId))
-                .isInstanceOf(NoSuchElementException.class);
+        assertThatIllegalArgumentException()
+                .isThrownBy(() -> reservationTimeService.findReservationTime(deleteId))
+                .withMessageContaining("존재하지 않는 예약 시간입니다.");
     }
 }

@@ -5,19 +5,22 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationSaveDto;
 import roomescape.fixture.TestReservationDao;
 import roomescape.fixture.TestReservationTimeDao;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 class ReservationServiceTest {
 
+    private static final int INSERT_INCREMENT = 1;
     private static final LocalTime time = LocalTime.of(10, 0);
     private static final LocalDate date = LocalDate.of(2026, 5, 3);
     private static final String name = "송송";
-    private static final ReservationTime reservationTime = new ReservationTime(time);
+    private static final ReservationTime reservationTime = new ReservationTime(1L, time);
     private static final Reservation reservation = new Reservation(name, date, reservationTime);
 
     @Nested
@@ -49,6 +52,61 @@ class ReservationServiceTest {
             // then
             Assertions.assertThat(actual)
                     .hasSize(reservations.size());
+        }
+
+    }
+
+    @Nested
+    class Reserve {
+
+        @Test
+        void 등록시_예약_데이터수가_1증가한다() {
+            // given
+            List<Reservation> emptyReservations = List.of();
+            ReservationService service = generateReservationService(
+                    emptyReservations,
+                    List.of(reservationTime)
+            );
+            ReservationSaveDto dto = new ReservationSaveDto(name, date, reservationTime.getId());
+
+            // when
+            service.reserve(dto);
+
+            // then
+            Assertions.assertThat(service.readAll())
+                    .hasSize(emptyReservations.size() + INSERT_INCREMENT);
+        }
+
+        @Test
+        void 등록한_예약과_반환되는_예약의_id를_제외한_모든필드가_일치한다() {
+            // given
+            ReservationService service = generateReservationService(
+                    List.of(),
+                    List.of(reservationTime)
+            );
+            ReservationSaveDto dto = new ReservationSaveDto(name, date, reservationTime.getId());
+
+            // when
+            Reservation actual = service.reserve(dto);
+
+            // then
+            Assertions.assertThat(actual)
+                    .usingRecursiveComparison()
+                    .ignoringFields("id")
+                    .isEqualTo(reservation);
+        }
+
+        @Test
+        void 존재하지_않는_timeId로_예약하면_예외가_발생한다() {
+            // given
+            Long wrongId = Long.MIN_VALUE;
+            ReservationService service = generateReservationService(List.of(), List.of());
+            ReservationSaveDto dto = new ReservationSaveDto(name, date, wrongId);
+
+            // when & then
+            Assertions.assertThatThrownBy(() -> service.reserve(dto))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("[ERROR] 존재하지 않는 ReservationTime 입니다.");
         }
     }
 

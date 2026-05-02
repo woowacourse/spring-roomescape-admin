@@ -24,7 +24,7 @@ public class ReservationTimeController {
 
     @GetMapping
     public List<ReservationTimeResponse> getReservationTimes() {
-        List<ReservationTime> reservationTimes = reservationTimeService.findAll();
+        List<ReservationTime> reservationTimes = reservationTimeService.findReservationTimes();
         return reservationTimes.stream()
                 .map(ReservationTimeResponse::from)
                 .toList();
@@ -34,12 +34,12 @@ public class ReservationTimeController {
     @PostMapping
     public ReservationTimeResponse createReservationTime(
             @Valid @RequestBody ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime reservationTime = reservationTimeService.save(reservationTimeRequest.startAt());
+        ReservationTime reservationTime = reservationTimeService.createReservationTime(reservationTimeRequest.startAt());
         return ReservationTimeResponse.from(reservationTime);
     }
 
     @DeleteMapping("/{id}")
     public void deleteReservationTime(@PathVariable long id) {
-        reservationTimeService.delete(id);
+        reservationTimeService.deleteReservationTime(id);
     }
 }

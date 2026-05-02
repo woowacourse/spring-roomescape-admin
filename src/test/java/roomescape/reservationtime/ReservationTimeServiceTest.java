@@ -1,6 +1,7 @@
 package roomescape.reservationtime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
@@ -58,18 +59,18 @@ class ReservationTimeServiceTest {
 
     @Test
     void 예약_시간을_등록할_수_있다() {
-        reservationTimeService.save(LocalTime.of(10, 30));
+        reservationTimeService.createReservationTime(LocalTime.of(10, 30));
 
-        assertThat(reservationTimeService.findAll())
+        assertThat(reservationTimeService.findReservationTimes())
                 .extracting(ReservationTime::startAt)
                 .containsExactly(LocalTime.of(10, 30));
     }
 
     @Test
     void 예약_시간이_중복되면_예외가_발생한다() {
-        reservationTimeService.save(LocalTime.of(16, 0));
+        reservationTimeService.createReservationTime(LocalTime.of(16, 0));
 
-        assertThatThrownBy(() -> reservationTimeService.save(LocalTime.of(16, 0)))
+        assertThatThrownBy(() -> reservationTimeService.createReservationTime(LocalTime.of(16, 0)))
                 .isInstanceOf(ReservationTimeException.class)
                 .extracting(e -> ((ReservationTimeException) e).getErrorCode())
                 .isEqualTo(ReservationTimeErrorCode.DUPLICATE);
@@ -77,43 +78,41 @@ class ReservationTimeServiceTest {
 
     @Test
     void 전체_예약_시간을_조회할_수_있다() {
-        reservationTimeService.save(LocalTime.of(9, 0));
-        reservationTimeService.save(LocalTime.of(11, 0));
+        reservationTimeService.createReservationTime(LocalTime.of(9, 0));
+        reservationTimeService.createReservationTime(LocalTime.of(11, 0));
 
-        assertThat(reservationTimeService.findAll())
+        assertThat(reservationTimeService.findReservationTimes())
                 .extracting(ReservationTime::startAt)
                 .containsExactly(LocalTime.of(9, 0), LocalTime.of(11, 0));
     }
 
     @Test
     void 존재하지_않는_ID로_조회하면_예외가_발생한다() {
-        assertThat(reservationTimeService.findAll()).isEmpty();
+        assertThat(reservationTimeService.findReservationTimes()).isEmpty();
     }
 
     @Test
     void 예약을_삭제할_수_있다() {
-        ReservationTime saved = reservationTimeService.save(LocalTime.of(16, 0));
+        ReservationTime saved = reservationTimeService.createReservationTime(LocalTime.of(16, 0));
 
-        reservationTimeService.delete(saved.id());
+        reservationTimeService.deleteReservationTime(saved.id());
     }
 
     @Test
     void 예약이_있으면_삭제가_차단된다() {
-        ReservationTime saved = reservationTimeService.save(LocalTime.of(15, 40));
+        ReservationTime saved = reservationTimeService.createReservationTime(LocalTime.of(15, 40));
         insertReservation("kim", LocalDate.of(2026, 5, 1), saved.id());
 
-        assertThatThrownBy(() -> reservationTimeService.delete(saved.id()))
+        assertThatThrownBy(() -> reservationTimeService.deleteReservationTime(saved.id()))
                 .isInstanceOf(ReservationTimeException.class)
                 .extracting(e -> ((ReservationTimeException) e).getErrorCode())
                 .isEqualTo(ReservationTimeErrorCode.HAS_RESERVATION);
     }
 
     @Test
-    void 존재하지_않는_ID로_삭제하면_예외가_발생한다() {
-        assertThatThrownBy(() -> reservationTimeService.delete(999L))
-                .isInstanceOf(ReservationTimeException.class)
-                .extracting(e -> ((ReservationTimeException) e).getErrorCode())
-                .isEqualTo(ReservationTimeErrorCode.NOT_FOUND);
+    void 존재하지_않는_ID로_삭제해도_예외가_발생하지_않는다() {
+        assertThatCode(() -> reservationTimeService.deleteReservationTime(999L))
+                .doesNotThrowAnyException();
     }
 
     private void insertReservation(String name, LocalDate date, long timeId) {

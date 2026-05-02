@@ -18,11 +18,11 @@ public class ReservationDao {
 
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
         ReservationTime reservationTime = new ReservationTime(
-                resultSet.getLong("id"),
-                resultSet.getTime("start_at").toLocalTime()
+                resultSet.getLong("time_id"),
+                resultSet.getTime("time_value").toLocalTime()
         );
         return new Reservation(
-                resultSet.getLong("id"),
+                resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
                 resultSet.getDate("date").toLocalDate(),
                 reservationTime

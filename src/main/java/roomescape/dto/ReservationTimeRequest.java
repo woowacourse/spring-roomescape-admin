@@ -8,6 +8,6 @@ public record ReservationTimeRequest(
 ) {
 
     public ReservationTime toEntity() {
-        return new ReservationTime(null, this.startAt);
+        return new ReservationTime(this.startAt);
     }
 }

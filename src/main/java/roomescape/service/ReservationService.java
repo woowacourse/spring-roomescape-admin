@@ -22,11 +22,13 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public Reservation addReservation(ReservationRequest reservationRequest) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequest.timeId());
-        Reservation reservation = new Reservation(reservationRequest.name(), reservationRequest.date(),
-                reservationTime);
+    public Reservation addReservation(Reservation reservation) {
         return reservationRepository.save(reservation);
+    }
+
+    public ReservationTime findReservationTimeById(Long timeId) {
+        ReservationTime reservationTime = reservationTimeRepository.findById(timeId);
+        return reservationTime;
     }
 
     public void deleteReservation(Long id) {

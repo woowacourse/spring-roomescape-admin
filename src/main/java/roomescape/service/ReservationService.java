@@ -3,7 +3,6 @@ package roomescape.service;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequestDTO;
@@ -35,7 +34,6 @@ public class ReservationService {
                         Collectors.toList());
     }
 
-    @Transactional
     public ReservationResponseDTO addReservation(ReservationRequestDTO reservationRequestDTO) {
         ReservationTime time = reservationTimeRepository.findById(reservationRequestDTO.timeId())
                 .orElseThrow(
@@ -46,7 +44,7 @@ public class ReservationService {
         return ReservationResponseDTO.from(savedReservation);
     }
 
-    @Transactional
+
     public void deleteReservation(Long id) {
         reservationRepository.delete(id);
     }

@@ -8,6 +8,7 @@ public record ReservationResponseDTO(
         LocalDate date,
         Long timeId
 ) {
+
     public static ReservationResponseDTO from(Reservation reservation) {
         return new ReservationResponseDTO(
                 reservation.getName(),

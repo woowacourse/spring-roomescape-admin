@@ -23,9 +23,10 @@ public class ReservationTimeService {
         }
 
         ReservationTime reservationTime = reservationTimeRequest.toEntity();
-        reservationTime.setId(reservationTimeRepository.save(reservationTime));
+        Long id = reservationTimeRepository.save(reservationTime);
 
-        return ReservationTimeResponse.from(reservationTime);
+        ReservationTime savedReservationTime = ReservationTime.create(id, reservationTime.getStartAt());
+        return ReservationTimeResponse.from(savedReservationTime);
     }
 
     public List<ReservationTimeResponse> getAll() {

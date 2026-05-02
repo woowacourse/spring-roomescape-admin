@@ -2,14 +2,12 @@ package roomescape.domain.entity;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Builder
 @Getter
 public class Reservation {
-    @Setter
     private Long id;
     private String name;
     private LocalDate date;

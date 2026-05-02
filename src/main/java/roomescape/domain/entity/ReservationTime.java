@@ -9,7 +9,6 @@ import java.time.LocalTime;
 @Getter
 @Builder
 public class ReservationTime {
-    @Setter
     private Long id;
     private LocalTime startAt;
 

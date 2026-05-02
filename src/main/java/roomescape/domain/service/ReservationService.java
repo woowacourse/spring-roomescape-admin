@@ -22,17 +22,20 @@ public class ReservationService {
 
     @Transactional
     public ReservationResponse save(ReservationRequest reservationRequest) {
+        LocalDate date = reservationRequest.date();
+
         List<Reservation> reservations = reservationRepository.getAll();
         for (Reservation reservation : reservations) {
-            validateDuplicateReservation(reservation, reservationRequest.date(), reservationRequest.timeId());
+            validateDuplicateReservation(reservation, date, reservationRequest.timeId());
         }
 
         ReservationTime reservationTime = reservationTimeRepository.getById(reservationRequest.timeId());
         Reservation reservation = reservationRequest.toEntity(reservationTime);
 
-        reservation.setId(reservationRepository.save(reservation));
+        Long id = reservationRepository.save(reservation);
+        Reservation savedReservation = Reservation.create(id, reservationRequest.name(), date, reservationTime);
 
-        return ReservationResponse.from(reservation);
+        return ReservationResponse.from(savedReservation);
     }
 
     public List<ReservationResponse> getAll() {

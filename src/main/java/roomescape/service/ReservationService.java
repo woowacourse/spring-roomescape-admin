@@ -22,10 +22,16 @@ public class ReservationService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public List<ReservationResponseDTO> readReservation() {
+    public List<ReservationResponseDTO> readAllReservation() {
         return reservationRepository.findAll().stream()
                 .map(ReservationResponseDTO::from)
                 .collect(Collectors.toList());
+    }
+
+    public List<ReservationResponseDTO> readReservationByTimeId(Long timeId) {
+        return reservationRepository.findByTimeId(timeId).stream()
+                .map(ReservationResponseDTO::from).collect(
+                        Collectors.toList());
     }
 
     public ReservationResponseDTO addReservation(ReservationRequestDTO reservationRequestDTO) {

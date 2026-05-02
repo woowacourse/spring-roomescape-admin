@@ -7,15 +7,21 @@ import org.springframework.stereotype.Service;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequestDTO;
 import roomescape.dto.ReservationTimeResponseDTO;
+import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationTimeService {
 
     private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {
+    public ReservationTimeService(
+            ReservationTimeRepository reservationTimeRepository,
+            ReservationRepository reservationRepository
+    ) {
         this.reservationTimeRepository = reservationTimeRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     public ReservationTimeResponseDTO addReservationTime(
@@ -34,6 +40,9 @@ public class ReservationTimeService {
     }
 
     public void deleteReservationTime(Long id) {
+        if (reservationRepository.existByTimeId(id)) {
+            throw new IllegalArgumentException("이미 예약된 시간은 삭제할 수 없습니다.");
+        }
         reservationTimeRepository.delete(id);
     }
 }

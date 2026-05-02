@@ -72,6 +72,39 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
+    public boolean existByTimeId(Long timeId) {
+        String sql = "select count(*) from reservation where time_id = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class);
+        return count != null && count > 0;
+    }
+
+    @Override
+    public List<Reservation> findByTimeId(Long timeId) {
+        String sql = """
+                    select r.id as reservation_id,   
+                    r.name, r.date, 
+                    t.id as reservation_time_id,
+                    t.start_at as time_value
+                    from reservation as r 
+                    inner join reservation_time as t 
+                    on r.time_id = t.id
+                    where r.time_id = ?
+                """;
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            ReservationTime time = new ReservationTime(
+                    rs.getLong("reservation_time_id"),
+                    LocalTime.parse(rs.getString("time_value"))
+            );
+            return new Reservation(
+                    rs.getLong("reservation_id"),
+                    rs.getString("name"),
+                    LocalDate.parse(rs.getString("date")),
+                    time
+            );
+        }, timeId);
+    }
+
+    @Override
     public List<Reservation> findAll() {
         String sql = """
                     select r.id as reservation_id,   

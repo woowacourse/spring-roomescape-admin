@@ -50,7 +50,7 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
-    public Long insertReservation(Reservation reservation) {
+    public Reservation insertReservation(Reservation reservation) {
         String createSql = "insert into reservations (name, date, time_id) values (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -64,7 +64,12 @@ public class ReservationDao {
 
         Long generatedId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
-        return generatedId;
+        return new Reservation(
+                generatedId,
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
+        );
     }
 
     public void deleteById(Long id) {

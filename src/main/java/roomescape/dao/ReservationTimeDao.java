@@ -33,7 +33,7 @@ public class ReservationTimeDao {
         return jdbcTemplate.query(sql, reservationTimeRowMapper);
     }
 
-    public Long insertReservationTime(ReservationTime reservationTime) {
+    public ReservationTime insertReservationTime(ReservationTime reservationTime) {
         String sql = "insert into reservation_times (start_at) values (?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -45,7 +45,10 @@ public class ReservationTimeDao {
 
         Long generatedId = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
-        return generatedId;
+        return new ReservationTime(
+                generatedId,
+                reservationTime.getStartAt()
+        );
     }
 
     public void deleteById(Long id) {

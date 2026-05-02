@@ -40,14 +40,7 @@ public class ReservationService {
                 reservationTime
         );
 
-        Long generatedId = reservationDao.insertReservation(newReservation);
-
-        Reservation savedReservation = new Reservation(
-                generatedId,
-                newReservation.getName(),
-                newReservation.getDate(),
-                reservationTime
-        );
+        Reservation savedReservation = reservationDao.insertReservation(newReservation);
 
         return convertToResponse(savedReservation);
     }

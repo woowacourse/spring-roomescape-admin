@@ -4,10 +4,8 @@ import java.time.LocalTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationTimeDao;
-import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationTimeRequest;
-import roomescape.dto.response.ReservationResponse;
 import roomescape.dto.response.ReservationTimeResponse;
 
 @Service
@@ -32,14 +30,9 @@ public class ReservationTimeService {
                 LocalTime.parse(request.startAt())
         );
 
-        Long generatedId = reservationTimeDao.insertReservationTime(newReservationTime);
+        ReservationTime savedReservationTime = reservationTimeDao.insertReservationTime(newReservationTime);
 
-        ReservationTime reservationTime = new ReservationTime(
-                generatedId,
-                newReservationTime.getStartAt()
-        );
-
-        return convertToResponse(reservationTime);
+        return convertToResponse(savedReservationTime);
     }
 
     public void deleteReservationTime(Long id) {

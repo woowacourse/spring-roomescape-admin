@@ -1,7 +1,6 @@
 package roomescape.repository.h2;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,26 +10,23 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationRepository;
 
 @Repository
 public class H2ReservationRepository implements ReservationRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) ->
-            new ReservationTime(
-                    resultSet.getLong("time_id"),
-                    LocalTime.parse(resultSet.getString("start_at"))
-            );
-    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) ->
-            new Reservation(
-                    resultSet.getLong("id"),
-                    resultSet.getString("name"),
-                    LocalDate.parse(resultSet.getString("date")),
-                    reservationTimeRowMapper.mapRow(resultSet, rowNum));
 
     public H2ReservationRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public static RowMapper<Reservation> reservationRowMapper() {
+        return (resultSet, rowNum) ->
+                new Reservation(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        LocalDate.parse(resultSet.getString("date")),
+                        H2ReservationTimeRepository.rowMapper().mapRow(resultSet, rowNum));
     }
 
     @Override
@@ -41,7 +37,7 @@ public class H2ReservationRepository implements ReservationRepository {
                 INNER JOIN reservation_time AS t
                 ON r.time_id = t.id
                 """;
-        return jdbcTemplate.query(sql, reservationRowMapper);
+        return jdbcTemplate.query(sql, reservationRowMapper());
     }
 
     @Override
@@ -56,17 +52,17 @@ public class H2ReservationRepository implements ReservationRepository {
 
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
 
-        return jdbcTemplate.queryForObject(sql, params, reservationRowMapper);
+        return jdbcTemplate.queryForObject(sql, params, reservationRowMapper());
     }
 
     @Override
     public Reservation save(Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = "INSERT INTO reservation(name, date, time_id) VALUES (:name, :date, :timeId)";
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("name", reservation.getName());
-        params.addValue("date", reservation.getDate());
-        params.addValue("timeId", reservation.getTime().getId());
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", reservation.getName())
+                .addValue("date", reservation.getDate())
+                .addValue("timeId", reservation.getTime().getId());
 
         jdbcTemplate.update(sql, params, keyHolder);
         long id = Objects.requireNonNull(keyHolder.getKey()).longValue();

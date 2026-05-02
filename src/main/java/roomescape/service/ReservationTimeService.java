@@ -1,6 +1,7 @@
 package roomescape.service;
 
-import jakarta.validation.constraints.NotNull;
+import static java.util.Objects.requireNonNull;
+
 import java.time.LocalTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -22,19 +23,19 @@ public class ReservationTimeService {
     private final ReservationTimeRepository reservationTimeRepository;
 
     @Transactional
-    public ReservationTimeResult register(
-            @NotNull(message = "예약 시간 정보가 필요합니다.") ReservationTimeCommand request
-    ) {
-        validateAlreadyTime(request.startAt());
-        ReservationTime reservationTime = new ReservationTime(request.startAt());
+    public ReservationTimeResult register(ReservationTimeCommand command) {
+        requireNonNull(command, "예약 시간 정보가 필요합니다.");
+
+        validateAlreadyTime(command.startAt());
+        ReservationTime reservationTime = new ReservationTime(command.startAt());
         ReservationTime saved = reservationTimeRepository.save(reservationTime);
+
         return ReservationTimeResult.from(saved);
     }
 
-    private void validateAlreadyTime(LocalTime startAt) {
-        if (reservationTimeRepository.existsByStartAt(startAt)) {
-            throw new DuplicateEntityException("이미 등록된 예약 시간 입니다. %s", startAt);
-        }
+    @Transactional
+    public void remove(Long id) {
+        reservationTimeRepository.deleteById(id);
     }
 
     public List<ReservationTimeResult> getAllReservationTimes() {
@@ -44,8 +45,9 @@ public class ReservationTimeService {
                 .toList();
     }
 
-    @Transactional
-    public void remove(Long id) {
-        reservationTimeRepository.deleteById(id);
+    private void validateAlreadyTime(LocalTime startAt) {
+        if (reservationTimeRepository.existsByStartAt(startAt)) {
+            throw new DuplicateEntityException("이미 등록된 예약 시간 입니다. %s", startAt);
+        }
     }
 }

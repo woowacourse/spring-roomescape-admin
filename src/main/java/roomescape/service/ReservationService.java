@@ -1,12 +1,12 @@
 package roomescape.service;
 
-import jakarta.validation.constraints.NotNull;
+import static java.util.Objects.requireNonNull;
+
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 import roomescape.domain.DuplicateEntityException;
 import roomescape.domain.EntityNotFoundException;
 import roomescape.domain.Reservation;
@@ -18,7 +18,6 @@ import roomescape.service.result.ReservationResult;
 
 @Service
 @Transactional(readOnly = true)
-@Validated
 @RequiredArgsConstructor
 public class ReservationService {
 
@@ -26,13 +25,21 @@ public class ReservationService {
     private final ReservationTimeRepository reservationTimeRepository;
 
     @Transactional
-    public ReservationResult reserve(@NotNull(message = "예약 정보가 비어있습니다.") ReservationCommand request) {
-        ReservationTime time = findTimeWithThrow(request.timeId());
-        validateAlreadyReservation(request.date(), request.timeId(), time);
+    public ReservationResult reserve(ReservationCommand command) {
+        requireNonNull(command, "예약 정보가 필요합니다.");
 
-        Reservation reservation = new Reservation(request.name(), request.date(), time);
+        ReservationTime time = findTimeWithThrow(command.timeId());
+        validateAlreadyReservation(command.date(), command.timeId(), time);
+
+        Reservation reservation = new Reservation(command.name(), command.date(), time);
         Reservation saved = reservationRepository.save(reservation);
+
         return ReservationResult.from(saved);
+    }
+
+    @Transactional
+    public void cancelAllReservation(long id) {
+        reservationRepository.delete(id);
     }
 
     public List<ReservationResult> getAllReservations() {
@@ -40,11 +47,6 @@ public class ReservationService {
                 .stream()
                 .map(ReservationResult::from)
                 .toList();
-    }
-
-    @Transactional
-    public void cancelAllReservation(long id) {
-        reservationRepository.delete(id);
     }
 
     private void validateAlreadyReservation(LocalDate date, long timeId, ReservationTime time) {

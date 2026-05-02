@@ -44,6 +44,18 @@ public class ReservationRepositoryImpl implements ReservationRepository {
     }
 
     @Override
+    public boolean existsByTimeId(long timeId) {
+        final String sql = String.format("SELECT id FROM %s WHERE time_id = :time_id LIMIT 1", TABLE_NAME);
+        final SqlParameterSource parameters = new MapSqlParameterSource("time_id", timeId);
+
+        final List<Long> ids = jdbcTemplate.query(
+            sql,
+            parameters,
+            (resultSet, rowNum) -> resultSet.getLong("id"));
+        return !ids.isEmpty();
+    }
+
+    @Override
     public Reservation save(final Reservation reservation) {
         try {
             final Map<String, Object> args = Map.of(

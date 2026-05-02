@@ -12,9 +12,9 @@ import java.util.List;
 
 public class ReservationTimeServiceTest {
 
-    private static final int INSERT_INCREMENT = 1;
-    private static final LocalTime time = LocalTime.of(10, 0);
-    private static final ReservationTime reservationTime = new ReservationTime(time);
+    private final int INSERT_INCREMENT = 1;
+    private final LocalTime time = LocalTime.of(10, 0);
+    private final ReservationTime reservationTime = new ReservationTime(time);
 
     @Nested
     class ReadAll {

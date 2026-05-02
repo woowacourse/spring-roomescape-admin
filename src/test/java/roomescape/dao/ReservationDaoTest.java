@@ -1,10 +1,7 @@
 package roomescape.dao;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -20,12 +17,12 @@ import java.util.List;
 
 class ReservationDaoTest {
 
-    private static final int hour = 10;
-    private static final int minute = 0;
-    private static final LocalTime time = LocalTime.of(hour, minute);
-    private static final ReservationTime reservationTime = new ReservationTime(time);
-    private static final String name = "송송";
-    private static final LocalDate date = LocalDate.of(2026, 5, 3);
+    private final int hour = 10;
+    private final int minute = 0;
+    private final LocalTime time = LocalTime.of(hour, minute);
+    private final ReservationTime reservationTime = new ReservationTime(time);
+    private final String name = "송송";
+    private final LocalDate date = LocalDate.of(2026, 5, 3);
 
     private JdbcTemplate jdbcTemplate;
     private JdbcReservationTimeDao jdbcReservationTimeDao;
@@ -53,6 +50,17 @@ class ReservationDaoTest {
                 new ClassPathResource("test-clear-schema.sql")
         );
     }
+
+    @AfterAll
+    static void dropTable() throws SQLException {
+        DataSource dataSource = generateDataSource();
+
+        ScriptUtils.executeSqlScript(
+                dataSource.getConnection(),
+                new ClassPathResource("drop-table-schema.sql")
+        );
+    }
+
 
     @Nested
     class Insert {

@@ -15,12 +15,12 @@ import java.util.List;
 
 class ReservationServiceTest {
 
-    private static final int INSERT_INCREMENT = 1;
-    private static final LocalTime time = LocalTime.of(10, 0);
-    private static final LocalDate date = LocalDate.of(2026, 5, 3);
-    private static final String name = "송송";
-    private static final ReservationTime reservationTime = new ReservationTime(1L, time);
-    private static final Reservation reservation = new Reservation(name, date, reservationTime);
+    private final int INSERT_INCREMENT = 1;
+    private final LocalTime time = LocalTime.of(10, 0);
+    private final LocalDate date = LocalDate.of(2026, 5, 3);
+    private final String name = "송송";
+    private final ReservationTime reservationTime = new ReservationTime(1L, time);
+    private final Reservation reservation = new Reservation(name, date, reservationTime);
 
     @Nested
     class ReadAll {

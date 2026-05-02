@@ -16,10 +16,10 @@ import java.util.Optional;
 
 class ReservationTimeDaoTest {
 
-    private static final int hour = 10;
-    private static final int minute = 0;
-    private static final LocalTime time = LocalTime.of(hour, minute);
-    private static final ReservationTime reservationTime = new ReservationTime(time);
+    private final int hour = 10;
+    private final int minute = 0;
+    private final LocalTime time = LocalTime.of(hour, minute);
+    private final ReservationTime reservationTime = new ReservationTime(time);
 
     private JdbcTemplate jdbcTemplate;
     private JdbcReservationTimeDao reservationTimeDao;
@@ -45,6 +45,17 @@ class ReservationTimeDaoTest {
                 new ClassPathResource("test-clear-schema.sql")
         );
     }
+
+    @AfterAll
+    static void dropTable() throws SQLException {
+        DataSource dataSource = generateDataSource();
+
+        ScriptUtils.executeSqlScript(
+                dataSource.getConnection(),
+                new ClassPathResource("drop-table-schema.sql")
+        );
+    }
+
 
     @Nested
     class Insert {

@@ -6,7 +6,6 @@ import roomescape.time.domain.ReservationTime;
 import roomescape.time.mapper.ReservationTimeMapper;
 import roomescape.time.repository.dao.ReservationTimeDao;
 import roomescape.time.repository.dto.CreateReservationTimeParams;
-import roomescape.time.repository.entity.ReservationTimeEntity;
 
 @Repository
 public class ReservationTimeRepository {

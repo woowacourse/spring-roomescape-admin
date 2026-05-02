@@ -30,7 +30,8 @@ public class ReservationService {
 
     public ReservationResponse reserve(CreateReservationRequest request) {
         ReservationTime time = reservationTimeRepository.findById(request.getTimeId());
-        CreateReservationParams params = new CreateReservationParams(request.getName(), request.getDate(), time.getId());
+        CreateReservationParams params = new CreateReservationParams(request.getName(), request.getDate(),
+                time.getId());
         Reservation reservation = reservationRepository.save(params);
 
         return ReservationResponse.from(reservation);

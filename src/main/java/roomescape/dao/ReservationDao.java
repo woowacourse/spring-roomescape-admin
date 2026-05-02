@@ -39,16 +39,16 @@ public class ReservationDao {
         return reservations;
     }
 
-    public long createReservation(ReservationRequest request) {
+    public long createReservation(Reservation reservation) {
         String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, request.name());
-            ps.setString(2, request.date());
-            ps.setLong(3, request.timeId());
+            ps.setString(1, reservation.getName());
+            ps.setString(2, reservation.getDate());
+            ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
 

@@ -2,7 +2,6 @@ package roomescape.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
@@ -35,11 +34,12 @@ public class ReservationService {
         ReservationTime reservationTime = reservationTimeDao.findById(request.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간입니다."));
 
+        Reservation reservation = new Reservation( request.name(), request.date(), reservationTime);
 
-        Long reservationId = reservationDao.createReservation(request);
-        Reservation reservation = new Reservation(reservationId, request.name(), request.date(), reservationTime);
+        Long reservationId = reservationDao.createReservation(reservation);
 
-        return ReservationResponse.of(reservation);
+        Reservation saved = reservation.withId(reservationId);
+        return ReservationResponse.of(saved);
     }
 
     public void deleteReservation(long id) {

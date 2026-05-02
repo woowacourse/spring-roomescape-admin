@@ -2,7 +2,6 @@ package roomescape.time.mapper;
 
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.dto.CreateResrvationTimeRequest;
-import roomescape.time.dto.ReservationTimeResponse;
 import roomescape.time.repository.entity.ReservationTimeEntity;
 
 public class ReservationTimeMapper {
@@ -16,10 +15,6 @@ public class ReservationTimeMapper {
 
     public static ReservationTime toReservationTime(ReservationTimeEntity from) {
         return new ReservationTime(from.getId(), from.getStartAt());
-    }
-
-    public static ReservationTimeResponse toReservationTimeResponse(ReservationTime from) {
-        return new ReservationTimeResponse(from.getId(), from.getStartAt());
     }
 
     public static ReservationTimeEntity toReservationTimeEntity(ReservationTime from) {

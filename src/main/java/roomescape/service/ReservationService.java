@@ -24,7 +24,7 @@ public class ReservationService {
     }
 
     public Reservation create(ReservationRequest reservationReq) {
-        Long generatedId = reservationUpdatingDAO.insertWithKeyHolder(reservationReq);
+        Long generatedId = reservationUpdatingDAO.insert(reservationReq);
         return reservationQueryingDAO.findReservationById(generatedId);
     }
 

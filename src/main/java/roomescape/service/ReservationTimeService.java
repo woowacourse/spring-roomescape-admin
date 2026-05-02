@@ -23,7 +23,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTime create(ReservationTime reservationTime) {
-        Long generatedId = timeUpdatingDAO.insertWithKeyHolder(reservationTime);
+        Long generatedId = timeUpdatingDAO.insert(reservationTime);
         return timeQueryingDAO.findReservationTimeById(generatedId);
     }
 

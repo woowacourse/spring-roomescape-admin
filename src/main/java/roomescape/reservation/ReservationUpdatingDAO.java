@@ -26,7 +26,7 @@ public class ReservationUpdatingDAO {
         return jdbcTemplate.update(sql, id);
     }
 
-    public Long insertWithKeyHolder(ReservationRequest reservationReq) {
+    public Long insert(ReservationRequest reservationReq) {
         String sql = "insert into reservation(name, date, time_id) values(?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 

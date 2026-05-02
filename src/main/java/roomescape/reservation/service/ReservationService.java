@@ -32,7 +32,10 @@ public class ReservationService {
         return ReservationMapper.toResponse(createdReservation);
     }
 
-    public int deleteById(Long id) {
-        return reservationRepository.deleteById(id);
+    public void deleteById(Long id) {
+        int deletedRows = reservationRepository.deleteById(id);
+        if(deletedRows == 0) {
+            throw new IllegalArgumentException("[ERROR] 해당 ID의 예약이 없습니다");
+        }
     }
 }

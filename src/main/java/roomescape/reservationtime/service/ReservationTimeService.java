@@ -28,7 +28,10 @@ public class ReservationTimeService {
         return ReservationTimeMapper.toResponse(createdReservationTime);
     }
 
-    public int deleteById(Long id) {
-        return reservationTimeRepository.deleteById(id);
+    public void deleteById(Long id) {
+        int deletedRows = reservationTimeRepository.deleteById(id);
+        if(deletedRows == 0) {
+            throw new IllegalArgumentException("[ERROR] 해당 ID의 예약 시간이 없습니다");
+        }
     }
 }

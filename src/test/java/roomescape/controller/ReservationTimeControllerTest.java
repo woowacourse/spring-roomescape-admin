@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationTimeRequestDTO;
 import roomescape.service.ReservationTimeService;
 
 import java.time.LocalTime;
@@ -19,8 +20,8 @@ class FakeReservationTimeService extends ReservationTimeService {
     }
 
     @Override
-    public ReservationTime createReservationTime(ReservationTime reservationTime) {
-        return new ReservationTime(999L, reservationTime.getStartAt());
+    public ReservationTime createReservationTime(ReservationTimeRequestDTO requestDTO) {
+        return new ReservationTime(requestDTO.getId(), requestDTO.getStartAt());
     }
 
     @Override
@@ -43,9 +44,9 @@ public class ReservationTimeControllerTest {
         ReservationTimeService fakeService = new FakeReservationTimeService();
         controller = new ReservationTimeController(fakeService);
 
-        ReservationTime reservationTime = new ReservationTime(LocalTime.of(15, 0));
+        ReservationTimeRequestDTO requestDTO = new ReservationTimeRequestDTO(LocalTime.of(15, 0), 1L);
 
-        createResponse = controller.create(reservationTime);
+        createResponse = controller.create(requestDTO);
     }
 
     @Test

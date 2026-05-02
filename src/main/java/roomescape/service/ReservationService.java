@@ -45,6 +45,10 @@ public class ReservationService {
     }
 
     public void deleteReservationTime(Long id) {
+        boolean isUsed = reservationRepository.existByTimeId(id);
+        if (isUsed) {
+            throw new IllegalArgumentException("사용 중인 time_id 입니다. 삭제가 불가합니다.");
+        }
         reservationTimeRepository.deleteById(id);
     }
 }

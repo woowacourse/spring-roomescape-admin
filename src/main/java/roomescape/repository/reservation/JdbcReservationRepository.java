@@ -1,4 +1,4 @@
-package roomescape.repository;
+package roomescape.repository.reservation;
 
 import java.util.Collections;
 import java.util.List;
@@ -9,22 +9,25 @@ import roomescape.domain.Reservation.ReservationCommand;
 import roomescape.domain.ReservationTime.ReservationTime;
 
 @Repository
-public class ReservationRepository {
+public class JdbcReservationRepository implements ReservationRepository {
     private final ReservationDao reservationDao;
 
-    public ReservationRepository(ReservationDao reservationDao) {
+    public JdbcReservationRepository(ReservationDao reservationDao) {
         this.reservationDao = reservationDao;
     }
 
+    @Override
     public List<Reservation> getAllReservation() {
         return Collections.unmodifiableList(reservationDao.getAllReservation());
     }
 
+    @Override
     public Reservation addReservation(ReservationCommand reservationCommand, ReservationTime reservationTime) {
         long id = reservationDao.insertReservation(reservationCommand);
         return new Reservation(id, reservationCommand.name(), reservationCommand.date(), reservationTime);
     }
 
+    @Override
     public void deleteReservation(long id) {
         reservationDao.deleteReservation(id);
     }

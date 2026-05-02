@@ -8,8 +8,8 @@ import roomescape.domain.Reservation.ReservationCommand;
 import roomescape.domain.ReservationTime.ReservationTime;
 import roomescape.exception.ErrorMessage;
 import roomescape.exception.NotFoundResourceException;
-import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.repository.reservation.ReservationRepository;
+import roomescape.repository.reservationTime.ReservationTimeRepository;
 
 @Service
 public class RoomReservationService {

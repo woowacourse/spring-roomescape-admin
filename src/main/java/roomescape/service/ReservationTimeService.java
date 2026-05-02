@@ -8,7 +8,7 @@ import roomescape.domain.ReservationTime.ReservationTime;
 import roomescape.domain.ReservationTime.ReservationTimeCommand;
 import roomescape.exception.DataReferencedException;
 import roomescape.exception.ErrorMessage;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.repository.reservationTime.ReservationTimeRepository;
 
 @Service
 public class ReservationTimeService {

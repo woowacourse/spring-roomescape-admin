@@ -1,6 +1,5 @@
 package roomescape.reservation.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.RequestReservation;
@@ -10,10 +9,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/reservations")
-@RequiredArgsConstructor
 public class ReservationController {
 
     private final ReservationService reservationService;
+
+    public ReservationController(ReservationService reservationService) {
+        this.reservationService = reservationService;
+    }
 
     @GetMapping
     public List<Reservation> getReservations() {
@@ -23,9 +25,9 @@ public class ReservationController {
     @PostMapping
     public Reservation createReservation(@RequestBody RequestReservation request) {
         return reservationService.createReservation(
-                request.getName(),
-                request.getDate(),
-                request.getTimeId()
+                request.name(),
+                request.date(),
+                request.timeId()
         );
     }
 

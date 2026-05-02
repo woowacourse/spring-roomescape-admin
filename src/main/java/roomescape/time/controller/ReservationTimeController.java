@@ -1,6 +1,5 @@
 package roomescape.time.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.dto.RequestReservationTime;
@@ -10,14 +9,17 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/times")
-@RequiredArgsConstructor
 public class ReservationTimeController {
 
     private final ReservationTimeService reservationTimeService;
 
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
+    }
+
     @PostMapping
     public ReservationTime createTime(@RequestBody RequestReservationTime request) {
-        return reservationTimeService.createTime(request.getStartAt());
+        return reservationTimeService.createTime(request.startAt());
     }
 
     @GetMapping

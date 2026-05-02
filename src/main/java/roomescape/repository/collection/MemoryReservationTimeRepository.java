@@ -5,13 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
-@Repository
-@Profile("console")
 public class MemoryReservationTimeRepository implements ReservationTimeRepository {
     private final List<ReservationTime> reservationTimes = new CopyOnWriteArrayList<>();
     private final AtomicLong counter = new AtomicLong(1);

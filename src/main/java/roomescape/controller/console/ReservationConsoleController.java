@@ -3,15 +3,11 @@ package roomescape.controller.console;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
 
-@Component
-@Profile("console")
 public class ReservationConsoleController implements CommandLineRunner {
 
     private final ReservationService reservationService;
@@ -21,10 +17,6 @@ public class ReservationConsoleController implements CommandLineRunner {
                                         ReservationTimeService reservationTimeService) {
         this.reservationService = reservationService;
         this.reservationTimeService = reservationTimeService;
-    }
-
-    private static void printInvalidMenu() {
-        ConsoleView.printError("잘못된 선택입니다.");
     }
 
     @Override
@@ -89,4 +81,9 @@ public class ReservationConsoleController implements CommandLineRunner {
         reservationTimeService.remove(id);
         ConsoleView.printMessage("시간이 삭제되었습니다.");
     }
+
+    private void printInvalidMenu() {
+        ConsoleView.printError("잘못된 선택입니다.");
+    }
+
 }

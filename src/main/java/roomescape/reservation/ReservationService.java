@@ -3,6 +3,7 @@ package roomescape.reservation;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.reservationtime.ReservationTime;
+import roomescape.reservationtime.ReservationTimeNotFoundException;
 import roomescape.reservationtime.ReservationTimeRepository;
 
 @Service
@@ -17,7 +18,8 @@ public class ReservationService {
     }
 
     public ReservationResponseDTO createReservation(ReservationRequestDTO reservationRequestDTO) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequestDTO.getTimeId());
+        ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequestDTO.getTimeId())
+                .orElseThrow(() -> new ReservationTimeNotFoundException("예약 시간을 찾을 수 없습니다."));
         Reservation reservation = new Reservation(
                 reservationRequestDTO.getName(),
                 reservationRequestDTO.getDate(),

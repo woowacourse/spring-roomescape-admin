@@ -4,8 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -55,15 +57,21 @@ public class ReservationTimeRepository {
                 });
     }
 
-    public ReservationTime findById(Long id) {
-        logger.info("id = {}", id);
+    public Optional<ReservationTime> findById(Long id) {
         String sql = "select id, start_at from reservation_time where id = ?";
-        return jdbcTemplate.queryForObject(
-                sql,
-                (resultSet, rowNum) ->
-                        new ReservationTime(
-                                resultSet.getLong("id"),
-                                LocalTime.parse(resultSet.getString("start_at"))),
-                id);
+
+        try {
+            ReservationTime reservationTime = jdbcTemplate.queryForObject(
+                    sql,
+                    (resultSet, rowNum) ->
+                            new ReservationTime(
+                                    resultSet.getLong("id"),
+                                    LocalTime.parse(resultSet.getString("start_at"))),
+                    id
+            );
+            return Optional.ofNullable(reservationTime);
+        } catch (DataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

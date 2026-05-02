@@ -9,6 +9,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
+import roomescape.exception.ReservationTimeNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +25,8 @@ public class ReservationService {
     }
 
     public ReservationResponseDto create(ReservationRequestDto requestDto) {
-        ReservationTime time = reservationTimeDao.findById(requestDto.timeId());
+        ReservationTime time = reservationTimeDao.findById(requestDto.timeId())
+                .orElseThrow(() -> new ReservationTimeNotFoundException(requestDto.timeId()));
         Reservation saved = reservationDao.save(requestDto.toEntity(time));
         return ReservationResponseDto.from(saved);
     }

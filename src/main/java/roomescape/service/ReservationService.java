@@ -20,7 +20,8 @@ public class ReservationService {
     }
 
     public long saveReservation(ReservationRequest reservationRequest) {
-        return reservationRepository.save(reservationRequest);
+        ReservationCommand reservationCommand = new ReservationCommand(reservationRequest.name(), reservationRequest.date(), reservationRequest.timeId());
+        return reservationRepository.save(reservationCommand);
     }
 
     public void removeReservation(long reservationId) {

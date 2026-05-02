@@ -3,7 +3,7 @@ package roomescape.repository;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.controller.ReservationRequest;
+import roomescape.service.ReservationCommand;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
@@ -25,8 +25,8 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public long save(ReservationRequest reservationRequest) {
-        return jdbcReservationDao.insert(reservationRequest);
+    public long save(ReservationCommand reservationCommand) {
+        return jdbcReservationDao.insert(reservationCommand);
     }
 
     @Override

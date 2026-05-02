@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.controller.ReservationRequest;
+import roomescape.service.ReservationCommand;
 
 @Repository
 public class JdbcReservationDao implements ReservationDao {
@@ -35,9 +35,9 @@ public class JdbcReservationDao implements ReservationDao {
     }
 
     @Override
-    public long insert(ReservationRequest request) {
+    public long insert(ReservationCommand reservationCommand) {
         SimpleJdbcInsert insert = createInsert();
-        Map<String, Object> params = createParams(request);
+        Map<String, Object> params = createParams(reservationCommand);
         return insert.executeAndReturnKey(params).longValue();
     }
 
@@ -47,8 +47,8 @@ public class JdbcReservationDao implements ReservationDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    private Map<String, Object> createParams(ReservationRequest request) {
-        return Map.of("name", request.name(), "date", request.date(), "time_id", request.timeId());
+    private Map<String, Object> createParams(ReservationCommand reservationCommand) {
+        return Map.of("name", reservationCommand.name(), "date", reservationCommand.date(), "time_id", reservationCommand.timeId());
     }
 
     @Override

@@ -6,11 +6,15 @@ public class Reservation {
     private final ReservationDate date;
     private final ReservationTime time;
 
-    public Reservation(long id, String name, String date, ReservationTime time) {
+    private Reservation(long id, Name name, ReservationDate date, ReservationTime time) {
         this.id = id;
-        this.name = Name.from(name);
-        this.date = ReservationDate.from(date);
+        this.name = name;
+        this.date = date;
         this.time = time;
+    }
+
+    public static Reservation of(long id, String name, String date, ReservationTime time) {
+        return new Reservation(id, Name.from(name), ReservationDate.from(date), time);
     }
 
     public long getId() {

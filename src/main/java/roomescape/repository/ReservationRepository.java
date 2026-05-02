@@ -25,7 +25,7 @@ public class ReservationRepository {
         String sql = "select r.id as reservation_id, r.name, r.date, rt.id as time_id, rt.start_at from reservation r inner join reservation_time rt on r.time_id = rt.id";
         return jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) -> new Reservation(
+                (resultSet, rowNum) -> Reservation.of(
                         resultSet.getLong("reservation_id"),
                         resultSet.getString("name"),
                         resultSet.getString("date"),
@@ -41,7 +41,7 @@ public class ReservationRepository {
 
         long generatedKey = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
-        return new Reservation(generatedKey, dto.getName(), dto.getDate(), dto.getReservationTime());
+        return Reservation.of(generatedKey, dto.getName(), dto.getDate(), dto.getReservationTime());
     }
 
     public void deleteById(Long id) {

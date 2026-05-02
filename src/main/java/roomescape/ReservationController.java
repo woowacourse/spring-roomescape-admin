@@ -23,7 +23,9 @@ public class ReservationController {
         Reservation newReservation = Reservation.toEntity(reservation, index.getAndIncrement());
         reservations.add(newReservation);
 
-        return ResponseEntity.ok().body(newReservation);
+        return ResponseEntity
+                .status(201)
+                .body(newReservation);
     }
 
     @GetMapping("/reservations")
@@ -40,6 +42,8 @@ public class ReservationController {
 
         reservations.remove(reservation);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }

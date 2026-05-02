@@ -18,7 +18,7 @@ public class ReservationTest {
         Reservation reservation = new Reservation(1L, "brown", LocalDate.now(), time);
 
         // when & then
-        assertThat(reservation.getName()).isEqualTo("brown");
+        assertThat(reservation.getUserName()).isEqualTo("brown");
         assertThat(reservation.getDate()).isEqualTo(LocalDate.now());
         assertThat(reservation.getTime()).isEqualTo(time);
     }

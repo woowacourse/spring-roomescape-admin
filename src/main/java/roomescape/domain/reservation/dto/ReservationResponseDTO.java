@@ -9,7 +9,7 @@ public record ReservationResponseDTO(Long id, String name, LocalDate date, Reser
     public static ReservationResponseDTO from(Reservation reservation) {
         return new ReservationResponseDTO(
                 reservation.getId(),
-                reservation.getName(),
+                reservation.getUserName(),
                 reservation.getDate(),
                 ReservationTimeResponseDTO.from(reservation.getTime())
         );

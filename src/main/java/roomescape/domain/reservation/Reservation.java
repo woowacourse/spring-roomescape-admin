@@ -5,26 +5,26 @@ import roomescape.domain.time.ReservationTime;
 
 public class Reservation {
     private final Long id;
-    private final String name;
+    private final String userName;
     private final LocalDate date;
     private final ReservationTime time;
 
-    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
-        validate(name, date, time);
+    public Reservation(Long id, String userName, LocalDate date, ReservationTime time) {
+        validate(userName, date, time);
         this.id = id;
-        this.name = name;
+        this.userName = userName;
         this.date = date;
         this.time = time;
     }
 
-    private void validate(String name, LocalDate date, ReservationTime time) {
-        validateName(name);
+    private void validate(String userName, LocalDate date, ReservationTime time) {
+        validateUserName(userName);
         validateDate(date);
         validateTime(time);
     }
 
-    private void validateName(String name) {
-        if (name == null || name.isBlank()) {
+    private void validateUserName(String userName) {
+        if (userName == null || userName.isBlank()) {
             throw new IllegalArgumentException("[ERROR] 예약자 이름은 필수입니다.");
         }
     }
@@ -45,8 +45,8 @@ public class Reservation {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
     public LocalDate getDate() {

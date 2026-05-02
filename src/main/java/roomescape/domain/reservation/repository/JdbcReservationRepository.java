@@ -27,13 +27,13 @@ public class JdbcReservationRepository implements ReservationRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-            ps.setString(1, reservation.getName());
+            ps.setString(1, reservation.getUserName());
             ps.setString(2, reservation.getDate().toString());
             ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
         Long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
-        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+        return new Reservation(id, reservation.getUserName(), reservation.getDate(), reservation.getTime());
     }
 
     @Override

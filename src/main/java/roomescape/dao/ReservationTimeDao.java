@@ -52,6 +52,11 @@ public class ReservationTimeDao {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    public ReservationTime selectById(Long id) {
+        String sql = "select id, start_at from reservation_time where id = ?";
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+    }
+
     public void delete(Long id) {
         String sql = "delete from reservation_time where id = ?";
         jdbcTemplate.update(sql, id);

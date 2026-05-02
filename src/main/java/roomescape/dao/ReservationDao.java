@@ -54,7 +54,7 @@ public class ReservationDao {
         }, keyHolder);
 
         long generatedId = keyHolder.getKey().longValue();
-        return new Reservation(generatedId, reservation.getName(), reservation.getDate(), new ReservationTime(reservation.getTime().getId(), null));
+        return new Reservation(generatedId, reservation.getName(), reservation.getDate(), new ReservationTime(reservation.getTime().getId(), reservation.getTime().getStartAt()));
     }
 
     public List<Reservation> select() {

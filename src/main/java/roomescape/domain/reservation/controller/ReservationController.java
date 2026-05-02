@@ -38,7 +38,7 @@ public class ReservationController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/reservations/{id}")
-    public void delete(@PathVariable Long id) {
-        reservationService.delete(id);
+    public void cancel(@PathVariable Long id) {
+        reservationService.cancel(id);
     }
 }

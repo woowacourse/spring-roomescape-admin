@@ -37,7 +37,7 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public void delete(Long id) {
+    public void cancel(Long id) {
         reservationRepository.delete(id);
     }
 }

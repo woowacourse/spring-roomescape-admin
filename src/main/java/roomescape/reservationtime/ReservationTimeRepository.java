@@ -22,8 +22,8 @@ public class ReservationTimeRepository {
         return reservationTimeDao.save(startAt);
     }
 
-    public int delete(long id) {
-        return reservationTimeDao.delete(id);
+    public void delete(long id) {
+        reservationTimeDao.delete(id);
     }
 
     public Optional<ReservationTime> findById(long id) {

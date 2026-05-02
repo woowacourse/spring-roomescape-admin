@@ -20,12 +20,12 @@ public class ReservationTimeService {
         this.reservationRepository = reservationRepository;
     }
 
-    public List<ReservationTime> findAll() {
+    public List<ReservationTime> findReservationTimes() {
         return reservationTimeRepository.findAll();
     }
 
     @Transactional
-    public ReservationTime save(LocalTime startAt) {
+    public ReservationTime createReservationTime(LocalTime startAt) {
         try {
             return reservationTimeRepository.save(startAt);
         } catch (DataIntegrityViolationException e) {
@@ -34,18 +34,13 @@ public class ReservationTimeService {
     }
 
     @Transactional
-    public void delete(long id) {
+    public void deleteReservationTime(long id) {
         int reservationCount = reservationRepository.countByTimeId(id);
 
         if (reservationCount > 0) {
             throw new ReservationTimeException(ReservationTimeErrorCode.HAS_RESERVATION);
         }
 
-        int affectedRow = reservationTimeRepository.delete(id);
-
-        if (affectedRow == 0) {
-            throw new ReservationTimeException(ReservationTimeErrorCode.NOT_FOUND);
-        }
-
+        reservationTimeRepository.delete(id);
     }
 }

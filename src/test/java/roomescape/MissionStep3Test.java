@@ -68,6 +68,18 @@ public class MissionStep3Test {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+
+        Map<String, Object> updatedReservation = new HashMap<>();
+        updatedReservation.put("name", "주니");
+        updatedReservation.put("date", "2023-08-06");
+        updatedReservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(updatedReservation)
+                .when().put("/reservations/1")
+                .then().log().all()
+                .statusCode(200);
     }
 
 }

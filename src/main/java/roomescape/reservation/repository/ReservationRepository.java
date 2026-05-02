@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.time.domain.ReservationTime;
 
-import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,8 +18,8 @@ public class ReservationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationRepository(DataSource dataSource) {
-        jdbcTemplate = new JdbcTemplate(dataSource);
+    public ReservationRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<Reservation> findAllWithTime() {

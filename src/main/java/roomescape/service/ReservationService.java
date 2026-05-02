@@ -19,7 +19,7 @@ public class ReservationService {
     }
 
     public Reservation save(Reservation reservation) {
-        ReservationTime time = reservationDao.findTimeById(reservation.getTimeId());
+        ReservationTime time = reservationDao.findTimeById(reservation.getTime().getId());
         return reservationDao.save(reservation, time);
     }
 

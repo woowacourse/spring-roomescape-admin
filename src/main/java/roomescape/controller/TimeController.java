@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,7 @@ public class TimeController {
     }
 
     @PostMapping
-    public ResponseEntity<Time> create(@RequestBody TimeRequestDto timeRequest) {
+    public ResponseEntity<Time> create(@Valid @RequestBody TimeRequestDto timeRequest) {
         CreateTimeCommand command = CreateTimeCommand.from(timeRequest);
         Time time = timeService.create(command);
         return ResponseEntity.ok(time);
@@ -39,7 +40,7 @@ public class TimeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@Valid @PathVariable Long id){
         timeService.delete(id);
         return ResponseEntity.ok().build();
     }

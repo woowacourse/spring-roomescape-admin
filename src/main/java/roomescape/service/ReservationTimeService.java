@@ -24,7 +24,7 @@ public class ReservationTimeService {
         return timeDao.create(time);
     }
 
-    public int delete(Long id) {
-        return timeDao.delete(id);
+    public void delete(Long id) {
+        timeDao.delete(id);
     }
 }

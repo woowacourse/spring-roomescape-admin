@@ -24,7 +24,7 @@ class Mission1Test {
                 .body(timeParams)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200)
+                .statusCode(201)
                 .extract().jsonPath().getInt("id");
 
         Map<String, Object> params = new HashMap<>();

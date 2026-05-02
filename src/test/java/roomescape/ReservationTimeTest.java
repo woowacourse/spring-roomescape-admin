@@ -24,7 +24,7 @@ class ReservationTimeTest {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -49,7 +49,7 @@ class ReservationTimeTest {
                 .body(reservationTime)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
 
         // 예약 추가
         Map<String, Object> reservation = new HashMap<>();

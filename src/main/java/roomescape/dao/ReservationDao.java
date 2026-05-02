@@ -44,7 +44,7 @@ public class ReservationDao {
         });
     }
 
-    public Long save(Reservation reservation){
+    public Reservation save(Reservation reservation){
         String sql = "INSERT INTO reservation (name, date, time_id) VALUES(?,?,?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -56,7 +56,9 @@ public class ReservationDao {
 
             return preparedStatement;
         }, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        Long id =  Objects.requireNonNull(keyHolder.getKey()).longValue();
+
+        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     public void deleteById(Long id) {

@@ -25,7 +25,7 @@ public class ReservationTimeController {
         final List<ReservationTimeResponseDto> reservationTimeResponseDtos =
             reservationTimeService.getAllReservationTimes();
 
-        return new ResponseEntity<>(reservationTimeResponseDtos, HttpStatus.OK);
+        return ResponseEntity.ok(reservationTimeResponseDtos);
     }
 
     @PostMapping
@@ -33,12 +33,13 @@ public class ReservationTimeController {
         final ReservationTimeResponseDto reservationTimeResponseDto =
             reservationTimeService.createReservationTime(reservationTimeRequestDto.startAt());
 
-        return new ResponseEntity<>(reservationTimeResponseDto, HttpStatus.OK);
+        return ResponseEntity.ok(reservationTimeResponseDto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable final long id) {
         reservationTimeService.removeReservationTime(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        return ResponseEntity.ok().build();
     }
 }

@@ -31,7 +31,7 @@ public class ReservationController {
     public ResponseEntity<List<ReservationResponseDto>> getReservations() {
         final List<ReservationResponseDto> reservationResponseDtos = reservationService.getAllReservations();
 
-        return new ResponseEntity<>(reservationResponseDtos, HttpStatus.OK);
+        return ResponseEntity.ok(reservationResponseDtos);
     }
 
     @PostMapping
@@ -40,13 +40,13 @@ public class ReservationController {
         final ReservationResponseDto reservationResponseDto =
             reservationService.createReservation(reservationRequestDto);
 
-        return new ResponseEntity<>(reservationResponseDto, HttpStatus.OK);
+        return ResponseEntity.ok(reservationResponseDto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable final long id) {
         reservationService.removeReservation(id);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 }

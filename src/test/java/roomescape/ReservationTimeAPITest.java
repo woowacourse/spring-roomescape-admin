@@ -19,29 +19,49 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ReservationTimeAPITest {
-    @DisplayName("시간 추가, 조회, 삭제 API가 정상 동작한다.")
+    @DisplayName("시작 시간으로 예약 시간을 생성한다.")
     @Test
-    void 시간_관리_API() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
-
-        RestAssured.given().log().all()
+    void 시간_생성_테스트() {
+        // given & when
+        var response = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(Map.of("startAt", "10:00"))
                 .when().post("/times")
-                .then().log().all()
-                .statusCode(201);
+                .then().log().all().extract();
 
-        RestAssured.given().log().all()
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+    @DisplayName("생성된 예약 시간 목록을 조회한다.")
+    @Test
+    void 시간_조회_테스트() {
+        // given
+        createTime();
+
+        // when
+        var response = RestAssured.given().log().all()
                 .when().get("/times")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
+                .then().log().all().extract();
 
-        RestAssured.given().log().all()
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.jsonPath().getList("").size()).isEqualTo(1);
+    }
+
+    @DisplayName("예약 시간 ID로 예약 시간을 삭제한다.")
+    @Test
+    void 시간_삭제_테스트() {
+        // given
+        createTime();
+
+        // when
+        var response = RestAssured.given().log().all()
                 .when().delete("/times/1")
-                .then().log().all()
-                .statusCode(204);
+                .then().log().all().extract();
+
+        // then
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     @DisplayName("시작 시간 없이 예약 시간을 생성하는 경우, 400을 반환한다.")
@@ -81,5 +101,12 @@ public class ReservationTimeAPITest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
+
+    private void createTime() {
+        RestAssured.given()
+                .body(Map.of("startAt", "10:00"))
+                .contentType(ContentType.JSON)
+                .when().post("/times");
     }
 }

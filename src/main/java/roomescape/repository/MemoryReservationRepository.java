@@ -4,12 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import roomescape.domain.Reservation;
 
 public class MemoryReservationRepository implements ReservationRepository {
 
-    private final Map<Long, Reservation> reservations = new HashMap<>();
+    private final Map<Long, Reservation> reservations = new ConcurrentHashMap<>();
     private final AtomicLong nextId = new AtomicLong(1);
 
     @Override

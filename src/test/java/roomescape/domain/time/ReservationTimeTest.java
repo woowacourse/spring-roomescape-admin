@@ -23,6 +23,6 @@ public class ReservationTimeTest {
     void 시작_시간_null_예외_테스트() {
         assertThatThrownBy(() -> new ReservationTime(1L, null))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 시작 시간은 비어 있을 수 없습니다.");
+                .hasMessage("[ERROR] 시작 시간은 필수입니다.");
     }
 }

@@ -32,7 +32,7 @@ public class ReservationTest {
         // when & then
         assertThatThrownBy(() -> new Reservation(1L, "", LocalDate.now(), time))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 예약자의 이름은 비어 있거나, 공백일 수 없습니다.");
+                .hasMessage("[ERROR] 예약자 이름은 필수입니다.");
     }
 
     @DisplayName("예약자 이름이 공백인 경우, IllegalArgumentException이 발생한다.")
@@ -44,7 +44,7 @@ public class ReservationTest {
         // when & then
         assertThatThrownBy(() -> new Reservation(1L, "   ", LocalDate.now(), time))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 예약자의 이름은 비어 있거나, 공백일 수 없습니다.");
+                .hasMessage("[ERROR] 예약자 이름은 필수입니다.");
     }
 
     @DisplayName("예약 날짜가 null인 경우, IllegalArgumentException이 발생한다.")
@@ -56,7 +56,7 @@ public class ReservationTest {
         // when & then
         assertThatThrownBy(() -> new Reservation(1L, "brown", null, time))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 예약 날짜는 비어 있을 수 없습니다.");
+                .hasMessage("[ERROR] 예약 날짜는 필수입니다.");
     }
 
     @DisplayName("예약 시간이 null인 경우, IllegalArgumentException이 발생한다.")
@@ -64,6 +64,6 @@ public class ReservationTest {
     void 예약_시간_null_예외_테스트() {
         assertThatThrownBy(() -> new Reservation(1L, "brown", LocalDate.now(), null))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("[ERROR] 예약 시간은 비어 있을 수 없습니다.");
+                .hasMessage("[ERROR] 예약 시간은 필수입니다.");
     }
 }

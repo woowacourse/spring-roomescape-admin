@@ -1,6 +1,8 @@
 package roomescape.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -29,7 +31,7 @@ public class ReservationDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> createPreparedStatement(connection, sql, reservation), keyHolder);
 
-        long id = keyHolder.getKey().longValue();
+        long id = extractGeneratedId(keyHolder);
 
         return Reservation.of(
                 id,
@@ -39,9 +41,19 @@ public class ReservationDao {
         );
     }
 
-    private PreparedStatement createPreparedStatement(java.sql.Connection connection, String sql,
+    private long extractGeneratedId(KeyHolder keyHolder) {
+        Number key = keyHolder.getKey();
+
+        if (key == null) {
+            throw new IllegalStateException("생성된 키를 조회할 수 없습니다.");
+        }
+
+        return key.longValue();
+    }
+
+    private PreparedStatement createPreparedStatement(Connection connection, String sql,
                                                       Reservation reservation)
-            throws java.sql.SQLException {
+            throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
         preparedStatement.setString(1, reservation.getName());
         preparedStatement.setString(2, reservation.getDate().toString());

@@ -13,5 +13,5 @@ public interface ReservationRepository {
 
     List<Reservation> findAll();
 
-    int countByDateAndTimeId(LocalDate date, Long timeId);
+    boolean existsByDateAndTimeId(LocalDate date, Long timeId);
 }

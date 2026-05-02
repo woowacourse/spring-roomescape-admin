@@ -26,7 +26,7 @@ public class ReservationService {
         ReservationTime time = reservationTimeRepository.findById(timeId);
         Reservation reservation = Reservation.create(name, date, time);
 
-        if (reservationRepository.countByDateAndTimeId(reservation.getDate(), timeId) > 0) {
+        if (reservationRepository.existsByDateAndTimeId(reservation.getDate(), timeId)) {
             throw new IllegalStateException("이미 해당 날짜와 시간에 예약이 존재합니다.");
         }
 

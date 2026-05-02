@@ -77,19 +77,19 @@ class JdbcReservationRepositoryTest {
     }
 
     @Test
-    @DisplayName("특정 날짜와 시간 ID로 예약 개수를 확인한다.")
-    void countByDateAndTimeIdTest() {
+    @DisplayName("특정 날짜와 시간 ID로 예약 존재 여부를 확인한다.")
+    void existsByDateAndTimeIdTest() {
         // given
         ReservationTime time = new ReservationTime(setupTimeId, LocalTime.of(10, 0));
         LocalDate date = LocalDate.of(2024, 5, 1);
         reservationRepository.save(new Reservation(null, "브라운", date, time));
 
         // when
-        int count = reservationRepository.countByDateAndTimeId(date, setupTimeId);
-        int nonExistentCount = reservationRepository.countByDateAndTimeId(date, 999L);
+        boolean exists = reservationRepository.existsByDateAndTimeId(date, setupTimeId);
+        boolean notExists = reservationRepository.existsByDateAndTimeId(date, 999L);
 
         // then
-        assertThat(count).isEqualTo(1);
-        assertThat(nonExistentCount).isEqualTo(0);
+        assertThat(exists).isTrue();
+        assertThat(notExists).isFalse();
     }
 }

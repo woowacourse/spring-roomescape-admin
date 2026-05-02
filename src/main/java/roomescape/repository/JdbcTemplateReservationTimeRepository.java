@@ -35,8 +35,7 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
             return ps;
         }, keyHolder);
 
-        reservationTime.bindId(keyHolder.getKey().longValue());
-        return reservationTime;
+        return reservationTime.withId(keyHolder.getKey().longValue());
     }
 
     @Override

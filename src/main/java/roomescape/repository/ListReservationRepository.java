@@ -14,9 +14,9 @@ public class ListReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
-        reservation.bindId(idCursor.getAndIncrement());
-        reservations.add(reservation);
-        return reservation;
+        Reservation reservationWithId = reservation.withId(idCursor.getAndIncrement());
+        reservations.add(reservationWithId);
+        return reservationWithId;
     }
 
     @Override

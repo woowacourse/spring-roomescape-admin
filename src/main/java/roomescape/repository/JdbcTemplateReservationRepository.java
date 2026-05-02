@@ -35,8 +35,7 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
             return ps;
         }, keyHolder);
 
-        reservation.bindId(keyHolder.getKey().longValue());
-        return reservation;
+        return reservation.withId(keyHolder.getKey().longValue());
     }
 
     @Override

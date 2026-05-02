@@ -15,9 +15,9 @@ public class ListReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public ReservationTime save(ReservationTime reservationTime) {
-        reservationTime.bindId(idCursor.getAndIncrement());
-        reservationTimes.add(reservationTime);
-        return reservationTime;
+        ReservationTime reservationTimeWithId = reservationTime.withId(idCursor.getAndIncrement());
+        reservationTimes.add(reservationTimeWithId);
+        return reservationTimeWithId;
     }
 
     @Override

@@ -4,8 +4,8 @@ import java.time.LocalTime;
 
 public class ReservationTime {
 
-    private Long id;
-    private LocalTime startAt;
+    private final Long id;
+    private final LocalTime startAt;
 
     public ReservationTime(Long id, LocalTime startAt) {
         this.id = id;
@@ -13,14 +13,11 @@ public class ReservationTime {
     }
 
     public ReservationTime(LocalTime startAt) {
-        this.startAt = startAt;
+        this(null, startAt);
     }
 
-    public void bindId(long id) {
-        if(this.id != null) {
-            throw new RuntimeException("ID는 수정할 수 없습니다.");
-        }
-        this.id = id;
+    public ReservationTime withId(Long id) {
+        return new ReservationTime(id, startAt);
     }
 
     public Long getId() {

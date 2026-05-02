@@ -4,13 +4,10 @@ package roomescape.domain;
 import java.time.LocalDate;
 
 public class Reservation {
-    private Long id;
-    private String name;
-    private LocalDate date;
-    private ReservationTime time;
-
-    public Reservation() { // Jackson이 Json -> Reservation으로 변환하는 과정에서 필요.
-    }
+    private final Long id;
+    private final String name;
+    private final LocalDate date;
+    private final ReservationTime time;
 
     public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         this.id = id;
@@ -20,16 +17,11 @@ public class Reservation {
     }
 
     public Reservation(String name, LocalDate date, ReservationTime time) {
-        this.name = name;
-        this.date = date;
-        this.time = time;
+        this(null, name, date, time);
     }
 
-    public void bindId(long id) {
-        if(this.id != null) {
-            throw new RuntimeException("ID는 수정할 수 없습니다.");
-        }
-        this.id = id;
+    public Reservation withId(Long id) {
+        return new Reservation(id, name, date, time);
     }
 
     public Long getId() {

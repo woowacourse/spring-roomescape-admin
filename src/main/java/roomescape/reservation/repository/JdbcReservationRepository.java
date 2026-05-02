@@ -1,8 +1,6 @@
 package roomescape.reservation.repository;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -37,10 +35,10 @@ public class JdbcReservationRepository implements ReservationRepository {
                         Reservation.builder()
                                 .id(rs.getLong("id"))
                                 .name(rs.getString("name"))
-                                .date(LocalDate.parse(rs.getString("date")))
+                                .date(rs.getDate("date").toLocalDate())
                                 .time(ReservationTime.builder()
                                         .id(rs.getLong("time_id"))
-                                        .startAt(LocalTime.parse(rs.getString("time_value")))
+                                        .startAt(rs.getTime("time_value").toLocalTime())
                                         .build())
                                 .build()
                 )
@@ -49,10 +47,9 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
-        String formattedDate = reservation.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
-                .addValue("date", formattedDate)
+                .addValue("date", reservation.getDate())
                 .addValue("time_id", reservation.getTimeId());
 
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();

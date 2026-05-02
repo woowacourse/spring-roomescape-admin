@@ -1,6 +1,5 @@
 package roomescape.reservationtime.repository;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -47,9 +46,8 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
     @Override
     public ReservationTime save(ReservationTime reservationTime) {
-        String formattedTime = reservationTime.getStartAt().format(DateTimeFormatter.ofPattern("HH:mm"));
         SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("start_at", formattedTime);
+                .addValue("start_at", reservationTime.getStartAt());
 
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
         return reservationTime.withId(id);

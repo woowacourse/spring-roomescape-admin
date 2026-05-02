@@ -24,7 +24,8 @@ public class ReservationTimeController {
 
     @PostMapping("/times")
     public ResponseEntity<TimeResponse> create(@RequestBody TimeRequest request) {
-        ReservationTime savedReservationTime = reservationTimeRepository.save(request.startAt());
+        ReservationTime reservationTime = ReservationTime.from(null, request.startAt());
+        ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
 
         TimeResponse timeResponse = TimeResponse.from(savedReservationTime);
 

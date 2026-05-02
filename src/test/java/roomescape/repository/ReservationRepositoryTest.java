@@ -8,7 +8,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import roomescape.domain.Name;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationDate;
 import roomescape.domain.ReservationTime;
 
 class ReservationRepositoryTest {
@@ -54,9 +56,9 @@ class ReservationRepositoryTest {
     @Test
     @DisplayName("예약을 저장한다.")
     void save() {
-        ReservationTime time = reservationTimeRepository.save("10:00");
+        ReservationTime time = saveTime("10:00");
 
-        Reservation reservation = reservationRepository.save("브라운", "2026-04-29", time.id());
+        Reservation reservation = saveReservation("브라운", "2026-04-29", time);
 
         assertThat(reservation.getId()).isEqualTo(1L);
         assertThat(reservation.getName()).isEqualTo("브라운");
@@ -68,11 +70,11 @@ class ReservationRepositoryTest {
     @Test
     @DisplayName("저장된 에약을 조회한다.")
     void findAll() {
-        ReservationTime firstTime = reservationTimeRepository.save("10:00");
-        ReservationTime secondTime = reservationTimeRepository.save("11:00");
+        ReservationTime firstTime = saveTime("10:00");
+        ReservationTime secondTime = saveTime("11:00");
 
-        reservationRepository.save("브라운", "2026-04-29", firstTime.id());
-        reservationRepository.save("리사", "2026-04-30", secondTime.id());
+        saveReservation("브라운", "2026-04-29", firstTime);
+        saveReservation("리사", "2026-04-30", secondTime);
 
         List<Reservation> reservations = reservationRepository.findAll();
 
@@ -86,11 +88,25 @@ class ReservationRepositoryTest {
     @Test
     @DisplayName("저장된 예약을 삭제한다.")
     void deleteById() {
-        ReservationTime time = reservationTimeRepository.save("10:00");
-        Reservation reservation = reservationRepository.save("브라운", "2026-04-29", time.id());
+        ReservationTime time = saveTime("10:00");
+        Reservation reservation = saveReservation("브라운", "2026-04-29", time);
 
         reservationRepository.deleteById(reservation.getId());
 
         assertThat(reservationRepository.findAll()).isEmpty();
+    }
+
+    private ReservationTime saveTime(String startAt) {
+        return reservationTimeRepository.save(ReservationTime.from(null, startAt));
+    }
+
+    private Reservation saveReservation(String name, String date, ReservationTime time) {
+        Reservation reservation = new Reservation(
+                null,
+                new Name(name),
+                ReservationDate.from(date),
+                time
+        );
+        return reservationRepository.save(reservation);
     }
 }

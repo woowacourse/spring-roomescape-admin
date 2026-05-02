@@ -19,11 +19,7 @@ public class ReservationRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Reservation save(String nameValue, String dateValue, Long timeId) {
-        Name name = new Name(nameValue);
-        ReservationDate date = ReservationDate.from(dateValue);
-        ReservationTime time = findTimeById(timeId);
-
+    public Reservation save(Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -32,9 +28,9 @@ public class ReservationRepository {
                     new String[]{"id"}
             );
 
-            statement.setString(1, name.value());
-            statement.setString(2, date.value().toString());
-            statement.setLong(3, time.id());
+            statement.setString(1, reservation.name().value());
+            statement.setString(2, reservation.date().value().toString());
+            statement.setLong(3, reservation.time().id());
             return statement;
         }, keyHolder);
 
@@ -43,7 +39,12 @@ public class ReservationRepository {
             throw new IllegalStateException("[ERROR] 예약 ID가 생성되지 않았습니다.");
         }
 
-        return new Reservation(key.longValue(), name, date, time);
+        return new Reservation(
+                key.longValue(),
+                reservation.name(),
+                reservation.date(),
+                reservation.time()
+        );
     }
 
     public List<Reservation> findAll() {
@@ -76,16 +77,5 @@ public class ReservationRepository {
         if (deletedCount == 0) {
             throw new IllegalArgumentException("[ERROR] 존재하지 않는 예약입니다.");
         }
-    }
-
-    private ReservationTime findTimeById(Long id) {
-        return jdbcTemplate.queryForObject(
-                "SELECT id, start_at FROM reservation_time WHERE id = ?",
-                (resultSet, rowNum) -> ReservationTime.from(
-                        resultSet.getLong("id"),
-                        resultSet.getString("start_at")
-                ),
-                id
-        );
     }
 }

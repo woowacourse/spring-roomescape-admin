@@ -16,8 +16,7 @@ public class ReservationTimeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ReservationTime save(String startAt) {
-        ReservationTime time = ReservationTime.from(null, startAt);
+    public ReservationTime save(ReservationTime time) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -36,6 +35,17 @@ public class ReservationTimeRepository {
         }
 
         return new ReservationTime(key.longValue(), time.startAt());
+    }
+
+    public ReservationTime findById(Long id) {
+        return jdbcTemplate.queryForObject(
+                "SELECT id, start_at FROM reservation_time WHERE id = ?",
+                (resultSet, rowNum) -> ReservationTime.from(
+                        resultSet.getLong("id"),
+                        resultSet.getString("start_at")
+                ),
+                id
+        );
     }
 
     public List<ReservationTime> findAll() {

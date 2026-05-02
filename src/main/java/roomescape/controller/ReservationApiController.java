@@ -2,6 +2,7 @@ package roomescape.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import roomescape.service.ReservationService;
 import roomescape.service.command.ReservationCommand;
 import roomescape.service.result.ReservationResult;
@@ -27,7 +29,12 @@ public class ReservationApiController {
 
     @PostMapping
     public ResponseEntity<ReservationResult> reserve(@Valid @RequestBody ReservationCommand request) {
-        return ResponseEntity.ok(reservationService.reserve(request));
+        ReservationResult result = reservationService.reserve(request);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(result.id())
+                .toUri();
+        return ResponseEntity.created(location).body(result);
     }
 
     @GetMapping
@@ -42,6 +49,6 @@ public class ReservationApiController {
             Long id
     ) {
         reservationService.cancelAllReservation(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

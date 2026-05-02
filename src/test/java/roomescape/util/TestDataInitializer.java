@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import org.springframework.stereotype.Component;
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.repository.ReservationTimeRepository;
+import roomescape.time.repository.dto.CreateReservationTimeParams;
 
 @Component
 public class TestDataInitializer {
@@ -15,6 +16,7 @@ public class TestDataInitializer {
     }
 
     public void initializeReservationTime(LocalTime localTime) {
-        reservationTimeRepository.save(new ReservationTime(localTime.withSecond(0).withNano(0)));
+        CreateReservationTimeParams createReservationTimeParams = new CreateReservationTimeParams(localTime.withSecond(0).withNano(0));
+        reservationTimeRepository.save(createReservationTimeParams);
     }
 }

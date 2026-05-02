@@ -1,6 +1,6 @@
 package roomescape.reservation.dto;
 
-import roomescape.reservation.entity.Reservation;
+import roomescape.reservation.domain.Reservation;
 
 public class ReservationResponseDto {
 

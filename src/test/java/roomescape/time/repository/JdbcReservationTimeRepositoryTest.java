@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import roomescape.time.entity.ReservationTime;
+import roomescape.time.domain.ReservationTime;
 
 @JdbcTest
 class JdbcReservationTimeRepositoryTest {

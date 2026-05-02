@@ -1,6 +1,6 @@
-package roomescape.reservation.entity;
+package roomescape.reservation.domain;
 
-import roomescape.time.entity.ReservationTime;
+import roomescape.time.domain.ReservationTime;
 
 public class Reservation {
 

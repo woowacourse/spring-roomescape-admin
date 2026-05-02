@@ -1,4 +1,4 @@
-package roomescape.time.entity;
+package roomescape.time.domain;
 
 public class ReservationTime {
 

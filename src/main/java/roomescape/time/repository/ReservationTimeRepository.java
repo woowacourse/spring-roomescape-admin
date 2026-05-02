@@ -1,6 +1,6 @@
 package roomescape.time.repository;
 
-import roomescape.time.entity.ReservationTime;
+import roomescape.time.domain.ReservationTime;
 
 import java.util.List;
 

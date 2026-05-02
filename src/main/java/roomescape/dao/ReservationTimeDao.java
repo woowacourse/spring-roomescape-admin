@@ -22,7 +22,7 @@ public class ReservationTimeDao {
                 "SELECT id, start_at FROM reservation_time",
                 (rs, rowNum) -> new ReservationTime(
                         rs.getLong("id"),
-                        rs.getString("start_at")
+                        rs.getDate("start_at").toLocalDate()
                 )
         );
     }

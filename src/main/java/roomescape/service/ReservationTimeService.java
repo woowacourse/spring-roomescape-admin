@@ -26,11 +26,16 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse createReservationTime(ReservationTimeRequest request) {
-        Long generatedId = reservationTimeDao.insertReservationTime(request.startAt());
+        ReservationTime newReservationTime = new ReservationTime(
+                null,
+                ReservationTime.parse(request.startAt())
+        );
+
+        Long generatedId = reservationTimeDao.insertReservationTime(newReservationTime);
 
         ReservationTime reservationTime = new ReservationTime(
                 generatedId,
-                ReservationTime.parse(request.startAt())
+                newReservationTime.getStartAt()
         );
 
         return convertToResponse(reservationTime);

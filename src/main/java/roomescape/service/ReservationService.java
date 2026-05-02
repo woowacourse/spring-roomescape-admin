@@ -33,20 +33,23 @@ public class ReservationService {
     public ReservationResponse createReservation(ReservationRequest request) {
         ReservationTime reservationTime = reservationTimeDao.findById(request.timeId());
 
-        Long generatedId = reservationDao.insertReservation(
-                request.name(),
-                request.date(),
-                request.timeId()
-        );
-
         Reservation newReservation = new Reservation(
-                generatedId,
+                null,
                 Name.parse(request.name()),
                 LocalDate.parse(request.date()),
                 reservationTime
         );
 
-        return convertToResponse(newReservation);
+        Long generatedId = reservationDao.insertReservation(newReservation);
+
+        Reservation savedReservation = new Reservation(
+                generatedId,
+                newReservation.getName(),
+                newReservation.getDate(),
+                reservationTime
+        );
+
+        return convertToResponse(savedReservation);
     }
 
     public void deleteReservation(Long id) {

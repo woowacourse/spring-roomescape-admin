@@ -49,15 +49,15 @@ public class ReservationDao {
         return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
-    public Long insertReservation(String name, String date, Long timeId) {
+    public Long insertReservation(Reservation reservation) {
         String createSql = "insert into reservations (name, date, time_id) values (?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(createSql, new String[]{"id"});
-            ps.setString(1, name.toString());
-            ps.setString(2, date);
-            ps.setLong(3, timeId);
+            ps.setString(1, reservation.getName().toString());
+            ps.setString(2, reservation.getDate().toString());
+            ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);
 

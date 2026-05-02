@@ -19,38 +19,4 @@ public class MissionStepOneTest {
                 .statusCode(200)
                 .body("size()", is(0)); // 아직 생성 요청이 없으니 0개
     }
-
-    // 미션을 위한 1단계 테스트이지만, 예약 추가의 반환값이 달라졌으므로, 주석처리함.
-    /*@Test
-    void 예약_추가_및_삭제() {
-        Map<String, String> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("time", "15:40");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("id", is(1));
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
-
-        RestAssured.given().log().all()
-                .when().delete("/reservations/1")
-                .then().log().all()
-                .statusCode(200);
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
-    }*/
 }

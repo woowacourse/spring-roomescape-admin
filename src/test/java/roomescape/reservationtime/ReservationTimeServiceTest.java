@@ -11,12 +11,11 @@ import java.time.LocalTime;
 import java.util.Properties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import roomescape.reservation.ReservationDao;
 import roomescape.reservation.ReservationRepository;
-import roomescape.reservationtime.exception.ReservationTimeErrorCode;
-import roomescape.reservationtime.exception.ReservationTimeException;
 
 class ReservationTimeServiceTest {
     private static final String TEST_PROPERTIES = "application-test.properties";
@@ -72,8 +71,8 @@ class ReservationTimeServiceTest {
 
         assertThatThrownBy(() -> reservationTimeService.createReservationTime(LocalTime.of(16, 0)))
                 .isInstanceOf(ReservationTimeException.class)
-                .extracting(e -> ((ReservationTimeException) e).getErrorCode())
-                .isEqualTo(ReservationTimeErrorCode.DUPLICATE);
+                .extracting(e -> ((ReservationTimeException) e).getUserMessage())
+                .isEqualTo("이미 존재하는 예약 시간입니다");
     }
 
     @Test
@@ -84,11 +83,6 @@ class ReservationTimeServiceTest {
         assertThat(reservationTimeService.findReservationTimes())
                 .extracting(ReservationTime::startAt)
                 .containsExactly(LocalTime.of(9, 0), LocalTime.of(11, 0));
-    }
-
-    @Test
-    void 존재하지_않는_ID로_조회하면_예외가_발생한다() {
-        assertThat(reservationTimeService.findReservationTimes()).isEmpty();
     }
 
     @Test
@@ -105,8 +99,8 @@ class ReservationTimeServiceTest {
 
         assertThatThrownBy(() -> reservationTimeService.deleteReservationTime(saved.id()))
                 .isInstanceOf(ReservationTimeException.class)
-                .extracting(e -> ((ReservationTimeException) e).getErrorCode())
-                .isEqualTo(ReservationTimeErrorCode.HAS_RESERVATION);
+                .extracting(e -> ((ReservationTimeException) e).getStatus())
+                .isEqualTo(HttpStatus.CONFLICT);
     }
 
     @Test

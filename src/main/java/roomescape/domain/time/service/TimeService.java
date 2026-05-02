@@ -1,7 +1,6 @@
 package roomescape.domain.time.service;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.domain.time.domain.Time;
 import roomescape.domain.time.dto.request.TimeCreateRequestDTO;
@@ -13,7 +12,6 @@ public class TimeService {
 
     private final TimeRepository timeRepository;
 
-    @Autowired
     public TimeService(TimeRepository timeRepository) {
         this.timeRepository = timeRepository;
     }

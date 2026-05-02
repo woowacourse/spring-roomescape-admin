@@ -1,7 +1,6 @@
 package roomescape.domain.reservation.service;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.domain.reservation.domain.Reservation;
 import roomescape.domain.reservation.dto.request.ReservationCreateRequestDTO;
@@ -16,7 +15,6 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final TimeRepository timeRepository;
 
-    @Autowired
     public ReservationService(ReservationRepository reservationRepository, TimeRepository timeRepository) {
         this.reservationRepository = reservationRepository;
         this.timeRepository = timeRepository;

@@ -25,13 +25,17 @@ public class MissionStep3Test {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(200)
+                .body("id", is(1))
+                .body("startAt", is("10:00"));
 
         RestAssured.given().log().all()
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(1))
+                .body("[0].id", is(1))
+                .body("[0].startAt", is("10:00"));
 
         RestAssured.given().log().all()
                 .when().delete("/times/1")
@@ -54,19 +58,31 @@ public class MissionStep3Test {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(200)
+                .body("id", is(1))
+                .body("startAt", is("10:00"));
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(200)
+                .body("id", is(1))
+                .body("name", is("브라운"))
+                .body("date", is("2023-08-05"))
+                .body("time.id", is(1))
+                .body("time.startAt", is("10:00"));
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(1))
+                .body("[0].id", is(1))
+                .body("[0].name", is("브라운"))
+                .body("[0].date", is("2023-08-05"))
+                .body("[0].time.id", is(1))
+                .body("[0].time.startAt", is("10:00"));
     }
 }

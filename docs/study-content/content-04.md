@@ -8,6 +8,16 @@
 스프링은 객체의 생명주기를 IoC container에서 관리하게 하려고, Bean로 등록한다.
 의존성 주입으로 객체와 강결합하지 않고, 필요한 의존성을 주입 받을 수 있다.
 예를 들어, ReservationController는 Service의 구현 방법에 대해 몰라도 기능은 사용할 수 있다.
+- 필요한 의존성을 어떻게 주입하는가?
+Spring에서는 어노테이션을 참고하여 객체를 Bean으로 등록하고, 외부에서 의존성을 주입받도록 관리한다. (DI)
+객체는 생성자와 setter를 통해 필요한 의존성을 선언하고, 
+Spring이 Bean 생성 시점에 컨테이너(ApplicationContext)에 등록된 Bean 중에서 타입(클래스/인터페이스)을 기준으로 적절한 Bean을 찾아 주입한다.
+
+> Dependency injection (DI) is a process whereby objects define their dependencies (that is, the other objects with which they work) only through constructor arguments, arguments to a factory method, or properties that are set on the object instance after it is constructed or returned from a factory method.
+> https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-collaborators.html?utm_source=chatgpt.com
+
+> The Spring container can autowire relationships between collaborating beans. You can let Spring resolve collaborators (other beans) automatically for your bean by inspecting the contents of the ApplicationContext
+> https://docs.spring.io/spring-framework/reference/core/beans/dependencies/factory-autowire.html?utm_source=chatgpt.com
 
 2. @Controller, @Service, @Repository는 단순한 이름표일까, 아니면 스프링이 객체를 관리하는 방식과 연결될까?
 @Component를 meta-annotated된 애노테이션으로 구체화시킨 것들이다.

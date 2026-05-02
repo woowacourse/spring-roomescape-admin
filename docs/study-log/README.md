@@ -68,3 +68,42 @@ AI는 배운의 문턱을 낮춰주지만, 동시에 너무 의존적으로 학�
 미션을 수행하면서 공부한 내용을 docs/study-content에 정리해두었습니다. 
 평소에 너무 깊이 공부하려다가 시간이 모자랐던 경험이 많다보니, 이번 미션에서는 질문을 먼저 정해두고 질문에 답할 정도만 공부하기로 했습니다. 
 기론이 보시기에는 학습의 깊이가 어떤지 궁금합니다. (ex. 더 깊이 파고들어야한다, 과제와 벗어난 개념까지 공부한것 같다 등의 의견이 궁금합니다!)
+
+
+-----
+
+안녕하세요 기론!    
+피드백 주셔서 너무 감사합니다.    
+놓치고 있던 개념들을 질문해주셔서, 리팩토링하고 개념을 잡는데 너무 도움이 됐습니다!    
+피드백 주신 것에 대해 저의 나름대로 제가 생각한 답을 답글로 적어보았는데, 적절하게 생각한건지 한번 확인해주시면 감사하겠습니다.
+이번 리뷰도 잘 부탁드립니다:)
+
+
+### [변경사항]
+- [x] 도메인에 따른 Controller 분리
+- ReservationTime과 Reservation의 Controller 분리
+- [x] @Controller를 @RestController로 수정함에 따른 응답 형식 변경
+- ResponseEntity 대신 @ResponseBody를 사용하면서, dto 그대로 반환
+- [x] RequestMapping을 사용하여 URL을 도메인 단위로 구조화
+- [x] DB 제약조건에 따른 도메인 검증 추가
+- [x] DB 제약조건에 따른 애플리케이션 예외처리 추가
+- [x] Controller에서 dao 제거
+- [x] Reservation 도메인에 id 필드 추가
+- [x] Controller 응답을 도메인에서 dto로 수정
+
+
+----
+
+### [추가 질문]
+1. Date와 time의 타입
+미션에서는 date와 time을 모두 Varchar(255)로 사용하고 있는데, 실제로 저 값들을 LocalDate나 LocalTime을 사용안하는 이유가 있나요?
+실무에서는 LocalDate나 LocalTime로 사용하는데, 도메인 검증으로 연습해보라고 저렇게 공지된것인지, 아니면 실무에서도 날짜와 시간을 Varchar로 사용하는지 궁금합니다.
+
+
+2. 입력값 검증? 도메인 검증? DB 검증?
+아래의 커밋에 추가질문 적어두었습니다!
+https://github.com/woowacourse/spring-roomescape-admin/pull/451#discussion_r3176252925
+
+3. 반복 Mapper 분리
+아래의 커밋에 추가질문 적어두었습니다!
+https://github.com/woowacourse/spring-roomescape-admin/pull/451#discussion_r3176752064

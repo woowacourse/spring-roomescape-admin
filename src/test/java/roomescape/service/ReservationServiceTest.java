@@ -18,8 +18,8 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationCreateResponse;
+import roomescape.dto.TimeCreateResponse;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -32,11 +32,11 @@ class ReservationServiceTest {
     void setUp() {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:35");
 
-        List<ReservationTime> times = RestAssured.given().log().all()
+        List<TimeCreateResponse> times = RestAssured.given().log().all()
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", ReservationTime.class);
+                .jsonPath().getList(".", TimeCreateResponse.class);
     }
 
     @Test
@@ -54,11 +54,11 @@ class ReservationServiceTest {
     void DB_예약_조회_API_전환() {
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", 1L);
 
-        List<Reservation> reservations = RestAssured.given().log().all()
+        List<ReservationCreateResponse> reservations = RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", Reservation.class);
+                .jsonPath().getList(".", ReservationCreateResponse.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
 
@@ -95,11 +95,11 @@ class ReservationServiceTest {
     void 시간_추가_테스트() {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:23");
 
-        List<ReservationTime> times = RestAssured.given().log().all()
+        List<TimeCreateResponse> times = RestAssured.given().log().all()
                 .when().get("/times")
                 .then().log().all()
                 .statusCode(200).extract()
-                .jsonPath().getList(".", ReservationTime.class);
+                .jsonPath().getList(".", TimeCreateResponse.class);
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(2) from reservation_time", Integer.class);
 

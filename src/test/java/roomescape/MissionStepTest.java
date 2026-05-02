@@ -22,6 +22,8 @@ import roomescape.controller.ReservationController;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
+    @Autowired
+    private ReservationController reservationController;
 
     @BeforeEach
     void setUp() {
@@ -43,6 +45,44 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(0)); // 아직 생성 요청이 없으니 0개
+    }
+
+    @Test
+    void 예약_조회_응답_테스트() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("timeId", 1L);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", is(1));
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1))
+                .body("[0].name", is("브라운"))
+                .body("[0].date", is("2023-08-05"))
+                .body("[0].time.id", is(1))
+                .body("[0].time.startAt", is("10:00"));
+
+    }
+
+    @Test
+    void 시간_조회_응답_테스트() {
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1))
+                .body("[0].id", is(1))
+                .body("[0].startAt", is("10:00"));
     }
 
     @Test
@@ -149,10 +189,6 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(1));
     }
-
-
-    @Autowired
-    private ReservationController reservationController;
 
     @Test
     void 계층화_리팩터링() {

@@ -1,7 +1,7 @@
 package roomescape.domain;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +13,7 @@ class ReservationTest {
     @BeforeEach
     void setUp() {
         ReservationTime time = new ReservationTime("10:10");
-        this.time=time;
+        this.time = time;
     }
 
     @Test

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
-class ReservationTest {
+public class ReservationTest {
 
     @Test
     void 이름이_비어있으면_예약_생성에_실패한다() {

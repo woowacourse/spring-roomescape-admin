@@ -9,9 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.domain.Reservation;
+import roomescape.repository.ReservationJoinedDto;
 import roomescape.service.ReservationService;
-import roomescape.util.ReservationTimeMapper;
 
 @RestController
 @RequestMapping("/reservations")
@@ -30,8 +29,8 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        long reservationId = reservationService.saveReservation(reservationRequest);
-        ReservationResponse reservationResponse = toResponse(reservationService.findReservation(reservationId));
+        ReservationJoinedDto reservation = reservationService.saveReservation(reservationRequest);
+        ReservationResponse reservationResponse = toResponse(reservation);
         return ResponseEntity.ok(reservationResponse);
     }
 
@@ -41,18 +40,22 @@ public class ReservationController {
         return ResponseEntity.ok().build();
     }
 
-    private List<ReservationResponse> convertToReservationResponse(List<Reservation> reservations) {
+    private List<ReservationResponse> convertToReservationResponse(List<ReservationJoinedDto> reservations) {
         return reservations.stream()
                 .map(this::toResponse)
                 .toList();
     }
 
-    private ReservationResponse toResponse(Reservation reservation) {
+    private ReservationResponse toResponse(ReservationJoinedDto reservationJoinedDto) {
+        ReservationTimeResponse reservationTimeResponse = new ReservationTimeResponse(
+                reservationJoinedDto.timeId(),
+                reservationJoinedDto.startAt()
+        );
         return new ReservationResponse(
-                reservation.id(),
-                reservation.name(),
-                reservation.date(),
-                ReservationTimeMapper.toResponse(reservation.reservationTime())
+                reservationJoinedDto.id(),
+                reservationJoinedDto.name(),
+                reservationJoinedDto.date(),
+                reservationTimeResponse
         );
     }
 }

@@ -7,8 +7,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
-import roomescape.service.ReservationCommand;
 
 @Repository
 public class JdbcReservationDao implements ReservationDao {
@@ -20,10 +18,10 @@ public class JdbcReservationDao implements ReservationDao {
     }
 
     @Override
-    public List<Reservation> findAll() {
+    public List<ReservationJoinedDto> findAll() {
         String sql = "SELECT r.id AS r_id, r.name, r.date, t.id AS t_id, t.start_at " +
                 "FROM reservation r INNER JOIN reservation_time t ON r.time_id = t.id";
-        return jdbcTemplate.query(sql, rowMapper());
+        return jdbcTemplate.query(sql, joinedDtoRowMapper());
     }
 
     @Override
@@ -35,9 +33,17 @@ public class JdbcReservationDao implements ReservationDao {
     }
 
     @Override
-    public long insert(ReservationCommand reservationCommand) {
+    public ReservationJoinedDto findJoinedDtoById(long reservationId) {
+        String sql = "SELECT r.id AS r_id, r.name, r.date, t.id AS t_id, t.start_at " +
+                "FROM reservation r INNER JOIN reservation_time t ON r.time_id = t.id " +
+                "WHERE r.id = ?";
+        return jdbcTemplate.queryForObject(sql, joinedDtoRowMapper(), reservationId);
+    }
+
+    @Override
+    public long insert(Reservation reservation) {
         SimpleJdbcInsert insert = createInsert();
-        Map<String, Object> params = createParams(reservationCommand);
+        Map<String, Object> params = createParams(reservation);
         return insert.executeAndReturnKey(params).longValue();
     }
 
@@ -47,8 +53,9 @@ public class JdbcReservationDao implements ReservationDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    private Map<String, Object> createParams(ReservationCommand reservationCommand) {
-        return Map.of("name", reservationCommand.name(), "date", reservationCommand.date(), "time_id", reservationCommand.timeId());
+    private Map<String, Object> createParams(Reservation reservation) {
+        return Map.of("name", reservation.name(), "date", reservation.date(), "time_id",
+                reservation.reservationTimeId());
     }
 
     @Override
@@ -62,7 +69,17 @@ public class JdbcReservationDao implements ReservationDao {
                 rs.getLong("r_id"),
                 rs.getString("name"),
                 rs.getString("date"),
-                new ReservationTime(rs.getLong("t_id"), rs.getString("start_at"))
+                rs.getLong("t_id")
+        );
+    }
+
+    private RowMapper<ReservationJoinedDto> joinedDtoRowMapper() {
+        return (rs, rowNum) -> new ReservationJoinedDto(
+                rs.getLong("r_id"),
+                rs.getString("name"),
+                rs.getString("date"),
+                rs.getLong("t_id"),
+                rs.getString("start_at")
         );
     }
 }

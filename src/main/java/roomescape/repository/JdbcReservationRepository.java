@@ -3,7 +3,6 @@ package roomescape.repository;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.service.ReservationCommand;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
@@ -15,7 +14,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> findAll() {
+    public List<ReservationJoinedDto> findAll() {
         return jdbcReservationDao.findAll();
     }
 
@@ -25,8 +24,13 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public long save(ReservationCommand reservationCommand) {
-        return jdbcReservationDao.insert(reservationCommand);
+    public ReservationJoinedDto findJoinedDtoById(long id) {
+        return jdbcReservationDao.findJoinedDtoById(id);
+    }
+
+    @Override
+    public long save(Reservation reservation) {
+        return jdbcReservationDao.insert(reservation);
     }
 
     @Override

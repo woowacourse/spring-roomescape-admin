@@ -2,16 +2,16 @@ package roomescape.repository;
 
 import java.util.List;
 import roomescape.domain.Reservation;
-import roomescape.controller.ReservationRequest;
-import roomescape.service.ReservationCommand;
 
 public interface ReservationDao {
 
-    List<Reservation> findAll();
+    List<ReservationJoinedDto> findAll();
 
-    long insert(ReservationCommand reservationCommand);
+    long insert(Reservation reservation);
 
     void deleteById(long reservationId);
 
     Reservation findById(long reservationId);
+
+    ReservationJoinedDto findJoinedDtoById(long reservationId);
 }

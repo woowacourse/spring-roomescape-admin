@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequestDto;
+import roomescape.exception.CustomException;
+import roomescape.exception.ErrorCode;
 
 @Primary
 @Repository
@@ -42,8 +45,32 @@ public class JdbcReservationDao implements ReservationDao {
     }
 
     @Override
+    public Reservation read(Long id) {
+        String sql = "SELECT r.id, r.name, r.date, t.id as time_id, t.start_at as time_value "
+                + "FROM `reservation` r "
+                + "INNER JOIN `reservation_time` t ON r.time_id = t.id "
+                + "WHERE r.id = ?";
+
+        try {
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+                String name = rs.getString("name");
+                LocalDate date = rs.getDate("date").toLocalDate();
+                Long timeId = rs.getLong("time_id");
+                LocalTime timeValue = rs.getTime("time_value").toLocalTime();
+
+                ReservationTime reservationTime = new ReservationTime(timeId, timeValue);
+                return new Reservation(id, name, date, reservationTime);
+            }, id);
+        } catch (EmptyResultDataAccessException exception) {
+            throw new CustomException(ErrorCode.NOT_FOUND_RESERVATION);
+        }
+    }
+
+    @Override
     public List<Reservation> readAll() {
-        String sql = "SELECT r.id, r.name, r.date, t.id as time_id, t.start_at as time_value FROM `reservation` r INNER JOIN `reservation_time` t ON r.time_id = t.id";
+        String sql = "SELECT r.id, r.name, r.date, t.id as time_id, t.start_at as time_value "
+                + "FROM `reservation` r "
+                + "INNER JOIN `reservation_time` t ON r.time_id = t.id";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long id = rs.getLong("id");

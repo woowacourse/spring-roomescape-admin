@@ -28,8 +28,7 @@ public class ReservationTimeService {
     }
 
     public void delete(Long id) {
-        if (reservationTimeDao.delete(id) == 0) {
-            throw new IllegalArgumentException("[ERROR] 해당 id의 예약 시간이 존재하지 않습니다.");
-        }
+        reservationTimeDao.read(id);
+        reservationTimeDao.delete(id);
     }
 }

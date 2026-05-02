@@ -13,6 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import roomescape.dto.ReservationTimeRequestDto;
 import roomescape.dto.ReservationTimeResponseDto;
+import roomescape.exception.CustomException;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -24,8 +25,8 @@ public class ReservationTimeServiceTest {
     @Test
     void notExistReservationDeleteExceptionTest() {
         assertThatThrownBy(() -> reservationTimeService.delete(1L))
-                .hasMessage("[ERROR] 해당 id의 예약 시간이 존재하지 않습니다.")
-                .isInstanceOf(IllegalArgumentException.class);
+                .hasMessage("[ERROR] 해당 ID의 예약 시간을 찾을 수 없습니다.")
+                .isInstanceOf(CustomException.class);
     }
 
     @Test

@@ -12,12 +12,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.dto.ReservationRequestDto;
 import roomescape.dto.ReservationResponseDto;
 import roomescape.dto.ReservationTimeRequestDto;
 import roomescape.dto.ReservationTimeResponseDto;
+import roomescape.exception.CustomException;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -27,24 +27,21 @@ public class ReservationServiceTest {
     private ReservationService reservationService;
 
     @Autowired
-    private ReservationDao reservationDao;
-
-    @Autowired
     private ReservationTimeDao reservationTimeDao;
 
     @Test
     void notExistReservationTimeExceptionTest() {
         ReservationRequestDto requestDto = new ReservationRequestDto("fizz", LocalDate.of(2026, 5, 2), 1L);
         assertThatThrownBy(() -> reservationService.create(requestDto))
-                .hasMessage("[ERROR] 해당 id의 예약 시간이 존재하지 않습니다.")
-                .isInstanceOf(IllegalArgumentException.class);
+                .hasMessage("[ERROR] 해당 ID의 예약 시간을 찾을 수 없습니다.")
+                .isInstanceOf(CustomException.class);
     }
 
     @Test
     void notExistReservationDeleteExceptionTest() {
         assertThatThrownBy(() -> reservationService.delete(1L))
-                .hasMessage("[ERROR] 해당 id의 예약이 존재하지 않습니다.")
-                .isInstanceOf(IllegalArgumentException.class);
+                .hasMessage("[ERROR] 해당 ID의 예약을 찾을 수 없습니다.")
+                .isInstanceOf(CustomException.class);
     }
 
     ReservationTimeResponseDto createReservationTime() {

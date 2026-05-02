@@ -5,12 +5,15 @@ import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
 import org.springframework.context.annotation.Primary;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequestDto;
+import roomescape.exception.CustomException;
+import roomescape.exception.ErrorCode;
 
 @Primary
 @Repository
@@ -39,10 +42,14 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
     @Override
     public ReservationTime read(Long id) {
         String sql = "SELECT * FROM `reservation_time` WHERE `id` = id";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
-            LocalTime startAt = rs.getTime("start_at").toLocalTime();
-            return new ReservationTime(id, startAt);
-        });
+        try {
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
+                LocalTime startAt = rs.getTime("start_at").toLocalTime();
+                return new ReservationTime(id, startAt);
+            });
+        } catch (IncorrectResultSizeDataAccessException exception) {
+            throw new CustomException(ErrorCode.NOT_FOUND_RESERVATION_TIME);
+        }
     }
 
     @Override

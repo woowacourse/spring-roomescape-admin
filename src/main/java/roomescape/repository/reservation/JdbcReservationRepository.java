@@ -2,6 +2,7 @@ package roomescape.repository.reservation;
 
 import java.util.Collections;
 import java.util.List;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation.Reservation;
@@ -9,6 +10,7 @@ import roomescape.domain.Reservation.ReservationCommand;
 import roomescape.domain.ReservationTime.ReservationTime;
 
 @Repository
+@Profile("web")
 public class JdbcReservationRepository implements ReservationRepository {
     private final ReservationDao reservationDao;
 

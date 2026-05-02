@@ -2,13 +2,13 @@ package roomescape.domain;
 
 public class Reservation {
 
-    private final long id;
+    private final Long id;
     private final String name;
     private final String date;
     private final ReservationTime time;
 
 
-    public Reservation(long id, String name, String date, ReservationTime time) {
+    public Reservation(Long id, String name, String date, ReservationTime time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -22,7 +22,7 @@ public class Reservation {
         this.time = time;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

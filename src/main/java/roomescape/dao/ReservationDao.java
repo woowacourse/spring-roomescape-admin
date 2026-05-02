@@ -33,11 +33,11 @@ public class ReservationDao {
                 """;
 
         return jdbcTemplate.query(sql, (resultSet, rowNum) -> {
-            long id = resultSet.getLong("reservation_id");
+            Long id = resultSet.getLong("reservation_id");
             String name = resultSet.getString("name");
             String date = resultSet.getString("date");
 
-            long timeId = resultSet.getLong("time_id");
+            Long timeId = resultSet.getLong("time_id");
             String timeValue = resultSet.getString("time_value");
             ReservationTime time = new ReservationTime(timeId, timeValue);
             return new Reservation(id, name, date, time);

@@ -20,7 +20,8 @@ public class ReservationService {
     public ReservationService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-    public ReservationCreateResponse createReservation(ReservationCreateRequest request){
+
+    public ReservationCreateResponse createReservation(ReservationCreateRequest request) {
         UpdatingDAO dao = new UpdatingDAO(jdbcTemplate);
         QueryingDAO daoQuery = new QueryingDAO(jdbcTemplate);
         ReservationTime reservationTime = daoQuery.findTimeById(request.timeId());
@@ -31,7 +32,7 @@ public class ReservationService {
         return new ReservationCreateResponse(id, reservation.getName(), reservation.getDate(), timeCreateResponse);
     }
 
-    public List<Reservation> readAllReservations(){
+    public List<ReservationCreateResponse> readAllReservations() {
         QueryingDAO dao = new QueryingDAO(jdbcTemplate);
         return dao.findAllReservations();
     }
@@ -41,19 +42,19 @@ public class ReservationService {
         dao.delete(id);
     }
 
-    public TimeCreateResponse createTime(String startAt){
+    public TimeCreateResponse createTime(String startAt) {
         UpdatingDAO dao = new UpdatingDAO(jdbcTemplate);
         ReservationTime reservationTime = new ReservationTime(startAt);
         Long id = dao.insertWithKeyHolder(reservationTime);
-        return new TimeCreateResponse(id,startAt);
+        return new TimeCreateResponse(id, startAt);
     }
 
-    public List<ReservationTime> readAllTimes(){
+    public List<TimeCreateResponse> readAllTimes() {
         QueryingDAO dao = new QueryingDAO(jdbcTemplate);
         return dao.findAllTimes();
     }
 
-    public void deleteTime(Long id){
+    public void deleteTime(Long id) {
         UpdatingDAO dao = new UpdatingDAO(jdbcTemplate);
         dao.deleteTime(id);
     }

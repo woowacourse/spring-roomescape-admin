@@ -1,11 +1,14 @@
 package roomescape.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationCreateResponse;
+import roomescape.dto.TimeCreateResponse;
 
 public class QueryingDAO {
     private JdbcTemplate jdbcTemplate;
@@ -14,19 +17,18 @@ public class QueryingDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
     public ReservationTime findTimeById(Long reservationId) {
         String sql = "select id, start_at from reservation_time where id = ?";
         return jdbcTemplate.queryForObject(
                 sql,
                 (resultSet, rowNum) -> new ReservationTime(
-                            resultSet.getString("start_at")
-                    ),
+                        resultSet.getString("start_at")
+                ),
                 reservationId
-                );
+        );
     }
 
-    public List<Reservation> findAllReservations() {
+    public List<ReservationCreateResponse> findAllReservations() {
         String sql = """
                 SELECT
                     r.id as reservation_id,
@@ -41,27 +43,27 @@ public class QueryingDAO {
         return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) -> {
-                    ReservationTime reservationTime = new ReservationTime(
-                            resultSet.getString("time_value")
-                    );
-                    Reservation reservation = new Reservation(
+                    TimeCreateResponse timeCreateResponse = mapToTimeCreateResponse(resultSet);
+                    return new ReservationCreateResponse(
+                            resultSet.getLong("reservation_id"),
                             resultSet.getString("name"),
                             resultSet.getString("date"),
-                            reservationTime
+                            timeCreateResponse
                     );
-                    return reservation;
                 });
     }
 
-    public List<ReservationTime> findAllTimes() {
-        String sql = "select id, start_at from reservation_time";
+    public List<TimeCreateResponse> findAllTimes() {
+        String sql = "select id as time_id, start_at as time_value from reservation_time";
         return jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) -> {
-                    ReservationTime reservationTime = new ReservationTime(
-                            resultSet.getString("start_at")
-                    );
-                    return reservationTime;
-                });
+                (resultSet, rowNum) -> mapToTimeCreateResponse(resultSet));
+    }
+
+    private TimeCreateResponse mapToTimeCreateResponse(ResultSet rs) throws SQLException {
+        return new TimeCreateResponse(
+                rs.getLong("time_id"),
+                rs.getString("time_value")
+        );
     }
 }

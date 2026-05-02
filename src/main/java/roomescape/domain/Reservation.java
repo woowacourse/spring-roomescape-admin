@@ -16,7 +16,7 @@ public class Reservation {
     }
 
     private void validateName(String name) {
-        if (name.length()>255 || name.isBlank()) {
+        if (name.length() > 255 || name.isBlank()) {
             throw new IllegalArgumentException("[ERROR] 이름은 255자 이하여야합니다.");
         }
     }

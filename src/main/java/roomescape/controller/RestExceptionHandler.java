@@ -76,7 +76,6 @@ public class RestExceptionHandler {
                 .body("변환할 수 없는 잘못된 데이터 타입이 존재합니다.");
     }
 
-
     @ExceptionHandler(exception = Exception.class)
     public ResponseEntity<String> handleException(Exception ex) {
         log.error(ex.getMessage(), ex);

@@ -8,6 +8,7 @@ import roomescape.domain.dto.ReservationTimeRequest;
 import roomescape.domain.dto.ReservationTimeResponse;
 import roomescape.domain.repository.ReservationTimeRepository;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -17,10 +18,7 @@ public class ReservationTimeService {
 
     @Transactional
     public ReservationTimeResponse save(ReservationTimeRequest reservationTimeRequest) {
-        List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
-        for (ReservationTime reservationTime : reservationTimes) {
-            validateDuplicateTime(reservationTimeRequest, reservationTime);
-        }
+        validateDuplicateTime(reservationTimeRequest.startAt());
 
         ReservationTime reservationTime = reservationTimeRequest.toEntity();
         Long id = reservationTimeRepository.save(reservationTime);
@@ -41,8 +39,8 @@ public class ReservationTimeService {
         reservationTimeRepository.deleteById(id);
     }
 
-    private void validateDuplicateTime(ReservationTimeRequest reservationTimeRequest, ReservationTime reservationTime) {
-        if (reservationTime.isSameTime(reservationTimeRequest.startAt())) {
+    private void validateDuplicateTime(LocalTime time) {
+        if (reservationTimeRepository.existsByDateAndTime(time)) {
             throw new IllegalArgumentException("이미 존재하는 시간 슬롯입니다.");
         }
     }

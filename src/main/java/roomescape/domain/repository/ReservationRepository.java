@@ -83,4 +83,17 @@ public class ReservationRepository {
             throw new IllegalArgumentException("존재하지 않는 예약입니다.");
         }
     }
+
+    public boolean existsByDateAndTime(LocalDate date, ReservationTime time){
+        String sql = "SELECT EXISTS (" +
+                "SELECT 1 FROM reservation WHERE date = ? AND time_id = ?" +
+                ")";
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(
+                sql,
+                Boolean.class,
+                date.toString(),
+                time.getId()
+        ));
+    }
 }

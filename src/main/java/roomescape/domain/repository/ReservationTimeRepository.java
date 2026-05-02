@@ -61,5 +61,17 @@ public class ReservationTimeRepository {
             throw new IllegalArgumentException("존재하지 않는 시간대입니다.");
         }
     }
+
+    public boolean existsByDateAndTime(LocalTime time) {
+        String sql = "SELECT EXISTS (" +
+                "SELECT 1 FROM reservation_time WHERE start_at = ?" +
+                ")";
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(
+                sql,
+                Boolean.class,
+                time
+        ));
+    }
 }
 

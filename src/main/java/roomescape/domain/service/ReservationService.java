@@ -12,7 +12,6 @@ import roomescape.domain.repository.ReservationTimeRepository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -24,10 +23,7 @@ public class ReservationService {
     public ReservationResponse save(ReservationRequest reservationRequest) {
         LocalDate date = reservationRequest.date();
 
-        List<Reservation> reservations = reservationRepository.findAll();
-        for (Reservation reservation : reservations) {
-            validateDuplicateReservation(reservation, date, reservationRequest.timeId());
-        }
+        validateDuplicateReservation(date, reservationRequest.timeId());
 
         ReservationTime reservationTime = reservationTimeRepository.getById(reservationRequest.timeId());
         Reservation reservation = reservationRequest.toEntity(reservationTime);
@@ -54,8 +50,10 @@ public class ReservationService {
         reservationTimeRepository.deleteById(reservationTime.getId());
     }
 
-    private void validateDuplicateReservation(Reservation reservation, LocalDate date, Long timeId) {
-        if (reservation.isSameDate(date) && Objects.equals(reservation.getTime().getId(), timeId)) {
+    private void validateDuplicateReservation(LocalDate date, Long timeId) {
+        ReservationTime time = reservationTimeRepository.getById(timeId);
+
+        if (reservationRepository.existsByDateAndTime(date, time)) {
             throw new IllegalArgumentException("예약이 마감된 일시입니다.");
         }
     }

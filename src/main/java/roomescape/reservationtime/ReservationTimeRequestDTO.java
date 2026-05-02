@@ -1,13 +1,15 @@
 package roomescape.reservationtime;
 
-public class ReservationTimeRequestDTO {
-    private final String startAt;
+import java.time.LocalTime;
 
-    public ReservationTimeRequestDTO(String startAt) {
+public class ReservationTimeRequestDTO {
+    private final LocalTime startAt;
+
+    public ReservationTimeRequestDTO(LocalTime startAt) {
         this.startAt = startAt;
     }
 
-    public String getStartAt() {
+    public LocalTime getStartAt() {
         return startAt;
     }
 }

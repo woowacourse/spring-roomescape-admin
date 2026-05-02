@@ -1,6 +1,8 @@
 package roomescape.reservationtime;
 
 import java.sql.PreparedStatement;
+import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +30,7 @@ public class ReservationTimeRepository {
             PreparedStatement ps = connection.prepareStatement(
                     sql,
                     new String[]{"id"});
-            ps.setString(1, reservationTime.getStartAt());
+            ps.setTime(1, Time.valueOf(reservationTime.getStartAt()));
             return ps;
         }, keyHolder);
 
@@ -47,7 +49,7 @@ public class ReservationTimeRepository {
                 (resultSet, rowNum) -> {
                     ReservationTime reservationTime = new ReservationTime(
                             resultSet.getLong("id"),
-                            resultSet.getString("start_at")
+                            LocalTime.parse(resultSet.getString("start_at"))
                     );
                     return reservationTime;
                 });
@@ -61,6 +63,7 @@ public class ReservationTimeRepository {
                 (resultSet, rowNum) ->
                         new ReservationTime(
                                 resultSet.getLong("id"),
-                                resultSet.getString("start_at")), id);
+                                LocalTime.parse(resultSet.getString("start_at"))),
+                id);
     }
 }

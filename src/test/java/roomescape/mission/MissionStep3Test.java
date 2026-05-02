@@ -35,15 +35,12 @@ class MissionStep3Test {
     @Test
     void 예약과_시간_연결() {
         Long timeId = ReservationFixture.generateReservationTime("10:00:00");
-
-        Map<String, Object> reservation = new HashMap<>();
-        reservation.put("name", "브라운");
-        reservation.put("date", "2023-08-05");
-        reservation.put("timeId", timeId);
+        Map<String, Object> reservationParams =
+                ReservationFixture.generateReservationParams("브라운", "2023-08-05", timeId);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(reservation)
+                .body(reservationParams)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201);

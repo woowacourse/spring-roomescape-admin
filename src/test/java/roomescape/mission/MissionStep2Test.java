@@ -55,15 +55,12 @@ class MissionStep2Test {
     @Test
     void DB_추가_삭제_API_전환() {
         Long timeId = ReservationFixture.generateReservationTime("10:00:00");
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("name", "브라운");
-        params.put("date", "2023-08-05");
-        params.put("timeId", timeId);
+        Map<String, Object> reservationParams =
+                ReservationFixture.generateReservationParams("브라운", "2023-08-05", timeId);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
-                .body(params)
+                .body(reservationParams)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(201);

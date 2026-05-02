@@ -21,4 +21,12 @@ public class ReservationFixture {
                 .extract().jsonPath().getLong("id");
     }
 
+    public static Map<String, Object> generateReservationParams(String name, String date, Long timeId) {
+        Map<String, Object> reservationParams = new HashMap<>();
+        reservationParams.put("name", name);
+        reservationParams.put("date", date);
+        reservationParams.put("timeId", timeId);
+        return reservationParams;
+    }
+
 }

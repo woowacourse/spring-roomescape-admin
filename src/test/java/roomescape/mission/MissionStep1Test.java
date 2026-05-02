@@ -28,11 +28,8 @@ class MissionStep1Test {
     @Test
     void 예약_추가_및_삭제() {
         Long timeId = ReservationFixture.generateReservationTime("10:00:00");
-
-        Map<String, Object> reservationParams = new HashMap<>();
-        reservationParams.put("name", "브라운");
-        reservationParams.put("date", "2023-08-05");
-        reservationParams.put("timeId", timeId);
+        Map<String, Object> reservationParams =
+                ReservationFixture.generateReservationParams("브라운", "2023-08-05", timeId);
 
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)

@@ -10,6 +10,8 @@ import roomescape.dto.ReservationResponseDto;
 import roomescape.dto.ReservationTimeResponseDto;
 import roomescape.entity.Reservation;
 import roomescape.entity.ReservationTime;
+import roomescape.exception.ErrorCode;
+import roomescape.exception.ReservationTimeException;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 
@@ -30,7 +32,7 @@ public class ReservationService {
         final List<ReservationResponseDto> reservationResponseDtos = new ArrayList<>();
         for (final Reservation reservation : reservationRepository.findAll()) {
             final ReservationTime reservationTime = reservationTimeRepository.findById(reservation.getTimeId())
-                .orElseThrow(() -> new NoSuchElementException("해당 예약 시간 데이터가 존재하지 않습니다."));
+                .orElseThrow(() -> new ReservationTimeException(ErrorCode.RESERVATION_TIME_NOT_FOUND));
             final ReservationTimeResponseDto reservationTimeResponseDto =
                 ReservationTimeResponseDto.from(reservationTime);
             reservationResponseDtos.add(
@@ -49,7 +51,7 @@ public class ReservationService {
             .timeId(reservationRequestDto.timeId())
             .build();
         final ReservationTime reservationTime = reservationTimeRepository.findById(reservationRequestDto.timeId())
-            .orElseThrow(() -> new NoSuchElementException("해당 예약 시간 데이터가 존재하지 않습니다."));
+            .orElseThrow(() -> new ReservationTimeException(ErrorCode.RESERVATION_TIME_NOT_FOUND));
         final ReservationTimeResponseDto reservationTimeResponseDto = ReservationTimeResponseDto.from(reservationTime);
 
         return ReservationResponseDto.from(reservationRepository.save(reservation), reservationTimeResponseDto);

@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -7,7 +8,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
-import roomescape.controller.ReservationTimeRequest;
 
 @Repository
 public class JdbcReservationTimeDao implements ReservationTimeDao {
@@ -25,9 +25,9 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
     }
 
     @Override
-    public long insert(ReservationTimeRequest reservationTimeRequest) {
+    public long insert(LocalTime startAt) {
         SimpleJdbcInsert insert = createInsert();
-        Map<String, Object> params = createParams(reservationTimeRequest);
+        Map<String, Object> params = createParams(startAt);
         return insert.executeAndReturnKey(params).longValue();
     }
 
@@ -46,7 +46,7 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
     private RowMapper<ReservationTime> rowMapper() {
         return (rs, rowNum) -> new ReservationTime(
                 rs.getLong("id"),
-                rs.getString("start_at")
+                rs.getObject("start_at", LocalTime.class)
         );
     }
 
@@ -56,7 +56,7 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    private Map<String, Object> createParams(ReservationTimeRequest request) {
-        return Map.of("start_at", request.startAt());
+    private Map<String, Object> createParams(LocalTime startAt) {
+        return Map.of("start_at", startAt);
     }
 }

@@ -1,9 +1,9 @@
 package roomescape.repository;
 
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
-import roomescape.controller.ReservationTimeRequest;
 
 @Repository
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
@@ -25,8 +25,8 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public long save(ReservationTimeRequest reservationTimeRequest) {
-        return jdbcReservationTimeDao.insert(reservationTimeRequest);
+    public long save(LocalTime startAt) {
+        return jdbcReservationTimeDao.insert(startAt);
     }
 
     @Override

@@ -7,7 +7,7 @@ import roomescape.domain.Reservation;
 @Repository
 public interface ReservationRepository {
 
-    List<ReservationJoinedDto> findAll();
+    List<ReservationJoinedDto> findAllJoinedDto();
 
     Reservation findById(long id);
 

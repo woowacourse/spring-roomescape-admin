@@ -1,4 +1,16 @@
 package roomescape.domain;
 
-public record ReservationTime(long id, String startAt) {
+import java.time.LocalTime;
+
+public record ReservationTime(long id, LocalTime startAt) {
+
+    public ReservationTime {
+        validate(startAt);
+    }
+
+    private void validate(LocalTime startAt) {
+        if (startAt == null) {
+            throw new IllegalArgumentException("시작 시간은 필수입니다.");
+        }
+    }
 }

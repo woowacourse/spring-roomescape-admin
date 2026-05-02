@@ -14,7 +14,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public List<ReservationJoinedDto> findAll() {
+    public List<ReservationJoinedDto> findAllJoinedDto() {
         return jdbcReservationDao.findAll();
     }
 

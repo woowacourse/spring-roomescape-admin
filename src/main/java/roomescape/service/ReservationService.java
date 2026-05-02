@@ -1,8 +1,8 @@
 package roomescape.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.controller.ReservationRequest;
 import roomescape.domain.Reservation;
 import roomescape.repository.ReservationJoinedDto;
 import roomescape.repository.ReservationRepository;
@@ -17,11 +17,11 @@ public class ReservationService {
     }
 
     public List<ReservationJoinedDto> allReservations() {
-        return reservationRepository.findAll();
+        return reservationRepository.findAllJoinedDto();
     }
 
-    public ReservationJoinedDto saveReservation(ReservationRequest reservationRequest) {
-        Reservation transientReservation = Reservation.transientOf(reservationRequest);
+    public ReservationJoinedDto saveReservation(String name, LocalDate date, Long reservationTimeId) {
+        Reservation transientReservation = Reservation.transientOf(name, date, reservationTimeId);
         long reservationId = reservationRepository.save(transientReservation);
         return reservationRepository.findJoinedDtoById(reservationId);
     }

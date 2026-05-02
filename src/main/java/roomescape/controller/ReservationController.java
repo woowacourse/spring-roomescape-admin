@@ -29,7 +29,8 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        ReservationJoinedDto reservation = reservationService.saveReservation(reservationRequest);
+        ReservationJoinedDto reservation = reservationService.saveReservation(reservationRequest.name(),
+                reservationRequest.date(), reservationRequest.timeId());
         ReservationResponse reservationResponse = toResponse(reservation);
         return ResponseEntity.ok(reservationResponse);
     }

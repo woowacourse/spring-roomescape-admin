@@ -1,8 +1,8 @@
 package roomescape.repository;
 
+import java.time.LocalTime;
 import java.util.List;
 import roomescape.domain.ReservationTime;
-import roomescape.controller.ReservationTimeRequest;
 
 public interface ReservationTimeRepository {
 
@@ -10,7 +10,7 @@ public interface ReservationTimeRepository {
 
     ReservationTime findById(long id);
 
-    long save(ReservationTimeRequest reservationTimeRequest);
+    long save(LocalTime startAt);
 
     void deleteById(long id);
 }

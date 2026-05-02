@@ -1,9 +1,9 @@
 package roomescape.service;
 
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.ReservationTime;
-import roomescape.controller.ReservationTimeRequest;
 import roomescape.repository.ReservationTimeRepository;
 
 @Service
@@ -19,8 +19,9 @@ public class ReservationTimeService {
         return reservationTimeRepository.findAll();
     }
 
-    public long saveTime(ReservationTimeRequest reservationTimeRequest) {
-        return reservationTimeRepository.save(reservationTimeRequest);
+    public ReservationTime saveTime(LocalTime startAt) {
+        long reservationTimeId = reservationTimeRepository.save(startAt);
+        return reservationTimeRepository.findById(reservationTimeId);
     }
 
     public void removeTime(long timeId) {

@@ -1,14 +1,14 @@
 package roomescape.repository;
 
+import java.time.LocalTime;
 import java.util.List;
 import roomescape.domain.ReservationTime;
-import roomescape.controller.ReservationTimeRequest;
 
 public interface ReservationTimeDao {
 
     List<ReservationTime> findAll();
 
-    long insert(ReservationTimeRequest reservationTimeRequest);
+    long insert(LocalTime startAt);
 
     void deleteById(long timeId);
 

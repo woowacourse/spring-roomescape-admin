@@ -35,7 +35,7 @@ public class ReservationDao {
     public Reservation save(Reservation reservation, long timeId) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", reservation.username())
-                .addValue("date", reservation.date())
+                .addValue("date", reservation.reservationDate())
                 .addValue("time_id", timeId);
 
         SimpleJdbcInsert reservationInsertExecutor = new SimpleJdbcInsert(jdbcTemplate)

@@ -9,7 +9,7 @@ public class Reservation {
     private static final long PENDING_RESERVATION_ID = -1L;
 
     private final long id;
-    private final String name;
+    private final String username;
     private final LocalDate reservationDate;
     private final ReservationTime reservationTime;
 
@@ -22,14 +22,14 @@ public class Reservation {
     }
 
     public String username() {
-        return name;
+        return username;
     }
 
-    public LocalDate date() {
+    public LocalDate reservationDate() {
         return reservationDate;
     }
 
-    public ReservationTime time() {
+    public ReservationTime reservationTime() {
         return reservationTime;
     }
 

@@ -62,7 +62,7 @@ public class ReservationTimeRepository {
         }
     }
 
-    public boolean existsByDateAndTime(LocalTime time) {
+    public boolean existsByTime(LocalTime time) {
         String sql = "SELECT EXISTS (" +
                 "SELECT 1 FROM reservation_time WHERE start_at = ?" +
                 ")";

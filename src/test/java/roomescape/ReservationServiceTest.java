@@ -17,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class ReservationServiceTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
     @Autowired
     private ReservationService reservationService;
 

@@ -43,7 +43,7 @@ public class ReservationTimeService {
     }
 
     private void validateDuplicateTime(LocalTime time) {
-        if (reservationTimeRepository.existsByDateAndTime(time)) {
+        if (reservationTimeRepository.existsByTime(time)) {
             throw new IllegalArgumentException("이미 존재하는 시간 슬롯입니다.");
         }
     }

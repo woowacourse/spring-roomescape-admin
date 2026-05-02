@@ -12,7 +12,6 @@ import roomescape.domain.repository.ReservationTimeRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -22,8 +21,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class ReservationRepositoryTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
     @Autowired
     private ReservationRepository reservationRepository;
+
     @Autowired
     private ReservationTimeRepository reservationTimeRepository;
 
@@ -49,7 +50,7 @@ public class ReservationRepositoryTest {
     }
 
     @Test
-    void 예약을_조회하면_전체_예약_목록이_반환된다() {
+    void 예약_목록을_조회하면_전체_예약_목록이_반환된다() {
         Long timeId = reservationTimeRepository.save(ReservationTime.create(null, LocalTime.of(10, 0)));
 
         Reservation reservation = Reservation.create(
@@ -57,17 +58,9 @@ public class ReservationRepositoryTest {
                 "바니",
                 LocalDate.of(2026, 5, 1),
                 ReservationTime.create(timeId, LocalTime.of(10, 0)));
-        Long id = reservationRepository.save(reservation);
+        reservationRepository.save(reservation);
 
-        Reservation savedReservation = Reservation.create(
-                id,
-                "바니",
-                LocalDate.of(2026, 5, 1),
-                ReservationTime.create(timeId, LocalTime.of(10, 0)));
-
-        List<Reservation> result = reservationRepository.findAll();
-
-        assertThat(result.size()).isEqualTo(1);
+        assertThat(reservationRepository.findAll().size()).isEqualTo(1);
     }
 
     @Test

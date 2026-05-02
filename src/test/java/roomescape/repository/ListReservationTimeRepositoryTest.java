@@ -40,7 +40,11 @@ class ListReservationTimeRepositoryTest {
         Optional<ReservationTime> timeOptional = repository.findById(saved.getId());
 
         // then
-        assertThat(timeOptional).isPresent();
+        assertThat(timeOptional)
+                .isPresent()
+                .get()
+                .extracting(ReservationTime::getStartAt)
+                .isEqualTo(reservationTime.getStartAt());
     }
 
     @Test
@@ -60,7 +64,13 @@ class ListReservationTimeRepositoryTest {
         List<ReservationTime> reservationTimes = repository.findAll();
 
         // then
-        assertThat(reservationTimes).hasSize(3);
+        assertThat(reservationTimes).hasSize(3)
+                .extracting(ReservationTime::getStartAt)
+                .containsExactlyInAnyOrder(
+                        LocalTime.of(15, 40),
+                        LocalTime.of(16, 10),
+                        LocalTime.of(17, 30)
+                );
     }
 
     @Test

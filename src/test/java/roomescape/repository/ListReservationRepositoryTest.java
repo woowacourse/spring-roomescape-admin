@@ -10,6 +10,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
 
 class ListReservationRepositoryTest {
 
@@ -50,7 +51,16 @@ class ListReservationRepositoryTest {
         List<Reservation> reservations = repository.findAll();
 
         // then
-        assertThat(reservations).hasSize(3);
+        assertThat(reservations).hasSize(3)
+                .extracting(
+                        Reservation::getName,
+                        Reservation::getDate,
+                        reservation -> reservation.getTime().getStartAt()
+                ).containsExactlyInAnyOrder(
+                        tuple("kim", LocalDate.of(2026, 4, 30), LocalTime.of(15, 40)),
+                        tuple("lee", LocalDate.of(2026, 5, 13), LocalTime.of(16, 10)),
+                        tuple("park", LocalDate.of(2026, 6, 23), LocalTime.of(17, 30))
+                );
     }
 
     @Test

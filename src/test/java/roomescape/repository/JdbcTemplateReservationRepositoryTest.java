@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
 
 
 @JdbcTest
@@ -50,7 +52,7 @@ class JdbcTemplateReservationRepositoryTest {
                 Reservation::getName,
                 Reservation::getDate,
                 Reservation::getTime
-        ).containsExactlyInAnyOrder(reservation.getName(), reservation.getDate(), reservation.getTime());
+        ).containsExactly(reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     @Test
@@ -77,7 +79,16 @@ class JdbcTemplateReservationRepositoryTest {
         List<Reservation> reservations = repository.findAll();
 
         // then
-        assertThat(reservations).hasSize(3);
+        assertThat(reservations).hasSize(3)
+                .extracting(
+                        Reservation::getName,
+                        Reservation::getDate,
+                        reservation -> reservation.getTime().getStartAt()
+                ).containsExactlyInAnyOrder(
+                        tuple("kim", LocalDate.of(2023, 8, 5), LocalTime.of(15, 40)),
+                        tuple("lee", LocalDate.of(2023, 8, 6), LocalTime.of(16, 10)),
+                        tuple("park", LocalDate.of(2023, 8, 7), LocalTime.of(17, 30))
+                );
     }
 
     @Test

@@ -54,7 +54,11 @@ class JdbcTemplateReservationTimeRepositoryTest {
         Optional<ReservationTime> timeOptional = repository.findById(reservationTime.getId());
 
         // then
-        assertThat(timeOptional).isPresent();
+        assertThat(timeOptional)
+                .isPresent()
+                .get()
+                .extracting(ReservationTime::getStartAt)
+                .isEqualTo(reservationTime.getStartAt());
     }
 
     @Test
@@ -69,7 +73,13 @@ class JdbcTemplateReservationTimeRepositoryTest {
         List<ReservationTime> reservationTimes = repository.findAll();
 
         // then
-        assertThat(reservationTimes).hasSize(3);
+        assertThat(reservationTimes).hasSize(3)
+                .extracting(ReservationTime::getStartAt)
+                .containsExactlyInAnyOrder(
+                        LocalTime.of(15, 40),
+                        LocalTime.of(16, 10),
+                        LocalTime.of(17, 30)
+                );
     }
 
     @Test

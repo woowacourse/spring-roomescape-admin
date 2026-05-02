@@ -23,7 +23,7 @@ public class TimeService {
         return timeDao.findAll().toTimes();
     }
 
-    public Time createTime(CreateTimeCommand command) {
+    public Time create(CreateTimeCommand command) {
         Time time = new Time(command.getTime());
         Long id = timeDao.insert(time);
 
@@ -32,11 +32,11 @@ public class TimeService {
                 .toTime();
     }
 
-    public void deleteTime(Long id) {
-        int deleted = timeDao.delete(id);
+    public void delete(Long id) {
+        Time time = timeDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다."))
+                .toTime();
 
-        if (deleted < 1) {
-            throw new IllegalArgumentException("존재하지 않는 시간입니다. id: " + id);
-        }
+        timeDao.delete(time.getId());
     }
 }

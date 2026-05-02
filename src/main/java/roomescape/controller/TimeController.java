@@ -28,7 +28,7 @@ public class TimeController {
     @PostMapping
     public ResponseEntity<Time> create(@RequestBody TimeRequestDto timeRequest) {
         CreateTimeCommand command = CreateTimeCommand.from(timeRequest);
-        Time time = timeService.createTime(command);
+        Time time = timeService.create(command);
         return ResponseEntity.ok(time);
     }
 
@@ -40,7 +40,7 @@ public class TimeController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id){
-        timeService.deleteTime(id);
+        timeService.delete(id);
         return ResponseEntity.ok().build();
     }
 }

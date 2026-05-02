@@ -19,13 +19,13 @@
 - 학습 과정 예시
 
 ```text
-## NullPointerException
+## 테스트를 스프링 환경에서 실행시키는 방법: @SpringBootTest
 1. 테스트의 jdbcTemplate에서 NullPointerException이 발생했다.
 2. 메인에서는 실행해도 에러가 안 나는데, 테스트에서만 에러가 나는 걸 확인했다. 
 3. AI를 활용해 현재 테스트 코드에서 NullPointerException이 발생하는 이유를 찾아봤다.
 4. 테스트에서 @AutoWired로 JdbcTemplate을 주입받고 있는데, @SpringBootTest 애노테이션을 붙이지 않아 스프링 환경 위에서 실행되지 않는다는 걸 깨달았다.
 
-## 406 Not Acceptable
+## 객체를 직렬화할 때는(ResponseEntity 만드는 과정) 해당 객체의 public getter 사용
 1. ReservationRequestDto를 따로 만든 후, Reservation에서 getter를 쓸 일이 사라져서 getter를 모두 삭제했다.
 2. 정상적으로 통과하던 테스트가 깨지고, 406 에러가 발생했다.
 3. 406 에러의 원인을 인터넷 검색으로 찾아봤다.

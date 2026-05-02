@@ -15,6 +15,7 @@ import roomescape.controller.dto.ReservationRequest;
 import roomescape.controller.dto.ReservationResponse;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.ReservationService;
 
 class ReservationControllerTest {
     ReservationController reservationController;
@@ -53,7 +54,8 @@ class ReservationControllerTest {
 
         ReservationRepository reservationRepository = new ReservationRepository(jdbcTemplate);
         ReservationTimeRepository reservationTimeRepository = new ReservationTimeRepository(jdbcTemplate);
-        reservationController = new ReservationController(reservationRepository, reservationTimeRepository);
+        ReservationService reservationService = new ReservationService(reservationRepository, reservationTimeRepository);
+        reservationController = new ReservationController(reservationService);
     }
 
     @Test

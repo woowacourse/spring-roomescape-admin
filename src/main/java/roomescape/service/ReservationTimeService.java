@@ -1,7 +1,5 @@
 package roomescape.service;
 
-import java.time.LocalTime;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.ReservationTime;
@@ -25,14 +23,7 @@ public class ReservationTimeService {
     }
 
     public ReservationTime add(ReservationTimeRequest request) {
-        LocalTime startAt;
-        try {
-            startAt = LocalTime.parse(request.startAt());
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("올바르지 않은 시간 형식입니다. (HH:mm) startAt: " + request.startAt());
-        }
-
-        ReservationTime reservationTime = new ReservationTime(null, startAt);
+        ReservationTime reservationTime = new ReservationTime(request.startAt());
         return repository.save(reservationTime);
     }
 

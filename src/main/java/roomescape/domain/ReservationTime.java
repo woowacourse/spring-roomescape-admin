@@ -7,6 +7,10 @@ public record ReservationTime(
     LocalTime startAt
 ) {
 
+    public ReservationTime(LocalTime startAt) {
+        this(null, startAt);
+    }
+
     public ReservationTime withId(long id) {
         return new ReservationTime(id, startAt);
     }

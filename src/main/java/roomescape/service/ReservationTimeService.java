@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationTimeDao;
+import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
@@ -27,8 +28,10 @@ public class ReservationTimeService {
     }
 
     public ReservationTimeResponse createReservationTime(ReservationTimeRequest reservationTimeRequest) {
-        ReservationTime reservationTime = reservationTimeDao.create(reservationTimeRequest);
-        return ReservationTimeResponse.of(reservationTime);
+        ReservationTime reservationTime = new ReservationTime(reservationTimeRequest.startAt());
+        long reservationTimeId = reservationTimeDao.create(reservationTime);
+        ReservationTime saved = reservationTime.withId(reservationTimeId);
+        return ReservationTimeResponse.of(saved);
     }
 
     public void deleteReservationTime(Long id) {

@@ -23,7 +23,7 @@ public class ReservationTimeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ReservationTime create(ReservationTimeRequest reservationTimeRequest) {
+    public Long create(ReservationTime reservationTime) {
         String sql = "INSERT INTO reservation_time(start_at) VALUES (?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -31,12 +31,12 @@ public class ReservationTimeDao {
         jdbcTemplate.update(connection -> {
                     PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-                    ps.setString(1, reservationTimeRequest.startAt());
+                    ps.setString(1, reservationTime.getStartAt());
                     return ps;
                 }, keyHolder
         );
 
-        return new ReservationTime(keyHolder.getKey().longValue(), reservationTimeRequest.startAt());
+        return keyHolder.getKey().longValue();
     }
 
     public List<ReservationTime> getTimes() {

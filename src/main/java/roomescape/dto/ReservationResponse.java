@@ -7,9 +7,9 @@ public record ReservationResponse(
         Long id,
         String name,
         String date,
-        ReservationTime time
+        ReservationTimeResponse time
 ) {
     public static ReservationResponse of(Reservation reservation) {
-        return new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(), reservation.getTime());
+        return new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(), ReservationTimeResponse.of(reservation.getTime()));
     }
 }

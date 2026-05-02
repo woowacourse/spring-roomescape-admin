@@ -15,7 +15,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-public class ReservationTimeTest {
+public class ReservationTimeAPITest {
     @DisplayName("시간 추가, 조회, 삭제 API가 정상 동작한다.")
     @Test
     void 시간_관리_API() {

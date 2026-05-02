@@ -24,6 +24,7 @@ public class ConsoleOutputView {
     }
 
     public static void printErrorMessage(String message) {
-        System.out.println(message);
+        System.out.println("[Error] " + message);
+
     }
 }

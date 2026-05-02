@@ -12,7 +12,6 @@ import roomescape.domain.ReservationTime;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static roomescape.console.ConsoleInputView.*;
 import static roomescape.console.ConsoleOutputView.*;
 
 public class ConsoleRunner {
@@ -28,7 +27,7 @@ public class ConsoleRunner {
     public void run() {
 
         int op;
-        while ((op = readOption()) != 7) {
+        while ((op = readUntilValid(ConsoleInputView::readOption)) != 7) {
             switch (op) {
                 case 1 -> addTime();
                 case 2 -> getTimeList();
@@ -41,7 +40,7 @@ public class ConsoleRunner {
     }
 
     private void addTime() {
-        ReservationTimeRequest request = readOperationExceptionHandler(ConsoleInputView::readTimeRequest);
+        ReservationTimeRequest request = readUntilValid(ConsoleInputView::readTimeRequest);
         ResponseEntity<ReservationTime> response =
                 controllerExceptionHandler(() -> reservationTimeController.addReservationTime(request));
 
@@ -60,12 +59,12 @@ public class ConsoleRunner {
     }
 
     private void deleteReservationTime() {
-        Long deleteId = readOperationExceptionHandler(ConsoleInputView::readDeleteTimeId);
+        Long deleteId = readUntilValid(ConsoleInputView::readDeleteTimeId);
         controllerExceptionHandler(() -> reservationTimeController.deleteReservationTime(deleteId));
     }
 
     private void addReservation() {
-        ReservationRequest request = readOperationExceptionHandler(ConsoleInputView::readReservationRequest);
+        ReservationRequest request = readUntilValid(ConsoleInputView::readReservationRequest);
         ResponseEntity<Reservation> response =
                 controllerExceptionHandler(() -> reservationController.addReservation(request));
 
@@ -84,7 +83,7 @@ public class ConsoleRunner {
     }
 
     private void deleteReservation() {
-        Long deleteId = readOperationExceptionHandler(ConsoleInputView::readDeleteReservationId);
+        Long deleteId = readUntilValid(ConsoleInputView::readDeleteReservationId);
         controllerExceptionHandler(() -> reservationController.deleteReservation(deleteId));
     }
 
@@ -94,12 +93,14 @@ public class ConsoleRunner {
      * @param readOperation: 특정 입력을 받는 작업
      * @return: 입력값
      */
-    private <T> T readOperationExceptionHandler(Supplier<T> readOperation) {
+    private <T> T readUntilValid(Supplier<T> readOperation) {
         while (true) {
             try {
                 return readOperation.get();
-            } catch (RuntimeException e) {
+            } catch (ConsoleException e) {
                 ConsoleOutputView.printErrorMessage(e.getMessage());
+            } catch (Exception e) {
+                ConsoleOutputView.printErrorMessage("알 수 없는 에러가 발생했습니다. 잠시 후 다시 시도해주세요.");
             }
         }
     }

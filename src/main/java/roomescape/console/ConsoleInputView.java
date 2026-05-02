@@ -13,7 +13,7 @@ public class ConsoleInputView {
     private static final Scanner sc = new Scanner(System.in);
 
     public static int readOption() {
-        System.out.println("선택하고 싶은 옵션을 선택해주세요: (1~7)");
+        System.out.println("\n선택하고 싶은 옵션을 선택해주세요: (1~7)");
         System.out.println("1. 시간 추가");
         System.out.println("2. 시간 목록 조회");
         System.out.println("3. 특정 ID의 시간 삭제");
@@ -29,11 +29,11 @@ public class ConsoleInputView {
         try {
             int i = Integer.parseInt(strOption);
             if(i < 1 || i > 7) {
-                throw new RuntimeException("1~7 사이의 숫자를 입력해주세요.");
+                throw new ConsoleException("1~7 사이의 숫자를 입력해주세요.");
             }
             return i;
         } catch (NumberFormatException e) {
-            throw new RuntimeException("숫자 형식으로 입력해주세요.");
+            throw new ConsoleException("숫자 형식으로 입력해주세요.");
         }
     }
 
@@ -43,7 +43,7 @@ public class ConsoleInputView {
         try {
             startAt = LocalTime.parse(sc.nextLine());
         } catch (DateTimeParseException e) {
-            throw new RuntimeException("변환할 수 없는 포멧입니다. 올바른 형식: HH:MM:SS(SS 생략 가능)");
+            throw new ConsoleException("변환할 수 없는 포멧입니다. 올바른 형식: HH:MM:SS(SS 생략 가능)");
         }
         return new ReservationTimeRequest(startAt);
     }
@@ -74,7 +74,7 @@ public class ConsoleInputView {
         try {
             date = LocalDate.parse(sc.nextLine());
         } catch (DateTimeParseException e) {
-            throw new RuntimeException("변환할 수 없는 포멧입니다. (올바른 형식: YYYY-MM-DD)");
+            throw new ConsoleException("변환할 수 없는 포멧입니다. (올바른 형식: YYYY-MM-DD)");
         }
         return date;
     }
@@ -85,7 +85,7 @@ public class ConsoleInputView {
         try {
             id = Long.parseLong(strId);
         } catch (NumberFormatException e) {
-            throw new RuntimeException("숫자 형식으로 입력해주세요.");
+            throw new ConsoleException("숫자 형식으로 입력해주세요.");
         }
         return id;
     }

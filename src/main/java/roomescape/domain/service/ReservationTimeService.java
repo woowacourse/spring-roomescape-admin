@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.entity.ReservationTime;
 import roomescape.domain.dto.ReservationTimeRequest;
 import roomescape.domain.dto.ReservationTimeResponse;
+import roomescape.domain.repository.ReservationRepository;
 import roomescape.domain.repository.ReservationTimeRepository;
 
 import java.time.LocalTime;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReservationTimeService {
     private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationRepository reservationRepository;
 
     @Transactional
     public ReservationTimeResponse save(ReservationTimeRequest reservationTimeRequest) {
@@ -36,6 +38,7 @@ public class ReservationTimeService {
 
     @Transactional
     public void delete(Long id) {
+        reservationRepository.deleteAllByTimeId(id);
         reservationTimeRepository.deleteById(id);
     }
 

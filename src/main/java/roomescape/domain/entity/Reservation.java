@@ -24,10 +24,6 @@ public class Reservation {
                 .build();
     }
 
-    public boolean isSameDate(LocalDate date) {
-        return this.date.equals(date);
-    }
-
     private static void validateName(String name) {
         if (name == null) {
             throw new IllegalArgumentException("[ERROR] 이름은 필수 값입니다.");

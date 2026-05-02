@@ -43,11 +43,7 @@ public class ReservationService {
 
     @Transactional
     public void delete(Long id) {
-        Reservation reservation = reservationRepository.getById(id);
-        ReservationTime reservationTime = reservation.getTime();
-
         reservationRepository.deleteById(id);
-        reservationTimeRepository.deleteById(reservationTime.getId());
     }
 
     private void validateDuplicateReservation(LocalDate date, Long timeId) {

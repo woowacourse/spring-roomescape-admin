@@ -75,6 +75,12 @@ public class ReservationRepository {
         return jdbcTemplate.query(selectAllSql, reservationRowMapper);
     }
 
+    public void deleteAllByTimeId(Long timeId) {
+        String deleteSql = "DELETE FROM reservation WHERE time_id = ?";
+
+        jdbcTemplate.update(deleteSql, timeId);
+    }
+
     public void deleteById(Long id) {
         String deleteSql = "DELETE FROM reservation WHERE id = ?";
 
@@ -84,7 +90,7 @@ public class ReservationRepository {
         }
     }
 
-    public boolean existsByDateAndTime(LocalDate date, ReservationTime time){
+    public boolean existsByDateAndTime(LocalDate date, ReservationTime time) {
         String sql = "SELECT EXISTS (" +
                 "SELECT 1 FROM reservation WHERE date = ? AND time_id = ?" +
                 ")";

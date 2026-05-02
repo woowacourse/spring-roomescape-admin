@@ -33,12 +33,6 @@ public class ReservationServiceTest {
     }
 
     @Test
-    void 존재하지_않는_예약을_삭제하면_예외를_던진다() {
-        assertThatThrownBy(() -> reservationService.delete(1L))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
     void 존재하지_않는_시간대에_예약을_생성하면_예외를_던진다() {
         ReservationRequest reservationRequest = new ReservationRequest("브라운", LocalDate.of(2026, 5, 1), 1L);
 

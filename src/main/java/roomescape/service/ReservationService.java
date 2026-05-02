@@ -3,6 +3,7 @@ package roomescape.service;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.Reservation;
@@ -23,6 +24,7 @@ public class ReservationService {
         return reservationDao.read();
     }
 
+    @Transactional
     public Reservation create(String name, LocalDate date, Long timeId) {
         ReservationTime time = timeDao.findById(timeId);
         Reservation reservation = new Reservation(name, date, time);

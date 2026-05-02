@@ -22,10 +22,7 @@ public class ReservationAPITest {
     @Test
     void 예약_생성_테스트() {
         // given
-        RestAssured.given()
-                .body(Map.of("startAt", "10:00"))
-                .contentType(ContentType.JSON)
-                .when().post("/times");
+        createTime();
 
         var body = Map.of(
                 "name", "brown",
@@ -67,7 +64,7 @@ public class ReservationAPITest {
     @Test
     void 예약_조회_테스트() {
         // given
-        예약_생성_테스트();
+        createReservation();
 
         // when
         var response = RestAssured
@@ -88,7 +85,7 @@ public class ReservationAPITest {
     @Test
     void 예약_삭제_테스트() {
         // given
-        예약_생성_테스트();
+        createReservation();
 
         // when
         var response = RestAssured
@@ -98,5 +95,20 @@ public class ReservationAPITest {
 
         // then
         assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    private void createTime() {
+        RestAssured.given()
+                .body(Map.of("startAt", "10:00"))
+                .contentType(ContentType.JSON)
+                .when().post("/times");
+    }
+
+    private void createReservation() {
+        createTime();
+        RestAssured.given()
+                .body(Map.of("name", "brown", "date", LocalDate.now().toString(), "timeId", 1L))
+                .contentType(ContentType.JSON)
+                .when().post("/reservations");
     }
 }

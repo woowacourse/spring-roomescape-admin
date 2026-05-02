@@ -36,7 +36,7 @@ DDD 관점의 엔티티 / 애그리거트 루트 판별 등
 웨지의 시간과 노력의 투자가 보람있을 수 있도록 노력하겠습니다!  
 항상 감사합니다! 오늘도 평안한 휴일 되세요! ♥️
 
-[피드백/답변 정리 문서]()
+[피드백/답변 정리 문서](https://github.com/nn98/spring-roomescape-admin/blob/nn98/docs/code-review/step1-01.md)
 
 - ### [📝 Feedback 01](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171918749)
 - ### [📝 Feedback 02](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171920507)

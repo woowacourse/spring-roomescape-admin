@@ -70,7 +70,7 @@ public class ReservationTimeControllerTest {
     void return200OK_When_DeleteReservationTime() {
         Long fakeId = 1L;
 
-        ResponseEntity<List<ReservationTime>> deleteResponse = controller.delete(fakeId);
+        ResponseEntity<Void> deleteResponse = controller.delete(fakeId);
 
         assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
     }

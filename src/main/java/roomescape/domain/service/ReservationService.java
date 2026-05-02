@@ -24,7 +24,7 @@ public class ReservationService {
     public ReservationResponse save(ReservationRequest reservationRequest) {
         LocalDate date = reservationRequest.date();
 
-        List<Reservation> reservations = reservationRepository.getAll();
+        List<Reservation> reservations = reservationRepository.findAll();
         for (Reservation reservation : reservations) {
             validateDuplicateReservation(reservation, date, reservationRequest.timeId());
         }
@@ -39,7 +39,7 @@ public class ReservationService {
     }
 
     public List<ReservationResponse> getAll() {
-        return reservationRepository.getAll()
+        return reservationRepository.findAll()
                 .stream()
                 .map(ReservationResponse::from)
                 .toList();
@@ -47,7 +47,11 @@ public class ReservationService {
 
     @Transactional
     public void delete(Long id) {
+        Reservation reservation = reservationRepository.getById(id);
+        ReservationTime reservationTime = reservation.getTime();
+
         reservationRepository.deleteById(id);
+        reservationTimeRepository.deleteById(reservationTime.getId());
     }
 
     private void validateDuplicateReservation(Reservation reservation, LocalDate date, Long timeId) {

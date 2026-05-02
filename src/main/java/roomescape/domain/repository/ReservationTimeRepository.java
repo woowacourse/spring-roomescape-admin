@@ -47,16 +47,13 @@ public class ReservationTimeRepository {
         }
     }
 
-    public List<ReservationTime> getAll() {
+    public List<ReservationTime> findAll() {
         String selectAllSql = "SELECT id, start_at FROM reservation_time";
 
         return jdbcTemplate.query(selectAllSql, reservationTimeRowMapper);
     }
 
-    public void delete(Long id) {
-        String deleteReservationSql = "DELETE FROM reservation WHERE time_id = ?";
-        jdbcTemplate.update(deleteReservationSql, id);
-
+    public void deleteById(Long id) {
         String deleteSql = "DELETE FROM reservation_time WHERE id = ?";
 
         int executeCount = jdbcTemplate.update(deleteSql, id);

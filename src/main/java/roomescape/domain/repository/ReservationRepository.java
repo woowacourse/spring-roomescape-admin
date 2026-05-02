@@ -1,6 +1,7 @@
 package roomescape.domain.repository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -50,7 +51,21 @@ public class ReservationRepository {
         return keyHolder.getKeyAs(Long.class);
     }
 
-    public List<Reservation> getAll() {
+    public Reservation getById(Long id) {
+        String selectSql = "SELECT r.id as reservation_id, r.name, r.date, " +
+                "t.id as time_id, t.start_at as time_value " +
+                "FROM reservation r " +
+                "INNER JOIN reservation_time t ON r.time_id = t.id " +
+                "WHERE r.id = ?";
+
+        try {
+            return jdbcTemplate.queryForObject(selectSql, reservationRowMapper, id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("존재하지 않는 에약입니다.");
+        }
+    }
+
+    public List<Reservation> findAll() {
         String selectAllSql = "SELECT r.id as reservation_id, r.name, r.date, " +
                 "t.id as time_id, t.start_at as time_value " +
                 "FROM reservation as r " +

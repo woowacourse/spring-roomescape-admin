@@ -14,7 +14,7 @@ public class ReservationTime {
 
     private void validateTime(LocalTime startAt) {
         if (startAt == null) {
-            throw new IllegalArgumentException("[ERROR] 시작 시간은 비어 있을 수 없습니다.");
+            throw new IllegalArgumentException("[ERROR] 시작 시간은 필수입니다.");
         }
     }
 

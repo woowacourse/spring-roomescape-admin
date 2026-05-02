@@ -25,23 +25,23 @@ public class Reservation {
 
     private void validateName(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("[ERROR] 예약자의 이름은 비어 있거나, 공백일 수 없습니다.");
+            throw new IllegalArgumentException("[ERROR] 예약자 이름은 필수입니다.");
         }
     }
 
     private void validateDate(LocalDate date) {
         if (date == null) {
-            throw new IllegalArgumentException("[ERROR] 예약 날짜는 비어 있을 수 없습니다.");
+            throw new IllegalArgumentException("[ERROR] 예약 날짜는 필수입니다.");
         }
 
         if (date.isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("[ERROR] 예약 날짜는 과거일 수 없습니다.");
+            throw new IllegalArgumentException("[ERROR] 예약 날짜는 오늘 이후여야 합니다.");
         }
     }
 
     private void validateTime(ReservationTime time) {
         if (time == null) {
-            throw new IllegalArgumentException("[ERROR] 예약 시간은 비어 있을 수 없습니다.");
+            throw new IllegalArgumentException("[ERROR] 예약 시간은 필수입니다.");
         }
     }
 

@@ -5,16 +5,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import roomescape.dto.ReservationCreateReqDto;
 import roomescape.dto.ReservationTimeCreateReqDto;
 import roomescape.dto.ReservationTimeResDto;
+import roomescape.repository.ReservationDao;
 import roomescape.repository.ReservationTimeDao;
 
 import javax.sql.DataSource;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
 class ReservationTimeServiceTest {
 
+    private ReservationService reservationService;
     private ReservationTimeService reservationTimeService;
     private JdbcTemplate jdbcTemplate;
 
@@ -50,8 +54,10 @@ class ReservationTimeServiceTest {
                         ");"
         );
 
+        ReservationDao reservationDao = new ReservationDao(dataSource);
         ReservationTimeDao reservationTimeDao = new ReservationTimeDao(dataSource);
-        reservationTimeService = new ReservationTimeService(reservationTimeDao);
+        reservationTimeService = new ReservationTimeService(reservationTimeDao, reservationDao);
+        reservationService = new ReservationService(reservationDao, reservationTimeDao);
     }
 
     @Test
@@ -101,5 +107,21 @@ class ReservationTimeServiceTest {
         // then
         List<ReservationTimeResDto> times = reservationTimeService.getTimes();
         Assertions.assertEquals(0, times.size());
+    }
+
+    @Test
+    void 시간_삭제_에러() {
+        // given
+        LocalTime time = LocalTime.of(15, 40);
+        ReservationTimeCreateReqDto reservationTimeCreateReqDto = new ReservationTimeCreateReqDto(time);
+        ReservationTimeResDto savedTime = reservationTimeService.createTime(reservationTimeCreateReqDto);
+
+        String name = "브라운";
+        LocalDate date = LocalDate.of(2023, 7, 4);
+
+        reservationService.createReservation(new ReservationCreateReqDto(name, date, savedTime.getId()));
+
+        // when && then
+        Assertions.assertThrows(IllegalStateException.class, () -> reservationTimeService.deleteTime(savedTime.getId()));
     }
 }

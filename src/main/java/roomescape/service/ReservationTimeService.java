@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeCreateReqDto;
 import roomescape.dto.ReservationTimeResDto;
+import roomescape.repository.ReservationDao;
 import roomescape.repository.ReservationTimeDao;
 
 import java.util.List;
@@ -14,9 +15,11 @@ import java.util.List;
 public class ReservationTimeService {
 
     private final ReservationTimeDao timeDao;
+    private final ReservationDao reservationDao;
 
-    public ReservationTimeService(ReservationTimeDao timeDao) {
+    public ReservationTimeService(ReservationTimeDao timeDao, ReservationDao reservationDao) {
         this.timeDao = timeDao;
+        this.reservationDao = reservationDao;
     }
 
     @Transactional
@@ -35,6 +38,9 @@ public class ReservationTimeService {
 
     @Transactional
     public void deleteTime(Long id) {
+        if (reservationDao.existsByTimeId(id)) {
+            throw new IllegalStateException("예약이 있는 시간은 삭제할 수 없습니다.");
+        }
         timeDao.deleteById(id);
     }
 }

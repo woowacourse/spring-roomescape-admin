@@ -66,6 +66,14 @@ public class ReservationDao {
         template.update(sql, param);
     }
 
+    public boolean existsByTimeId(Long timeId) {
+        String sql = "SELECT COUNT(*) FROM reservation WHERE time_id = :time_id";
+        SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("time_id", timeId);
+        Integer count = template.queryForObject(sql, param, Integer.class);
+        return count != null && count > 0;
+    }
+
     private RowMapper<Reservation> reservationRowMapper() {
         return (rs, rowNum) -> Reservation.withId(
                 rs.getLong("reservation_id"),

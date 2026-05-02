@@ -6,7 +6,6 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationCreateReqDto;
 import roomescape.dto.ReservationResDto;
-import roomescape.dto.ReservationTimeResDto;
 import roomescape.repository.ReservationDao;
 import roomescape.repository.ReservationTimeDao;
 
@@ -28,6 +27,7 @@ public class ReservationService {
     public ReservationResDto createReservation(ReservationCreateReqDto dto) {
         ReservationTime reservationTime = reservationTimeDao.findById(dto.getTimeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간입니다."));
+
         Reservation reservation = Reservation.create(dto.getName(), dto.getDate(), reservationTime);
         Reservation savedReservation = reservationDao.save(reservation);
         return ReservationResDto.from(savedReservation);

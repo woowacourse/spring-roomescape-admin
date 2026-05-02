@@ -45,24 +45,6 @@ public class Reservation {
         return time;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(this.id);
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof Reservation that)) {
-            return false;
-        }
-
-        if (that.id == null || this.id == null) {
-            return false;
-        }
-
-        return Objects.equals(this.id, that.id);
-    }
-
     private static void validate(String name, LocalDate date, ReservationTime time) {
         validateName(name);
         validateDate(date);
@@ -98,5 +80,23 @@ public class Reservation {
         if (id == null) {
             throw new IllegalArgumentException("예약 ID는 필수입니다.");
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.id);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof Reservation that)) {
+            return false;
+        }
+
+        if (that.id == null || this.id == null) {
+            return false;
+        }
+
+        return Objects.equals(this.id, that.id);
     }
 }

@@ -30,6 +30,18 @@ public class ReservationTime {
         return startAt;
     }
 
+    private static void validateStartAt(LocalTime startAt) {
+        if (startAt == null) {
+            throw new IllegalArgumentException("예약 시작 시간은 필수입니다.");
+        }
+    }
+
+    private static void validateId(Long timeId) {
+        if (timeId == null) {
+            throw new IllegalArgumentException("예약 시간 ID는 필수입니다.");
+        }
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(this.id);
@@ -46,17 +58,5 @@ public class ReservationTime {
         }
 
         return Objects.equals(this.id, that.id);
-    }
-
-    private static void validateStartAt(LocalTime startAt) {
-        if (startAt == null) {
-            throw new IllegalArgumentException("예약 시작 시간은 필수입니다.");
-        }
-    }
-
-    private static void validateId(Long timeId) {
-        if (timeId == null) {
-            throw new IllegalArgumentException("예약 시간 ID는 필수입니다.");
-        }
     }
 }

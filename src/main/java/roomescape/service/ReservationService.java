@@ -30,20 +30,20 @@ public class ReservationService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간입니다."));
         Reservation reservation = Reservation.create(dto.getName(), dto.getDate(), reservationTime);
         Reservation savedReservation = reservationDao.save(reservation);
-        return ReservationResDto.from(savedReservation.getId(), savedReservation.getName(), savedReservation.getDate(), ReservationTimeResDto.from(savedReservation.getTime().getId(), savedReservation.getTime().getStartAt()));
+        return ReservationResDto.from(savedReservation);
     }
 
     public List<ReservationResDto> getReservations() {
         return reservationDao.findAll()
                 .stream()
-                .map(r -> ReservationResDto.from(r.getId(), r.getName(), r.getDate(), ReservationTimeResDto.from(r.getTime().getId(), r.getTime().getStartAt())))
+                .map(ReservationResDto::from)
                 .toList();
     }
 
     public ReservationResDto getReservationById(Long id) {
         Reservation reservation = reservationDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 ID입니다."));
-        return ReservationResDto.from(reservation.getId(), reservation.getName(), reservation.getDate(), ReservationTimeResDto.from(reservation.getTime().getId(), reservation.getTime().getStartAt()));
+        return ReservationResDto.from(reservation);
     }
 
     @Transactional

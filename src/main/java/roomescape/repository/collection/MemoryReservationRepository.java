@@ -25,7 +25,7 @@ public class MemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public void delete(Long id) {
-        reservations.removeIf(it -> it.getId().equals(id));
+    public void delete(long id) {
+        reservations.removeIf(reservation -> reservation.getId().equals(id));
     }
 }

@@ -1,8 +1,10 @@
 package roomescape.service;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
@@ -12,6 +14,7 @@ import roomescape.repository.ReservationTimeRepository;
 
 @Service
 @Transactional
+@Validated
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
@@ -23,7 +26,7 @@ public class ReservationService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public ReservationResponse reserve(ReservationRequest request) {
+    public ReservationResponse reserve(@NotNull(message = "예약 정보가 비어있습니다.") ReservationRequest request) {
         ReservationTime time = reservationTimeRepository.findById(request.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간 정보입니다."));
 
@@ -40,7 +43,7 @@ public class ReservationService {
                 .toList();
     }
 
-    public void cancelAllReservation(Long id) {
+    public void cancelAllReservation(long id) {
         reservationRepository.delete(id);
     }
 }

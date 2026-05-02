@@ -41,7 +41,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public Optional<ReservationTime> findById(Long id) {
+    public Optional<ReservationTime> findById(long id) {
         try {
             String sql = "SELECT * FROM reservation_time WHERE id = ?";
             ReservationTime time = jdbcTemplate.queryForObject(sql, (resultSet, rowNum) -> new ReservationTime(
@@ -55,7 +55,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
     }
 }

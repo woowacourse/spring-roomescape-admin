@@ -1,5 +1,7 @@
 package roomescape.repository.collection;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +16,8 @@ public class MemoryReservationTimeRepository implements ReservationTimeRepositor
 
     @Override
     public ReservationTime save(ReservationTime reservationTime) {
+        requireNonNull(reservationTime, "저장할 예약 시간 정보는 null일 수 없습니다.");
+
         ReservationTime saved = new ReservationTime(
                 counter.getAndIncrement(),
                 reservationTime.getStartAt()
@@ -28,14 +32,14 @@ public class MemoryReservationTimeRepository implements ReservationTimeRepositor
     }
 
     @Override
-    public Optional<ReservationTime> findById(Long id) {
+    public Optional<ReservationTime> findById(long id) {
         return reservationTimes.stream()
                 .filter(time -> time.getId().equals(id))
                 .findFirst();
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         reservationTimes.removeIf(time -> time.getId().equals(id));
     }
 }

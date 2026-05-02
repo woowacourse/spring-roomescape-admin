@@ -26,7 +26,7 @@ class MissionStep3Test {
                 .body(reservationTimeParams)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
     }
 
     @Test
@@ -55,7 +55,7 @@ class MissionStep3Test {
                 .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
 
         RestAssured.given().log().all()
                 .when().get("/reservations")

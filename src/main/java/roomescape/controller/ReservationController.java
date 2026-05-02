@@ -1,5 +1,6 @@
 package roomescape.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import roomescape.domain.Reservation;
@@ -31,7 +32,8 @@ public class ReservationController {
     public ResponseEntity<ReservationDetailDto> createReservation(@RequestBody ReservationSaveDto dto) {
         Reservation savedReservation = reservationService.reserve(dto.name(), dto.date(), dto.timeId());
         ReservationDetailDto responseData = ReservationDetailDto.from(savedReservation);
-        return ResponseEntity.ok(responseData);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(responseData);
     }
 
     @DeleteMapping("/reservations/{id}")

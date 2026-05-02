@@ -26,7 +26,7 @@ class MissionStep1Test {
                 .body(reservationTimeParams)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
     }
 
     @Test
@@ -50,7 +50,7 @@ class MissionStep1Test {
                 .body(reservationParams)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200)
+                .statusCode(201)
                 .body("id", is(1));
 
         RestAssured.given().log().all()

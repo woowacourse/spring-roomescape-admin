@@ -8,14 +8,17 @@ import roomescape.domain.ReservationTime.ReservationTime;
 import roomescape.domain.ReservationTime.ReservationTimeCommand;
 import roomescape.exception.DataReferencedException;
 import roomescape.exception.ErrorMessage;
+import roomescape.repository.reservation.ReservationRepository;
 import roomescape.repository.reservationTime.ReservationTimeRepository;
 
 @Service
 public class ReservationTimeService {
     private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationRepository reservationRepository;
 
-    public ReservationTimeService(ReservationTimeRepository reservationTimeRepository) {
+    public ReservationTimeService(ReservationTimeRepository reservationTimeRepository, ReservationRepository reservationRepository) {
         this.reservationTimeRepository = reservationTimeRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     public List<ReservationTime> getAllReservationTime() {
@@ -27,11 +30,18 @@ public class ReservationTimeService {
         return reservationTimeRepository.addReservationTime(reservationTimeCommand);
     }
 
+    @Transactional
     public void deleteReservationTime(long id) {
+        boolean hasTimeId = reservationRepository.getAllReservation().stream()
+                .anyMatch(reservation -> reservation.time().id() == id);
+
+        if(hasTimeId) {
+            throw new DataReferencedException(ErrorMessage.CANNOT_DELETE_RESERVATION_TIME_IN_USE);
+        }
+
         try {
             reservationTimeRepository.deleteReservationTime(id);
-        }  catch(
-        DataIntegrityViolationException e) {
+        }  catch(DataIntegrityViolationException e) {
             throw new DataReferencedException(ErrorMessage.CANNOT_DELETE_RESERVATION_TIME_IN_USE);
         }
     }

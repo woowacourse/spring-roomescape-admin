@@ -2,6 +2,7 @@ package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.LocalTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,9 +53,9 @@ class ReservationTimeServiceTest {
     @Test
     @DisplayName("이미 존재하는 시간은 추가할 수 없다.")
     void throwException_When_CreateDuplicateTime() {
-        reservationTimeService.create("10:00");
+        reservationTimeService.create(LocalTime.of(10, 0));
 
-        assertThatThrownBy(() -> reservationTimeService.create("10:00"))
+        assertThatThrownBy(() -> reservationTimeService.create(LocalTime.of(10, 0)))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -68,7 +69,7 @@ class ReservationTimeServiceTest {
     @Test
     @DisplayName("예약에 사용 중인 시간은 삭제할 수 없다.")
     void throwException_When_DeleteTimeUsedByReservation() {
-        reservationTimeService.create("10:00");
+        reservationTimeService.create(LocalTime.of(10, 0));
         jdbcTemplate.update(
                 "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
                 "브라운",

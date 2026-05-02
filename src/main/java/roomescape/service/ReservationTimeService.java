@@ -1,5 +1,6 @@
 package roomescape.service;
 
+import java.time.LocalTime;
 import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -14,8 +15,8 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public ReservationTime create(String startAt) {
-        ReservationTime reservationTime = ReservationTime.from(null, startAt);
+    public ReservationTime create(LocalTime startAt) {
+        ReservationTime reservationTime = new ReservationTime(null, startAt);
 
         if (reservationTimeRepository.hasTimeAt(reservationTime.startAt())) {
             throw new IllegalArgumentException("[ERROR] 이미 존재하는 시간입니다.");

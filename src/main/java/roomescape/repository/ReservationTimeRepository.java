@@ -41,9 +41,9 @@ public class ReservationTimeRepository {
     public ReservationTime findById(Long id) {
         return jdbcTemplate.queryForObject(
                 "SELECT id, start_at FROM reservation_time WHERE id = ?",
-                (resultSet, rowNum) -> ReservationTime.from(
+                (resultSet, rowNum) -> new ReservationTime(
                         resultSet.getLong("id"),
-                        resultSet.getString("start_at")
+                        LocalTime.parse(resultSet.getString("start_at"))
                 ),
                 id
         );
@@ -52,9 +52,9 @@ public class ReservationTimeRepository {
     public List<ReservationTime> findAll() {
         return jdbcTemplate.query(
                 "SELECT id, start_at FROM reservation_time ORDER BY id",
-                (resultSet, rowNum) -> ReservationTime.from(
+                (resultSet, rowNum) -> new ReservationTime(
                         resultSet.getLong("id"),
-                        resultSet.getString("start_at")
+                        LocalTime.parse(resultSet.getString("start_at"))
                 )
         );
     }

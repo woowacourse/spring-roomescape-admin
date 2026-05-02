@@ -12,16 +12,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 class ReservationTimeTest {
 
     @ParameterizedTest
-    @ValueSource(strings = {
-            "9:00",
-            "25:00",
-            "12:64",
-            "12-30",
-            "12:3",
-    })
-    @DisplayName("시간이 정상 형태가 아닌 경우 예외를 발생한다.")
-    void throwException_When_TimeIllegalFormat(String input) {
-        assertThatThrownBy(() -> ReservationTime.from(1L, input))
+    @ValueSource(longs = {0L, -1L})
+    @DisplayName("시간 ID가 0 이하이면 예외를 발생한다.")
+    void throwException_When_IdIsNotPositive(Long id) {
+        assertThatThrownBy(() -> new ReservationTime(id, LocalTime.of(10, 0)))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -33,32 +27,9 @@ class ReservationTimeTest {
     }
 
     @Test
-    @DisplayName("정상적인 시간인 경우 예외가 발생하지 않는다.")
-    void makeTime_When_legalTime() {
-        assertThatCode(() -> ReservationTime.from(1L, "12:30"))
-                .doesNotThrowAnyException();
-    }
-
-    @Test
     @DisplayName("LocalTime으로 시간을 생성한다.")
     void makeTime_When_LocalTime() {
         assertThatCode(() -> new ReservationTime(1L, LocalTime.of(12, 30)))
                 .doesNotThrowAnyException();
     }
-//
-//    @Test
-//    @DisplayName("예약 시간은 아이디와 시작시간을 가진다.")
-//    void reservationTimeHave_IdAndStartedAt() {
-//        ReservationTime time = new ReservationTime(1L, "10:00");
-//
-//        assertThat(time.getId()).isEqualTo(1L);
-//        assertThat(time.getStartAt()).isEqualTo("10:00");
-//    }
-//
-//    @Test
-//    @DisplayName("id가 0 이하이면 예외를 발생한다.")
-//    void throwException_when_IdUnderZero() {
-//        assertThatThrownBy(() -> new ReservationTime(-1L, "10:00"))
-//                .isInstanceOf(IllegalArgumentException.class);
-//    }
 }

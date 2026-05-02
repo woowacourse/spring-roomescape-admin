@@ -2,6 +2,7 @@ package roomescape.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -59,7 +60,7 @@ public class ReservationTimeControllerTest {
     @Test
     @DisplayName("시간을 추가한다.")
     void createTime() {
-        TimeRequest timeRequest = new TimeRequest("10:00");
+        TimeRequest timeRequest = new TimeRequest(LocalTime.of(10, 0));
 
         ResponseEntity<TimeResponse> timeResponse = reservationTimeController.create(timeRequest);
 
@@ -71,8 +72,8 @@ public class ReservationTimeControllerTest {
     @Test
     @DisplayName("시간이 생성된 상태에서 시간을 조회한다.")
     void findAllTimes_After_Create() {
-        reservationTimeController.create(new TimeRequest("10:00"));
-        reservationTimeController.create(new TimeRequest("11:00"));
+        reservationTimeController.create(new TimeRequest(LocalTime.of(10, 0)));
+        reservationTimeController.create(new TimeRequest(LocalTime.of(11, 0)));
 
         ResponseEntity<List<TimeResponse>> times = reservationTimeController.findAll();
 
@@ -98,8 +99,8 @@ public class ReservationTimeControllerTest {
     @Test
     @DisplayName("시간을 삭제한다.")
     void deleteTime_After_Create() {
-        reservationTimeController.create(new TimeRequest("10:00"));
-        reservationTimeController.create(new TimeRequest("11:00"));
+        reservationTimeController.create(new TimeRequest(LocalTime.of(10, 0)));
+        reservationTimeController.create(new TimeRequest(LocalTime.of(11, 0)));
 
         ResponseEntity<Void> deleteResponse = reservationTimeController.delete(1L);
 

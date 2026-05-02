@@ -1,5 +1,7 @@
 package roomescape.controller.dto;
 
-public record TimeRequest(String startAt) {
+import java.time.LocalTime;
+
+public record TimeRequest(LocalTime startAt) {
 
 }

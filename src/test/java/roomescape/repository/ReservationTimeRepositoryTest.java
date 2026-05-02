@@ -43,7 +43,7 @@ class ReservationTimeRepositoryTest {
     @Test
     @DisplayName("시간을 저장한다.")
     void saveTime() {
-        ReservationTime time = saveTime("10:00");
+        ReservationTime time = saveTime(LocalTime.of(10, 0));
 
         assertThat(time.id()).isEqualTo(1L);
         assertThat(time.startAt().toString()).isEqualTo("10:00");
@@ -52,8 +52,8 @@ class ReservationTimeRepositoryTest {
     @Test
     @DisplayName("모든 시간을 조회한다.")
     void findAllTime() {
-        saveTime("10:00");
-        saveTime("11:00");
+        saveTime(LocalTime.of(10, 0));
+        saveTime(LocalTime.of(11, 0));
 
         List<ReservationTime> times = repository.findAll();
 
@@ -65,7 +65,7 @@ class ReservationTimeRepositoryTest {
     @Test
     @DisplayName("특정 시간의 존재 여부를 확인한다.")
     void hasTimeAt() {
-        saveTime("10:00");
+        saveTime(LocalTime.of(10, 0));
 
         assertThat(repository.hasTimeAt(LocalTime.of(10, 0))).isTrue();
         assertThat(repository.hasTimeAt(LocalTime.of(11, 0))).isFalse();
@@ -74,7 +74,7 @@ class ReservationTimeRepositoryTest {
     @Test
     @DisplayName("특정 id에 해당하는 시간을 제거한다.")
     void deleteById() {
-        saveTime("10:00");
+        saveTime(LocalTime.of(10, 0));
 
         repository.deleteById(1L);
 
@@ -88,7 +88,7 @@ class ReservationTimeRepositoryTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    private ReservationTime saveTime(String startAt) {
-        return repository.save(ReservationTime.from(null, startAt));
+    private ReservationTime saveTime(LocalTime startAt) {
+        return repository.save(new ReservationTime(null, startAt));
     }
 }

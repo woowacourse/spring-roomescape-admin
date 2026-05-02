@@ -4,13 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.time.domain.Time;
 import roomescape.domain.time.dto.request.TimeCreateRequestDTO;
 import roomescape.domain.time.dto.response.TimeResponseDTO;
+import roomescape.domain.time.repository.FakeTimeRepository;
 import roomescape.domain.time.repository.TimeRepository;
 
 class TimeServiceTest {
@@ -89,37 +89,6 @@ class TimeServiceTest {
                 () -> assertEquals(1, actual.size()),
                 () -> assertEquals(LocalTime.of(13, 0), actual.getFirst().startAt())
             );
-        }
-    }
-
-    private static class FakeTimeRepository implements TimeRepository {
-
-        private final List<Time> times = new ArrayList<>();
-        private Long sequence = 1L;
-
-        @Override
-        public Time save(Time time) {
-            Time savedTime = new Time(sequence++, time.getStartAt());
-            times.add(savedTime);
-            return savedTime;
-        }
-
-        @Override
-        public List<Time> findAllTimes() {
-            return times;
-        }
-
-        @Override
-        public Time findTimeById(Long id) {
-            return times.stream()
-                .filter(time -> time.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-        }
-
-        @Override
-        public void deleteTimeById(Long id) {
-            times.removeIf(time -> time.getId().equals(id));
         }
     }
 }

@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import java.util.List;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Name;
 import roomescape.domain.Reservation;
@@ -25,10 +26,34 @@ public class ReservationService {
     public Reservation create(String nameValue, String dateValue, Long timeId) {
         Name name = new Name(nameValue);
         ReservationDate date = ReservationDate.from(dateValue);
-        ReservationTime time = reservationTimeRepository.findById(timeId);
+        ReservationTime time = findReservationTime(timeId);
+
+        if (isDuplicatedReservation(date, time)) {
+            throw new IllegalArgumentException("[ERROR] 이미 존재하는 예약입니다.");
+        }
+
         Reservation reservation = new Reservation(null, name, date, time);
 
         return reservationRepository.save(reservation);
+    }
+
+    private ReservationTime findReservationTime(Long timeId) {
+        if (timeId == null || timeId <= 0) {
+            throw new IllegalArgumentException("[ERROR] 예약 시간 ID는 양수여야 합니다.");
+        }
+
+        try {
+            return reservationTimeRepository.findById(timeId);
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("[ERROR] 존재하지 않는 예약 시간입니다.", e);
+        }
+    }
+
+    private boolean isDuplicatedReservation(ReservationDate date, ReservationTime time) {
+        return reservationRepository.findAll()
+                .stream()
+                .anyMatch(reservation -> reservation.date().equals(date)
+                        && reservation.time().id().equals(time.id()));
     }
 
     public List<Reservation> findAll() {

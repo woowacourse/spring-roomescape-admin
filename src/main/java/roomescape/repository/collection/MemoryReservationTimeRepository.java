@@ -2,6 +2,7 @@ package roomescape.repository.collection;
 
 import static java.util.Objects.requireNonNull;
 
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -42,5 +43,11 @@ public class MemoryReservationTimeRepository implements ReservationTimeRepositor
     @Override
     public void deleteById(long id) {
         reservationTimes.removeIf(time -> time.getId().equals(id));
+    }
+
+    @Override
+    public boolean existsByStartAt(LocalTime time) {
+        return reservationTimes.stream()
+                .anyMatch(reservationTime -> reservationTime.getStartAt().equals(time));
     }
 }

@@ -3,6 +3,7 @@ package roomescape.repository.jdbc;
 import static roomescape.repository.jdbc.ReservationEntityMapper.RESERVATION_ROW_MAPPER;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -48,5 +49,12 @@ public class JdbcReservationRepository implements ReservationRepository {
     @Override
     public void delete(long id) {
         jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
+    }
+
+    @Override
+    public boolean existByDateAndTimeId(LocalDate date, long timeId) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM reservation WHERE date = ? AND time_id = ?)";
+        Boolean result = jdbcTemplate.queryForObject(sql, Boolean.class, date, timeId);
+        return Boolean.TRUE.equals(result);
     }
 }

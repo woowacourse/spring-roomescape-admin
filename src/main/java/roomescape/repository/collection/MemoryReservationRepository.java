@@ -1,5 +1,6 @@
 package roomescape.repository.collection;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -27,5 +28,12 @@ public class MemoryReservationRepository implements ReservationRepository {
     @Override
     public void delete(long id) {
         reservations.removeIf(reservation -> reservation.getId().equals(id));
+    }
+
+    @Override
+    public boolean existByDateAndTimeId(LocalDate date, long timeId) {
+        return reservations.stream()
+                .anyMatch(reservation -> reservation.getDate().equals(date) &&
+                        reservation.getTime().getId().equals(timeId));
     }
 }

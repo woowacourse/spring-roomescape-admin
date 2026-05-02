@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.validation.annotation.Validated;
@@ -16,4 +17,6 @@ public interface ReservationTimeRepository {
     Optional<ReservationTime> findById(long id);
 
     void deleteById(long id);
+
+    boolean existsByStartAt(@NotNull(message = "예약 시간 정보는 필수 값입니다.") LocalTime time);
 }

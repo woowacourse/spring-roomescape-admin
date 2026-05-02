@@ -18,7 +18,7 @@ public class ReservationTimeDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<ReservationTime> actorRowMapper = (resultSet, rowNum) -> {
+    private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) -> {
         ReservationTime reservationTime = new ReservationTime(
                 resultSet.getLong("id"),
                 ReservationTime.parse(resultSet.getString("start_at"))
@@ -29,7 +29,7 @@ public class ReservationTimeDao {
     public List<ReservationTime> findAll() {
         String sql = "select id, start_at from reservation_times";
 
-        return jdbcTemplate.query(sql, actorRowMapper);
+        return jdbcTemplate.query(sql, reservationTimeRowMapper);
     }
 
     public Long insertReservationTime(String startAt) {
@@ -56,6 +56,6 @@ public class ReservationTimeDao {
     public ReservationTime findById(Long id) {
         String readSql = "select id, start_at from reservation_times where id = ?";
 
-        return jdbcTemplate.queryForObject(readSql, actorRowMapper, id);
+        return jdbcTemplate.queryForObject(readSql, reservationTimeRowMapper, id);
     }
 }

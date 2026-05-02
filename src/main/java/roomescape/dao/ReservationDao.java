@@ -21,7 +21,7 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> {
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
         Reservation reservation = new Reservation(
                 resultSet.getLong("reservation_id"),
                 Name.parse(resultSet.getString("name")),
@@ -46,7 +46,7 @@ public class ReservationDao {
                 inner join reservation_times as t
                     on r.time_id = t.id
                 """;
-        return jdbcTemplate.query(sql, actorRowMapper);
+        return jdbcTemplate.query(sql, reservationRowMapper);
     }
 
     public Long insertReservation(String name, String date, Long timeId) {

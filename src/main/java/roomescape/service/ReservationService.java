@@ -6,6 +6,7 @@ import roomescape.dao.ReservationDAO;
 import roomescape.dao.ReservationTimeDAO;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequestDTO;
+import roomescape.exception.ReservationNotFoundException;
 
 import java.util.List;
 
@@ -35,6 +36,12 @@ public class ReservationService {
     }
 
     public void deleteReservation(Long id) {
+        int deletedRowNum = reservationDAO.delete(id);
+
+        if (deletedRowNum == 0) {
+            throw new ReservationNotFoundException("[ERROR] 존재하지 않는 예약 ID입니다.");
+        }
+
         reservationDAO.delete(id);
     }
 }

@@ -21,7 +21,7 @@ class FakeReservationTimeService extends ReservationTimeService {
 
     @Override
     public ReservationTime createReservationTime(ReservationTimeRequestDTO requestDTO) {
-        return new ReservationTime(requestDTO.getId(), requestDTO.getStartAt());
+        return new ReservationTime(requestDTO.getStartAt());
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ReservationTimeControllerTest {
         ReservationTimeService fakeService = new FakeReservationTimeService();
         controller = new ReservationTimeController(fakeService);
 
-        ReservationTimeRequestDTO requestDTO = new ReservationTimeRequestDTO(LocalTime.of(15, 0), 1L);
+        ReservationTimeRequestDTO requestDTO = new ReservationTimeRequestDTO(LocalTime.of(15, 0));
 
         createResponse = controller.create(requestDTO);
     }

@@ -7,7 +7,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 import roomescape.domain.DuplicateEntityException;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
@@ -16,7 +15,6 @@ import roomescape.service.result.ReservationTimeResult;
 
 @Service
 @Transactional(readOnly = true)
-@Validated
 @RequiredArgsConstructor
 public class ReservationTimeService {
 
@@ -34,7 +32,7 @@ public class ReservationTimeService {
     }
 
     @Transactional
-    public void remove(Long id) {
+    public void remove(long id) {
         reservationTimeRepository.deleteById(id);
     }
 

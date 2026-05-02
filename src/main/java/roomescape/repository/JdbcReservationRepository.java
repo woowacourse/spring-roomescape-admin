@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -27,13 +28,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
         return jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) -> new Reservation(
-                        resultSet.getLong("reservation_id"),
-                        resultSet.getString("name"),
-                        resultSet.getObject("date", LocalDate.class),
-                        new ReservationTime(resultSet.getLong("time_id"),
-                                resultSet.getObject("time_value", LocalTime.class))
-                )
+                rowMapperToReservation()
         );
     }
 
@@ -58,5 +53,15 @@ public class JdbcReservationRepository implements ReservationRepository {
     public void delete(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    private static RowMapper<Reservation> rowMapperToReservation() {
+        return (resultSet, rowNum) -> new Reservation(
+                resultSet.getLong("reservation_id"),
+                resultSet.getString("name"),
+                resultSet.getObject("date", LocalDate.class),
+                new ReservationTime(resultSet.getLong("time_id"),
+                        resultSet.getObject("time_value", LocalTime.class))
+        );
     }
 }

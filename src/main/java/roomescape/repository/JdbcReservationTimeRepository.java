@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -20,10 +21,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         String sql = "SELECT * FROM reservation_time WHERE id = ?";
         return jdbcTemplate.queryForObject(
                 sql,
-                (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getLong("id"),
-                        resultSet.getObject("start_at", LocalTime.class)
-                ),
+                rowMapperToReservationTime(),
                 timeId
         );
     }
@@ -33,10 +31,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         String sql = "SELECT * FROM reservation_time";
         return jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getLong("id"),
-                        resultSet.getObject("start_at", LocalTime.class)
-                )
+                rowMapperToReservationTime()
         );
     }
 
@@ -56,5 +51,12 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     public void delete(Long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    private static RowMapper<ReservationTime> rowMapperToReservationTime() {
+        return (resultSet, rowNum) -> new ReservationTime(
+                resultSet.getLong("id"),
+                resultSet.getObject("start_at", LocalTime.class)
+        );
     }
 }

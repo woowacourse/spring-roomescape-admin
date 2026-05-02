@@ -32,14 +32,14 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationResponseDto> create(@RequestBody ReservationRequestDto requestDto) {
         Reservation reservation = reservationService.save(
-                requestDto.getName(),
-                requestDto.getDate(),
-                requestDto.getTimeId()
+                requestDto.name(),
+                requestDto.date(),
+                requestDto.timeId()
         );
 
         ReservationResponseDto response = ReservationResponseDto.from(reservation);
         return ResponseEntity
-                .created(URI.create("/reservations/" + response.getId()))
+                .created(URI.create("/reservations/" + response.id()))
                 .body(response);
     }
 

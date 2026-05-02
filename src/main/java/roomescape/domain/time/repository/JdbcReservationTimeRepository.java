@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -48,9 +49,10 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTime findById(Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
-                new ReservationTime(rs.getLong("id"), LocalTime.parse(rs.getString("start_at"))), id);
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+                new ReservationTime(rs.getLong("id"), LocalTime.parse(rs.getString("start_at"))), id)
+                .stream().findFirst();
     }
 }

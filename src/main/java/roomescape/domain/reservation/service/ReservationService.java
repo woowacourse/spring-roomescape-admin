@@ -22,14 +22,15 @@ public class ReservationService {
 
     public Reservation create(ReservationRequestDTO requestDTO) {
         validateDate(requestDTO.date());
-        ReservationTime time = reservationTimeRepository.findById(requestDTO.timeId());
+        ReservationTime time = reservationTimeRepository.findById(requestDTO.timeId())
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] 존재하지 않는 시간입니다."));
         Reservation reservation = new Reservation(null, requestDTO.name(), requestDTO.date(), time);
         return reservationRepository.save(reservation);
     }
 
     private void validateDate(LocalDate date) {
         if (date.isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("예약 날짜는 오늘 이후여야 합니다.");
+            throw new IllegalArgumentException("[ERROR] 예약 날짜는 오늘 이후여야 합니다.");
         }
     }
 

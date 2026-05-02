@@ -48,11 +48,7 @@ public class ReservationTimeDao {
 
     int delete(long id) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
-        int affectedRow = jdbcTemplate.update(sql, id);
-        if (affectedRow == 0) {
-            throw new ReservationTimeException(ReservationTimeErrorCode.NOT_FOUND);
-        }
-        return affectedRow;
+        return jdbcTemplate.update(sql, id);
     }
 
     public Optional<ReservationTime> findById(long id) {

@@ -1,6 +1,7 @@
 package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
 import roomescape.request.ReservationRequest;
 import roomescape.response.ReservationResponse;
 import roomescape.service.ReservationService;
@@ -34,11 +34,14 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> registerReservation(@RequestBody ReservationRequest request) {
-        ReservationTime reservationTime = reservationService.findTime(request.timeId());
-        Reservation reservation = request.toReservation(reservationTime);
-        ReservationResponse reservationResponse =
-                ReservationResponse.from(reservationService.addReservation(reservation));
-        return ResponseEntity.created(URI.create(DEFAULT_PATH + reservationResponse.id())).body(reservationResponse);
+        Reservation reservationReturned = reservationService.saveReservation(request);
+        ReservationResponse reservationResponse = ReservationResponse.from(reservationReturned);
+        return ResponseEntity.created(getLocation(reservationResponse.id())).body(reservationResponse);
+    }
+
+    @NonNull
+    private static URI getLocation(Long id) {
+        return URI.create(DEFAULT_PATH + id);
     }
 
     @DeleteMapping("/{id}")

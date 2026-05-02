@@ -5,6 +5,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
+import roomescape.request.ReservationRequest;
 
 import java.util.List;
 
@@ -18,7 +19,6 @@ public class ReservationService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-
     public List<Reservation> findAllReservations() {
         return reservationRepository.findAllReservations();
     }
@@ -27,11 +27,9 @@ public class ReservationService {
         reservationRepository.deleteById(id);
     }
 
-    public ReservationTime findTime(Long id) {
-        return reservationTimeRepository.findById(id);
-    }
-
-    public Reservation addReservation(Reservation reservation) {
+    public Reservation saveReservation(ReservationRequest request) {
+        ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId());
+        Reservation reservation = request.toReservation(reservationTime);
         return reservationRepository.addReservation(reservation);
     }
 }

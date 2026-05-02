@@ -4,7 +4,6 @@ public class Reservation {
     private Long id;
     private String name;
     private String date;
-    private Long timeId;
     private ReservationTime time;
 
     public Reservation() {
@@ -42,13 +41,5 @@ public class Reservation {
 
     public ReservationTime getTime() {
         return time;
-    }
-
-    public void setTimeId(Long timeId) {
-        this.timeId = timeId;
-    }
-
-    public Long getTimeId() {
-        return timeId;
     }
 }

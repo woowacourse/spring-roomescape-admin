@@ -2,8 +2,8 @@ package roomescape.controller.console;
 
 import java.util.List;
 import java.util.Scanner;
-import roomescape.dto.ReservationResponse;
-import roomescape.dto.ReservationTimeResponse;
+import roomescape.service.result.ReservationResult;
+import roomescape.service.result.ReservationTimeResult;
 
 public final class ConsoleView {
 
@@ -16,7 +16,7 @@ public final class ConsoleView {
         System.out.println("[기타] q: 종료");
     }
 
-    public static void printTimes(List<ReservationTimeResponse> times) {
+    public static void printTimes(List<ReservationTimeResult> times) {
         System.out.println("\n[현재 등록된 시간 목록]");
         if (times.isEmpty()) {
             System.out.println("등록된 시간이 없습니다.");
@@ -32,7 +32,7 @@ public final class ConsoleView {
         return scanner.nextLine();
     }
 
-    public static void printReservations(List<ReservationResponse> reservations) {
+    public static void printReservations(List<ReservationResult> reservations) {
         System.out.println("\n[현재 예약 목록]");
         if (reservations.isEmpty()) {
             System.out.println("예약이 없습니다.");

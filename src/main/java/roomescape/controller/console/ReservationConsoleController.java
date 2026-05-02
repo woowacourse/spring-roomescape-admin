@@ -3,10 +3,10 @@ package roomescape.controller.console;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.springframework.boot.CommandLineRunner;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationTimeRequest;
 import roomescape.service.ReservationService;
 import roomescape.service.ReservationTimeService;
+import roomescape.service.command.ReservationCommand;
+import roomescape.service.command.ReservationTimeCommand;
 
 public class ReservationConsoleController implements CommandLineRunner {
 
@@ -56,7 +56,7 @@ public class ReservationConsoleController implements CommandLineRunner {
         String date = ConsoleView.readInput("날짜(YYYY-MM-DD): ");
         Long timeId = Long.parseLong(ConsoleView.readInput("시간 ID: "));
 
-        reservationService.reserve(new ReservationRequest(name, LocalDate.parse(date), timeId));
+        reservationService.reserve(new ReservationCommand(name, LocalDate.parse(date), timeId));
         ConsoleView.printMessage("예약이 완료되었습니다.");
     }
 
@@ -72,7 +72,7 @@ public class ReservationConsoleController implements CommandLineRunner {
 
     private void registerReservationTime() {
         String startAt = ConsoleView.readInput("추가할 시간(HH:mm): ");
-        reservationTimeService.register(new ReservationTimeRequest(LocalTime.parse(startAt)));
+        reservationTimeService.register(new ReservationTimeCommand(LocalTime.parse(startAt)));
         ConsoleView.printMessage("시간이 등록되었습니다.");
     }
 

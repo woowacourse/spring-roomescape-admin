@@ -7,10 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationRequest;
-import roomescape.dto.ReservationResponse;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.command.ReservationCommand;
+import roomescape.service.result.ReservationResult;
 
 @Service
 @Transactional(readOnly = true)
@@ -27,19 +27,19 @@ public class ReservationService {
     }
 
     @Transactional
-    public ReservationResponse reserve(@NotNull(message = "예약 정보가 비어있습니다.") ReservationRequest request) {
+    public ReservationResult reserve(@NotNull(message = "예약 정보가 비어있습니다.") ReservationCommand request) {
         ReservationTime time = reservationTimeRepository.findById(request.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간 정보입니다."));
 
         Reservation reservation = new Reservation(request.name(), request.date(), time);
         Reservation saved = reservationRepository.save(reservation);
-        return ReservationResponse.from(saved);
+        return ReservationResult.from(saved);
     }
 
-    public List<ReservationResponse> getAllReservations() {
+    public List<ReservationResult> getAllReservations() {
         return reservationRepository.findAll()
                 .stream()
-                .map(ReservationResponse::from)
+                .map(ReservationResult::from)
                 .toList();
     }
 

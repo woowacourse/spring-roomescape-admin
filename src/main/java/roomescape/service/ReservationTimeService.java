@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationTimeRequest;
-import roomescape.dto.ReservationTimeResponse;
 import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.command.ReservationTimeCommand;
+import roomescape.service.result.ReservationTimeResult;
 
 @Service
 @Transactional(readOnly = true)
@@ -22,18 +22,18 @@ public class ReservationTimeService {
     }
 
     @Transactional
-    public ReservationTimeResponse register(
-            @NotNull(message = "예약 시간 정보가 필요합니다.") ReservationTimeRequest request
+    public ReservationTimeResult register(
+            @NotNull(message = "예약 시간 정보가 필요합니다.") ReservationTimeCommand request
     ) {
         ReservationTime reservationTime = new ReservationTime(request.startAt());
         ReservationTime saved = reservationTimeRepository.save(reservationTime);
-        return ReservationTimeResponse.from(saved);
+        return ReservationTimeResult.from(saved);
     }
 
-    public List<ReservationTimeResponse> getAllReservationTimes() {
+    public List<ReservationTimeResult> getAllReservationTimes() {
         return reservationTimeRepository.findAll()
                 .stream()
-                .map(ReservationTimeResponse::from)
+                .map(ReservationTimeResult::from)
                 .toList();
     }
 

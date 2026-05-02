@@ -1,7 +1,7 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 import roomescape.repository.TimeRepository;
 
 import java.util.List;
@@ -15,17 +15,17 @@ public class TimeServiceImpl implements TimeService {
     }
 
     @Override
-    public List<Time> findAllTimes() {
+    public List<ReservationTime> findAllTimes() {
         return timeRepository.findAllTimes();
     }
 
     @Override
-    public Time add(Time time) {
+    public ReservationTime add(ReservationTime time) {
         return timeRepository.add(time);
     }
 
     @Override
-    public Time findById(Long id) {
+    public ReservationTime findById(Long id) {
         return timeRepository.findById(id);
     }
 

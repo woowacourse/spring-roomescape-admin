@@ -1,15 +1,15 @@
 package roomescape.repository;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,21 +24,20 @@ class TimeRepositoryTest {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-
     @Test
     @DisplayName("전체 시간을 조회한다.")
     void findAllTimesTest() {
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
-        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "11:00");
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", LocalTime.of(10,0));
+        jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", LocalTime.of(11,0));
 
-        List<Time> times = timeRepository.findAllTimes();
+        List<ReservationTime> times = timeRepository.findAllTimes();
         assertThat(times).hasSize(2);
     }
 
     @Test
     @DisplayName("시간을 추가하면 id가 부여된 객체가 반환된다.")
     void addTest() {
-        Time saved = timeRepository.add(new Time(null, "10:00"));
+        ReservationTime saved = timeRepository.add(new ReservationTime(null, LocalTime.of(10,0)));
 
         assertThat(saved.getId()).isNotNull();
         assertThat(saved.getStartAt()).isEqualTo("10:00");
@@ -47,11 +46,11 @@ class TimeRepositoryTest {
     @Test
     @DisplayName("시간을 삭제한다.")
     void removeTest() {
-        Time saved = timeRepository.add(new Time(null, "10:00"));
+        ReservationTime saved = timeRepository.add(new ReservationTime(null, LocalTime.of(10,0)));
 
         timeRepository.remove(saved.getId());
 
-        List<Time> times = timeRepository.findAllTimes();
+        List<ReservationTime> times = timeRepository.findAllTimes();
         assertThat(times).hasSize(0);
     }
 

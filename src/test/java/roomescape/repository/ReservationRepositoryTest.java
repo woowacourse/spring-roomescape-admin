@@ -8,8 +8,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,18 +26,18 @@ class ReservationRepositoryTest {
     @Autowired
     TimeRepository timeRepository;
 
-    private Time savedTime;
+    private ReservationTime savedTime;
 
     @BeforeEach
     void beforeEach() {
-        savedTime = timeRepository.add(new Time(null, "10:00"));
+        savedTime = timeRepository.add(new ReservationTime(null, LocalTime.of(10,0)));
     }
 
     @Test
     @DisplayName("전체 예약을 조회한다.")
     void findAllReservationsTest() {
-        reservationRepository.add(new Reservation("브라운", "2026-08-05", savedTime));
-        reservationRepository.add(new Reservation("네오", "2026-08-06", savedTime));
+        reservationRepository.add(new Reservation("브라운", LocalDate.of(2026, 8, 5), savedTime));
+        reservationRepository.add(new Reservation("네오", LocalDate.of(2026, 8, 6), savedTime));
 
         List<Reservation> reservations = reservationRepository.findAllReservations();
 
@@ -45,7 +47,7 @@ class ReservationRepositoryTest {
     @Test
     @DisplayName("예약을 추가하면 id가 부여된 객체가 반환된다.")
     void addTest() {
-        Reservation reservation = new Reservation("네오", "2026-08-06", savedTime);
+        Reservation reservation = new Reservation("네오", LocalDate.of(2026, 8, 6), savedTime);
 
         Reservation saved = reservationRepository.add(reservation);
 
@@ -55,7 +57,7 @@ class ReservationRepositoryTest {
     @Test
     @DisplayName("예약을 삭제한다.")
     void removeTest() {
-        Reservation saved = reservationRepository.add(new Reservation("브라운", "2026-08-05", savedTime));
+        Reservation saved = reservationRepository.add(new Reservation("브라운", LocalDate.of(2026, 8, 5), savedTime));
 
         reservationRepository.remove(saved.getId());
 

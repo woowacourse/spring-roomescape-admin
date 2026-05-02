@@ -3,7 +3,7 @@ package roomescape.service;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.repository.ReservationRepository;
 
@@ -22,7 +22,7 @@ public class ReservationServiceImpl implements ReservationService{
 
     @Override
     public Reservation add(ReservationRequest request) {
-        Time time = timeService.findById(request.getTimeId());
+        ReservationTime time = timeService.findById(request.getTimeId());
 
         Reservation reservation = new Reservation(request.getName(), request.getDate(), time);
         return reservationRepository.add(reservation);

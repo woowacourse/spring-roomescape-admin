@@ -1,16 +1,16 @@
 package roomescape.service;
 
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 
 import java.util.List;
 
 public interface TimeService {
 
-    List<Time> findAllTimes();
+    List<ReservationTime> findAllTimes();
 
-    Time add(Time time);
+    ReservationTime add(ReservationTime time);
 
-    Time findById(Long id);
+    ReservationTime findById(Long id);
 
     void remove(Long id);
 }

@@ -1,22 +1,24 @@
 package roomescape.dto;
 
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
+
+import java.time.LocalTime;
 
 public class TimeRequest {
-    private String startAt;
+    private LocalTime startAt;
 
     public TimeRequest() {
     }
 
-    public TimeRequest(String startAt) {
+    public TimeRequest(LocalTime startAt) {
         this.startAt = startAt;
     }
 
-    public String getStartAt() {
+    public LocalTime getStartAt() {
         return startAt;
     }
 
-    public Time toDomain() {
-        return new Time(null, startAt);
+    public ReservationTime toDomain() {
+        return new ReservationTime(null, startAt);
     }
 }

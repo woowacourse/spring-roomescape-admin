@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.repository.TimeRepository;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,7 +36,7 @@ class ReservationControllerTest {
 
     @BeforeEach
     void setUp() {
-        Time time = timeRepository.add(new Time(null, "10:00"));
+        ReservationTime time = timeRepository.add(new ReservationTime(null, LocalTime.of(10,0)));
         savedTimeId = time.getId();
     }
 
@@ -49,13 +51,13 @@ class ReservationControllerTest {
         List<ReservationResponse> allReservations = controller.findAllReservations();
 
         assertThat(allReservations).hasSize(1);
-        assertThat(allReservations.get(0).getTime().getStartAt()).isEqualTo("10:00");
+        assertThat(allReservations.get(0).getTime().getStartAt()).isEqualTo(LocalTime.of(10,0));
     }
 
     @Test
     @DisplayName("예약을 추가한다.")
     void addReservationTest() {
-        ReservationRequest request = new ReservationRequest("네오", "2023-08-06", savedTimeId);
+        ReservationRequest request = new ReservationRequest("네오", LocalDate.of(2023, 8, 6), savedTimeId);
 
         controller.addReservation(request);
         List<ReservationResponse> allReservations = controller.findAllReservations();

@@ -5,9 +5,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import roomescape.domain.Time;
+import roomescape.domain.ReservationTime;
 
 import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.util.List;
 
 @Repository
@@ -18,28 +19,27 @@ public class TimeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<Time> findAllTimes() {
+    public List<ReservationTime> findAllTimes() {
         String sql = "SELECT id, start_at FROM reservation_time";
         return jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) -> {
-                    Time time = new Time(
-                            resultSet.getLong("id"),
-                            resultSet.getString("start_at")
-                    );
-                    return time;
-                });
+                (rs, rowNum) ->
+                        new ReservationTime(
+                                rs.getLong("id"),
+                                rs.getTime("start_at").toLocalTime()
+                        )
+        );
     }
 
-    public Time findById(Long id) {
+    public ReservationTime findById(Long id) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = (?)";
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new Time(
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new ReservationTime(
                 rs.getLong("id"),
-                rs.getString("start_at")
+                rs.getTime("start_at").toLocalTime()
         ), id);
     }
 
-    public Time add(Time time) {
+    public ReservationTime add(ReservationTime time) {
         String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -47,13 +47,13 @@ public class TimeRepository {
             PreparedStatement ps = connection.prepareStatement(
                     sql,
                     new String[]{"id"});
-            ps.setString(1, time.getStartAt());
+            ps.setTime(1, Time.valueOf(time.getStartAt()));
             return ps;
         }, keyHolder);
 
         long id = keyHolder.getKey().longValue();
 
-        return new Time(id, time.getStartAt());
+        return new ReservationTime(id, time.getStartAt());
     }
 
     public void remove(Long id) {

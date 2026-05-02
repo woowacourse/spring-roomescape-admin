@@ -30,8 +30,4 @@ public record ReservationDate(LocalDate value) {
             throw new IllegalArgumentException("[ERROR] 날짜 형식은 yyyy-MM-dd 여야 합니다.");
         }
     }
-
-    public String format() {
-        return value.format(FORMATTER);
-    }
 }

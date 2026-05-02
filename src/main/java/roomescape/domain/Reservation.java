@@ -22,7 +22,7 @@ public class Reservation {
     }
 
     public String getDate() {
-        return date.format();
+        return date.value().toString();
     }
 
     public ReservationTime getTime() {

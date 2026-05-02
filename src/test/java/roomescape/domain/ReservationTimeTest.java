@@ -3,6 +3,7 @@ package roomescape.domain;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,7 +21,7 @@ class ReservationTimeTest {
     })
     @DisplayName("시간이 정상 형태가 아닌 경우 예외를 발생한다.")
     void throwException_When_TimeIllegalFormat(String input) {
-        assertThatThrownBy(() -> new ReservationTime(1L, input))
+        assertThatThrownBy(() -> ReservationTime.from(1L, input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -34,7 +35,14 @@ class ReservationTimeTest {
     @Test
     @DisplayName("정상적인 시간인 경우 예외가 발생하지 않는다.")
     void makeTime_When_legalTime() {
-        assertThatCode(() -> new ReservationTime(1L,"12:30"))
+        assertThatCode(() -> ReservationTime.from(1L, "12:30"))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("LocalTime으로 시간을 생성한다.")
+    void makeTime_When_LocalTime() {
+        assertThatCode(() -> new ReservationTime(1L, LocalTime.of(12, 30)))
                 .doesNotThrowAnyException();
     }
 //

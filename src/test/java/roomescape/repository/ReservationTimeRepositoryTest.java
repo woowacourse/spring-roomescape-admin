@@ -43,7 +43,7 @@ class ReservationTimeRepositoryTest {
         ReservationTime time = repository.save("10:00");
 
         assertThat(time.id()).isEqualTo(1L);
-        assertThat(time.startAt()).isEqualTo("10:00");
+        assertThat(time.startAt().toString()).isEqualTo("10:00");
     }
 
     @Test
@@ -55,8 +55,8 @@ class ReservationTimeRepositoryTest {
         List<ReservationTime> times = repository.findAll();
 
         assertThat(times).hasSize(2);
-        assertThat(times.get(0).startAt()).isEqualTo("10:00");
-        assertThat(times.get(1).startAt()).isEqualTo("11:00");
+        assertThat(times.get(0).startAt().toString()).isEqualTo("10:00");
+        assertThat(times.get(1).startAt().toString()).isEqualTo("11:00");
     }
 
     @Test

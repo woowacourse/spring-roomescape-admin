@@ -33,7 +33,7 @@ public class ReservationRepository {
             );
 
             statement.setString(1, name.value());
-            statement.setString(2, date.format());
+            statement.setString(2, date.value().toString());
             statement.setLong(3, time.id());
             return statement;
         }, keyHolder);
@@ -62,7 +62,7 @@ public class ReservationRepository {
                         resultSet.getLong("reservation_id"),
                         new Name(resultSet.getString("name")),
                         ReservationDate.from(resultSet.getString("date")),
-                        new ReservationTime(
+                        ReservationTime.from(
                                 resultSet.getLong("time_id"),
                                 resultSet.getString("start_at")
                         )
@@ -81,7 +81,7 @@ public class ReservationRepository {
     private ReservationTime findTimeById(Long id) {
         return jdbcTemplate.queryForObject(
                 "SELECT id, start_at FROM reservation_time WHERE id = ?",
-                (resultSet, rowNum) -> new ReservationTime(
+                (resultSet, rowNum) -> ReservationTime.from(
                         resultSet.getLong("id"),
                         resultSet.getString("start_at")
                 ),

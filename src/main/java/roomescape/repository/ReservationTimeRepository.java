@@ -17,6 +17,7 @@ public class ReservationTimeRepository {
     }
 
     public ReservationTime save(String startAt) {
+        ReservationTime time = ReservationTime.from(null, startAt);
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
@@ -25,7 +26,7 @@ public class ReservationTimeRepository {
                     new String[]{"id"}
             );
 
-            preparedStatement.setString(1, startAt);
+            preparedStatement.setString(1, time.startAt().toString());
             return preparedStatement;
         }, keyHolder);
 
@@ -34,13 +35,13 @@ public class ReservationTimeRepository {
             throw new IllegalStateException("[ERROR] 시간 ID가 생성되지 않았습니다.");
         }
 
-        return new ReservationTime(key.longValue(), startAt);
+        return new ReservationTime(key.longValue(), time.startAt());
     }
 
     public List<ReservationTime> findAll() {
         return jdbcTemplate.query(
                 "SELECT id, start_at FROM reservation_time ORDER BY id",
-                (resultSet, rowNum) -> new ReservationTime(
+                (resultSet, rowNum) -> ReservationTime.from(
                         resultSet.getLong("id"),
                         resultSet.getString("start_at")
                 )

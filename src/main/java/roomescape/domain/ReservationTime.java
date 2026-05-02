@@ -4,7 +4,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public record ReservationTime(Long id, String startAt) {
+public record ReservationTime(Long id, LocalTime startAt) {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     public ReservationTime {
@@ -12,6 +12,12 @@ public record ReservationTime(Long id, String startAt) {
             throw new IllegalArgumentException("[ERROR] 시간 ID는 양수여야 합니다.");
         }
 
+        if (startAt == null) {
+            throw new IllegalArgumentException("[ERROR] 시간은 null일 수 없습니다.");
+        }
+    }
+
+    public static ReservationTime from(Long id, String startAt) {
         if (startAt == null) {
             throw new IllegalArgumentException("[ERROR] 시간은 null일 수 없습니다.");
         }
@@ -23,11 +29,9 @@ public record ReservationTime(Long id, String startAt) {
         }
 
         try {
-            LocalTime.parse(trimmed, FORMATTER);
+            return new ReservationTime(id, LocalTime.parse(trimmed, FORMATTER));
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("[ERROR] 시간 형식은 HH:mm 이어야 합니다.");
         }
-
-        startAt = trimmed;
     }
 }

@@ -62,7 +62,7 @@ class ReservationRepositoryTest {
         assertThat(reservation.getName()).isEqualTo("브라운");
         assertThat(reservation.getDate()).isEqualTo("2026-04-29");
         assertThat(reservation.getTime().id()).isEqualTo(1L);
-        assertThat(reservation.getTime().startAt()).isEqualTo("10:00");
+        assertThat(reservation.getTime().startAt().toString()).isEqualTo("10:00");
     }
 
     @Test
@@ -78,9 +78,9 @@ class ReservationRepositoryTest {
 
         assertThat(reservations).hasSize(2);
         assertThat(reservations.get(0).getName()).isEqualTo("브라운");
-        assertThat(reservations.get(0).getTime().startAt()).isEqualTo("10:00");
+        assertThat(reservations.get(0).getTime().startAt().toString()).isEqualTo("10:00");
         assertThat(reservations.get(1).getName()).isEqualTo("리사");
-        assertThat(reservations.get(1).getTime().startAt()).isEqualTo("11:00");
+        assertThat(reservations.get(1).getTime().startAt().toString()).isEqualTo("11:00");
     }
 
     @Test

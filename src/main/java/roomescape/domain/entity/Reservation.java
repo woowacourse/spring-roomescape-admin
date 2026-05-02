@@ -15,7 +15,8 @@ public class Reservation {
 
     public static Reservation create(Long id, String name, LocalDate date, ReservationTime time) {
         validateName(name);
-        validateNull(date, time);
+        validateDate(date);
+        validateTime(time);
 
         return Reservation.builder()
                 .id(id)
@@ -25,11 +26,13 @@ public class Reservation {
                 .build();
     }
 
-    private static void validateNull(LocalDate date, ReservationTime time) {
+    private static void validateDate(LocalDate date) {
         if (date == null) {
             throw new IllegalArgumentException("예약 날짜는 필수 값입니다.");
         }
+    }
 
+    private static void validateTime(ReservationTime time) {
         if (time == null) {
             throw new IllegalArgumentException("예약 시간은 필수 값입니다.");
         }

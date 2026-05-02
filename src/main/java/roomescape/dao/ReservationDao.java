@@ -60,8 +60,12 @@ public class ReservationDao {
         }, keyHolder);
 
         Long generatedId = keyHolder.getKey().longValue();
-        reservation.assignId(generatedId);
-        return reservation;
+        return Reservation.builder()
+                .id(generatedId)
+                .name(reservation.getName())
+                .date(reservation.getDate())
+                .time(reservation.getTime())
+                .build();
     }
 
     public int deleteById(Long id) {

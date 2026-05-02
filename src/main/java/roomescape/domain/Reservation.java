@@ -16,8 +16,4 @@ public class Reservation {
     private String name;
     private LocalDate date;
     private ReservationTime time;
-
-    public void assignId(Long id) {
-        this.id = id;
-    }
 }

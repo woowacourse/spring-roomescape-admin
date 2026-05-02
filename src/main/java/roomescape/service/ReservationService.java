@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationCreateReqDto;
@@ -11,6 +12,7 @@ import roomescape.repository.ReservationTimeDao;
 
 import java.util.List;
 
+@Transactional(readOnly = true)
 @Service
 public class ReservationService {
 
@@ -22,6 +24,7 @@ public class ReservationService {
         this.reservationTimeDao = reservationTimeDao;
     }
 
+    @Transactional
     public ReservationResDto createReservation(ReservationCreateReqDto dto) {
         ReservationTime reservationTime = reservationTimeDao.findById(dto.getTimeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간입니다."));
@@ -43,6 +46,7 @@ public class ReservationService {
         return ReservationResDto.from(reservation.getId(), reservation.getName(), reservation.getDate(), ReservationTimeResDto.from(reservation.getTime().getId(), reservation.getTime().getStartAt()));
     }
 
+    @Transactional
     public void deleteReservation(Long id) {
         reservationDao.deleteById(id);
     }

@@ -71,6 +71,17 @@ public class ReservationRepository {
         );
     }
 
+    public boolean hasReservationAt(ReservationDate date, ReservationTime time) {
+        Long count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM reservation WHERE date = ? AND time_id = ?",
+                Long.class,
+                date.value().toString(),
+                time.id()
+        );
+
+        return count != null && count > 0;
+    }
+
     public void deleteById(Long id) {
         int deletedCount = jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
 

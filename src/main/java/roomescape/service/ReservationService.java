@@ -28,7 +28,7 @@ public class ReservationService {
         ReservationDate date = ReservationDate.from(dateValue);
         ReservationTime time = findReservationTime(timeId);
 
-        if (isDuplicatedReservation(date, time)) {
+        if (reservationRepository.hasReservationAt(date, time)) {
             throw new IllegalArgumentException("[ERROR] 이미 존재하는 예약입니다.");
         }
 
@@ -47,13 +47,6 @@ public class ReservationService {
         } catch (EmptyResultDataAccessException e) {
             throw new IllegalArgumentException("[ERROR] 존재하지 않는 예약 시간입니다.", e);
         }
-    }
-
-    private boolean isDuplicatedReservation(ReservationDate date, ReservationTime time) {
-        return reservationRepository.findAll()
-                .stream()
-                .anyMatch(reservation -> reservation.date().equals(date)
-                        && reservation.time().id().equals(time.id()));
     }
 
     public List<Reservation> findAll() {

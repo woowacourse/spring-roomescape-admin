@@ -19,19 +19,21 @@ public class ReservationDao {
 
     public List<Reservation> findAll() {
         return jdbcTemplate.query(
-                "SELECT r.id AS reservation_id, r.name, r.date, " +
-                        "t.id AS time_id, t.start_at AS time_value " +
+                "SELECT r.id, r.name, r.date, t.id AS time_id, t.start_at " +
                         "FROM reservation r " +
                         "INNER JOIN reservation_time t ON r.time_id = t.id",
-                (rs, rowNum) -> new Reservation(
-                        rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getString("date"),
-                        new ReservationTime(
-                                rs.getLong("time_id"),
-                                rs.getString("time_value")
-                        )
-                )
+                (rs, rowNum) -> {
+                    ReservationTime time = new ReservationTime(
+                            rs.getLong("time_id"),
+                            rs.getString("start_at")
+                    );
+                    return new Reservation(
+                            rs.getLong("id"),
+                            rs.getString("name"),
+                            rs.getString("date"),
+                            time
+                    );
+                }
         );
     }
 
@@ -54,7 +56,7 @@ public class ReservationDao {
         Map<String, Object> params = new HashMap<>();
         params.put("name", reservation.getName());
         params.put("date", reservation.getDate());
-        params.put("time_id", reservation.getTimeId());
+        params.put("time_id", reservation.getTime().getId());
 
         Long id = insert.executeAndReturnKey(params).longValue();
         return new Reservation(id, reservation.getName(), reservation.getDate(), reservationTime);

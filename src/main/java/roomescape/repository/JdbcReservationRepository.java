@@ -13,7 +13,7 @@ import roomescape.domain.ReservationTime;
 public class JdbcReservationRepository implements ReservationRepository {
     private static final RowMapper<Reservation> RESERVATION_ROW_MAPPER = (rs, rowNum) ->
             new Reservation(
-                    rs.getLong("id"),
+                    rs.getLong("reservation_id"),
                     rs.getString("name"),
                     rs.getDate("date").toLocalDate(),
                     new ReservationTime(

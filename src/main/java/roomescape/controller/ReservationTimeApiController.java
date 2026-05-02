@@ -37,18 +37,18 @@ public class ReservationTimeApiController {
         return ResponseEntity.created(location).body(result);
     }
 
-    @GetMapping
-    public ResponseEntity<List<ReservationTimeResult>> getAllTimes() {
-        return ResponseEntity.ok(reservationTimeService.getAllReservationTimes());
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(
             @PathVariable
-            @Positive(message = "식별자는 양수여야 합니다.")
+            @Positive(message = "예약 시간 제거 식별자는 양수여야 합니다.")
             Long id
     ) {
         reservationTimeService.remove(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ReservationTimeResult>> getAllTimes() {
+        return ResponseEntity.ok(reservationTimeService.getAllReservationTimes());
     }
 }

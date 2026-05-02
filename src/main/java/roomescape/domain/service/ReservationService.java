@@ -28,7 +28,7 @@ public class ReservationService {
         }
 
         ReservationTime reservationTime = reservationTimeRepository.getById(reservationRequest.timeId());
-        Reservation reservation = reservationRequest.toEntity(null, reservationTime);
+        Reservation reservation = reservationRequest.toEntity(reservationTime);
 
         reservation.setId(reservationRepository.save(reservation));
 

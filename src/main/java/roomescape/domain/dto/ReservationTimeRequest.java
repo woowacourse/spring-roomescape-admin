@@ -2,6 +2,7 @@ package roomescape.domain.dto;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
+import roomescape.domain.entity.ReservationTime;
 
 import java.time.LocalTime;
 
@@ -10,4 +11,7 @@ public record ReservationTimeRequest(
         @DateTimeFormat(pattern = "HH:mm")
         LocalTime startAt
 ) {
+    public ReservationTime toEntity() {
+        return ReservationTime.create(null, startAt);
+    }
 }

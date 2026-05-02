@@ -22,10 +22,7 @@ public class ReservationTimeService {
             validateDuplicateTime(reservationTimeRequest, reservationTime);
         }
 
-        ReservationTime reservationTime = ReservationTime.create(
-                null,
-                reservationTimeRequest.startAt()
-        );
+        ReservationTime reservationTime = reservationTimeRequest.toEntity();
         reservationTime.setId(reservationTimeRepository.save(reservationTime));
 
         return ReservationTimeResponse.from(reservationTime);

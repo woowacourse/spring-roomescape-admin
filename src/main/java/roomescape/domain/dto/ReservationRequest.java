@@ -19,7 +19,7 @@ public record ReservationRequest(
         @NotNull(message = "time id는 필수 값입니다.")
         Long timeId
 ) {
-    public Reservation toEntity(Long id, ReservationTime time) {
-        return Reservation.create(id, name, date, time);
+    public Reservation toEntity(ReservationTime time) {
+        return Reservation.create(null, name, date, time);
     }
 }

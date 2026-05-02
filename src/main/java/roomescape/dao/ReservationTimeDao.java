@@ -55,4 +55,10 @@ public class ReservationTimeDao {
         String sql = "DELETE FROM reservation_time WHERE id=?";
         jdbcTemplate.update(sql, id);
     }
+
+    public boolean existsByStartAt(String startAt) {
+        String sql = "Select count(*) from reservation_time where start_at = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, startAt);
+        return count != null && count >0;
+    }
 }

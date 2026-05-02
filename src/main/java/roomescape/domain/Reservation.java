@@ -1,4 +1,6 @@
 package roomescape.domain;
 
-public record Reservation(Long id, String name, String date, ReservationTime reservationTime) {
+import java.time.LocalDate;
+
+public record Reservation(Long id, String name, LocalDate date, ReservationTime reservationTime) {
 }

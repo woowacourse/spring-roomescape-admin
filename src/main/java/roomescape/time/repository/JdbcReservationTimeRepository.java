@@ -55,11 +55,4 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     public List<ReservationTime> findAll() {
         return jdbcTemplate.query("select id, start_at from reservation_time", reservationTimeRowMapper);
     }
-
-    @Override
-    public boolean existsById(Long id) {
-        String sql = "select count(*) from reservation_time where id = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
-        return count != null && count > 0;
-    }
 }

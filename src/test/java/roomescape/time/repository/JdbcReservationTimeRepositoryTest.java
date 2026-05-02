@@ -24,21 +24,42 @@ class JdbcReservationTimeRepositoryTest {
     @Test
     @DisplayName("새로운 시간 정보를 저장하고 반환된 객체의 ID를 확인한다.")
     void saveTest() {
-        ReservationTime time = ReservationTime.create(LocalTime.of(10, 0));
+        // given
+        LocalTime startTime = LocalTime.of(10, 0);
+        ReservationTime time = new ReservationTime(null, startTime);
 
+        // when
         ReservationTime savedTime = reservationTimeRepository.save(time);
 
+        //then
         assertThat(savedTime.getId()).isNotNull();
-        assertThat(savedTime.getStartAt()).isEqualTo("10:00");
+        assertThat(savedTime.getStartAt()).isEqualTo(startTime);
+    }
+
+    @Test
+    @DisplayName("ID를 통해 시간 정보를 삭제한다.")
+    void deleteByIdTest() {
+        // given
+        ReservationTime saved = reservationTimeRepository.save(new ReservationTime(null, LocalTime.of(10, 0)));
+
+        // when
+        reservationTimeRepository.deleteById(saved.getId());
+
+        // then
+        List<ReservationTime> all = reservationTimeRepository.findAll();
+        assertThat(all).isEmpty();
     }
 
     @Test
     @DisplayName("ID를 통해 저장된 시간 정보를 정확히 조회한다.")
     void findByIdTest() {
-        ReservationTime savedTime = reservationTimeRepository.save(ReservationTime.create(LocalTime.of(11, 0)));
+        // given
+        ReservationTime savedTime = reservationTimeRepository.save(new ReservationTime(null, LocalTime.of(11, 0)));
 
+        // when
         ReservationTime foundTime = reservationTimeRepository.findById(savedTime.getId());
 
+        // then
         assertThat(foundTime.getId()).isEqualTo(savedTime.getId());
         assertThat(foundTime.getStartAt()).isEqualTo("11:00");
     }
@@ -46,35 +67,15 @@ class JdbcReservationTimeRepositoryTest {
     @Test
     @DisplayName("존재하는 모든 시간 목록을 리스트로 조회한다.")
     void findAllTest() {
-        reservationTimeRepository.save(ReservationTime.create(LocalTime.of(10, 0)));
-        reservationTimeRepository.save(ReservationTime.create(LocalTime.of(11, 0)));
+        // given
+        reservationTimeRepository.save(new ReservationTime(null, LocalTime.of(10, 0)));
+        reservationTimeRepository.save(new ReservationTime(null, LocalTime.of(11, 0)));
 
+        // when
         List<ReservationTime> times = reservationTimeRepository.findAll();
 
+        // then
         assertThat(times).hasSize(2);
-        assertThat(times).extracting("startAt").containsExactly("10:00", "11:00");
-    }
-
-    @Test
-    @DisplayName("특정 ID의 데이터 존재 여부를 boolean으로 반환한다.")
-    void existsByIdTest() {
-        ReservationTime savedTime = reservationTimeRepository.save(ReservationTime.create(LocalTime.of(12, 0)));
-
-        boolean exists = reservationTimeRepository.existsById(savedTime.getId());
-        boolean notExists = reservationTimeRepository.existsById(999L);
-
-        assertThat(exists).isTrue();
-        assertThat(notExists).isFalse();
-    }
-
-    @Test
-    @DisplayName("ID를 지정하여 데이터를 삭제하면 더 이상 조회되지 않는다.")
-    void deleteByIdTest() {
-        ReservationTime savedTime = reservationTimeRepository.save(ReservationTime.create(LocalTime.of(13, 0)));
-
-        reservationTimeRepository.deleteById(savedTime.getId());
-
-        boolean exists = reservationTimeRepository.existsById(savedTime.getId());
-        assertThat(exists).isFalse();
+        assertThat(times).extracting("startAt").containsExactly(LocalTime.of(10, 0), LocalTime.of(11, 0));
     }
 }

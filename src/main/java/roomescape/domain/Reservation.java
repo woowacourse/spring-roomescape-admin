@@ -24,6 +24,10 @@ public class Reservation {
         this.time = time;
     }
 
+    public static Reservation of(long id, String name, LocalDate date, ReservationTime time) {
+        return new Reservation(id, name, date, time);
+    }
+
     public LocalDate getDate() {
         return date;
     }

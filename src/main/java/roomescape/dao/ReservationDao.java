@@ -11,7 +11,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.dto.ReservationRequest;
 
 @Repository
 public class ReservationDao {
@@ -25,20 +24,28 @@ public class ReservationDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Reservation save(ReservationRequest reservationRequest, ReservationTime reservationTime) {
+    public Reservation save(Reservation reservation) {
         String sql = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> createPreparedStatement(connection, sql, reservationRequest), keyHolder);
-        return reservationRequest.toEntity(keyHolder.getKey().longValue(), reservationTime);
+        jdbcTemplate.update(connection -> createPreparedStatement(connection, sql, reservation), keyHolder);
+
+        long id = keyHolder.getKey().longValue();
+
+        return Reservation.of(
+                id,
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
+        );
     }
 
     private PreparedStatement createPreparedStatement(java.sql.Connection connection, String sql,
-                                                      ReservationRequest reservationRequest)
+                                                      Reservation reservation)
             throws java.sql.SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(sql, new String[]{"id"});
-        preparedStatement.setString(1, reservationRequest.name());
-        preparedStatement.setString(2, reservationRequest.date().toString());
-        preparedStatement.setLong(3, reservationRequest.timeId());
+        preparedStatement.setString(1, reservation.getName());
+        preparedStatement.setString(2, reservation.getDate().toString());
+        preparedStatement.setLong(3, reservation.getTime().getId());
         return preparedStatement;
     }
 

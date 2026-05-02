@@ -13,6 +13,7 @@ import roomescape.repository.ReservationTimeRepository;
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
@@ -31,7 +32,6 @@ public class ReservationService {
         return ReservationResponse.from(new Reservation(id, reservation.getName(), reservation.getDate(), time));
     }
 
-    @Transactional
     public ReservationsResponse findAll() {
         List<Reservation> responses = reservationRepository.findAll();
         return ReservationsResponse.from(responses);

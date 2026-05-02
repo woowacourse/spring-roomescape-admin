@@ -2,7 +2,6 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
@@ -18,11 +17,11 @@ public class ReservationTimeService {
     public ReservationTime create(String startAt) {
         ReservationTime reservationTime = ReservationTime.from(null, startAt);
 
-        try {
-            return reservationTimeRepository.save(reservationTime);
-        } catch (DuplicateKeyException e) {
-            throw new IllegalArgumentException("[ERROR] 이미 존재하는 시간입니다.", e);
+        if (reservationTimeRepository.hasTimeAt(reservationTime.startAt())) {
+            throw new IllegalArgumentException("[ERROR] 이미 존재하는 시간입니다.");
         }
+
+        return reservationTimeRepository.save(reservationTime);
     }
 
     public List<ReservationTime> findAll() {

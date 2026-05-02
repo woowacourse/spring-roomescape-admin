@@ -3,6 +3,7 @@ package roomescape.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -59,6 +60,15 @@ class ReservationTimeRepositoryTest {
         assertThat(times).hasSize(2);
         assertThat(times.get(0).startAt().toString()).isEqualTo("10:00");
         assertThat(times.get(1).startAt().toString()).isEqualTo("11:00");
+    }
+
+    @Test
+    @DisplayName("특정 시간의 존재 여부를 확인한다.")
+    void hasTimeAt() {
+        saveTime("10:00");
+
+        assertThat(repository.hasTimeAt(LocalTime.of(10, 0))).isTrue();
+        assertThat(repository.hasTimeAt(LocalTime.of(11, 0))).isFalse();
     }
 
     @Test

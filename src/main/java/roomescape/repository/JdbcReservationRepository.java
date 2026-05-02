@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.exception.ErrorCode;
-import roomescape.exception.PersistenceException;
-import roomescape.exception.ReservationException;
+import roomescape.exception.InfrastructureException;
+import roomescape.exception.DomainException;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -79,7 +79,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         int deletedRowCount = jdbcTemplate.update(DELETE_SQL, id);
 
         if (deletedRowCount == 0) {
-            throw new ReservationException(ErrorCode.RESERVATION_NOT_FOUND);
+            throw new DomainException(ErrorCode.RESERVATION_NOT_FOUND);
         }
     }
 
@@ -98,14 +98,14 @@ public class JdbcReservationRepository implements ReservationRepository {
 
     private void validateCreatedRowCount(int rowCount) {
         if (rowCount != 1) {
-            throw new PersistenceException(ErrorCode.RESERVATION_CREATE_FAILED);
+            throw new InfrastructureException(ErrorCode.RESERVATION_CREATE_FAILED);
         }
     }
 
     private Long getGeneratedId(KeyHolder keyHolder) {
         Number key = keyHolder.getKey();
         if (key == null) {
-            throw new PersistenceException(ErrorCode.RESERVATION_CREATE_FAILED);
+            throw new InfrastructureException(ErrorCode.RESERVATION_CREATE_FAILED);
         }
         return key.longValue();
     }

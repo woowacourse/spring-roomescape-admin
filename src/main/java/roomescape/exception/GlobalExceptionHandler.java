@@ -1,6 +1,7 @@
 package roomescape.exception;
 
-import org.springframework.http.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -8,8 +9,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ApplicationException.class)
-    public ResponseEntity<ErrorResponse> handleApplicationException(ApplicationException exception) {
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(DomainException.class)
+    public ResponseEntity<ErrorResponse> handleDomainException(DomainException exception) {
         ErrorCode errorCode = exception.getErrorCode();
 
         return ResponseEntity
@@ -17,10 +20,21 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(errorCode.message()));
     }
 
+    @ExceptionHandler(InfrastructureException.class)
+    public ResponseEntity<ErrorResponse> handleInfrastructureException(InfrastructureException exception) {
+        log.error("Infrastructure exception occurred", exception);
+        return internalServerError();
+    }
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleAllUncaughtException(Exception e) {
+    public ResponseEntity<ErrorResponse> handleAllUncaughtException(Exception exception) {
+        log.error("Unexpected exception occurred", exception);
+        return internalServerError();
+    }
+
+    private ResponseEntity<ErrorResponse> internalServerError() {
         return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .internalServerError()
                 .body(new ErrorResponse("서버 내부에서 문제가 발생했습니다."));
     }
 }

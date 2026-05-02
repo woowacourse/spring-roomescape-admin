@@ -141,7 +141,7 @@ DTO 를 패키지로 묶어 관리하기보다 각 계층에 두는 것도 impor
 비영속(transient) 상태의 도메인 객체를 허용하는 방식을 택했어요.
 
 ```java
-public record Reservation(long id, String name, String date, long reservationTimeId) {
+public record Reservation(long id, String name, LocalDate date, long reservationTimeId) {
 
     public static Reservation transientOf(ReservationRequest reservationRequest) {
         return new Reservation(0, reservationRequest.name(), reservationRequest.date(), reservationRequest.timeId());
@@ -164,9 +164,99 @@ public record Reservation(long id, String name, String date, long reservationTim
 또 transient 용어에 대한 탐색 과정에서 별 생각 없이 사용했던 다양한 도구가  
 선배 개발자들의 수많은 고민의 결과였음을 재확인하는 경험이었어요.
 
-### 📝 Feedback 0
+### 📝 Feedback 04
 
-### 💬 Apply 0
+> id가 아니라 객체 자체를 반환하게 해보세요.  
+> 지금 메서드에서 create + select 두 번의 쿼리가 나가고 있습니다.  
+> 1번의 쿼리로 처리할 수 있는 구간인데 return 타입의 문제네요.
+
+### 💬 Apply 04
+
+> `도메인 객체` 라 명시하지 않으신 점이 힌트이지 않을까 생각했어요.
+
+### 쿼리의 분리
+
+먼저, 미션의 API 명세를 참고하면 생성과 함께 생성 결과를 반환해줘야 하는데  
+이 부분은 [학습 로그](../study-log/log-02.md)에서 다룬 CQS 에 대한 `실용적 예외` 로 일부 해결되는 부분이지만  
+그 위치가 여기가 맞을지 고민해 보고 서비스로 해당 로직을 이관했어요.
+
+### `객체`의 반환
+
+그 다음, 어떤 객체를 리턴하고 응답할지 고민해 보았어요.  
+[Apply 03](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3176528655) 에선 VO -> Entity 과정에
+대한 고민으로 transient 객체를 사용했고,  
+이번엔 도메인 객체 간의 포함 관계를 고민해 보았습니다.
+
+- 🎯 `도메인 객체`
+
+이전 미션에서의 학습을 기반으로, 도메인 객체를 3가지로 분류할 수 있다 생각했어요.
+
+- 애그리거트 루트
+    - 엔티티이자 포함하고 있는 하위 엔티티와 VO 에 대한 접근점, Repository 와 대응
+- 엔티티
+    - 고유한 식별자를 기반으로 자신만의 라이프사이클을 보유한 도메인 객체
+- VO
+    - 값과 책임을 보유하고 있지만, 상태만을 가지고 자신만의 식별자가 없는 도메인 객체
+
+이미 구현된 구조를 배제하고 생각해 볼 때,  
+Reservation 과 ReservationTime 각각이 무엇에 해당하는가?
+
+- 아직 별도의 행위는 없지만 예약과 시간을 저장한다는 비즈니스 로직은 보유 O
+    - VO 충족, 도메인 객체 충족
+- 고유한 식별자 보유 O
+    - 엔티티 충족
+- `접근점` 인가?
+
+일단 직관적으로 Reservation 은 모든 조건을 충족하기에 애그리거트 루트라 생각했어요.
+
+- ReservationTime 은 애그리거트 루트인가?
+    - Reservation 내부에 ReservationTime, 정확히는 ID 가 있는데?
+- 단순히 내부 필드로 존재한다고 애그리거트 루트가 아니라 단정할 수 있는가?
+    - 별도의 엔드포인트도 존재하고, 그에 따라 DB 에 접근할 저장소까지 구현되어 있는데?
+
+그 외에도 여러 고민을 했지만 엔드포인트가 존재하고 그에 따른 Repository 가 존재한다는 점이  
+애그리거트 루트라 판단하는 결정적 근거가 되었어요.
+
+- 🎯 `애그리거트 루트` 간의 참조
+
+도메인 객체 간의 의존/협력이 아닌  
+애그리거트 루트 간의 참조를 객체 내부 필드로 구현해야 할 지,  
+객체 간 참조와 의존으로 구현하되 필요에 따라 필드로 표현해야 할 지 고민했으나
+
+결국 어떻게든 도메인 객체 간의 의존을 최소화하는 것이 바람직하다 판단하고  
+식별자 기반 참조로 구현하기로 결정하고,  
+기존 Reservation 객체에서 ReservationTime 필드를 long reservationTimeId 로 변경했습니다.
+
+- 🎯 `조회 전용 객체`
+
+위와 같이 변경한다면 API 명세에서 요구한  
+`GET /reservations` `POST /reservations` 의 응답은 어떻게 표현할 것인가?
+
+다행스럽게도 [학습 로그](../study-log/log-03.md)를 정리하는 과정에서  
+DB 단에서 join 을 통해 모든 데이터를 조회해 오도록 구현했기에  
+응답을 위한 모든 데이터를 조회할 수 있었지만
+
+식변자 참조 방식으로 변경했기에 도메인 객체를 그대로 반환할 수 없다는  
+충돌 상황을 마주하게 되었습니다.
+
+이에 응답 구조에 맞춰 모든 정보를 담은 조회 전용 객체, ReservationJoinedDto 를 생성하고  
+Repository 에서 반환하도록 수정했습니다.
+
+도메인 객체와 저장소의 1:1 대응을 준수하면서 응답 구조를 생성하기 위해  
+두 번의 조회를 실행하고 응답을 조립하기보단  
+SRP, 이론적 DDD 준수를 일부 포기하더라도  
+단일 쿼리로 응답을 생성하는 것이 훨씬 바람직하기 때문입니다.
+
+#### 정리
+
+결국 `객체`라는 키워드 하나로 열심히 머리를 굴려가며 개념에 대한 보강과  
+나름의 논리 전개를 시도해 보았는데 웨지의 의도를 잘 파악한 것일지,  
+그렇지 않더라도 올바른 방향성으로 생각하기라도 한 것일지 걱정되네요.
+
+이런 작은 크기의 서비스에서도 수많은 고민과 구현, 변경과 확장이 반복되는데  
+실무에서의 복잡다원한 서비스를 관리하기 위해선  
+얼마나 많은 이론적 기반과 배경 학습, 자신만의 기준과 트레이드오프가 필요할지  
+두려움 반 기대심 반의 마음입니다..
 
 ### 📝 Feedback 0
 

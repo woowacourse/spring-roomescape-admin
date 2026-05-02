@@ -54,7 +54,7 @@ public class MissionStep2Test {
     void DB_추가_삭제_API_전환() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", "2026-08-05");
         params.put("time", "10:00");
 
         RestAssured.given().log().all()

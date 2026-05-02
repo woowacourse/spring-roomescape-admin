@@ -28,7 +28,7 @@ public class MissionStep1Test {
     void 예약_추가_및_삭제() {
         Map<String, String> params = new HashMap<>();
         params.put("name", "브라운");
-        params.put("date", "2023-08-05");
+        params.put("date", "2026-08-05");
         params.put("time", "15:40");
 
         RestAssured.given().log().all()

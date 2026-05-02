@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.domain.time;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.time.LocalTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import roomescape.domain.time.ReservationTime;
 
 public class ReservationTimeTest {
     @DisplayName("예약 시간 객체를 생성한다.")

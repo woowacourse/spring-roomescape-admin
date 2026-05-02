@@ -18,10 +18,16 @@ public class ReservationTimeRepository {
     public List<ReservationTime> findAllReservationTimes() {
         String sql = "SELECT id, start_at FROM reservation_time";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> new ReservationTime(
-                rs.getLong("id"),
-                LocalTime.parse(rs.getString("start_at"))
-        ));
+        return jdbcTemplate.query(sql, (rs, rowNum) ->
+
+                ReservationTime.builder()
+                        .id(rs.getLong("id"))
+                        .startAt(LocalTime.parse(rs.getString("start_at")))
+                        .build()
+//                new ReservationTime(
+//                rs.getLong("id"),
+//                LocalTime.parse(rs.getString("start_at"))
+        );
     }
 
     public ReservationTime saveReservationTime(ReservationTime reservationTime) {
@@ -50,9 +56,10 @@ public class ReservationTimeRepository {
     public ReservationTime findById(Long id) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
 
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> new ReservationTime(
-             rs.getLong("id"),
-             LocalTime.parse(rs.getString("start_at"))
-        ), id);
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
+                ReservationTime.builder()
+                        .id(rs.getLong("id"))
+                        .startAt(LocalTime.parse(rs.getString("start_at")))
+                        .build(), id);
     }
 }

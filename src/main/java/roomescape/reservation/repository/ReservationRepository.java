@@ -23,17 +23,17 @@ public class ReservationRepository {
                 + "INNER JOIN reservation_time t ON r.time_id = t.id";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            ReservationTime reservationTime = new ReservationTime(
-                    rs.getLong("time_id"),
-                    LocalTime.parse(rs.getString("start_at"))
-            );
+            ReservationTime reservationTime = ReservationTime.builder()
+                    .id(rs.getLong("time_id"))
+                    .startAt(LocalTime.parse(rs.getString("start_at")))
+                    .build();
 
-            return new Reservation(
-                    rs.getLong("id"),
-                    rs.getString("name"),
-                    LocalDate.parse(rs.getString("date")),
-                    reservationTime
-            );
+            return Reservation.builder()
+                    .id(rs.getLong("id"))
+                    .name(rs.getString("name"))
+                    .date(LocalDate.parse(rs.getString("date")))
+                    .time(reservationTime)
+                    .build();
         });
     }
 

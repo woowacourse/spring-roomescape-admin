@@ -5,8 +5,8 @@ import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationSaveDto;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -24,9 +24,9 @@ public class ReservationService {
         return reservationDao.selectAll();
     }
 
-    public Reservation reserve(String name, LocalDate date, Long timeId) {
-        ReservationTime reservationTime = readReservationTime(timeId);
-        return reservationDao.insert(new Reservation(name, date, reservationTime));
+    public Reservation reserve(ReservationSaveDto dto) {
+        ReservationTime reservationTime = readReservationTime(dto.timeId());
+        return reservationDao.insert(new Reservation(dto.name(), dto.date(), reservationTime));
     }
 
     public void cancel(Long id) {

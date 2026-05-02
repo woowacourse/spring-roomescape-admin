@@ -20,7 +20,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public Long save(ReservationTime reservationTime) {
+    public ReservationTime save(ReservationTime reservationTime) {
         String sql = "INSERT INTO reservation_time(start_at) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -28,7 +28,8 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
             ps.setString(1, reservationTime.getStartAt().toString());
             return ps;
         }, keyHolder);
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        Long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return new ReservationTime(id, reservationTime.getStartAt());
     }
 
     @Override

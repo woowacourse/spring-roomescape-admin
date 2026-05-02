@@ -5,7 +5,7 @@ import roomescape.domain.time.ReservationTime;
 
 public interface ReservationTimeRepository {
     // 시간 추가
-    Long save(ReservationTime reservationTime);
+    ReservationTime save(ReservationTime reservationTime);
 
     // 시간 조회
     List<ReservationTime> findAll();

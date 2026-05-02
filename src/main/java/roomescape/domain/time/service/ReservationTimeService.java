@@ -16,8 +16,7 @@ public class ReservationTimeService {
 
     public ReservationTime create(ReservationTimeRequestDTO requestDTO) {
         ReservationTime reservationTime = new ReservationTime(null, requestDTO.getStartAt());
-        Long id = reservationTimeRepository.save(reservationTime);
-        return new ReservationTime(id, reservationTime.getStartAt());
+        return reservationTimeRepository.save(reservationTime);
     }
 
     public List<ReservationTime> getAll() {

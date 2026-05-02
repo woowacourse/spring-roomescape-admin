@@ -24,8 +24,7 @@ public class ReservationService {
         validateDate(requestDTO.getDate());
         ReservationTime time = reservationTimeRepository.findById(requestDTO.getTimeId());
         Reservation reservation = new Reservation(null, requestDTO.getName(), requestDTO.getDate(), time);
-        Long id = reservationRepository.save(reservation);
-        return new Reservation(id, reservation.getName(), reservation.getDate(), reservation.getTime());
+        return reservationRepository.save(reservation);
     }
 
     private void validateDate(LocalDate date) {

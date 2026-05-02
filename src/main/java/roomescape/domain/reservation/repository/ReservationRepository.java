@@ -5,7 +5,7 @@ import roomescape.domain.reservation.Reservation;
 
 public interface ReservationRepository {
     // 예약 추가
-    Long save(Reservation reservation);
+    Reservation save(Reservation reservation);
 
     // 예약 조회
     List<Reservation> findAll();

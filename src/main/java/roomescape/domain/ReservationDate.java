@@ -1,17 +1,19 @@
 package roomescape.domain;
 
-import static com.fasterxml.jackson.annotation.JsonCreator.Mode.DELEGATING;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-public record ReservationDate(String value) {
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+public record ReservationDate(LocalDate value) {
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
-    @JsonCreator(mode = DELEGATING)
     public ReservationDate {
+        if (value == null) {
+            throw new IllegalArgumentException("[ERROR] 날짜는 null일 수 없습니다.");
+        }
+    }
+
+    public static ReservationDate from(String value) {
         if (value == null) {
             throw new IllegalArgumentException("[ERROR] 날짜는 null일 수 없습니다.");
         }
@@ -23,11 +25,13 @@ public record ReservationDate(String value) {
         }
 
         try {
-            LocalDate.parse(trimmed, FORMATTER);
+            return new ReservationDate(LocalDate.parse(trimmed, FORMATTER));
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("[ERROR] 날짜 형식은 yyyy-MM-dd 여야 합니다.");
         }
+    }
 
-        value = trimmed;
+    public String format() {
+        return value.format(FORMATTER);
     }
 }

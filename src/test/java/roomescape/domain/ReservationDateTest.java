@@ -3,6 +3,7 @@ package roomescape.domain;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,6 +18,13 @@ class ReservationDateTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Test
+    @DisplayName("문자열 날짜가 null이면 예외를 발생한다.")
+    void throwException_When_DateStringIsNull() {
+        assertThatThrownBy(() -> ReservationDate.from(null))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {
             "2024=01=01",
@@ -25,7 +33,7 @@ class ReservationDateTest {
     })
     @DisplayName("날짜가 정상 형태가 아닌 경우 예외를 발생한다.")
     void throwException_When_DateIllegalFormat(String input) {
-        assertThatThrownBy(() -> new ReservationDate(input))
+        assertThatThrownBy(() -> ReservationDate.from(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -37,7 +45,7 @@ class ReservationDateTest {
     })
     @DisplayName("날짜의 월이 정상 범위를 넘어가는 경우 예외를 발생한다.")
     void throwException_When_MonthOutOfRange(String input) {
-        assertThatThrownBy(() -> new ReservationDate(input))
+        assertThatThrownBy(() -> ReservationDate.from(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -49,14 +57,21 @@ class ReservationDateTest {
     })
     @DisplayName("날짜의 일이 정상 범위를 넘어가는 경우 예외를 발생한다.")
     void throwException_When_DateOutOfRange(String input) {
-        assertThatThrownBy(() -> new ReservationDate(input))
+        assertThatThrownBy(() -> ReservationDate.from(input))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     @DisplayName("날짜 형식의 문제가 없는 경우 정상적으로 생성된다.")
     void makeDate_When_LegalFormat() {
-        assertThatCode(() -> new ReservationDate("2024-01-01"))
+        assertThatCode(() -> ReservationDate.from("2024-01-01"))
+                .doesNotThrowAnyException();
+    }
+
+    @Test
+    @DisplayName("LocalDate로 날짜를 생성한다.")
+    void makeDate_When_LocalDate() {
+        assertThatCode(() -> new ReservationDate(LocalDate.of(2024, 1, 1)))
                 .doesNotThrowAnyException();
     }
 }

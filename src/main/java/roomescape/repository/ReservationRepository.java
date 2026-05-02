@@ -21,7 +21,7 @@ public class ReservationRepository {
 
     public Reservation save(String nameValue, String dateValue, Long timeId) {
         Name name = new Name(nameValue);
-        ReservationDate date = new ReservationDate(dateValue);
+        ReservationDate date = ReservationDate.from(dateValue);
         ReservationTime time = findTimeById(timeId);
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -33,7 +33,7 @@ public class ReservationRepository {
             );
 
             statement.setString(1, name.value());
-            statement.setString(2, date.value());
+            statement.setString(2, date.format());
             statement.setLong(3, time.id());
             return statement;
         }, keyHolder);
@@ -61,7 +61,7 @@ public class ReservationRepository {
                 (resultSet, rowNum) -> new Reservation(
                         resultSet.getLong("reservation_id"),
                         new Name(resultSet.getString("name")),
-                        new ReservationDate(resultSet.getString("date")),
+                        ReservationDate.from(resultSet.getString("date")),
                         new ReservationTime(
                                 resultSet.getLong("time_id"),
                                 resultSet.getString("start_at")

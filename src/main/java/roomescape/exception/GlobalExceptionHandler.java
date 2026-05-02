@@ -2,11 +2,14 @@ package roomescape.exception;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import roomescape.reservation.ReservationException;
+import roomescape.reservationtime.ReservationTimeException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -18,13 +21,31 @@ public class GlobalExceptionHandler {
                 .getFieldErrors()
                 .stream()
                 .findFirst()
-                .map(error -> error.getDefaultMessage())
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .orElse("유효하지 않은 요청입니다");
 
         logger.warn("검증 오류 발생", e);
         ErrorResponse response = new ErrorResponse(message);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(ReservationException.class)
+    public ResponseEntity<ErrorResponse> handleReservationException(ReservationException e) {
+        logger.warn("예약 오류 발생: {}", e.getMessage());
+        ErrorResponse response = new ErrorResponse(e.getUserMessage());
+        return ResponseEntity
+                .status(e.getStatus())
+                .body(response);
+    }
+
+    @ExceptionHandler(ReservationTimeException.class)
+    public ResponseEntity<ErrorResponse> handleReservationTimeException(ReservationTimeException e) {
+        logger.warn("예약 시간 오류 발생: {}", e.getMessage());
+        ErrorResponse response = new ErrorResponse(e.getUserMessage());
+        return ResponseEntity
+                .status(e.getStatus())
                 .body(response);
     }
 

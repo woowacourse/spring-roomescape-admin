@@ -12,16 +12,14 @@ import java.util.List;
 import java.util.Properties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import roomescape.reservation.exception.ReservationErrorCode;
-import roomescape.reservation.exception.ReservationException;
 import roomescape.reservationtime.ReservationTime;
 import roomescape.reservationtime.ReservationTimeDao;
 import roomescape.reservationtime.ReservationTimeRepository;
 import roomescape.reservationtime.ReservationTimeService;
-import roomescape.reservationtime.exception.ReservationTimeErrorCode;
-import roomescape.reservationtime.exception.ReservationTimeException;
+import roomescape.reservationtime.ReservationTimeException;
 
 class ReservationServiceTest {
     private static final String TEST_PROPERTIES = "application-test.properties";
@@ -81,8 +79,8 @@ class ReservationServiceTest {
     void 예약_시간_ID가_없으면_예외가_발생한다() {
         assertThatThrownBy(() -> reservationService.createReservation("브라운", LocalDate.of(2026, 5, 1), 999L))
                 .isInstanceOf(ReservationTimeException.class)
-                .extracting(e -> ((ReservationTimeException) e).getErrorCode())
-                .isEqualTo(ReservationTimeErrorCode.NOT_FOUND);
+                .extracting(e -> ((ReservationTimeException) e).getStatus())
+                .isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
@@ -93,8 +91,8 @@ class ReservationServiceTest {
 
         assertThatThrownBy(() -> reservationService.createReservation("코니", LocalDate.of(2026, 5, 1), time.id()))
                 .isInstanceOf(ReservationException.class)
-                .extracting(e -> ((ReservationException) e).getErrorCode())
-                .isEqualTo(ReservationErrorCode.DUPLICATE);
+                .extracting(e -> ((ReservationException) e).getUserMessage())
+                .isEqualTo("해당 날짜의 해당 시간은 이미 예약되었습니다");
     }
 
     @Test

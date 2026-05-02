@@ -3,14 +3,12 @@ package roomescape.reservation;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import roomescape.reservation.exception.ReservationException;
-import roomescape.reservation.exception.ReservationErrorCode;
 import roomescape.reservationtime.ReservationTime;
 import roomescape.reservationtime.ReservationTimeRepository;
-import roomescape.reservationtime.exception.ReservationTimeErrorCode;
-import roomescape.reservationtime.exception.ReservationTimeException;
+import roomescape.reservationtime.ReservationTimeException;
 
 @Service
 public class ReservationService {
@@ -26,11 +24,11 @@ public class ReservationService {
     @Transactional
     public Reservation createReservation(String name, LocalDate date, long timeId) {
         ReservationTime reservationTime = reservationTimeRepository.findById(timeId)
-                .orElseThrow(() -> new ReservationTimeException(ReservationTimeErrorCode.NOT_FOUND));
+                .orElseThrow(() -> new ReservationTimeException(HttpStatus.NOT_FOUND, "예약 시간을 찾을 수 없습니다"));
         try {
             return reservationRepository.save(name, date, reservationTime);
         } catch (DataIntegrityViolationException e) {
-            throw new ReservationException(mapIntegrityViolation(e));
+            throw mapIntegrityViolation(e);
         }
     }
 
@@ -43,12 +41,12 @@ public class ReservationService {
         reservationRepository.delete(id);
     }
 
-    private ReservationErrorCode mapIntegrityViolation(DataIntegrityViolationException e) {
+    private ReservationException mapIntegrityViolation(DataIntegrityViolationException e) {
         String message = getMostSpecificMessage(e);
         if (message.contains("unique_date_time")) {
-            return ReservationErrorCode.DUPLICATE;
+            return new ReservationException(HttpStatus.BAD_REQUEST, "해당 날짜의 해당 시간은 이미 예약되었습니다");
         }
-        return ReservationErrorCode.INTEGRITY_VIOLATION;
+        return new ReservationException(HttpStatus.BAD_REQUEST, "요청이 데이터 무결성 조건을 위반했습니다");
     }
 
     private String getMostSpecificMessage(DataIntegrityViolationException e) {

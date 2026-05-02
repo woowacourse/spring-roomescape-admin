@@ -82,7 +82,7 @@ class ReservationTimeDaoTest {
     }
 
     @Test
-    void 존재하지_않는_ID로_조회하면_예외가_발생한다() {
+    void 존재하지_않는_ID로_조회하면_빈_Optional을_반환한다() {
         assertThat(reservationTimeDao.findById(999L)).isEmpty();
     }
 

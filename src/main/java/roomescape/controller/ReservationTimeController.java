@@ -9,34 +9,34 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
+import roomescape.repository.ReservationTimeRepository;
 
 @RestController
 public class ReservationTimeController {
 
-    private final ReservationTimeDao reservationTimeDao;
+    private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationTimeController(ReservationTimeDao reservationTimeDao) {
-        this.reservationTimeDao = reservationTimeDao;
+    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     @PostMapping("/times")
     @ResponseStatus(HttpStatus.OK)
     public ReservationTime insertTimes(@RequestBody ReservationTimeRequest reservationTimeRequest) {
-        return reservationTimeDao.insert(reservationTimeRequest);
+        return reservationTimeRepository.insert(reservationTimeRequest);
     }
 
     @GetMapping("/times")
     @ResponseStatus(HttpStatus.OK)
     public List<ReservationTime> selectTimes() {
-        return reservationTimeDao.select();
+        return reservationTimeRepository.select();
     }
 
     @DeleteMapping("/times/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteTimes(@PathVariable long id) {
-        reservationTimeDao.delete(id);
+        reservationTimeRepository.delete(id);
     }
 }

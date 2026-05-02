@@ -2,7 +2,7 @@ package roomescape.controller;
 
 import java.util.List;
 import java.util.Scanner;
-import roomescape.dao.ReservationTimeDao;
+import roomescape.repository.ReservationTimeRepository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
@@ -13,12 +13,12 @@ import roomescape.service.ReservationService;
 public class ReservationConsoleController {
 
     private final ReservationService reservationService;
-    private final ReservationTimeDao reservationTimeDao;
+    private final ReservationTimeRepository reservationTimeRepository;
     private final Scanner scanner = new Scanner(System.in);
 
-    public ReservationConsoleController(ReservationService reservationService, ReservationTimeDao reservationTimeDao) {
+    public ReservationConsoleController(ReservationService reservationService, ReservationTimeRepository reservationTimeRepository) {
         this.reservationService = reservationService;
-        this.reservationTimeDao = reservationTimeDao;
+        this.reservationTimeRepository = reservationTimeRepository;
     }
 
     public void run() {
@@ -35,7 +35,7 @@ public class ReservationConsoleController {
                 deleteReservation();
             }
             if (input == 4) {
-                printTimes(reservationTimeDao.select());
+                printTimes(reservationTimeRepository.select());
             }
             if (input == 5) {
                 insertTime();
@@ -63,7 +63,7 @@ public class ReservationConsoleController {
     }
 
     private void insertReservation() {
-        printTimes(reservationTimeDao.select());
+        printTimes(reservationTimeRepository.select());
         System.out.print("이름을 입력하세요: ");
         String name = scanner.next();
         System.out.print("날짜를 입력하세요: ");
@@ -89,13 +89,13 @@ public class ReservationConsoleController {
     private void insertTime() {
         System.out.print("추가할 시간을 입력하세요 (HH:mm): ");
         String startAt = scanner.next();
-        reservationTimeDao.insert(new ReservationTimeRequest(startAt));
+        reservationTimeRepository.insert(new ReservationTimeRequest(startAt));
     }
 
     private void deleteTime() {
-        printTimes(reservationTimeDao.select());
+        printTimes(reservationTimeRepository.select());
         System.out.print("삭제할 시간 id를 입력하세요: ");
         long id = scanner.nextLong();
-        reservationTimeDao.delete(id);
+        reservationTimeRepository.delete(id);
     }
 }

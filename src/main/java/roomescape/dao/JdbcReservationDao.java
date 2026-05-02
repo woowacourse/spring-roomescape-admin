@@ -42,20 +42,6 @@ public class JdbcReservationDao implements ReservationDao {
     }
 
     @Override
-    public Reservation read(Long id) {
-        String sql = "SELECT * FROM `reservation` WHERE `id` = id";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            String name = rs.getString("name");
-            LocalDate date = rs.getDate("date").toLocalDate();
-            Long timeId = rs.getLong("time_id");
-            LocalTime timeValue = rs.getTime("time_value").toLocalTime();
-
-            ReservationTime reservationTime = new ReservationTime(timeId, timeValue);
-            return new Reservation(id, name, date, reservationTime);
-        }).getFirst();
-    }
-
-    @Override
     public List<Reservation> readAll() {
         String sql = "SELECT r.id, r.name, r.date, t.id as time_id, t.start_at as time_value FROM `reservation` r INNER JOIN `reservation_time` t ON r.time_id = t.id";
 

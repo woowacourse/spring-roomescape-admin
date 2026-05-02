@@ -8,8 +8,6 @@ import roomescape.dto.ReservationRequestDto;
 public interface ReservationDao {
     Reservation create(ReservationRequestDto requestDto, ReservationTime reservationTime);
 
-    Reservation read(Long id);
-
     List<Reservation> readAll();
 
     int delete(Long id);

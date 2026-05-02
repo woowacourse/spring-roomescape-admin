@@ -39,10 +39,10 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
     @Override
     public ReservationTime read(Long id) {
         String sql = "SELECT * FROM `reservation_time` WHERE `id` = id";
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
             LocalTime startAt = rs.getTime("start_at").toLocalTime();
             return new ReservationTime(id, startAt);
-        }).getFirst();
+        });
     }
 
     @Override

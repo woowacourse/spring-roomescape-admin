@@ -16,8 +16,8 @@ import java.util.Optional;
 
 class ReservationTimeDaoTest {
 
-    private static final int hour = 11;
-    private static final int minute = 4;
+    private static final int hour = 10;
+    private static final int minute = 0;
     private static final LocalTime time = LocalTime.of(hour, minute);
     private static final ReservationTime reservationTime = new ReservationTime(time);
 
@@ -176,6 +176,37 @@ class ReservationTimeDaoTest {
             // then
             Assertions.assertThat(actual)
                     .isEmpty();
+        }
+
+    }
+
+    @Nested
+    class Delete {
+
+        @Test
+        void 존재하는_Id로_삭제하면_true를_반환한다() {
+            // given
+            ReservationTime saved = reservationTimeDao.insert(reservationTime);
+
+            // when
+            boolean actual = reservationTimeDao.delete(saved.getId());
+
+            // then
+            Assertions.assertThat(actual)
+                    .isTrue();
+        }
+
+        @Test
+        void 존재하지않는_Id로_삭제하면_false를_반환한다() {
+            // given
+            Long wrongId = Long.MIN_VALUE;
+
+            // when
+            boolean actual = reservationTimeDao.delete(wrongId);
+
+            // then
+            Assertions.assertThat(actual)
+                    .isFalse();
         }
 
     }

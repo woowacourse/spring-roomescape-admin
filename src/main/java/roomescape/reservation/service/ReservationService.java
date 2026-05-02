@@ -2,6 +2,7 @@ package roomescape.reservation.service;
 
 import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.exception.InvalidReservationTimeException;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.repository.ReservationTimeRepository;
@@ -25,7 +26,8 @@ public class ReservationService {
     }
 
     public Reservation createReservation(String name, LocalDate date, Long timeId) {
-        ReservationTime time = reservationTimeRepository.findById(timeId);
+        ReservationTime time = reservationTimeRepository.findById(timeId)
+                .orElseThrow(() -> new InvalidReservationTimeException(timeId));
         Long id = reservationRepository.save(name, date, timeId);
         return new Reservation(id, name, date, time);
     }

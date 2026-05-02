@@ -75,6 +75,21 @@ public class MissionStepTest {
     }
 
     @Test
+    void 존재하지_않는_시간으로_예약_생성() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 999);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
     void 데이터베이스_연동() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
@@ -187,7 +202,6 @@ public class MissionStepTest {
                 break;
             }
         }
-
         assertThat(isJdbcTemplateInjected).isFalse();
     }
 

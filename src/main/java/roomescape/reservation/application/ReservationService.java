@@ -15,14 +15,14 @@ import roomescape.reservation.presentation.dto.response.dto.TimeInformation;
 public class ReservationService {
     private final ReservationRepository reservationRepository;
 
-    public ReservationSaveResponse saveReservation(ReservationSaveRequest body) {
+    public ReservationSaveResponse save(ReservationSaveRequest body) {
         Reservation reservation = reservationRepository.save(body.name(), body.date(), body.timeId());
 
         return new ReservationSaveResponse(reservation.getId(), reservation.getName(), reservation.getDate(),
                 new TimeInformation(reservation.getTime().getId(), reservation.getTime().getStartAt()));
     }
 
-    public List<ReservationFindResponse> findAllReservations() {
+    public List<ReservationFindResponse> findAll() {
         return reservationRepository.findAll().stream()
                 .map(reservation -> new ReservationFindResponse(
                         reservation.getId(),
@@ -36,7 +36,7 @@ public class ReservationService {
                 .toList();
     }
 
-    public void deleteReservation(Long id) {
+    public void delete(Long id) {
         reservationRepository.deleteById(id);
     }
 }

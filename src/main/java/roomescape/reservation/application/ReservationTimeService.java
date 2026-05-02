@@ -14,13 +14,13 @@ import roomescape.reservation.presentation.dto.response.ReservationTimeSaveRespo
 public class ReservationTimeService {
     private final ReservationTimeRepository reservationTimeRepository;
 
-    public ReservationTimeSaveResponse saveReservationTime(ReservationTimeSaveRequest body) {
+    public ReservationTimeSaveResponse save(ReservationTimeSaveRequest body) {
         ReservationTime reservationTime = reservationTimeRepository.save(body.startAt());
 
         return new ReservationTimeSaveResponse(reservationTime.getId(), reservationTime.getStartAt());
     }
 
-    public List<ReservationTimeFindResponse> findAllReservationTimes(){
+    public List<ReservationTimeFindResponse> findAll(){
         return reservationTimeRepository.findAll().stream()
                 .map(reservationTime -> new ReservationTimeFindResponse(
                         reservationTime.getId(),
@@ -29,7 +29,7 @@ public class ReservationTimeService {
                 .toList();
     }
 
-    public void deleteReservationTime(Long id){
+    public void delete(Long id){
         reservationTimeRepository.deleteById(id);
     }
 }

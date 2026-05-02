@@ -26,22 +26,22 @@ public class ReservationTimeController {
     private final ReservationTimeService reservationTimeService;
 
     @PostMapping
-    public ResponseEntity<ReservationTimeSaveResponse> saveReservationTime(
+    public ResponseEntity<ReservationTimeSaveResponse> save(
             @RequestBody @Valid ReservationTimeSaveRequest body) {
-        ReservationTimeSaveResponse response = reservationTimeService.saveReservationTime(body);
+        ReservationTimeSaveResponse response = reservationTimeService.save(body);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTimeFindResponse>> findAllReservationTimes() {
-        List<ReservationTimeFindResponse> responses = reservationTimeService.findAllReservationTimes();
+    public ResponseEntity<List<ReservationTimeFindResponse>> findAll() {
+        List<ReservationTimeFindResponse> responses = reservationTimeService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(responses);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTime(@PathVariable Long id){
-        reservationTimeService.deleteReservationTime(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        reservationTimeService.delete(id);
         return ResponseEntity.ok().build();
     }
 }

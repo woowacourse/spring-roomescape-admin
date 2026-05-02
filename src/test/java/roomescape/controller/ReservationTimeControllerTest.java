@@ -14,6 +14,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import roomescape.controller.dto.TimeRequest;
 import roomescape.controller.dto.TimeResponse;
 import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.ReservationTimeService;
 
 public class ReservationTimeControllerTest {
     ReservationTimeController reservationTimeController;
@@ -41,7 +42,8 @@ public class ReservationTimeControllerTest {
                 """);
 
         ReservationTimeRepository reservationTimeRepository = new ReservationTimeRepository(jdbcTemplate);
-        reservationTimeController = new ReservationTimeController(reservationTimeRepository);
+        ReservationTimeService reservationTimeService = new ReservationTimeService(reservationTimeRepository);
+        reservationTimeController = new ReservationTimeController(reservationTimeService);
     }
 
     @Test

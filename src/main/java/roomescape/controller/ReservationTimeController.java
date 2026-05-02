@@ -12,20 +12,19 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.dto.TimeRequest;
 import roomescape.controller.dto.TimeResponse;
 import roomescape.domain.ReservationTime;
-import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.ReservationTimeService;
 
 @RestController
 public class ReservationTimeController {
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(ReservationTimeRepository reservationTimeRepository) {
-        this.reservationTimeRepository = reservationTimeRepository;
+    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+        this.reservationTimeService = reservationTimeService;
     }
 
     @PostMapping("/times")
     public ResponseEntity<TimeResponse> create(@RequestBody TimeRequest request) {
-        ReservationTime reservationTime = ReservationTime.from(null, request.startAt());
-        ReservationTime savedReservationTime = reservationTimeRepository.save(reservationTime);
+        ReservationTime savedReservationTime = reservationTimeService.create(request.startAt());
 
         TimeResponse timeResponse = TimeResponse.from(savedReservationTime);
 
@@ -36,7 +35,7 @@ public class ReservationTimeController {
     @GetMapping("/times")
     public ResponseEntity<List<TimeResponse>> findAll() {
 
-        List<TimeResponse> timeResponses = reservationTimeRepository.findAll()
+        List<TimeResponse> timeResponses = reservationTimeService.findAll()
                 .stream()
                 .map(TimeResponse::from)
                 .toList();
@@ -47,7 +46,7 @@ public class ReservationTimeController {
 
     @DeleteMapping("/times/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        reservationTimeRepository.deleteById(id);
+        reservationTimeService.deleteById(id);
 
         return ResponseEntity.noContent().build();
     }

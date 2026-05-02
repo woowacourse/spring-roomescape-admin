@@ -285,9 +285,28 @@ SRP, 이론적 DDD 준수를 일부 포기하더라도
 
 항상 기본을 기억하기
 
-### 📝 Feedback 0
+### 📝 Feedback 06
 
-### 💬 Apply 0
+> 단위 테스트가 없네요. 다음 리뷰 때 단위테스트 구현해서 요청주셔요.
+
+### 💬 Apply 06
+
+### 📝 Feedback 07
+
+> 시간에 적합한 DB 자료형을 적용해보세요
+
+### 💬 Apply 07
+
+[Feedback 05](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3176690056) 에서 일괄적으로 Date/Time
+자료형을 변경했습니다!
+
+### 📝 Feedback 08
+
+### 💬 Apply 08
+
+### 📝 Feedback 09
+
+### 💬 Apply 09
 
 ### 📝 Feedback 0
 

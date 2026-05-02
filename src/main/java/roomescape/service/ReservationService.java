@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
@@ -42,6 +43,13 @@ public class ReservationService {
     }
 
     public void deleteReservation(long id) {
-        reservationDao.deleteReservation(id);
+        try {
+            reservationDao.deleteReservation(id);
+        } catch (NoSuchElementException e) {
+            throw new IllegalArgumentException("삭제할 예약이 존재하지 않습니다.");
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException();
+        }
+
     }
 }

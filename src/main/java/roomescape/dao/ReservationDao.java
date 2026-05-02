@@ -3,6 +3,8 @@ package roomescape.dao;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
+import java.util.NoSuchElementException;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -56,6 +58,14 @@ public class ReservationDao {
     public void deleteReservation(Long id) {
         String sql = "DELETE FROM reservation WHERE id = ?";
 
-        jdbcTemplate.update(sql, id);
+        try {
+            int rowAffected = jdbcTemplate.update(sql, id);
+            if (rowAffected == 0) {
+                throw new NoSuchElementException();
+            }
+        } catch (DataAccessException e) {
+            throw new IllegalStateException();
+        }
+
     }
 }

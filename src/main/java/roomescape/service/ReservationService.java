@@ -29,7 +29,7 @@ public class ReservationService {
         for (final Reservation reservation : reservationRepository.findAll()) {
             final ReservationTimeResponseDto reservationTimeResponseDto =
                 ReservationTimeResponseDto.from(
-                    reservationTimeRepository.findById(reservation.getId()));
+                    reservationTimeRepository.findById(reservation.getTimeId()));
             reservationResponseDtos.add(
                 ReservationResponseDto.from(reservation, reservationTimeResponseDto));
         }

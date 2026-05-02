@@ -80,4 +80,16 @@ public class ReservationControllerTest {
 
         assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
+
+    @Test
+    @DisplayName("IllegalArgumentException이 발생하면 400 응답을 반환한다")
+    void return400BadRequest_When_IllegalArgumentException() {
+        String errorMessage = "테스트용 에러 메시지";
+        IllegalArgumentException exception = new IllegalArgumentException(errorMessage);
+
+        ResponseEntity<String> response = controller.handle(exception);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody()).isEqualTo(errorMessage);
+    }
 }

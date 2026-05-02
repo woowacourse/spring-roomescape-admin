@@ -18,7 +18,7 @@ public class ReservationQueryingDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    private final RowMapper<Reservation> actorRowMapper = (resultSet, rowNum) -> {
+    private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
         ReservationTime reservationTime = new ReservationTime(
                 resultSet.getLong("time_id"),
                 resultSet.getObject("start_at", LocalTime.class)
@@ -37,13 +37,13 @@ public class ReservationQueryingDAO {
                 "from reservation as r " +
                 "inner join reservation_time as t on r.time_id = t.id " +
                 "where r.id = ?";
-        return jdbcTemplate.queryForObject(sql, actorRowMapper, id);
+        return jdbcTemplate.queryForObject(sql, reservationRowMapper, id);
     }
 
     public List<Reservation> findAllReservations() {
         String sql = "select r.id as reservation_id, r.name, r.date, t.id as time_id, t.start_at " +
                 "from reservation as r " +
                 "inner join reservation_time as t on r.time_id = t.id";
-        return jdbcTemplate.query(sql, actorRowMapper);
+        return jdbcTemplate.query(sql, reservationRowMapper);
     }
 }

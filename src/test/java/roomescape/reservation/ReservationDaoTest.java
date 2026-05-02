@@ -54,10 +54,10 @@ class ReservationDaoTest {
         ReservationTime reservationTime = createReservationTime(LocalTime.of(15, 40));
         Reservation saved = reservationDao.save("브라운", LocalDate.of(2023, 8, 5), reservationTime);
 
-        assertThat(saved.id()).isNotNull();
-        assertThat(saved.name()).isEqualTo("브라운");
-        assertThat(saved.date()).isEqualTo(LocalDate.of(2023, 8, 5));
-        assertThat(saved.time().startAt()).isEqualTo(LocalTime.of(15, 40));
+        assertThat(saved.getId()).isNotNull();
+        assertThat(saved.getName()).isEqualTo("브라운");
+        assertThat(saved.getDate()).isEqualTo(LocalDate.of(2023, 8, 5));
+        assertThat(saved.getTime().startAt()).isEqualTo(LocalTime.of(15, 40));
     }
 
     @Test
@@ -72,7 +72,7 @@ class ReservationDaoTest {
 
         assertThat(reservations).hasSize(2);
         assertThat(reservations)
-                .extracting(Reservation::name)
+                .extracting(Reservation::getName)
                 .containsExactly("브라운", "코니");
     }
 
@@ -81,7 +81,7 @@ class ReservationDaoTest {
         ReservationTime reservationTime = createReservationTime(LocalTime.of(15, 40));
         Reservation saved = reservationDao.save("브라운", LocalDate.of(2023, 8, 5), reservationTime);
 
-        reservationDao.delete(saved.id());
+        reservationDao.delete(saved.getId());
 
         assertThat(reservationDao.findAll()).isEmpty();
     }

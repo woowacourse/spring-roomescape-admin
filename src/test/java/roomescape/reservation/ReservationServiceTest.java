@@ -70,9 +70,9 @@ class ReservationServiceTest {
 
         Reservation saved = reservationService.createReservation("브라운", LocalDate.of(2026, 5, 1), time.id());
 
-        assertThat(saved.name()).isEqualTo("브라운");
-        assertThat(saved.date()).isEqualTo(LocalDate.of(2026, 5, 1));
-        assertThat(saved.time().startAt()).isEqualTo(LocalTime.of(10, 0));
+        assertThat(saved.getName()).isEqualTo("브라운");
+        assertThat(saved.getDate()).isEqualTo(LocalDate.of(2026, 5, 1));
+        assertThat(saved.getTime().startAt()).isEqualTo(LocalTime.of(10, 0));
     }
 
     @Test
@@ -107,7 +107,7 @@ class ReservationServiceTest {
 
         assertThat(reservations).hasSize(2);
         assertThat(reservations)
-                .extracting(Reservation::name)
+                .extracting(Reservation::getName)
                 .containsExactly("브라운", "코니");
     }
 
@@ -116,7 +116,7 @@ class ReservationServiceTest {
         ReservationTime time = reservationTimeService.createReservationTime(LocalTime.of(14, 0));
         Reservation saved = reservationService.createReservation("브라운", LocalDate.of(2026, 5, 1), time.id());
 
-        reservationService.deleteReservation(saved.id());
+        reservationService.deleteReservation(saved.getId());
 
         assertThat(reservationService.getReservations()).isEmpty();
     }

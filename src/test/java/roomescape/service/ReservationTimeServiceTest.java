@@ -1,7 +1,6 @@
 package roomescape.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -13,7 +12,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import roomescape.dto.ReservationTimeRequestDto;
 import roomescape.dto.ReservationTimeResponseDto;
-import roomescape.exception.CustomException;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -21,13 +19,6 @@ public class ReservationTimeServiceTest {
 
     @Autowired
     private ReservationTimeService reservationTimeService;
-
-    @Test
-    void notExistReservationDeleteExceptionTest() {
-        assertThatThrownBy(() -> reservationTimeService.delete(1L))
-                .hasMessage("[ERROR] 해당 ID의 예약 시간을 찾을 수 없습니다.")
-                .isInstanceOf(CustomException.class);
-    }
 
     @Test
     void createTest() {

@@ -28,7 +28,6 @@ public class ReservationTimeService {
     }
 
     public void delete(Long id) {
-        reservationTimeDao.read(id);
         reservationTimeDao.delete(id);
     }
 }

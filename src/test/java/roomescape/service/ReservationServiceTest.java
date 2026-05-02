@@ -37,13 +37,6 @@ public class ReservationServiceTest {
                 .isInstanceOf(CustomException.class);
     }
 
-    @Test
-    void notExistReservationDeleteExceptionTest() {
-        assertThatThrownBy(() -> reservationService.delete(1L))
-                .hasMessage("[ERROR] 해당 ID의 예약을 찾을 수 없습니다.")
-                .isInstanceOf(CustomException.class);
-    }
-
     ReservationTimeResponseDto createReservationTime() {
         reservationTimeDao.create(new ReservationTimeRequestDto(LocalTime.of(10, 0)));
         return new ReservationTimeResponseDto(1L, LocalTime.of(10, 0));

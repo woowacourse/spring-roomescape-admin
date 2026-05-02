@@ -33,7 +33,6 @@ public class ReservationService {
     }
 
     public void delete(Long id) {
-        reservationDao.read(id);
         reservationDao.delete(id);
     }
 }

@@ -5,7 +5,7 @@ import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
 import org.springframework.context.annotation.Primary;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -27,6 +27,7 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
     @Override
     public ReservationTime create(ReservationTimeRequestDto requestDto) {
         String sql = "INSERT INTO `reservation_time`(`start_at`) VALUES ?";
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, new String[]{"id"});
@@ -42,12 +43,13 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
     @Override
     public ReservationTime read(Long id) {
         String sql = "SELECT * FROM `reservation_time` WHERE `id` = id";
+
         try {
             return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> {
                 LocalTime startAt = rs.getTime("start_at").toLocalTime();
                 return new ReservationTime(id, startAt);
             });
-        } catch (IncorrectResultSizeDataAccessException exception) {
+        } catch (EmptyResultDataAccessException exception) {
             throw new CustomException(ErrorCode.NOT_FOUND_RESERVATION_TIME);
         }
     }
@@ -55,6 +57,7 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
     @Override
     public List<ReservationTime> readAll() {
         String sql = "SELECT * FROM `reservation_time`";
+
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
             Long id = rs.getLong("id");
             LocalTime startAt = rs.getTime("start_at").toLocalTime();

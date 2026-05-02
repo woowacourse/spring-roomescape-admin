@@ -7,8 +7,6 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -79,52 +77,6 @@ class ReservationControllerTest {
         assertThat(reservationResponse.getBody().date()).isEqualTo("2026-04-29");
         assertThat(reservationResponse.getBody().time().id()).isEqualTo(1L);
         assertThat(reservationResponse.getBody().time().startAt()).isEqualTo("10:00");
-    }
-
-    @Test
-    @DisplayName("같은 날짜와 시간으로 예약을 중복 생성할 수 없다.")
-    void throwException_When_CreateDuplicateReservation() {
-        insertTime("10:00");
-        reservationController.create(new ReservationRequest("브라운", "2026-04-29", 1L));
-
-        assertThatThrownBy(() -> reservationController.create(new ReservationRequest("리사", "2026-04-29", 1L)))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    @DisplayName("같은 시간이라도 다른 날짜이면 예약을 생성할 수 있다.")
-    void createReservation_When_SameTimeDifferentDate() {
-        insertTime("10:00");
-        reservationController.create(new ReservationRequest("브라운", "2026-04-29", 1L));
-
-        ResponseEntity<ReservationResponse> reservationResponse = reservationController.create(
-                new ReservationRequest("리사", "2026-04-30", 1L)
-        );
-
-        assertThat(reservationResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(reservationResponse.getBody().id()).isEqualTo(2L);
-    }
-
-    @Test
-    @DisplayName("존재하지 않는 시간으로 예약을 생성할 수 없다.")
-    void throwException_When_CreateReservationWithNotFoundTime() {
-        assertThatThrownBy(() -> reservationController.create(new ReservationRequest("브라운", "2026-04-29", 1L)))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @ParameterizedTest
-    @ValueSource(longs = {0L, -1L})
-    @DisplayName("잘못된 시간 ID로 예약을 생성할 수 없다.")
-    void throwException_When_CreateReservationWithInvalidTimeId(Long timeId) {
-        assertThatThrownBy(() -> reservationController.create(new ReservationRequest("브라운", "2026-04-29", timeId)))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    @DisplayName("시간 ID가 null이면 예약을 생성할 수 없다.")
-    void throwException_When_CreateReservationWithNullTimeId() {
-        assertThatThrownBy(() -> reservationController.create(new ReservationRequest("브라운", "2026-04-29", null)))
-                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test

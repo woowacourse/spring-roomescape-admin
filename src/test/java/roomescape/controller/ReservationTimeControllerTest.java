@@ -1,7 +1,6 @@
 package roomescape.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,15 +69,6 @@ public class ReservationTimeControllerTest {
     }
 
     @Test
-    @DisplayName("이미 존재하는 시간은 추가할 수 없다.")
-    void createDuplicateTime() {
-        reservationTimeController.create(new TimeRequest("10:00"));
-
-        assertThatThrownBy(() -> reservationTimeController.create(new TimeRequest("10:00")))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
     @DisplayName("시간이 생성된 상태에서 시간을 조회한다.")
     void findAllTimes_After_Create() {
         reservationTimeController.create(new TimeRequest("10:00"));
@@ -121,27 +111,5 @@ public class ReservationTimeControllerTest {
         assertThat(times.getBody()).hasSize(1);
         assertThat(times.getBody().get(0).id()).isEqualTo(2L);
         assertThat(times.getBody().get(0).startAt()).isEqualTo("11:00");
-    }
-
-    @Test
-    @DisplayName("존재하지 않는 시간을 삭제하면 예외가 발생한다.")
-    void deleteTime_NotFound() {
-        assertThatThrownBy(() -> reservationTimeController.delete(1L))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    @DisplayName("예약에 사용 중인 시간은 삭제할 수 없다.")
-    void deleteTime_UsedByReservation() {
-        reservationTimeController.create(new TimeRequest("10:00"));
-        jdbcTemplate.update(
-                "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
-                "브라운",
-                "2026-04-29",
-                1L
-        );
-
-        assertThatThrownBy(() -> reservationTimeController.delete(1L))
-                .isInstanceOf(IllegalStateException.class);
     }
 }

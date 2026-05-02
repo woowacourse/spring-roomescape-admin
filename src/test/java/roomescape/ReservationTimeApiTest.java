@@ -35,6 +35,6 @@ public class ReservationTimeApiTest {
         RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
     }
 }

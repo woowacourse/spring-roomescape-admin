@@ -1,13 +1,10 @@
 package roomescape.domain;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Objects;
 
 public class Name {
     private String name;
 
-    @JsonCreator
     public Name(String name) {
         this.name = name;
     }
@@ -17,9 +14,7 @@ public class Name {
         return new Name(name);
     }
 
-
-    @JsonValue
-    public String getName() {
+    public String toString() {
         return name;
     }
 }

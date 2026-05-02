@@ -121,16 +121,15 @@ class ReservationTimeDaoTest {
         @Test
         void 저장된_시간이_여러개이면_조회시_저장된_개수만큼_반환한다() {
             // given
-            reservationTimeDao.insert(reservationTime);
-            reservationTimeDao.insert(reservationTime);
-            reservationTimeDao.insert(reservationTime);
+            List<ReservationTime> reservationTimes = List.of(reservationTime, reservationTime, reservationTime);
+            insert(reservationTimes);
 
             // when
             List<ReservationTime> actual = reservationTimeDao.selectAll();
 
             // then
             Assertions.assertThat(actual)
-                    .hasSize(3);
+                    .hasSize(reservationTimes.size());
         }
 
         @Test
@@ -229,6 +228,12 @@ class ReservationTimeDaoTest {
         dataSource.setUsername("sa");
         dataSource.setPassword("");
         return dataSource;
+    }
+
+    private void insert(List<ReservationTime> reservationTimes) {
+        for (ReservationTime reservationTime : reservationTimes) {
+            reservationTimeDao.insert(reservationTime);
+        }
     }
 
 }

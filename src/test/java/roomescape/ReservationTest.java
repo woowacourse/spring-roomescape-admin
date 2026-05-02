@@ -45,7 +45,6 @@ public class ReservationTest {
                 null,
                 reservationTime)
         ).isInstanceOf(IllegalArgumentException.class);
-
     }
 
     @Test

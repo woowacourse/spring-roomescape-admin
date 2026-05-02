@@ -3,6 +3,7 @@ package roomescape.dao;
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -18,19 +19,19 @@ public class ReservationTimeDao {
     private final JdbcTemplate jdbcTemplate;
 
     private static final RowMapper<ReservationTime> ROW_MAPPER = (resultSet, rowNum) ->
-            ReservationTime.builder()
-                    .id(resultSet.getLong("id"))
-                    .startAt(resultSet.getObject("start_at", LocalTime.class))
-                    .build();
+            new ReservationTime(
+                    resultSet.getLong("id"),
+                    resultSet.getObject("start_at", LocalTime.class)
+            );
 
     public List<ReservationTime> findAll() {
         String sql = "SELECT id, start_at FROM reservation_time";
         return jdbcTemplate.query(sql, ROW_MAPPER);
     }
 
-    public ReservationTime findById(Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, ROW_MAPPER, id);
+        return jdbcTemplate.query(sql, ROW_MAPPER, id).stream().findFirst();
     }
 
     public ReservationTime save(ReservationTime reservationTime) {
@@ -44,10 +45,7 @@ public class ReservationTimeDao {
         }, keyHolder);
 
         Long id = keyHolder.getKey().longValue();
-        return ReservationTime.builder()
-                .id(id)
-                .startAt(reservationTime.getStartAt())
-                .build();
+        return new ReservationTime(id, reservationTime.getStartAt());
     }
 
     public int deleteById(Long id) {

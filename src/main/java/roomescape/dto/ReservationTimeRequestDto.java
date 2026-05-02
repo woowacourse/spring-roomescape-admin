@@ -7,8 +7,6 @@ public record ReservationTimeRequestDto(
         LocalTime startAt
 ) {
     public ReservationTime toEntity() {
-        return ReservationTime.builder()
-                .startAt(this.startAt)
-                .build();
+        return new ReservationTime(this.startAt);
     }
 }

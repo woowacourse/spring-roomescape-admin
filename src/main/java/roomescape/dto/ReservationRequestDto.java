@@ -12,10 +12,6 @@ public record ReservationRequestDto(
         Long timeId
 ) {
     public Reservation toEntity(ReservationTime time) {
-        return Reservation.builder()
-                .name(this.name)
-                .date(this.date)
-                .time(time)
-                .build();
+        return new Reservation(this.name, this.date, time);
     }
 }

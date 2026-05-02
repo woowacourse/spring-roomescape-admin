@@ -21,17 +21,17 @@ public class ReservationDao {
     private final JdbcTemplate jdbcTemplate;
 
     private static final RowMapper<Reservation> ROW_MAPPER = (resultSet, rowNum) -> {
-        ReservationTime time = ReservationTime.builder()
-                .id(resultSet.getLong("time_id"))
-                .startAt(resultSet.getObject("time_start_at", LocalTime.class))
-                .build();
+        ReservationTime time = new ReservationTime(
+                resultSet.getLong("time_id"),
+                resultSet.getObject("time_start_at", LocalTime.class)
+        );
 
-        return Reservation.builder()
-                .id(resultSet.getLong("reservation_id"))
-                .name(resultSet.getString("reservation_name"))
-                .date(resultSet.getObject("reservation_date", LocalDate.class))
-                .time(time)
-                .build();
+        return new Reservation(
+                resultSet.getLong("reservation_id"),
+                resultSet.getString("reservation_name"),
+                resultSet.getObject("reservation_date", LocalDate.class),
+                time
+        );
     };
 
     public List<Reservation> findAll() {
@@ -60,12 +60,12 @@ public class ReservationDao {
         }, keyHolder);
 
         Long generatedId = keyHolder.getKey().longValue();
-        return Reservation.builder()
-                .id(generatedId)
-                .name(reservation.getName())
-                .date(reservation.getDate())
-                .time(reservation.getTime())
-                .build();
+        return new Reservation(
+                generatedId,
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
+        );
     }
 
     public int deleteById(Long id) {

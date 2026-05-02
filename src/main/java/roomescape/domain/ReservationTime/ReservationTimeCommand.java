@@ -7,10 +7,6 @@ import roomescape.exception.ReservationCommandException;
 
 public record ReservationTimeCommand(String startAt) {
     public ReservationTimeCommand {
-        validate(startAt);
-    }
-
-    private static void validate(String startAt) {
         validateStartAt(startAt);
     }
 

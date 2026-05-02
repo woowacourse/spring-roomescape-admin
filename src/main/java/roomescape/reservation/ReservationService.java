@@ -30,7 +30,7 @@ public class ReservationService {
         try {
             return reservationRepository.save(name, date, reservationTime);
         } catch (DataIntegrityViolationException e) {
-            throw new ReservationException(ReservationErrorCode.DUPLICATE);
+            throw new ReservationException(mapIntegrityViolation(e));
         }
     }
 
@@ -41,5 +41,24 @@ public class ReservationService {
     @Transactional
     public void deleteReservation(long id) {
         reservationRepository.delete(id);
+    }
+
+    private ReservationErrorCode mapIntegrityViolation(DataIntegrityViolationException e) {
+        String message = getMostSpecificMessage(e);
+        if (message.contains("unique_date_time")) {
+            return ReservationErrorCode.DUPLICATE;
+        }
+        return ReservationErrorCode.INTEGRITY_VIOLATION;
+    }
+
+    private String getMostSpecificMessage(DataIntegrityViolationException e) {
+        Throwable mostSpecificCause = e.getMostSpecificCause();
+        if (mostSpecificCause != null && mostSpecificCause.getMessage() != null) {
+            return mostSpecificCause.getMessage().toLowerCase();
+        }
+        if (e.getMessage() != null) {
+            return e.getMessage().toLowerCase();
+        }
+        return "";
     }
 }

@@ -1,6 +1,7 @@
 package roomescape.repository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -13,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -33,20 +35,24 @@ public class ReservationTimeRepository {
                 .toList();
     }
 
-    public ReservationTime findById(final Long timeId) {
+    public Optional<ReservationTime> findById(final Long timeId) {
         final String sql = """
                 SELECT id, start_at
                 FROM reservation_time
                 WHERE id = ?
                 """;
 
-        ReservationTimeEntity entity = jdbcTemplate.queryForObject(
-                sql,
-                this::mapToEntity,
-                timeId
-        );
+        try {
+            ReservationTimeEntity entity = jdbcTemplate.queryForObject(
+                    sql,
+                    this::mapToEntity,
+                    timeId
+            );
 
-        return toDomain(entity);
+            return Optional.of(toDomain(entity));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public ReservationTime save(final ReservationTime newReservationTime) {

@@ -27,7 +27,8 @@ public class ReservationService {
     }
 
     public ReservationResult create(final ReservationCreateData data) {
-        final ReservationTime reservationTime = reservationTimeRepository.findById(data.timeId());
+        final ReservationTime reservationTime = reservationTimeRepository.findById(data.timeId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간입니다."));
 
         final Reservation reservation = Reservation.create(
                 new ReservationCreateCommand(

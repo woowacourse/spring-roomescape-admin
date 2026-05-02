@@ -13,7 +13,7 @@ import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @Validated
 public class ReservationService {
 
@@ -26,6 +26,7 @@ public class ReservationService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
+    @Transactional
     public ReservationResponse reserve(@NotNull(message = "예약 정보가 비어있습니다.") ReservationRequest request) {
         ReservationTime time = reservationTimeRepository.findById(request.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간 정보입니다."));
@@ -35,7 +36,6 @@ public class ReservationService {
         return ReservationResponse.from(saved);
     }
 
-    @Transactional(readOnly = true)
     public List<ReservationResponse> getAllReservations() {
         return reservationRepository.findAll()
                 .stream()
@@ -43,6 +43,7 @@ public class ReservationService {
                 .toList();
     }
 
+    @Transactional
     public void cancelAllReservation(long id) {
         reservationRepository.delete(id);
     }

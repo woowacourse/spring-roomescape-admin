@@ -11,7 +11,7 @@ import roomescape.dto.ReservationTimeResponse;
 import roomescape.repository.ReservationTimeRepository;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @Validated
 public class ReservationTimeService {
 
@@ -21,6 +21,7 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
+    @Transactional
     public ReservationTimeResponse register(
             @NotNull(message = "예약 시간 정보가 필요합니다.") ReservationTimeRequest request
     ) {
@@ -29,7 +30,6 @@ public class ReservationTimeService {
         return ReservationTimeResponse.from(saved);
     }
 
-    @Transactional(readOnly = true)
     public List<ReservationTimeResponse> getAllReservationTimes() {
         return reservationTimeRepository.findAll()
                 .stream()
@@ -37,6 +37,7 @@ public class ReservationTimeService {
                 .toList();
     }
 
+    @Transactional
     public void remove(Long id) {
         reservationTimeRepository.deleteById(id);
     }

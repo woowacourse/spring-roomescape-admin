@@ -1,39 +1,39 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
-import roomescape.reservation.ReservationQueryingDAO;
+import roomescape.reservation.ReservationQueryingDao;
 import roomescape.reservation.Reservation;
 import roomescape.reservation.ReservationRequest;
-import roomescape.reservation.ReservationUpdatingDAO;
+import roomescape.reservation.ReservationUpdatingDao;
 
 import java.util.List;
 
 @Service
 public class ReservationService {
 
-    private final ReservationQueryingDAO reservationQueryingDAO;
-    private final ReservationUpdatingDAO reservationUpdatingDAO;
+    private final ReservationQueryingDao reservationQueryingDao;
+    private final ReservationUpdatingDao reservationUpdatingDao;
 
-    public ReservationService(ReservationQueryingDAO reservationQueryingDAO, ReservationUpdatingDAO reservationUpdatingDAO) {
-        this.reservationQueryingDAO = reservationQueryingDAO;
-        this.reservationUpdatingDAO = reservationUpdatingDAO;
+    public ReservationService(ReservationQueryingDao reservationQueryingDao, ReservationUpdatingDao reservationUpdatingDao) {
+        this.reservationQueryingDao = reservationQueryingDao;
+        this.reservationUpdatingDao = reservationUpdatingDao;
     }
 
     public List<Reservation> read() {
-        return reservationQueryingDAO.findAllReservations();
+        return reservationQueryingDao.findAllReservations();
     }
 
     public Reservation create(ReservationRequest reservationReq) {
-        Long generatedId = reservationUpdatingDAO.insert(reservationReq);
-        return reservationQueryingDAO.findReservationById(generatedId);
+        Long generatedId = reservationUpdatingDao.insert(reservationReq);
+        return reservationQueryingDao.findReservationById(generatedId);
     }
 
     public void update(Reservation newReservation, Long id) {
-        reservationUpdatingDAO.save(id, newReservation);
+        reservationUpdatingDao.save(id, newReservation);
     }
 
     public void delete(Long id) {
-        int count = reservationUpdatingDAO.delete(id);
+        int count = reservationUpdatingDao.delete(id);
 
         if (count == 0) {
             throw new RuntimeException("삭제하려는 예약을 찾을 수 없습니다.");

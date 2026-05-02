@@ -8,11 +8,11 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 
 @Repository
-public class ReservationUpdatingDAO {
+public class ReservationUpdatingDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationUpdatingDAO(JdbcTemplate jdbcTemplate) {
+    public ReservationUpdatingDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

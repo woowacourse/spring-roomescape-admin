@@ -10,11 +10,11 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Repository
-public class ReservationQueryingDAO {
+public class ReservationQueryingDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ReservationQueryingDAO(JdbcTemplate jdbcTemplate) {
+    public ReservationQueryingDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

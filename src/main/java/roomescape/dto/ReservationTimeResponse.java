@@ -6,7 +6,7 @@ import roomescape.domain.ReservationTime;
 
 public record ReservationTimeResponse(
         Long id,
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "Asia/Seoul")
+        @JsonFormat(pattern = "HH:mm")
         LocalTime startAt) {
     public static ReservationTimeResponse from(ReservationTime time) {
         return new ReservationTimeResponse(time.getId(), time.getStartAt());

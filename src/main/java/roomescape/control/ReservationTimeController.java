@@ -22,12 +22,6 @@ public class ReservationTimeController {
 
     private final ReservationTimeService reservationTimeService;
 
-    /*
-    시간 추가	POST /times	{startAt}	{id, startAt}
-    시간 조회	GET /times	—	[{id, startAt}, ...]
-    시간 삭제	DELETE /times/{id}	—	200 OK
-     */
-
     @PostMapping
     public ReservationTimeResponse createTime(@RequestBody CreateReservationTimeRequest request) {
         final long id = reservationTimeService.createTime(LocalTime.parse(request.startAt()));

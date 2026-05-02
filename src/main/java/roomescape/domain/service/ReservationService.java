@@ -48,7 +48,7 @@ public class ReservationService {
     }
 
     private void validateDuplicateReservation(Reservation reservation, LocalDate date, Long timeId) {
-        if (reservation.isSateDate(date) && Objects.equals(reservation.getTime().getId(), timeId)) {
+        if (reservation.isSameDate(date) && Objects.equals(reservation.getTime().getId(), timeId)) {
             throw new IllegalArgumentException("예약이 마감된 일시입니다.");
         }
     }

@@ -8,6 +8,7 @@ import roomescape.domain.dto.ReservationTimeRequest;
 import roomescape.domain.dto.ReservationTimeResponse;
 import roomescape.domain.service.ReservationTimeService;
 
+import java.net.URI;
 import java.util.List;
 
 @RequestMapping("/times")
@@ -18,7 +19,11 @@ public class ReservationTimeController {
 
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> createReservationTime(@Valid @RequestBody ReservationTimeRequest reservationTimeRequest) {
-        return ResponseEntity.ok(reservationTimeService.save(reservationTimeRequest));
+        ReservationTimeResponse reservationTimeResponse = reservationTimeService.save(reservationTimeRequest);
+
+        URI location = URI.create("/times/" + reservationTimeResponse.id());
+        return ResponseEntity.created(location)
+                .body(reservationTimeResponse);
     }
 
     @GetMapping

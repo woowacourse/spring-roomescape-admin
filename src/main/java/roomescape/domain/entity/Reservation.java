@@ -26,7 +26,7 @@ public class Reservation {
                 .build();
     }
 
-    public boolean isSateDate(LocalDate date) {
+    public boolean isSameDate(LocalDate date) {
         return this.date.equals(date);
     }
 

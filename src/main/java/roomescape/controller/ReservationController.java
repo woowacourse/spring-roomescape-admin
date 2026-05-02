@@ -59,29 +59,4 @@ public class ReservationController {
         dao.delete(Long.valueOf(id));
         return ResponseEntity.ok().build();
     }
-
-    @PostMapping("/times")
-    public ResponseEntity<TimeCreateResponse> createTime(
-            @RequestBody TimeCreateRequest request
-    ){
-        UpdatingDAO dao = reservationService.getUpdatingDAO();
-        Long id = dao.insertWithKeyHolder(request.startAt());
-        return ResponseEntity.ok(new TimeCreateResponse(id,request.startAt()));
-    }
-
-    @GetMapping("/times")
-    public ResponseEntity<List<ReservationTime>> readAll() {
-        QueryingDAO dao = reservationService.getQueryingDAO();
-        return ResponseEntity.ok(dao.findAllTimes());
-
-    }
-
-    @DeleteMapping("/times/{id}")
-    public ResponseEntity<Void> deleteTime(
-            @PathVariable("id") Long id
-    ) {
-        UpdatingDAO dao = reservationService.getUpdatingDAO();
-        dao.deleteTime(Long.valueOf(id));
-        return  ResponseEntity.ok().build();
-    }
 }

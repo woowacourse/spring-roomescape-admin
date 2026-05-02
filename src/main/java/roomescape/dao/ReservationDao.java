@@ -75,6 +75,10 @@ public class ReservationDao {
     public void deleteById(Long id) {
         String sql = "delete from reservations where id = ?";
 
-        jdbcTemplate.update(sql, id);
+        int affectedRows= jdbcTemplate.update(sql, id);
+
+        if (affectedRows == 0) {
+            throw new IllegalArgumentException("삭제하려는 예약이 존재하지 않습니다. " + id);
+        }
     }
 }

@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -54,12 +55,19 @@ public class ReservationTimeDao {
     public void deleteById(Long id) {
         String sql = "delete from reservation_times where id = ?";
 
-        jdbcTemplate.update(sql, id);
+        int affectedRows= jdbcTemplate.update(sql, id);
+
+        if (affectedRows == 0) {
+            throw new IllegalArgumentException("삭제하려는 시간이 존재하지 않습니다. " + id);
+        }
     }
 
     public ReservationTime findById(Long id) {
         String readSql = "select id, start_at from reservation_times where id = ?";
-
-        return jdbcTemplate.queryForObject(readSql, reservationTimeRowMapper, id);
+        try {
+            return jdbcTemplate.queryForObject(readSql, reservationTimeRowMapper, id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("존재하지 않는 시간입니다.");
+        }
     }
 }

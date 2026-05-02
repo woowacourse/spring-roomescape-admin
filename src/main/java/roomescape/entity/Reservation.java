@@ -1,11 +1,7 @@
 package roomescape.entity;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import roomescape.dto.ReservationRequestDto;
 
 @Builder
 public class Reservation {

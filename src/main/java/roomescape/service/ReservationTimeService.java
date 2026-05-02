@@ -24,13 +24,12 @@ public class ReservationTimeService {
     }
 
     public ReservationTime createReservationTime(ReservationTimeRequest request) {
-        ReservationTime time = new ReservationTime(request.getStartAt());
+        ReservationTime time = new ReservationTime(request.startAt());
         return reservationTimeRepository.save(time);
     }
 
     public void deleteReservationTime(Long id) {
         reservationTimeRepository.deleteById(id);
     }
-
 
 }

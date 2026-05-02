@@ -30,8 +30,8 @@ public class ReservationService {
     }
 
     public Reservation createReservation(ReservationRequest request) {
-        ReservationTime time = reservationTimeRepository.findById(request.getTimeId());
-        Reservation reservation = new Reservation(request.getName(), request.getDate(), time);
+        ReservationTime time = reservationTimeRepository.findById(request.timeId());
+        Reservation reservation = new Reservation(request.name(), request.date(), time);
         return reservationRepository.save(reservation);
     }
 

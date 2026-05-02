@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
         String errorMessage = e.getBindingResult()
-                .getFieldErrors()
+                .getAllErrors()
                 .getFirst()
                 .getDefaultMessage();
 

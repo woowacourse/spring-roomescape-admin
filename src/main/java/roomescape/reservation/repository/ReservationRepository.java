@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -49,10 +50,11 @@ public class ReservationRepository {
             return ps;
         },  keyHolder);
 
-        Long generatedId = keyHolder.getKey().longValue();
+        Number generatedId = Optional.ofNullable(keyHolder.getKey())
+                .orElseThrow(() -> new RuntimeException("[ERROR] DB 아이디 생성에 실패했습니다."));
 
         return Reservation.builder()
-                .id(generatedId)
+                .id(generatedId.longValue())
                 .name(reservation.getName())
                 .date(reservation.getDate())
                 .time(reservation.getTime())

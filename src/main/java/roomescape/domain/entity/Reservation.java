@@ -15,6 +15,7 @@ public class Reservation {
 
     public static Reservation create(Long id, String name, LocalDate date, ReservationTime time) {
         validateName(name);
+        validateNull(date, time);
 
         return Reservation.builder()
                 .id(id)
@@ -24,13 +25,23 @@ public class Reservation {
                 .build();
     }
 
+    private static void validateNull(LocalDate date, ReservationTime time) {
+        if (date == null) {
+            throw new IllegalArgumentException("예약 날짜는 필수 값입니다.");
+        }
+
+        if (time == null) {
+            throw new IllegalArgumentException("예약 시간은 필수 값입니다.");
+        }
+    }
+
     private static void validateName(String name) {
         if (name == null) {
-            throw new IllegalArgumentException("[ERROR] 이름은 필수 값입니다.");
+            throw new IllegalArgumentException("이름은 필수 값입니다.");
         }
 
         if (name.isBlank()) {
-            throw new IllegalArgumentException("[ERROR] 이름 형식이 올바르지 않습니다.");
+            throw new IllegalArgumentException("이름 형식이 올바르지 않습니다.");
         }
     }
 }

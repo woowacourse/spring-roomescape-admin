@@ -3,6 +3,7 @@ package roomescape.reservation.service;
 import org.springframework.stereotype.Service;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.exception.InvalidReservationTimeException;
+import roomescape.reservation.exception.ReservationNotFoundException;
 import roomescape.reservation.repository.ReservationRepository;
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.repository.ReservationTimeRepository;
@@ -33,6 +34,8 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     public void deleteReservation(Long id) {
-        reservationRepository.deleteById(id);
+        if (reservationRepository.deleteById(id) == 0) {
+            throw new ReservationNotFoundException(id);
+        }
     }
 }

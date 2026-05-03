@@ -2,7 +2,9 @@ package roomescape.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
@@ -25,7 +27,11 @@ public class ReservationService {
     }
 
     public ReservationResponse createReservation(ReservationRequest request) {
-        ReservationTime time = reservationTimeRepository.findById(request.timeId());
+        ReservationTime time = reservationTimeRepository.findById(request.timeId())
+            .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "[ERROR] 존재하지 않는 time id입니다.")
+            );
         Reservation reservation = Reservation.of(
             request.name(),
             request.date(),

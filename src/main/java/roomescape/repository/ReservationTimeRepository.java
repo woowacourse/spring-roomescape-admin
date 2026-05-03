@@ -1,9 +1,8 @@
 package roomescape.repository;
 
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -42,11 +41,12 @@ public class ReservationTimeRepository {
         return jdbcTemplate.query(query, rowMapper);
     }
 
-    public ReservationTime findById(Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         String query = "select * from reservation_time where id = ?";
-        return jdbcTemplate.queryForObject(query, rowMapper, id);
+        return jdbcTemplate.query(query, rowMapper, id)
+            .stream()
+            .findFirst();
     }
-
 
     public void deleteById(Long id) {
         String query = "delete from reservation_time where id = ?";

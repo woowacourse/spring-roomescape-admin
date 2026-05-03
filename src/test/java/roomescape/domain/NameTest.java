@@ -1,4 +1,4 @@
-package roomescape;
+package roomescape.domain;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -6,7 +6,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.NullSource;
-import roomescape.domain.Name;
 
 class NameTest {
     @ParameterizedTest

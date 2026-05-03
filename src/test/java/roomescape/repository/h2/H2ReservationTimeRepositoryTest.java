@@ -1,8 +1,8 @@
 package roomescape.repository.h2;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static roomescape.TestFixture.createTime;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -61,9 +61,5 @@ class H2ReservationTimeRepositoryTest {
     @DisplayName("timeId에 해당하는 예약시간이 존재하는지 확인한다.")
     void isExists() {
         assertThat(timeRepository.isExists(timeRepository.save(createTime()).getId())).isTrue();
-    }
-
-    public ReservationTime createTime() {
-        return new ReservationTime(null, LocalTime.of(10, 0));
     }
 }

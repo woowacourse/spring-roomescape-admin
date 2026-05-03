@@ -1,8 +1,8 @@
 package roomescape.repository.h2;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static roomescape.TestFixture.createReservation;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,9 +90,5 @@ class H2ReservationRepositoryTest {
         assertThat(reservationRepository.isExistsByTimeId(createReservation().getTime().getId())).isFalse();
         reservationRepository.save(createReservation());
         assertThat(reservationRepository.isExistsByTimeId(createReservation().getTime().getId())).isTrue();
-    }
-
-    private Reservation createReservation() {
-        return new Reservation(null, "티온", LocalDate.of(2026, 5, 3), RESERVATION_TIME);
     }
 }

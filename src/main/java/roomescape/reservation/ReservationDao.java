@@ -45,6 +45,12 @@ public class ReservationDao {
         )).longValue();
     }
 
+    public boolean existsByTimeId(Long timeId) {
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM reservation WHERE time_id = ?", Integer.class, timeId);
+        return count != null && count > 0;
+    }
+
     public void delete(Long id) {
         jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
     }

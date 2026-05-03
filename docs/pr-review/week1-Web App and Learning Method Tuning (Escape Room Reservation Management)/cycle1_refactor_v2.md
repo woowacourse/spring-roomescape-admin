@@ -8,7 +8,7 @@
 - [x] **2. 도메인 검증을 DB 저장 이전에 실행되도록 수정**
   - `Reservation`에 `static validate(name, date, time)` 메서드 추가
   - `ReservationService.save()`에서 `reservationDao.save()` 호출 전에 `Reservation.validate()` 먼저 호출
-- [ ] **3. 사용 중인 예약 시간 삭제 방지**
+- [x] **3. 사용 중인 예약 시간 삭제 방지**
   - `ReservationDao`에 `existsByTimeId(Long timeId)` 메서드 추가
   - `ReservationTimeService`에 `ReservationDao` 주입
   - `ReservationTimeService.delete()`에서 삭제 전 `existsByTimeId()` 확인 후 예외 처리

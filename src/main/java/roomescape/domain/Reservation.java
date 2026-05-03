@@ -1,8 +1,9 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
-public record Reservation(Long id, String name, LocalDate date, Long reservationTimeId) {
+public record Reservation(Long id, String name, LocalDate date, ReservationTime reservationTime) {
 
     public Reservation {
         if (name == null || name.isBlank()) {
@@ -14,12 +15,12 @@ public record Reservation(Long id, String name, LocalDate date, Long reservation
         if (date.isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("지나간 날짜로는 예약할 수 없습니다.");
         }
-        if (reservationTimeId == null || reservationTimeId <= 0) {
-            throw new IllegalArgumentException("유효하지 않은 예약 시간대 번호입니다.");
+        if (reservationTime == null) {
+            throw new IllegalArgumentException("유효하지 않은 예약 시간대입니다.");
         }
     }
 
     public static Reservation transientOf(String name, LocalDate date, Long reservationTimeId) {
-        return new Reservation(null, name, date, reservationTimeId);
+        return new Reservation(null, name, date, new ReservationTime(reservationTimeId, LocalTime.now()));
     }
 }

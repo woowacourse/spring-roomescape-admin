@@ -2,7 +2,7 @@ package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.repository.ReservationJoinedDto;
+import roomescape.domain.Reservation;
 import roomescape.service.ReservationService;
 
 import java.util.List;
@@ -24,8 +24,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest) {
-        ReservationJoinedDto reservation = reservationService.saveReservation(reservationRequest.name(),
-                reservationRequest.date(), reservationRequest.timeId());
+        Reservation reservation = reservationService.saveReservation(reservationRequest.name(), reservationRequest.date(), reservationRequest.timeId());
         ReservationResponse reservationResponse = toResponse(reservation);
         return ResponseEntity.ok(reservationResponse);
     }

@@ -38,12 +38,6 @@ public class ReservationTime {
     }
 
     private static void validate(String startAt) {
-        if (startAt == null || startAt.isBlank()) {
-            throw new RoomescapeException(RoomescapeErrorCode.INVALID_RESERVATION_TIME);
-        }
-        if (startAt.length() != 5 || startAt.charAt(2) != ':') {
-            throw new RoomescapeException(RoomescapeErrorCode.INVALID_RESERVATION_TIME_FORMAT);
-        }
         try {
             LocalTime.parse(startAt, DateTimeFormatter.ofPattern("HH:mm"));
         } catch (DateTimeParseException e) {

@@ -2,34 +2,58 @@
 
 ## `인사말`
 
-안녕하세요 웨지!
+안녕하세요 웨지! 마감시간을 꽉꽉 채워 리뷰 요청드리게 되었네요.  
+짧다면 짧은 시간이었지만 큰 도움이 되는 피드백과 따뜻한 조언들  
+너무나 감사히 새겨들을 수 있어 즐겁고 보람찬 경험이었습니다.
+
+뭔가 부족함을 자각한 부분만 많이 떠오르는 것 같지만서도  
+더 견고한 개발자가 되기 위해 보완할 수 있도록 더 많이 도전하겠습니다!
 
 ## `본문`
 
 ### 어떤 부분에 집중하여 리뷰해야 할까요?
 
-####                                  
+#### 최종적인 구조/로직 전반
+
+가볍게 훑어봐 주시며 좀 더 생각하면 좋을 부분을 짚어주시면 큰 도움이 될 것 같아요!
+
+#### 영속화를 위한 책임 이관
+
+[답변 06](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3178204559) 에 남긴 의문입니다.  
+객체의 상태를 영속화 계층에서 조회해야 하는 구조인 이상 서비스가 도메인의 조립 책임을 가지는 것은 필연적인가요?
 
 ---
 
-####                                  
+####                                                        
 
 ## `마치며`
 
+딱딱할 수 있는 주제들에서도  
+부드럽고 효과적으로 의도를 전달하고  
+스스로 답을 찾아 발전할 수 있도록 유도하는  
+웨지의 표현력과 화법에 감탄하는 과정이었습니다.
+
+가독성 좋은 글이나 잘 정리된 문서를 좋아하다 보니  
+약간 과할 정도의 시간과 노력을 들이긴 하지만서도  
+그 또한 문서 작성 능력을 위한 합리적인 투자라 생각하곤 합니다.
+
+그럼에도 학습 이후를 생각할 수 있도록 조언해주신 덕분에  
+더 멀리, 더 이후를 고민할 수 있게 된 점 너무나 감사드려요.
+
+남은 연휴도 즐겁게, 또 평안하게 보내시고  
+기회가 되어 다시 만나게 된다면 더욱 발전한 모습 보여드릴 수 있도록 하겠습니다!  
+항상 승승장구하세요!! 웨지 화이팅! 📣📣
+
 [피드백/답변 정리 문서](https://github.com/nn98/spring-roomescape-admin/blob/nn98/docs/code-review/step1-01.md)
 
-- ### [📝 Feedback 01](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171918749) - Repository / DAO 분리의 의도
-- ### [📝 Feedback 02](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171920507) - @Repository 어노테이션
-- ### [📝 Feedback 03](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171925031) - DTO 를 활용한 계층 간 의존 제거
-- ### [📝 Feedback 04](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171928189) - 쿼리의 분리, 반환값
-- ### [📝 Feedback 05](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171932731) - 자료형 변경
-- ### [📝 Feedback 06](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171933999) - 단위 테스트 구현
-- ### [📝 Feedback 07](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171937953) - 자료형 변경
-- ### [📝 Feedback 08](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171939298) - Util 클래스의 필요성
-- ### [📝 Feedback 09](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171968584) - 저만의 효율적 기록 방식
-- ### [📝 Feedback 10](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171986529) - Efficacy(효능)과 Effectiveness(유효성)
-- ### [📝 Feedback 11](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171987469) - 스파이크(Spike)
-- ### [📝 Feedback 12](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3171989344) - 따뜻한 공감
+- ### [📝 Feedback 01](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3177237289) - (이어서) @Repository 어노테이션
+- ### [📝 Feedback 02](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3177286318) - (이어서) Repository / DAO 분리의 의도
+- ### [📝 Feedback 03](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3177293779) - raw type
+- ### [📝 Feedback 04](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3177306784) - 유지보수를 위한 설계
+- ### [📝 Feedback 05](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3177313713) - 생성 시 중복 조회 로직 제거
+- ### [📝 Feedback 06](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3177320680) - 오버엔지니어링과 유지보수의 근본
+- ### [📝 Feedback 07](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3177321686) - 테스트 구현 격려
+- ### [📝 Feedback 08](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3177324029) - 누락된 DAO 테스트
 
 # 🛠️ 기능/구현
 
@@ -137,6 +161,15 @@ PR 마지막에 이런 문장이 있던데요
 
 #### raw type
 
+```java
+
+@DeleteMapping("/{id}")
+public ResponseEntity<Void> deleteReservation(@PathVariable long id) {
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTime ( @PathVariable long id){
+```
+
 쓰면서도 뭔가 찜찜한 기분이었는데 이게 raw type 문법이었군요.  
 타입 안전성 측면에서 Void 명시가 필수적이고  
 raw type 문법이 남은 이유는 제네릭 이전 코드와의 호환을 위해서임을 확인했어요!
@@ -167,6 +200,22 @@ DDD를 말씀하시던 분이 작성한 코드에 뜬금없이 왜 이런 객체
 [피드백 02](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3177286318)
 에서도, [피드백06](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3177320680) 에서도 언급되는 내용이지만  
 환경과 상황을 기반으로 진짜 `실무적 효용성`을 명확히 인지하는 것이 가장 중요하겠네요.
+
+```java
+
+@Repository
+public interface ReservationRepository {
+
+    List<Reservation> findAll();
+
+    Reservation findById(long id);
+
+    Reservation save(Reservation reservation);
+
+    void deleteById(long id);
+}
+
+```
 
 제 딴에는 효율성을 향상하는 게 운영 측면에서 효율적이라 생각해 도입한 객체지만  
 유지보수 측면에서 그보다 큰 문제를 야기할 수 있는 아이디어였군요..  
@@ -199,7 +248,8 @@ OOP 의 근본적 목적인 유지보수 측면에 중점을 두도록 노력하
 
 #### 중복 조회 로직 제거
 
-[피드백 6](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3177320680) 에서 제안해 주신 대로 구조를 변경하고,  
+[피드백 06](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3177320680) 에서 제안해 주신 대로 구조를
+변경하고,  
 재조회 대신 비영속 도메인 객체의 값을 활용하도록 수정했습니다.
 
 ```java
@@ -247,9 +297,24 @@ DB 친화적 설계라는 결과를 만들어냈군요.
 예약을 통해 접근 가능한 엔티티이면서도  
 필요에 따라 직접적인 API 호출도 가능한 이중적인 도메인이라 보는 것이 타당하겠네요.
 
+```java
+public record Reservation(Long id, String name, LocalDate date, ReservationTime reservationTime) {
+```
+
 #### `의문`
 
-변경된 Reservation > ReservationTime 구조에서도 서비스의 조립 책임은 유지되는데  
+변경된 Reservation > ReservationTime 구조에서도 서비스의 조립 책임은 유지되는데
+
+```java
+
+public Reservation saveReservation(String name, LocalDate date, Long reservationTimeId) {
+    ReservationTime reservationTime = reservationTimeRepository.findById(reservationTimeId);
+    Reservation transientReservation = Reservation.transientOf(name, date, reservationTime);
+    return reservationRepository.save(transientReservation);
+}
+
+```
+
 이 부분은 영속화 측면에서 필연적인 로직이니 감수할 책임 이관이겠죠?
 
 #### 유지보수성 효율성
@@ -281,6 +346,9 @@ DB 친화적 설계라는 결과를 만들어냈군요.
 #### 반복되는 누락..
 
 헉 Top-down 으로 구현하다 FakeDao만 보고 Dao 테스트를 놓쳐버렸네요..  
+[피드백 02](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3177286318)를 반영해 변경된 구조에 맞춰 DAO
+테스트를 구현했습니다.
+
 항상 다음번엔 테스트 코드도 정말 꼼꼼히 짜겠다 생각만 하고  
 자꾸 빼먹는 모습만 보이게 되네요.  
 단기간에 완벽해질 순 없겠지만 같은 실수를 반복하는건 지양해야 하는데..

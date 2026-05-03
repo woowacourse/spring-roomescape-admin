@@ -7,14 +7,14 @@ public class ReservationTime {
     private final long id;
     private final LocalTime startAt;
 
-    private ReservationTime(long id, String startAt) {
+    private ReservationTime(long id, LocalTime startAt) {
         this.id = id;
-        this.startAt = LocalTime.parse(startAt);
+        this.startAt = startAt;
     }
 
     public static ReservationTime of(long id, String startAt) {
         validateIsNull(startAt);
-        return new ReservationTime(id, startAt);
+        return new ReservationTime(id, LocalTime.parse(startAt));
     }
 
     private static void validateIsNull(String startAt) {

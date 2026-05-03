@@ -16,7 +16,7 @@ import roomescape.domain.ReservationTime;
 public class ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<ReservationTime> reservationTimeRowMapper = (rs, rowNum) ->
+    private final RowMapper<ReservationTime> rowMapper = (rs, rowNum) ->
             ReservationTime.create(
                     rs.getLong("id"),
                     rs.getObject("start_at", LocalTime.class)
@@ -45,6 +45,6 @@ public class ReservationTimeDao {
 
     public List<ReservationTime> findAllReservationTimes() {
         String sql = "SELECT id, start_at FROM reservation_time";
-        return jdbcTemplate.query(sql, reservationTimeRowMapper);
+        return jdbcTemplate.query(sql, rowMapper);
     }
 }

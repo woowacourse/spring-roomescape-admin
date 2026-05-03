@@ -18,7 +18,7 @@ import roomescape.domain.ReservationTime;
 public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> {
+    private final RowMapper<Reservation> rowMapper = (rs, rowNum) -> {
         ReservationTime reservationTime = ReservationTime.create(
                 rs.getLong("time_id"),
                 rs.getObject("time_value", LocalTime.class)
@@ -57,7 +57,7 @@ public class ReservationDao {
                 WHERE reservation.id = ?
                 """;
 
-        return jdbcTemplate.queryForObject(sql, reservationRowMapper, reservationId.longValue());
+        return jdbcTemplate.queryForObject(sql, rowMapper, reservationId.longValue());
     }
 
     public void delete(long reservationId) {
@@ -78,6 +78,6 @@ public class ReservationDao {
                 ON reservation.time_id = time.id
                 """;
 
-        return jdbcTemplate.query(sql, reservationRowMapper);
+        return jdbcTemplate.query(sql, rowMapper);
     }
 }

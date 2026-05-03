@@ -35,22 +35,18 @@ public class ReservationController {
         return ResponseEntity.ok().build();
     }
 
-    private List<ReservationResponse> convertToReservationResponse(List<ReservationJoinedDto> reservations) {
+    private List<ReservationResponse> convertToReservationResponse(List<Reservation> reservations) {
         return reservations.stream()
                 .map(this::toResponse)
                 .toList();
     }
 
-    private ReservationResponse toResponse(ReservationJoinedDto reservationJoinedDto) {
-        ReservationTimeResponse reservationTimeResponse = new ReservationTimeResponse(
-                reservationJoinedDto.timeId(),
-                reservationJoinedDto.startAt()
-        );
+    private ReservationResponse toResponse(Reservation reservation) {
         return new ReservationResponse(
-                reservationJoinedDto.id(),
-                reservationJoinedDto.name(),
-                reservationJoinedDto.date(),
-                reservationTimeResponse
+                reservation.id(),
+                reservation.name(),
+                reservation.date(),
+                ReservationTimeResponse.from(reservation.reservationTime())
         );
     }
 }

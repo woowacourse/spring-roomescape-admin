@@ -1,7 +1,6 @@
 package roomescape.domain;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public record Reservation(Long id, String name, LocalDate date, ReservationTime reservationTime) {
 
@@ -20,7 +19,7 @@ public record Reservation(Long id, String name, LocalDate date, ReservationTime 
         }
     }
 
-    public static Reservation transientOf(String name, LocalDate date, Long reservationTimeId) {
-        return new Reservation(null, name, date, new ReservationTime(reservationTimeId, LocalTime.now()));
+    public static Reservation transientOf(String name, LocalDate date, ReservationTime reservationTime) {
+        return new Reservation(null, name, date, reservationTime);
     }
 }

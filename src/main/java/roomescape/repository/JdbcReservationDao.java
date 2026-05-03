@@ -1,14 +1,16 @@
 package roomescape.repository;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class JdbcReservationDao implements ReservationDao {
@@ -20,10 +22,10 @@ public class JdbcReservationDao implements ReservationDao {
     }
 
     @Override
-    public List<ReservationJoinedDto> findAll() {
+    public List<Reservation> findAll() {
         String sql = "SELECT r.id AS r_id, r.name, r.date, t.id AS t_id, t.start_at " +
                 "FROM reservation r INNER JOIN reservation_time t ON r.time_id = t.id";
-        return jdbcTemplate.query(sql, joinedDtoRowMapper());
+        return jdbcTemplate.query(sql, rowMapper());
     }
 
     @Override
@@ -35,18 +37,11 @@ public class JdbcReservationDao implements ReservationDao {
     }
 
     @Override
-    public ReservationJoinedDto findJoinedDtoById(long reservationId) {
-        String sql = "SELECT r.id AS r_id, r.name, r.date, t.id AS t_id, t.start_at " +
-                "FROM reservation r INNER JOIN reservation_time t ON r.time_id = t.id " +
-                "WHERE r.id = ?";
-        return jdbcTemplate.queryForObject(sql, joinedDtoRowMapper(), reservationId);
-    }
-
-    @Override
-    public long insert(Reservation reservation) {
+    public Reservation insert(Reservation reservation) {
         SimpleJdbcInsert insert = createInsert();
         Map<String, Object> params = createParams(reservation);
-        return insert.executeAndReturnKey(params).longValue();
+        long reservationId = insert.executeAndReturnKey(params).longValue();
+        return new Reservation(reservationId, reservation.name(), reservation.date(), reservation.reservationTime());
     }
 
     private SimpleJdbcInsert createInsert() {
@@ -56,8 +51,7 @@ public class JdbcReservationDao implements ReservationDao {
     }
 
     private Map<String, Object> createParams(Reservation reservation) {
-        return Map.of("name", reservation.name(), "date", reservation.date(), "time_id",
-                reservation.reservationTimeId());
+        return Map.of("name", reservation.name(), "date", reservation.date(), "time_id", reservation.reservationTime().id());
     }
 
     @Override
@@ -71,17 +65,7 @@ public class JdbcReservationDao implements ReservationDao {
                 rs.getLong("r_id"),
                 rs.getString("name"),
                 rs.getObject("date", LocalDate.class),
-                rs.getLong("t_id")
-        );
-    }
-
-    private RowMapper<ReservationJoinedDto> joinedDtoRowMapper() {
-        return (rs, rowNum) -> new ReservationJoinedDto(
-                rs.getLong("r_id"),
-                rs.getString("name"),
-                rs.getObject("date", LocalDate.class),
-                rs.getLong("t_id"),
-                rs.getObject("start_at", LocalTime.class)
+                new ReservationTime(rs.getLong("t_id"), rs.getObject("start_at", LocalTime.class))
         );
     }
 }

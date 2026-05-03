@@ -1,19 +1,18 @@
 package roomescape.repository;
 
-import java.util.List;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+
+import java.util.List;
 
 @Repository
 public interface ReservationRepository {
 
-    List<ReservationJoinedDto> findAllJoinedDto();
+    List<Reservation> findAllJoinedDto();
 
     Reservation findById(long id);
 
-    ReservationJoinedDto findJoinedDtoById(long id);
-
-    long save(Reservation reservation);
+    Reservation save(Reservation reservation);
 
     void deleteById(long id);
 }

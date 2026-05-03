@@ -1,8 +1,9 @@
 package roomescape.repository;
 
-import java.util.List;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
+
+import java.util.List;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
@@ -14,7 +15,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public List<ReservationJoinedDto> findAllJoinedDto() {
+    public List<Reservation> findAllJoinedDto() {
         return reservationDao.findAll();
     }
 
@@ -24,12 +25,7 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public ReservationJoinedDto findJoinedDtoById(long id) {
-        return reservationDao.findJoinedDtoById(id);
-    }
-
-    @Override
-    public long save(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         return reservationDao.insert(reservation);
     }
 

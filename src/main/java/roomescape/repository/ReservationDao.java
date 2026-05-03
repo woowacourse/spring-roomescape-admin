@@ -1,17 +1,16 @@
 package roomescape.repository;
 
-import java.util.List;
 import roomescape.domain.Reservation;
+
+import java.util.List;
 
 public interface ReservationDao {
 
-    List<ReservationJoinedDto> findAll();
+    List<Reservation> findAll();
 
-    long insert(Reservation reservation);
+    Reservation insert(Reservation reservation);
 
     void deleteById(long reservationId);
 
     Reservation findById(long reservationId);
-
-    ReservationJoinedDto findJoinedDtoById(long reservationId);
 }

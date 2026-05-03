@@ -3,6 +3,7 @@ package roomescape.repository.jdbc;
 import static roomescape.repository.jdbc.ReservationTimeEntityMapper.RESERVATION_TIME_MAPPER;
 
 import java.sql.PreparedStatement;
+import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -28,12 +29,13 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, reservationTime.getStartAt().toString());
+            ps.setTime(1, Time.valueOf(reservationTime.getStartAt()));
             return ps;
         }, keyHolder);
 
         return new ReservationTime(keyHolder.getKey().longValue(), reservationTime.getStartAt());
     }
+
     @Override
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";

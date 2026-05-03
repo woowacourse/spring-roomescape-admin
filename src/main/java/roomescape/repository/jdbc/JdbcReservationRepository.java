@@ -2,6 +2,7 @@ package roomescape.repository.jdbc;
 
 import static roomescape.repository.jdbc.ReservationEntityMapper.RESERVATION_ROW_MAPPER;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.List;
@@ -26,7 +27,7 @@ public class JdbcReservationRepository implements ReservationRepository {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
             ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate().toString());
+            ps.setDate(2, Date.valueOf(reservation.getDate()));
             ps.setLong(3, reservation.getTime().getId());
             return ps;
         }, keyHolder);

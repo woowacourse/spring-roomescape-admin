@@ -13,14 +13,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.response.ReservationTimeCreateResponse;
 import roomescape.dto.response.ReservationTimeFindAllResponse;
+import roomescape.service.ReservationFacade;
 import roomescape.service.ReservationTimeService;
 
 @Controller
 public class ReservationTimeController {
 
+    private final ReservationFacade reservationFacade;
     private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(ReservationTimeService reservationTimeService) {
+    public ReservationTimeController(ReservationFacade reservationFacade,
+                                     ReservationTimeService reservationTimeService) {
+        this.reservationFacade = reservationFacade;
         this.reservationTimeService = reservationTimeService;
     }
 
@@ -41,7 +45,7 @@ public class ReservationTimeController {
     @DeleteMapping("/times/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {
-            reservationTimeService.delete(id);
+            reservationFacade.deleteReservationTime(id);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();

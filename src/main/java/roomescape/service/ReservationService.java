@@ -1,7 +1,6 @@
 package roomescape.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDAO;
 import roomescape.domain.Reservation;
@@ -27,5 +26,9 @@ public class ReservationService {
 
     public void delete(Long id) {
         reservationDAO.delete(id);
+    }
+
+    public boolean existsByTimeId(Long timeId) {
+        return reservationDAO.existsByTimeId(timeId);
     }
 }

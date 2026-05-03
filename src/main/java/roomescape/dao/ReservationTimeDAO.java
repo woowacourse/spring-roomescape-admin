@@ -2,6 +2,7 @@ package roomescape.dao;
 
 import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -41,11 +42,19 @@ public class ReservationTimeDAO {
         return response;
     }
 
-    public void delete(Long id) {
+    public ReservationTime findById(Long id) {
         try {
-            jdbcTemplate.update("delete from reservation_time where id = ?", id);
-        } catch (DataIntegrityViolationException e) {
-            throw new IllegalArgumentException("[ERROR] 해당 시간에 예약이 존재하여 삭제할 수 없습니다.");
+            return jdbcTemplate.queryForObject(
+                    "select id, start_at from reservation_time where id = ?",
+                    (resultSet, rowNum) -> ReservationTime.of(resultSet.getLong("id"), resultSet.getString("start_at")),
+                    id
+            );
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalArgumentException("[ERROR] 존재하지 않는 예약 시간입니다.");
         }
+    }
+
+    public void delete(Long id) {
+        jdbcTemplate.update("delete from reservation_time where id = ?", id);
     }
 }

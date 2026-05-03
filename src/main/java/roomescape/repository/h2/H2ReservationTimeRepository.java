@@ -2,12 +2,10 @@ package roomescape.repository.h2;
 
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Objects;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
@@ -43,13 +41,13 @@ public class H2ReservationTimeRepository implements ReservationTimeRepository {
 
     @Override
     public ReservationTime save(ReservationTime reservationTime) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "INSERT INTO reservation_time(start_at) values(:startAt)";
+        SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbcTemplate.getJdbcTemplate())
+                .withTableName("reservation_time")
+                .usingGeneratedKeyColumns("id");
 
         MapSqlParameterSource params = new MapSqlParameterSource("startAt", reservationTime.getStartAt());
 
-        jdbcTemplate.update(sql, params, keyHolder);
-        long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        long id = insert.executeAndReturnKey(params).longValue();
         return new ReservationTime(id, reservationTime.getStartAt());
     }
 

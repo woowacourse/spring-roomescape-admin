@@ -2,12 +2,10 @@ package roomescape.repository.h2;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.repository.ReservationRepository;
@@ -57,15 +55,16 @@ public class H2ReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        String sql = "INSERT INTO reservation(name, date, time_id) VALUES (:name, :date, :timeId)";
+        SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbcTemplate.getJdbcTemplate())
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
+
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
                 .addValue("date", reservation.getDate())
                 .addValue("timeId", reservation.getTime().getId());
 
-        jdbcTemplate.update(sql, params, keyHolder);
-        long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
+        long id = insert.executeAndReturnKey(params).longValue();
 
         return new Reservation(id, reservation.getName(), reservation.getDate(),
                 reservation.getTime());

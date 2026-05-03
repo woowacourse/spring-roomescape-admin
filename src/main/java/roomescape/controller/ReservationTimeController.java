@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.dto.ReservationTimeRequestDto;
 import roomescape.controller.dto.ReservationTimeResponseDto;
+import roomescape.controller.dto.ReservationTimesResponseDto;
 import roomescape.service.ReservationTimeService;
 
 @RestController
@@ -23,10 +24,7 @@ public class ReservationTimeController {
 
     @GetMapping
     public List<ReservationTimeResponseDto> getTimes() {
-        return timeService.findAll()
-                .stream()
-                .map(ReservationTimeResponseDto::from)
-                .toList();
+        return ReservationTimesResponseDto.from(timeService.findAll()).times();
     }
 
     @PostMapping

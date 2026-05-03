@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.dto.ReservationRequestDto;
 import roomescape.controller.dto.ReservationResponseDto;
+import roomescape.controller.dto.ReservationsResponseDto;
 import roomescape.service.ReservationService;
 
 @RestController
@@ -23,10 +24,8 @@ public class ReservationController {
 
     @GetMapping
     public List<ReservationResponseDto> getReservations() {
-        return reservationService.findAll()
-                .stream()
-                .map(ReservationResponseDto::from)
-                .toList();
+        return ReservationsResponseDto.from(reservationService.findAll()).reservations();
+
     }
 
     @GetMapping("/{id}")

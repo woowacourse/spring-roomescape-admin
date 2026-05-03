@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.exception.DeleteFailureException;
 import roomescape.exception.EntityNotFoundException;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
@@ -52,7 +51,7 @@ public class ReservationService {
         boolean deleted = reservationRepository.delete(reservationId);
 
         if (!deleted) {
-            throw new DeleteFailureException("예약 삭제에 실패했습니다. reservationId = " + reservationId);
+            throw new EntityNotFoundException("삭제할 예약을 조회하지 못했습니다. reservationId = " + reservationId);
         }
     }
 }

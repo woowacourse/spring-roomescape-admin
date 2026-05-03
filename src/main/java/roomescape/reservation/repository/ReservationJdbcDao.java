@@ -19,15 +19,17 @@ public class ReservationJdbcDao {
     }
 
     public List<Reservation> findAll() {
-        String sql = "SELECT\n"
-                + "    r.id as reservation_id,\n"
-                + "    r.name,\n"
-                + "    r.date,\n"
-                + "    t.id as time_id,\n"
-                + "    t.start_at as time_value\n"
-                + "FROM reservation as r\n"
-                + "INNER JOIN reservation_time as t\n"
-                + "  ON r.time_id = t.id";
+        String sql = """
+                SELECT
+                    r.id as reservation_id,
+                    r.name,
+                    r.date,
+                    t.id as time_id,
+                    t.start_at as time_value
+                FROM reservation as r
+                INNER JOIN reservation_time as t
+                    ON r.time_id = t.id
+                """;
 
         return jdbcTemplate.query(
                 sql,
@@ -47,9 +49,11 @@ public class ReservationJdbcDao {
     }
 
     public List<Reservation> findByTimeId(Long timeId) {
-        String sql = "SELECT id, name, date, time_id "
-                + "FROM reservation "
-                + "WHERE time_id = ?";
+        String sql = """
+                SELECT id, name, date, time_id
+                FROM reservation
+                WHERE time_id = ?
+                """;
 
         return jdbcTemplate.query(
                 sql,

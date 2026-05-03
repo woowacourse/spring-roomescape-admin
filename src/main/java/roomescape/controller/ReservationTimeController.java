@@ -24,7 +24,7 @@ public class ReservationTimeController {
 
     @PostMapping
     public ReservationTimeResponse create(@RequestBody ReservationTimeCreateRequest dto) {
-        ReservationTime found = reservationTimeService.save(dto);
+        ReservationTime found = reservationTimeService.create(dto);
 
         return ReservationTimeResponse.toDto(found);
     }
@@ -40,6 +40,6 @@ public class ReservationTimeController {
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable long id) {
-        reservationTimeService.deleteById(id);
+        reservationTimeService.delete(id);
     }
 }

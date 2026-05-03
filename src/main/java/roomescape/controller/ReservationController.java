@@ -33,13 +33,13 @@ public class ReservationController {
 
     @PostMapping
     public ReservationResponse create(@RequestBody ReservationCreateRequest dto) {
-        Reservation reservation = reservationService.save(dto);
+        Reservation reservation = reservationService.reserve(dto);
 
         return ReservationResponse.toDto(reservation);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        reservationService.deleteById(id);
+        reservationService.cancel(id);
     }
 }

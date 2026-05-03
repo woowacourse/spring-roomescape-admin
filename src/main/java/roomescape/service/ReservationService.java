@@ -24,16 +24,16 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public Reservation save(ReservationCreateRequest dto) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(dto.getTimeId())
+    public Reservation reserve(ReservationCreateRequest request) {
+        ReservationTime reservationTime = reservationTimeRepository.findById(request.getTimeId())
                 .orElseThrow(() -> new IllegalArgumentException(TIME_SLOT_DOES_NOT_EXISTS));
 
-        Reservation reservation = Reservation.of(dto.getName(), dto.getDate(), reservationTime);
+        Reservation reservation = Reservation.of(request.getName(), request.getDate(), reservationTime);
 
         return reservationRepository.save(reservation);
     }
 
-    public void deleteById(long id) {
-        reservationRepository.deleteById(id);
+    public void cancel(long reservationId) {
+        reservationRepository.deleteById(reservationId);
     }
 }

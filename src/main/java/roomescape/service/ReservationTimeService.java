@@ -14,8 +14,8 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public ReservationTime save(ReservationTimeCreateRequest dto) {
-        ReservationTime reservationTime = ReservationTime.of(dto.getStartAt());
+    public ReservationTime create(ReservationTimeCreateRequest request) {
+        ReservationTime reservationTime = ReservationTime.of(request.getStartAt());
 
         return reservationTimeRepository.save(reservationTime);
     }
@@ -24,7 +24,7 @@ public class ReservationTimeService {
         return reservationTimeRepository.findAll();
     }
 
-    public void deleteById(long id) {
-        reservationTimeRepository.delete(id);
+    public void delete(long reservationTimeId) {
+        reservationTimeRepository.delete(reservationTimeId);
     }
 }

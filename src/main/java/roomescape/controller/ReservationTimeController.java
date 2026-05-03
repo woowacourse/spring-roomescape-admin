@@ -32,12 +32,12 @@ public class ReservationTimeController {
     public ResponseEntity<ReservationTimeResponse> addReservationTime(@RequestBody ReservationTimeRequest request) {
         ReservationTime reservationTime = reservationTimeService.saveReservationTime(request.toDomain());
         ReservationTimeResponse reservationTimeResponse = ReservationTimeResponse.from(reservationTime);
-        return ResponseEntity.created(getLocation(request)).body(reservationTimeResponse);
+        return ResponseEntity.created(getLocation(reservationTimeResponse.id())).body(reservationTimeResponse);
     }
 
     @NonNull
-    private static URI getLocation(ReservationTimeRequest request) {
-        return URI.create(DEFAULT_PATH + request.startAt());
+    private static URI getLocation(long id) {
+        return URI.create(DEFAULT_PATH + id);
     }
 
     @GetMapping

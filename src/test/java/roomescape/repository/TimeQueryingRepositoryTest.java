@@ -11,6 +11,7 @@ import roomescape.domain.ReservationTime;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -52,10 +53,11 @@ public class TimeQueryingRepositoryTest {
     void findById() {
         Long id = jdbcTemplate.queryForObject("SELECT id FROM reservation_time LIMIT 1", Long.class);
 
-        ReservationTime time = timeQueryingRepository.findById(id);
+        Optional<ReservationTime> time = timeQueryingRepository.findById(id);
 
-        assertThat(time.getId()).isEqualTo(id);
-        assertThat(time.getStartAt()).isEqualTo(LocalTime.of(10, 0));
+        assertThat(time).isPresent();
+        assertThat(time.get().getId()).isEqualTo(id);
+        assertThat(time.get().getStartAt()).isEqualTo(LocalTime.of(10, 0));
     }
 
     @Test

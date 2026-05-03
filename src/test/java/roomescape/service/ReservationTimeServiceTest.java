@@ -9,6 +9,7 @@ import roomescape.repository.TimeUpdatingRepository;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -21,7 +22,7 @@ public class ReservationTimeServiceTest {
         ReservationTime stubTime = new ReservationTime(1L, LocalTime.of(10, 0));
         TimeQueryingRepository queryingRepo = new TimeQueryingRepository(null) {
             @Override
-            public ReservationTime findById(Long id) { return null; }
+            public Optional<ReservationTime> findById(Long id) { return Optional.empty(); }
             @Override
             public List<ReservationTime> findAll() { return List.of(stubTime); }
             @Override
@@ -43,7 +44,7 @@ public class ReservationTimeServiceTest {
     void findById_notFound() {
         TimeQueryingRepository queryingRepo = new TimeQueryingRepository(null) {
             @Override
-            public ReservationTime findById(Long id) { throw new RuntimeException(); }
+            public Optional<ReservationTime> findById(Long id) { return Optional.empty(); }
             @Override
             public List<ReservationTime> findAll() { return List.of(); }
             @Override
@@ -64,7 +65,7 @@ public class ReservationTimeServiceTest {
     void save_success() {
         TimeQueryingRepository queryingRepo = new TimeQueryingRepository(null) {
             @Override
-            public ReservationTime findById(Long id) { return null; }
+            public Optional<ReservationTime> findById(Long id) { return Optional.empty(); }
             @Override
             public List<ReservationTime> findAll() { return List.of(); }
             @Override
@@ -87,7 +88,7 @@ public class ReservationTimeServiceTest {
     void save_duplicate() {
         TimeQueryingRepository queryingRepo = new TimeQueryingRepository(null) {
             @Override
-            public ReservationTime findById(Long id) { return null; }
+            public Optional<ReservationTime> findById(Long id) { return Optional.empty(); }
             @Override
             public List<ReservationTime> findAll() { return List.of(); }
             @Override
@@ -115,7 +116,7 @@ public class ReservationTimeServiceTest {
         ReservationTimeService service = new ReservationTimeService(
                 new TimeQueryingRepository(null) {
                     @Override
-                    public ReservationTime findById(Long id) { return null; }
+                    public Optional<ReservationTime> findById(Long id) { return Optional.empty(); }
                     @Override
                     public List<ReservationTime> findAll() { return List.of(); }
                     @Override

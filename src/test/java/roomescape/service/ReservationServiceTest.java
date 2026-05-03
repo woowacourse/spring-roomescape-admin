@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -31,9 +32,8 @@ public class ReservationServiceTest {
         ReservationTimeService timeService = new ReservationTimeService(
                 new TimeQueryingRepository(null) {
                     @Override
-                    public ReservationTime findById(Long id) {
-                        if (timeForFindById == null) throw new RuntimeException();
-                        return timeForFindById;
+                    public Optional<ReservationTime> findById(Long id) {
+                        return Optional.ofNullable(timeForFindById);
                     }
                     @Override
                     public List<ReservationTime> findAll() { return List.of(); }

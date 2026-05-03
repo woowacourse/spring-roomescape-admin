@@ -2,6 +2,7 @@ package roomescape.service;
 
 import org.springframework.stereotype.Service;
 import roomescape.controller.dto.request.ReservationRequest;
+import roomescape.controller.dto.response.ReservationResponse;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.domain.exception.ReservationTimeNotFoundException;
@@ -25,7 +26,7 @@ public class ReservationService {
         return repository.findAll();
     }
 
-    public Reservation addReservation(ReservationRequest request) {
+    public ReservationResponse addReservation(ReservationRequest request) {
         ReservationTime reservationTime = timeRepository.findById(request.timeId())
                 .orElseThrow(() -> new ReservationTimeNotFoundException(request.timeId()));
         Reservation reservation = new Reservation(
@@ -34,7 +35,9 @@ public class ReservationService {
                 reservationTime
         );
 
-        return repository.save(reservation);
+        Reservation saved = repository.save(reservation);
+
+        return ReservationResponse.from(saved);
     }
 
     public void deleteReservation(Long id) {

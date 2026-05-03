@@ -8,8 +8,8 @@ public record ErrorInformation(
         String message
 ) {
 
-    public static ErrorInformation of(HttpStatus error, String meesage) {
-        return new ErrorInformation(error.value(), error, meesage);
+    public static ErrorInformation of(HttpStatus error, String message) {
+        return new ErrorInformation(error.value(), error, message);
     }
 
 }

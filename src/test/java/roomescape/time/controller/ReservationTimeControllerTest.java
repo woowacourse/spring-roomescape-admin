@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.dto.RequestReservationTime;
+import roomescape.time.dto.ResponseReservationTime;
 import roomescape.time.service.ReservationTimeService;
 
 import java.time.LocalTime;
@@ -26,9 +27,11 @@ class ReservationTimeControllerTest {
         );
         fakeReservationTimeService.toReturnTimes = times;
 
-        List<ReservationTime> result = reservationTimeController.getTimes();
+        List<ResponseReservationTime> result = reservationTimeController.getTimes();
 
-        Assertions.assertThat(result).isSameAs(times);
+        Assertions.assertThat(result).hasSize(1);
+        Assertions.assertThat(result.get(0).id()).isEqualTo(1L);
+        Assertions.assertThat(result.get(0).startAt()).isEqualTo(LocalTime.of(10, 0));
     }
 
     @Test
@@ -37,10 +40,11 @@ class ReservationTimeControllerTest {
         ReservationTime created = new ReservationTime(1L, LocalTime.of(10, 0));
         fakeReservationTimeService.toReturn = created;
 
-        ReservationTime result = reservationTimeController.createTime(request);
+        ResponseReservationTime result = reservationTimeController.createTime(request);
 
         Assertions.assertThat(fakeReservationTimeService.capturedStartAt).isEqualTo(LocalTime.of(10, 0));
-        Assertions.assertThat(result).isSameAs(created);
+        Assertions.assertThat(result.id()).isEqualTo(1L);
+        Assertions.assertThat(result.startAt()).isEqualTo(LocalTime.of(10, 0));
     }
 
     @Test

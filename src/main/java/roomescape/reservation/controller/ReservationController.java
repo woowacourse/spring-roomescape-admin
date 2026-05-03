@@ -1,8 +1,8 @@
 package roomescape.reservation.controller;
 
 import org.springframework.web.bind.annotation.*;
-import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.RequestReservation;
+import roomescape.reservation.dto.ResponseReservation;
 import roomescape.reservation.service.ReservationService;
 
 import java.util.List;
@@ -18,17 +18,20 @@ public class ReservationController {
     }
 
     @GetMapping
-    public List<Reservation> getReservations() {
-        return reservationService.getReservations();
+    public List<ResponseReservation> getReservations() {
+        return reservationService.getReservations()
+                .stream()
+                .map(ResponseReservation::from)
+                .toList();
     }
 
     @PostMapping
-    public Reservation createReservation(@RequestBody RequestReservation request) {
-        return reservationService.createReservation(
+    public ResponseReservation createReservation(@RequestBody RequestReservation request) {
+        return ResponseReservation.from(reservationService.createReservation(
                 request.name(),
                 request.date(),
                 request.timeId()
-        );
+        ));
     }
 
     @DeleteMapping("/{id}")

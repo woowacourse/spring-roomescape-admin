@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.dto.RequestReservation;
+import roomescape.reservation.dto.ResponseReservation;
 import roomescape.reservation.service.ReservationService;
 import roomescape.time.domain.ReservationTime;
 
@@ -30,8 +31,14 @@ class ReservationControllerTest {
                 )
         );
         fakeReservationService.toReturnReservations = reservations;
-        List<Reservation> result = reservationController.getReservations();
-        Assertions.assertThat(result).isSameAs(reservations);
+        List<ResponseReservation> result = reservationController.getReservations();
+
+        Assertions.assertThat(result).hasSize(1);
+        Assertions.assertThat(result.get(0).id()).isEqualTo(1L);
+        Assertions.assertThat(result.get(0).name()).isEqualTo("브라운");
+        Assertions.assertThat(result.get(0).date()).isEqualTo(LocalDate.of(2026, 5, 10));
+        Assertions.assertThat(result.get(0).time().id()).isEqualTo(1L);
+        Assertions.assertThat(result.get(0).time().startAt()).isEqualTo(LocalTime.of(10, 0));
     }
 
     @Test
@@ -43,12 +50,16 @@ class ReservationControllerTest {
         );
         fakeReservationService.toReturn = created;
 
-        Reservation result = reservationController.createReservation(request);
+        ResponseReservation result = reservationController.createReservation(request);
 
         Assertions.assertThat(fakeReservationService.capturedName).isEqualTo("브라운");
         Assertions.assertThat(fakeReservationService.capturedDate).isEqualTo(LocalDate.of(2026, 5, 10));
         Assertions.assertThat(fakeReservationService.capturedTimeId).isEqualTo(1L);
-        Assertions.assertThat(result).isSameAs(created);
+        Assertions.assertThat(result.id()).isEqualTo(99L);
+        Assertions.assertThat(result.name()).isEqualTo("브라운");
+        Assertions.assertThat(result.date()).isEqualTo(LocalDate.of(2026, 5, 10));
+        Assertions.assertThat(result.time().id()).isEqualTo(1L);
+        Assertions.assertThat(result.time().startAt()).isEqualTo(LocalTime.of(10, 0));
     }
 
     @Test

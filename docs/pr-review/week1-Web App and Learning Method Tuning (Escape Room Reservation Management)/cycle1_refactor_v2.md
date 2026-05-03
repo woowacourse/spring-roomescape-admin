@@ -14,6 +14,6 @@
   - `ReservationTimeService.delete()`에서 삭제 전 `existsByTimeId()` 확인 후 예외 처리
 - [x] **4. `ReservationTime` 생성자에 도메인 검증 추가**
   - `startAt`이 null이면 `IllegalArgumentException` 발생
-- [ ] **5. 패키지명 소문자로 수정**
+- [x] **5. 패키지명 소문자로 수정**
   - `roomescape.reservationTime` → `roomescape.reservationtime`
   - `roomescape.reservationTime.dto` → `roomescape.reservationtime.dto`

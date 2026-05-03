@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.junit.jupiter.api.Test;
-import roomescape.reservationTime.ReservationTime;
+import roomescape.reservationtime.ReservationTime;
 
 class ReservationTest {
 

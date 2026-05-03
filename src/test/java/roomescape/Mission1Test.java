@@ -57,4 +57,19 @@ class Mission1Test {
                 .statusCode(200)
                 .body("size()", is(0));
     }
+
+    @Test
+    void 없는_예약시간으로_예약저장시_404_에러() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("timeId", 1L);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(404);
+    }
 }

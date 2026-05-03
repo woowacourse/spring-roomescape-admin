@@ -53,7 +53,7 @@ class JdbcTemplateReservationTimeRepositoryTest {
     void id로_시간을_조회한다() {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", "10:00");
 
-        ReservationTime time = reservationTimeRepository.findById(1L);
+        ReservationTime time = reservationTimeRepository.findById(1L).get();
 
         assertThat(time.id()).isEqualTo(1L);
         assertThat(time.startAt()).isEqualTo(LocalTime.of(10, 0));

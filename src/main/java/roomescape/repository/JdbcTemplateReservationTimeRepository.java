@@ -1,5 +1,6 @@
 package roomescape.repository;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -9,6 +10,7 @@ import roomescape.domain.ReservationTime;
 import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class JdbcTemplateReservationTimeRepository implements ReservationTimeRepository {
@@ -48,12 +50,17 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
     }
 
     @Override
-    public ReservationTime findById(Long id) {
-        return jdbcTemplate.queryForObject(
-                "SELECT id, start_at FROM reservation_time WHERE id = ?",
-                (rs, rowNum) -> new ReservationTime(
-                        rs.getLong("id"),
-                        rs.getTime("start_at").toLocalTime()
-                ), id);
+    public Optional<ReservationTime> findById(Long id) {
+        try {
+            ReservationTime reservationTime = jdbcTemplate.queryForObject(
+                    "SELECT id, start_at FROM reservation_time WHERE id = ?",
+                    (rs, rowNum) -> new ReservationTime(
+                            rs.getLong("id"),
+                            rs.getTime("start_at").toLocalTime()
+                    ), id);
+            return Optional.ofNullable(reservationTime);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

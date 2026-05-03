@@ -26,17 +26,8 @@ public class ConsoleConfig {
     }
 
     @Bean
-    public ReservationService reservationService() {
-        return new ReservationService(reservationRepository(), reservationTimeRepository());
-    }
-
-    @Bean
-    public ReservationTimeService reservationTimeService() {
-        return new ReservationTimeService(reservationTimeRepository());
-    }
-
-    @Bean
-    public CommandLineRunner commandLineRunner() {
-        return new ReservationConsoleController(reservationService(), reservationTimeService());
+    public CommandLineRunner commandLineRunner(ReservationService reservationService,
+                                               ReservationTimeService reservationTimeService) {
+        return new ReservationConsoleController(reservationService, reservationTimeService);
     }
 }

@@ -1,9 +1,7 @@
 package roomescape.repository;
 
 import java.util.List;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public interface CommonRepository<T> {
     List<T> findAll();
 

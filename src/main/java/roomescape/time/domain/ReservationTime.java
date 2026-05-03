@@ -22,14 +22,6 @@ public class ReservationTime {
         return new ReservationTime(timeId, startAt);
     }
 
-    public Long id() {
-        return id;
-    }
-
-    public LocalTime startAt() {
-        return startAt;
-    }
-
     private static void validateStartAt(LocalTime startAt) {
         if (startAt == null) {
             throw new IllegalArgumentException("예약 시작 시간은 필수입니다.");
@@ -40,6 +32,14 @@ public class ReservationTime {
         if (timeId == null) {
             throw new IllegalArgumentException("예약 시간 ID는 필수입니다.");
         }
+    }
+
+    public Long id() {
+        return id;
+    }
+
+    public LocalTime startAt() {
+        return startAt;
     }
 
     @Override

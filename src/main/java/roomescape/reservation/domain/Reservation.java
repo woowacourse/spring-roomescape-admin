@@ -29,22 +29,6 @@ public class Reservation {
         return new Reservation(id, name, date, time);
     }
 
-    public Long id() {
-        return id;
-    }
-
-    public String name() {
-        return name;
-    }
-
-    public LocalDate date() {
-        return date;
-    }
-
-    public ReservationTime time() {
-        return time;
-    }
-
     private static void validate(String name, LocalDate date, ReservationTime time) {
         validateName(name);
         validateDate(date);
@@ -80,6 +64,22 @@ public class Reservation {
         if (id == null) {
             throw new IllegalArgumentException("예약 ID는 필수입니다.");
         }
+    }
+
+    public Long id() {
+        return id;
+    }
+
+    public String name() {
+        return name;
+    }
+
+    public LocalDate date() {
+        return date;
+    }
+
+    public ReservationTime time() {
+        return time;
     }
 
     @Override

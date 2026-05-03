@@ -37,4 +37,24 @@ public class GlobalExceptionHandlerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isEqualTo("테스트용 에러 메시지");
     }
+
+    @Test
+    @DisplayName("ReservationTimeNotFoundException이 발생하면 404 응답을 반환한다")
+    void return404_When_ReservationTimeNotFoundExceptionOccurred() {
+        ReservationTimeNotFoundException exception = new ReservationTimeNotFoundException("테스트용 에러 메시지");
+
+        ResponseEntity<String> response = handler.handle(exception);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    @DisplayName("ReservationTimeInUseException이 발생하면 400 응답을 반환한다")
+    void return400_When_ReservationTimeInUseExceptionOccurred() {
+        ReservationTimeInUseException exception = new ReservationTimeInUseException("테스트용 에러 메시지");
+
+        ResponseEntity<String> response = handler.handle(exception);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
 }

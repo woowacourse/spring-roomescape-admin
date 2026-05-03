@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.entity.ReservationTime;
+import roomescape.reservation.exception.ReservationTimeNotFoundException;
 
 @Repository
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
@@ -53,7 +54,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
 
         int affectedRows = jdbcTemplate.update(sql, id);
         if (affectedRows == 0) {
-            throw new IllegalArgumentException("존재하지 않는 예약 시간입니다. id=" + id);
+            throw new ReservationTimeNotFoundException(id);
         }
     }
 

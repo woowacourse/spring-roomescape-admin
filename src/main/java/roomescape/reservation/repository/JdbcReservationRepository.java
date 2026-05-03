@@ -13,6 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
+import roomescape.reservation.exception.ReservationNotFoundException;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
@@ -81,7 +82,7 @@ public class JdbcReservationRepository implements ReservationRepository {
 
         int affectedRows = jdbcTemplate.update(sql, id);
         if (affectedRows == 0) {
-            throw new IllegalArgumentException("존재하지 않는 예약입니다. id=" + id);
+            throw new ReservationNotFoundException(id);
         }
     }
 

@@ -21,7 +21,7 @@ public class ReservationService {
     }
 
     public List<Reservation> allReservations() {
-        return reservationRepository.findAllJoinedDto();
+        return reservationRepository.findAll();
     }
 
     public Reservation saveReservation(String name, LocalDate date, Long reservationTimeId) {

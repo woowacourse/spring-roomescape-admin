@@ -2,6 +2,7 @@ package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
@@ -62,12 +63,7 @@ public class JdbcReservationDao implements ReservationDao {
         }, keyHolder);
 
         long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
-        return new Reservation(
-                id,
-                reservation.getName(),
-                reservation.getDate(),
-                reservation.getTime()
-        );
+        return toEntity(reservation, id);
     }
 
     @Override
@@ -75,6 +71,15 @@ public class JdbcReservationDao implements ReservationDao {
         String sql = "delete from reservation where id = ?";
         int deletedRow = jdbcTemplate.update(sql, id);
         return deletedRow > 0;
+    }
+
+    private Reservation toEntity(Reservation reservation, long id) {
+        return new Reservation(
+                id,
+                reservation.getName(),
+                reservation.getDate(),
+                reservation.getTime()
+        );
     }
 
 }

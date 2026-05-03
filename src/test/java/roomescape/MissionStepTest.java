@@ -24,7 +24,10 @@ public class MissionStepTest {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
+
+//                기존 미션 상태 코드
+//                .statusCode(200);
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -35,7 +38,10 @@ public class MissionStepTest {
         RestAssured.given().log().all()
                 .when().delete("/times/1")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(204);
+
+//                기존 미션 상태 코드
+//                .statusCode(200);
     }
 
     @Test
@@ -49,7 +55,10 @@ public class MissionStepTest {
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
+
+//               기존 미션 상태 코드
+//                .statusCode(200);
 
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
@@ -61,7 +70,11 @@ public class MissionStepTest {
                 .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(201);
+
+//                기존 미션 상태 코드
+//                .statusCode(200);
+
 
         RestAssured.given().log().all()
                 .when().get("/reservations")

@@ -24,7 +24,7 @@ public class TimeService {
     }
 
     public TimeResponseDTO saveTime(TimeCreateRequestDTO requestDTO) {
-        Time time = new Time(requestDTO.startAt());
+        Time time = Time.create(requestDTO.startAt());
         return timeRepository.save(time).toResponseDTO();
     }
 

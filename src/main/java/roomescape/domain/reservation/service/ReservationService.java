@@ -38,7 +38,7 @@ public class ReservationService {
 
     private Reservation createReservation(ReservationCreateRequestDTO requestDTO) {
         Time time = timeRepository.findTimeById(requestDTO.timeId());
-        return new Reservation(requestDTO.name(), requestDTO.date(), time);
+        return Reservation.create(requestDTO.name(), requestDTO.date(), time);
     }
 
     public void deleteReservationById(Long id) {

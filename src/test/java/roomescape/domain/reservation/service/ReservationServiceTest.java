@@ -37,11 +37,13 @@ class ReservationServiceTest {
 
             // given
             LocalDate date = LocalDate.of(2026, 4, 30);
-            Time time = new Time(1L, LocalTime.of(10, 0));
+            Time time = Time.reconstruct(1L, LocalTime.of(10, 0));
 
-            reservationRepository.save(new Reservation("제이콥", date, time));
-            reservationRepository.save(new Reservation("라이", date.plusDays(1), new Time(2L, LocalTime.of(11, 0))));
-            reservationRepository.save(new Reservation("티모", date.plusDays(2), new Time(3L, LocalTime.of(12, 0))));
+            reservationRepository.save(Reservation.create("제이콥", date, time));
+            reservationRepository.save(
+                Reservation.create("라이", date.plusDays(1), Time.reconstruct(2L, LocalTime.of(11, 0))));
+            reservationRepository.save(
+                Reservation.create("티모", date.plusDays(2), Time.reconstruct(3L, LocalTime.of(12, 0))));
 
             // when
             List<ReservationResponseDTO> actual = reservationService.getReservations();
@@ -52,12 +54,12 @@ class ReservationServiceTest {
                 () -> assertEquals(new ReservationResponseDTO(1L, "제이콥", date, time.toResponseDTO()), actual.get(0)),
                 () -> assertEquals(
                     new ReservationResponseDTO(2L, "라이", date.plusDays(1),
-                        new Time(2L, LocalTime.of(11, 0)).toResponseDTO()),
+                        Time.reconstruct(2L, LocalTime.of(11, 0)).toResponseDTO()),
                     actual.get(1)
                 ),
                 () -> assertEquals(
                     new ReservationResponseDTO(3L, "티모", date.plusDays(2),
-                        new Time(3L, LocalTime.of(12, 0)).toResponseDTO()),
+                        Time.reconstruct(3L, LocalTime.of(12, 0)).toResponseDTO()),
                     actual.get(2)
                 )
             );
@@ -76,7 +78,7 @@ class ReservationServiceTest {
                 LocalDate.of(2026, 5, 1),
                 1L
             );
-            timeRepository.save(new Time(LocalTime.of(15, 30)));
+            timeRepository.save(Time.create(LocalTime.of(15, 30)));
 
             // when
             ReservationResponseDTO actual = reservationService.saveReservation(request);
@@ -86,7 +88,7 @@ class ReservationServiceTest {
                 () -> assertEquals(1L, actual.id()),
                 () -> assertEquals("보예", actual.name()),
                 () -> assertEquals(LocalDate.of(2026, 5, 1), actual.date()),
-                () -> assertEquals(new Time(1L, LocalTime.of(15, 30)).toResponseDTO(), actual.time()),
+                () -> assertEquals(Time.reconstruct(1L, LocalTime.of(15, 30)).toResponseDTO(), actual.time()),
                 () -> assertEquals(List.of(actual), reservationService.getReservations())
             );
         }
@@ -100,10 +102,10 @@ class ReservationServiceTest {
 
             // given
             Reservation savedReservation = reservationRepository.save(
-                new Reservation("제이슨", LocalDate.of(2026, 5, 2), new Time(1L, LocalTime.of(12, 0)))
+                Reservation.create("제이슨", LocalDate.of(2026, 5, 2), Time.reconstruct(1L, LocalTime.of(12, 0)))
             );
             reservationRepository.save(
-                new Reservation("시오", LocalDate.of(2026, 5, 3), new Time(2L, LocalTime.of(13, 0))));
+                Reservation.create("시오", LocalDate.of(2026, 5, 3), Time.reconstruct(2L, LocalTime.of(13, 0))));
 
             // when
             reservationService.deleteReservationById(savedReservation.getId());

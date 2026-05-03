@@ -32,9 +32,9 @@ class TimeServiceTest {
             // given
             LocalTime startAt = LocalTime.of(10, 0);
 
-            timeRepository.save(new Time(startAt));
-            timeRepository.save(new Time(startAt.plusHours(1)));
-            timeRepository.save(new Time(startAt.plusHours(2)));
+            timeRepository.save(Time.create(startAt));
+            timeRepository.save(Time.create(startAt.plusHours(1)));
+            timeRepository.save(Time.create(startAt.plusHours(2)));
 
             // when
             List<TimeResponseDTO> actual = timeService.getTimes();
@@ -77,8 +77,8 @@ class TimeServiceTest {
         void 성공() {
 
             // given
-            Time savedTime = timeRepository.save(new Time(LocalTime.of(12, 0)));
-            timeRepository.save(new Time(LocalTime.of(13, 0)));
+            Time savedTime = timeRepository.save(Time.create(LocalTime.of(12, 0)));
+            timeRepository.save(Time.create(LocalTime.of(13, 0)));
 
             // when
             timeService.deleteTimeById(savedTime.getId());

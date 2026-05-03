@@ -11,14 +11,7 @@ public class Reservation {
     private final LocalDate date;
     private final Time time;
 
-    public Reservation(String name, LocalDate date, Time time) {
-        this.id = null;
-        this.name = name;
-        this.date = date;
-        this.time = time;
-    }
-
-    public Reservation(Long id, String name, LocalDate date, Time time) {
+    private Reservation(Long id, String name, LocalDate date, Time time) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -47,5 +40,13 @@ public class Reservation {
 
     public ReservationResponseDTO toResponseDTO() {
         return new ReservationResponseDTO(id, name, date, time.toResponseDTO());
+    }
+
+    public static Reservation create(String name, LocalDate date, Time time) {
+        return new Reservation(null, name, date, time);
+    }
+
+    public static Reservation reconstruct(Long id, String name, LocalDate date, Time time) {
+        return new Reservation(id, name, date, time);
     }
 }

@@ -9,12 +9,7 @@ public class Time {
     private final Long id;
     private final LocalTime startAt;
 
-    public Time(LocalTime startAt) {
-        this.id = null;
-        this.startAt = startAt;
-    }
-
-    public Time(Long id, LocalTime startAt) {
+    private Time(Long id, LocalTime startAt) {
         this.id = id;
         this.startAt = startAt;
     }
@@ -30,5 +25,13 @@ public class Time {
 
     public TimeResponseDTO toResponseDTO() {
         return new TimeResponseDTO(id, startAt);
+    }
+
+    public static Time create(LocalTime startAt) {
+        return new Time(null, startAt);
+    }
+
+    public static Time reconstruct(Long id, LocalTime startAt) {
+        return new Time(id, startAt);
     }
 }

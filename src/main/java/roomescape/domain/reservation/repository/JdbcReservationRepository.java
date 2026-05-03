@@ -66,11 +66,11 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     private Reservation mapReservation(java.sql.ResultSet rs) throws java.sql.SQLException {
-        return new Reservation(
+        return Reservation.reconstruct(
             rs.getLong("id"),
             rs.getString("name"),
             rs.getDate("date").toLocalDate(),
-            new Time(
+            Time.reconstruct(
                 rs.getLong("time_id"),
                 LocalTime.parse(rs.getString("start_at"))
             )

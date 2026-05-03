@@ -19,7 +19,8 @@ public class FakeReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation save(Reservation reservation) {
-        Reservation savedReservation = new Reservation(id.addAndGet(1), reservation.getName(), reservation.getDate(),
+        Reservation savedReservation = Reservation.reconstruct(id.addAndGet(1), reservation.getName(),
+            reservation.getDate(),
             reservation.getTime());
         reservations.add(savedReservation);
         return savedReservation;

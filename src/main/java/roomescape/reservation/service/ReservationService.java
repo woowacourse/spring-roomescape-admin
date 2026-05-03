@@ -1,0 +1,40 @@
+package roomescape.reservation.service;
+
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import roomescape.reservation.domain.Reservation;
+import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.dto.ReservationResponse;
+import roomescape.reservation.repository.ReservationRepository;
+import roomescape.reservationtime.domain.ReservationTime;
+import roomescape.reservationtime.repository.ReservationTimeRepository;
+
+@Service
+@RequiredArgsConstructor
+public class ReservationService {
+    private final ReservationRepository reservationRepository;
+    private final ReservationTimeRepository reservationTimeRepository;
+
+    public List<ReservationResponse> findAllReservations() {
+        List<Reservation> reservations = reservationRepository.findAllReservations();
+
+        return reservations.stream()
+                .map(ReservationResponse::from)
+                .toList();
+    }
+
+    public ReservationResponse saveReservation(ReservationRequest reservationRequest) {
+        ReservationTime time = reservationTimeRepository.findById(reservationRequest.timeId());
+        Reservation reservation = reservationRequest.toEntity(time);
+        Reservation createdReservation = reservationRepository.saveReservation(reservation);
+        return ReservationResponse.from(createdReservation);
+    }
+
+    public void deleteById(Long id) {
+        int deletedRows = reservationRepository.deleteById(id);
+        if(deletedRows == 0) {
+            throw new IllegalArgumentException("[ERROR] 해당 ID의 예약이 없습니다");
+        }
+    }
+}

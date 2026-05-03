@@ -27,12 +27,18 @@ public class ReservationService {
         return reservationDao.findAll();
     }
 
+    @Transactional(readOnly = true)
+    public Reservation findById(Long id) {
+        return reservationDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
+    }
+
     public Reservation create(ReservationRequestDto reservationRequest) {
         Time timeById = timeDao.findById(reservationRequest.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다."));
 
         Reservation reservation = new Reservation(reservationRequest.name(), reservationRequest.date(), timeById);
-        Long id = reservationDao.insert(reservation)s;
+        Long id = reservationDao.insert(reservation);
 
         return reservationDao.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));

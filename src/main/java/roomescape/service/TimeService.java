@@ -23,6 +23,13 @@ public class TimeService {
         return timeDao.findAll();
     }
 
+
+    @Transactional(readOnly = true)
+    public Time findById(Long id) {
+        return timeDao.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다."));
+    }
+
     public Time create(TimeRequestDto timeRequest) {
         Time time = new Time(timeRequest.startAt());
         Long id = timeDao.insert(time);

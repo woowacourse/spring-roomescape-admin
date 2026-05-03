@@ -1,4 +1,4 @@
-package roomescape.reservation;
+package roomescape.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
 @Import(ReservationUpdatingRepository.class)
-public class UpdatingDaoTest {
+public class ReservationUpdatingRepositoryTest {
 
     @Autowired
     private ReservationUpdatingRepository reservationUpdatingRepository;

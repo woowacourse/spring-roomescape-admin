@@ -48,6 +48,9 @@ public class Reservation {
 
     @Override
     public int hashCode() {
-        return (id == null) ? 0 : id.hashCode();
+        if (id == null) {
+            return System.identityHashCode(this);
+        }
+        return id.hashCode();
     }
 }

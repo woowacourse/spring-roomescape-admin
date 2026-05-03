@@ -24,4 +24,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleDateTimeParse(DateTimeParseException e) {
         return ResponseEntity.badRequest().body("날짜 또는 시간 형식이 올바르지 않습니다.");
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception e) {
+        return ResponseEntity.internalServerError().body("서버 오류가 발생했습니다.");
+    }
 }

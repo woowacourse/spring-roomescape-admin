@@ -23,10 +23,10 @@ public class ReservationTimeController {
     private final ReservationTimeService reservationTimeService;
 
     @PostMapping
-    public ReservationTimeResponse createTime(@RequestBody CreateReservationTimeRequest request) {
+    public ResponseEntity<ReservationTimeResponse> createTime(@RequestBody CreateReservationTimeRequest request) {
         final long id = reservationTimeService.createTime(LocalTime.parse(request.startAt()));
 
-        return new ReservationTimeResponse(id, request.startAt());
+        return ResponseEntity.ok(new ReservationTimeResponse(id, request.startAt()));
     }
 
     @GetMapping

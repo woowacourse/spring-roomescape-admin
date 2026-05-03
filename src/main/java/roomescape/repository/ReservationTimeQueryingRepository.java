@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class TimeQueryingRepository {
+public class ReservationTimeQueryingRepository {
     private JdbcTemplate jdbcTemplate;
 
-    public TimeQueryingRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeQueryingRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

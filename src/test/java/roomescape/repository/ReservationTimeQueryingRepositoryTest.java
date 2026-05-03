@@ -16,11 +16,11 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-@Import(TimeQueryingRepository.class)
-public class TimeQueryingRepositoryTest {
+@Import(ReservationTimeQueryingRepository.class)
+public class ReservationTimeQueryingRepositoryTest {
 
     @Autowired
-    private TimeQueryingRepository timeQueryingRepository;
+    private ReservationTimeQueryingRepository timeQueryingRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

@@ -7,8 +7,8 @@ import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequest;
 import roomescape.repository.ReservationQueryingRepository;
 import roomescape.repository.ReservationUpdatingRepository;
-import roomescape.repository.TimeQueryingRepository;
-import roomescape.repository.TimeUpdatingRepository;
+import roomescape.repository.ReservationTimeQueryingRepository;
+import roomescape.repository.ReservationTimeUpdatingRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -30,7 +30,7 @@ public class ReservationServiceTest {
             ReservationTime timeForFindById
     ) {
         ReservationTimeService timeService = new ReservationTimeService(
-                new TimeQueryingRepository(null) {
+                new ReservationTimeQueryingRepository(null) {
                     @Override
                     public Optional<ReservationTime> findById(Long id) {
                         return Optional.ofNullable(timeForFindById);
@@ -40,7 +40,7 @@ public class ReservationServiceTest {
                     @Override
                     public boolean existsByStartAt(LocalTime startAt) { return false; }
                 },
-                new TimeUpdatingRepository(null) {
+                new ReservationTimeUpdatingRepository(null) {
                     @Override
                     public Long insert(ReservationTime reservationTime) { return null; }
                 }

@@ -9,10 +9,10 @@ import roomescape.domain.ReservationTime;
 import java.sql.PreparedStatement;
 
 @Repository
-public class TimeUpdatingRepository {
+public class ReservationTimeUpdatingRepository {
     private JdbcTemplate jdbcTemplate;
 
-    public TimeUpdatingRepository(JdbcTemplate jdbcTemplate) {
+    public ReservationTimeUpdatingRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

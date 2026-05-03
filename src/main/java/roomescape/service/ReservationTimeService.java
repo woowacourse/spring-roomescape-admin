@@ -1,8 +1,8 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
-import roomescape.repository.TimeQueryingRepository;
-import roomescape.repository.TimeUpdatingRepository;
+import roomescape.repository.ReservationTimeQueryingRepository;
+import roomescape.repository.ReservationTimeUpdatingRepository;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
 
@@ -11,10 +11,10 @@ import java.util.List;
 
 @Service
 public class ReservationTimeService {
-    private final TimeQueryingRepository timeQueryingRepository;
-    private final TimeUpdatingRepository timeUpdatingRepository;
+    private final ReservationTimeQueryingRepository timeQueryingRepository;
+    private final ReservationTimeUpdatingRepository timeUpdatingRepository;
 
-    public ReservationTimeService(TimeQueryingRepository timeQueryingRepository, TimeUpdatingRepository timeUpdatingRepository) {
+    public ReservationTimeService(ReservationTimeQueryingRepository timeQueryingRepository, ReservationTimeUpdatingRepository timeUpdatingRepository) {
         this.timeQueryingRepository = timeQueryingRepository;
         this.timeUpdatingRepository = timeUpdatingRepository;
     }

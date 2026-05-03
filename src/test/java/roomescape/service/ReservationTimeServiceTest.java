@@ -4,8 +4,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationTimeRequest;
-import roomescape.repository.TimeQueryingRepository;
-import roomescape.repository.TimeUpdatingRepository;
+import roomescape.repository.ReservationTimeQueryingRepository;
+import roomescape.repository.ReservationTimeUpdatingRepository;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -20,7 +20,7 @@ public class ReservationTimeServiceTest {
     @DisplayName("전체 예약 시간 조회 시 저장된 목록을 반환한다")
     void findAll() {
         ReservationTime stubTime = new ReservationTime(1L, LocalTime.of(10, 0));
-        TimeQueryingRepository queryingRepo = new TimeQueryingRepository(null) {
+        ReservationTimeQueryingRepository queryingRepo = new ReservationTimeQueryingRepository(null) {
             @Override
             public Optional<ReservationTime> findById(Long id) { return Optional.empty(); }
             @Override
@@ -28,7 +28,7 @@ public class ReservationTimeServiceTest {
             @Override
             public boolean existsByStartAt(LocalTime startAt) { return false; }
         };
-        ReservationTimeService service = new ReservationTimeService(queryingRepo, new TimeUpdatingRepository(null) {
+        ReservationTimeService service = new ReservationTimeService(queryingRepo, new ReservationTimeUpdatingRepository(null) {
             @Override
             public Long insert(ReservationTime reservationTime) { return null; }
         });
@@ -42,7 +42,7 @@ public class ReservationTimeServiceTest {
     @Test
     @DisplayName("존재하지 않는 시간 id 조회 시 예외가 발생한다")
     void findById_notFound() {
-        TimeQueryingRepository queryingRepo = new TimeQueryingRepository(null) {
+        ReservationTimeQueryingRepository queryingRepo = new ReservationTimeQueryingRepository(null) {
             @Override
             public Optional<ReservationTime> findById(Long id) { return Optional.empty(); }
             @Override
@@ -50,7 +50,7 @@ public class ReservationTimeServiceTest {
             @Override
             public boolean existsByStartAt(LocalTime startAt) { return false; }
         };
-        ReservationTimeService service = new ReservationTimeService(queryingRepo, new TimeUpdatingRepository(null) {
+        ReservationTimeService service = new ReservationTimeService(queryingRepo, new ReservationTimeUpdatingRepository(null) {
             @Override
             public Long insert(ReservationTime reservationTime) { return null; }
         });
@@ -63,7 +63,7 @@ public class ReservationTimeServiceTest {
     @Test
     @DisplayName("예약 시간을 정상적으로 저장하면 id가 포함된 객체를 반환한다")
     void save_success() {
-        TimeQueryingRepository queryingRepo = new TimeQueryingRepository(null) {
+        ReservationTimeQueryingRepository queryingRepo = new ReservationTimeQueryingRepository(null) {
             @Override
             public Optional<ReservationTime> findById(Long id) { return Optional.empty(); }
             @Override
@@ -71,7 +71,7 @@ public class ReservationTimeServiceTest {
             @Override
             public boolean existsByStartAt(LocalTime startAt) { return false; }
         };
-        TimeUpdatingRepository updatingRepo = new TimeUpdatingRepository(null) {
+        ReservationTimeUpdatingRepository updatingRepo = new ReservationTimeUpdatingRepository(null) {
             @Override
             public Long insert(ReservationTime reservationTime) { return 1L; }
         };
@@ -86,7 +86,7 @@ public class ReservationTimeServiceTest {
     @Test
     @DisplayName("이미 존재하는 시간 슬롯 저장 시 예외가 발생한다")
     void save_duplicate() {
-        TimeQueryingRepository queryingRepo = new TimeQueryingRepository(null) {
+        ReservationTimeQueryingRepository queryingRepo = new ReservationTimeQueryingRepository(null) {
             @Override
             public Optional<ReservationTime> findById(Long id) { return Optional.empty(); }
             @Override
@@ -94,7 +94,7 @@ public class ReservationTimeServiceTest {
             @Override
             public boolean existsByStartAt(LocalTime startAt) { return true; }
         };
-        ReservationTimeService service = new ReservationTimeService(queryingRepo, new TimeUpdatingRepository(null) {
+        ReservationTimeService service = new ReservationTimeService(queryingRepo, new ReservationTimeUpdatingRepository(null) {
             @Override
             public Long insert(ReservationTime reservationTime) { return null; }
         });
@@ -107,14 +107,14 @@ public class ReservationTimeServiceTest {
     @Test
     @DisplayName("예약 시간을 정상적으로 삭제하면 예외가 발생하지 않는다")
     void delete_success() {
-        TimeUpdatingRepository updatingRepo = new TimeUpdatingRepository(null) {
+        ReservationTimeUpdatingRepository updatingRepo = new ReservationTimeUpdatingRepository(null) {
             @Override
             public void delete(Long id) {}
             @Override
             public Long insert(ReservationTime reservationTime) { return null; }
         };
         ReservationTimeService service = new ReservationTimeService(
-                new TimeQueryingRepository(null) {
+                new ReservationTimeQueryingRepository(null) {
                     @Override
                     public Optional<ReservationTime> findById(Long id) { return Optional.empty(); }
                     @Override

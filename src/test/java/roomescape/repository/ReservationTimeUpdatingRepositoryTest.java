@@ -14,11 +14,11 @@ import java.time.LocalTime;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @JdbcTest
-@Import(TimeUpdatingRepository.class)
-public class TimeUpdatingRepositoryTest {
+@Import(ReservationTimeUpdatingRepository.class)
+public class ReservationTimeUpdatingRepositoryTest {
 
     @Autowired
-    private TimeUpdatingRepository timeUpdatingRepository;
+    private ReservationTimeUpdatingRepository timeUpdatingRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

@@ -5,7 +5,7 @@
 ## ✅ 리팩토링 할 것 목록
 
 - [x] **1. Lombok 지우기**
-- [ ] **2. 도메인 검증을 DB 저장 이전에 실행되도록 수정**
+- [x] **2. 도메인 검증을 DB 저장 이전에 실행되도록 수정**
   - `Reservation`에 `static validate(name, date, time)` 메서드 추가
   - `ReservationService.save()`에서 `reservationDao.save()` 호출 전에 `Reservation.validate()` 먼저 호출
 - [ ] **3. 사용 중인 예약 시간 삭제 방지**

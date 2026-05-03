@@ -26,6 +26,7 @@ public class ReservationService {
     public ReservationResponse save(ReservationRequest request) {
         ReservationTime time = reservationTimeDao.findById(request.timeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간입니다."));
+        Reservation.validate(request.name(), request.date(), time);
         Long id = reservationDao.save(request.name(), request.date(), request.timeId());
         return ReservationResponse.from(new Reservation(id, request.name(), request.date(), time));
     }

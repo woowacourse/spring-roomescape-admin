@@ -21,14 +21,13 @@ class ReservationTest {
     }
 
     @Test
-    @DisplayName("과거 날짜로 예약을 생성하면 예외가 발생한다.")
-    void validateDate_Past() {
-        ReservationTime time = new ReservationTime(1L, LocalTime.of(10, 0));
+    @DisplayName("DB에서 조회한 과거 날짜 데이터로 객체를 생성할 때는 예외가 발생하지 않는다.")
+    void validateDate_Past_Success() {
+        ReservationTime time = new ReservationTime(1L, java.time.LocalTime.of(10, 0));
         LocalDate pastDate = LocalDate.now().minusDays(1);
 
-        assertThatThrownBy(() -> new Reservation(1L, "브라운", pastDate, time))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("과거 날짜는 예약할 수 없습니다.");
+        assertThatCode(() -> new Reservation(1L, "브라운", pastDate, time))
+                .doesNotThrowAnyException();
     }
 
     @Test

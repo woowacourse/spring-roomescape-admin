@@ -37,3 +37,15 @@ DELETE http://localhost:8080/reservations/1
 ### 6. 예약 시간 삭제 (DELETE)
 # id가 1인 예약 시간을 삭제합니다. (엮여있는 예약이 없어야 삭제 가능)
 DELETE http://localhost:8080/times/1
+
+### 7. 과거 날짜 예약 생성 시도 (예외 발생)
+# @name createReservationWithPastDate
+# 400 Bad Request와 JSON 에러 메시지 응답을 기대합니다.
+POST http://localhost:8080/reservations
+Content-Type: application/json
+
+{
+  "name": "브라운",
+  "date": "2000-01-01",
+  "timeId": 1
+}

@@ -37,7 +37,7 @@ public class ReservationController {
     public ResponseEntity<ReservationResponseDto> create(@RequestBody ReservationRequestDto dto) {
         Reservation savedReservation = reservationService.save(dto);
         ReservationResponseDto response = ReservationResponseDto.from(savedReservation);
-        return ResponseEntity.ok(ReservationResponseDto.from(savedReservation));
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")

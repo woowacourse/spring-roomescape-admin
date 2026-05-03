@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import roomescape.reservationtime.ReservationTime;
 import roomescape.service.ReservationTimeService;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -31,7 +32,8 @@ public class ReservationTimeController {
     @PostMapping("/times")
     public ResponseEntity<ReservationTime> create(@RequestBody ReservationTime reservationTime) {
         ReservationTime newReservationTime = reservationTimeService.create(reservationTime);
-        return ResponseEntity.ok().body(newReservationTime);
+        URI uri = URI.create("/times/" + newReservationTime.getId());
+        return ResponseEntity.created(uri).body(newReservationTime);
     }
 
     @PutMapping("/times/{id}")
@@ -43,6 +45,6 @@ public class ReservationTimeController {
     @DeleteMapping("/times/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         reservationTimeService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

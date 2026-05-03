@@ -13,6 +13,7 @@ import roomescape.reservation.ReservationRequest;
 import roomescape.reservation.ReservationResponse;
 import roomescape.service.ReservationService;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -32,7 +33,8 @@ public class ReservationController {
     @PostMapping("/reservations")
     public ResponseEntity<Reservation> create(@RequestBody ReservationRequest reservationReq) {
         Reservation newReservation = reservationService.create(reservationReq);
-        return ResponseEntity.ok().body(newReservation);
+        URI uri = URI.create("/reservations/" + newReservation.getId());
+        return ResponseEntity.created(uri).body(newReservation);
     }
 
     @PutMapping("/reservations/{id}")
@@ -44,6 +46,6 @@ public class ReservationController {
     @DeleteMapping("/reservations/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         reservationService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

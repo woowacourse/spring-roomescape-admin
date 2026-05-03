@@ -8,11 +8,11 @@
 
 ### 어떤 부분에 집중하여 리뷰해야 할까요?
 
-####                    
+####                        
 
 ---
 
-####                    
+####                        
 
 ## `마치며`
 
@@ -178,9 +178,46 @@ OOP 의 근본적 목적인 유지보수 측면에 중점을 두도록 노력하
 
 ### 📝 Feedback 2-05
 
+아래와 같은 방식으로, controller에서 두번 조회하는 걸 막자는 의미였습니다.
+
+```suggestion
+    public Reservation saveReservation(String name, LocalDate date, Long reservationTimeId) {
+        Reservation transientReservation = Reservation.transientOf(name, date, reservationTimeId);
+        long reservationId = reservationRepository.save(transientReservation);
+
+        /**
+         * 1.transientReservation에 reservationId를 삽입하거나.
+         * 2. reservationRepository.save에서 ID까지 저장된 newReservation을 반환하거나.
+         */
+        Reservation identifiedReservation = ...
+
+        return identifiedReservation;
+    }
+```
+
 ### 💬 Apply 2-05
 
-####                    
+#### 중복 조회 로직 제거
+
+[피드백 6](https://github.com/woowacourse/spring-roomescape-admin/pull/452#discussion_r3177320680) 에서 제안해 주신 대로 구조를 변경하고,  
+재조회 대신 비영속 도메인 객체의 값을 활용하도록 수정했습니다.
+
+```java
+public Reservation saveReservation(String name, LocalDate date, Long reservationTimeId) {
+    ReservationTime reservationTime = reservationTimeRepository.findById(reservationTimeId);
+    Reservation transientReservation = Reservation.transientOf(name, date, reservationTime);
+    return reservationRepository.save(transientReservation);
+}
+...
+
+@Override
+public Reservation save(Reservation reservation) {
+    SimpleJdbcInsert insert = createInsert();
+    Map<String, Object> params = createParams(reservation);
+    long reservationId = insert.executeAndReturnKey(params).longValue();
+    return new Reservation(reservationId, reservation.name(), reservation.date(), reservation.reservationTime());
+}
+```
 
 ---
 
@@ -188,7 +225,7 @@ OOP 의 근본적 목적인 유지보수 측면에 중점을 두도록 노력하
 
 ### 💬 Apply 2-06
 
-####                    
+####                        
 
 ---
 
@@ -196,7 +233,7 @@ OOP 의 근본적 목적인 유지보수 측면에 중점을 두도록 노력하
 
 ### 💬 Apply 2-07
 
-####                    
+####                        
 
 ---
 
@@ -204,4 +241,4 @@ OOP 의 근본적 목적인 유지보수 측면에 중점을 두도록 노력하
 
 ### 💬 Apply 2-08
 
-####                    
+####                        

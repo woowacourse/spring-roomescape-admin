@@ -29,6 +29,11 @@ public class DummyController {
         return ResponseEntity.ok(data);
     }
 
+    @GetMapping("/business")
+    public ResponseEntity<Long> business() {
+        throw new IllegalArgumentException("비즈니스 예외");
+    }
+
     @GetMapping("/entityNotFound")
     public ResponseEntity<Long> entityNotFound() {
         throw new EntityNotFoundException("데이터 없음");

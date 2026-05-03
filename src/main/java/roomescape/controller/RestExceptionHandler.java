@@ -20,6 +20,12 @@ import roomescape.domain.EntityNotFoundException;
 @Slf4j
 public class RestExceptionHandler {
 
+    @ExceptionHandler(value = {IllegalArgumentException.class, IllegalStateException.class})
+    public ResponseEntity<String> handleDuplicateEntityException(RuntimeException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ex.getMessage());
+    }
+
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleNotFoundException(EntityNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)

@@ -118,6 +118,17 @@ public class RestExceptionHandlerTest {
     }
 
     @Test
+    void 비즈니스_예외() {
+        // when & then
+        RestAssuredMockMvc.given().log().all()
+                .contentType(MediaType.APPLICATION_JSON)
+                .when().get("/dummy/business")
+                .then().log().all()
+                .status(HttpStatus.BAD_REQUEST)
+                .body(containsString("비즈니스 예외"));
+    }
+
+    @Test
     void 엔티티_못찾을_경우_상태_404() {
         // when & then
         RestAssuredMockMvc.given().log().all()
@@ -149,7 +160,6 @@ public class RestExceptionHandlerTest {
                 .status(HttpStatus.CONFLICT)
                 .body(containsString("요청 처리 중 데이터 충돌이 발생했습니다. 다시 시도 해주세요."));
     }
-
 
     @Test
     void 나머지_예외는_서버_예외() {

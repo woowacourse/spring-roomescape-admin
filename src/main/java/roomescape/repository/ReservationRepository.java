@@ -16,6 +16,7 @@ public class ReservationRepository {
             resultSet.getString("name"),
             resultSet.getString("date"),
             ReservationTime.of(resultSet.getLong("time_id"), resultSet.getString("start_at")));
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 

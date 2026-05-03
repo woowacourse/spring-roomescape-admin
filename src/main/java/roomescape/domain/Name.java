@@ -8,6 +8,7 @@ public class Name {
     private static final String INVALID_NAME_LENGTH = String.format("이름 길이는 %d ~ %d자여야 합니다.", MIN_NAME_LENGTH,
             MAX_NAME_LENGTH);
     public static final String NAME_SHOULD_NOT_BE_NULL = "이름이 입력되어야 합니다.";
+
     private final String value;
 
     private Name(String value) {

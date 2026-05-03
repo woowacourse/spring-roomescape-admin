@@ -41,7 +41,6 @@ public class ReservationTimeController {
         return ResponseEntity.ok(reservationTimeService.findAll());
     }
 
-
     @DeleteMapping("/times/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         try {

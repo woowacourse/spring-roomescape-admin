@@ -1,6 +1,7 @@
 package roomescape.reservation.controller;
 
 import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,11 +38,16 @@ public class ReservationController {
     public ResponseEntity<ReservationResponseDto> create(@RequestBody ReservationRequestDto dto) {
         Reservation savedReservation = reservationService.save(dto);
         ReservationResponseDto response = ReservationResponseDto.from(savedReservation);
-        return ResponseEntity.ok(response);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         reservationService.deleteById(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

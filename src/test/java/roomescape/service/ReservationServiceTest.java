@@ -85,8 +85,8 @@ class ReservationServiceTest {
     void 모든_예약_목록을_조회한다() {
         // given: 2개의 예약이 저장되어 있음
         ReservationTime time = reservationTimeRepository.save(new ReservationTime(LocalTime.of(10, 0)));
-        reservationRepository.save(new Reservation("이프", LocalDate.now(), time));
-        reservationRepository.save(new Reservation("아루", LocalDate.now(), time));
+        reservationRepository.save(new Reservation("이프", LocalDate.now().plusDays(1), time));
+        reservationRepository.save(new Reservation("아루", LocalDate.now().plusDays(2), time));
 
         // when: 전체 조회를 요청함
         List<ReservationResult> results = reservationService.getAllReservations();
@@ -99,7 +99,7 @@ class ReservationServiceTest {
     void 식별자를_이용해_예약을_취소한다() {
         // given: 취소할 예약이 저장되어 있음
         ReservationTime time = reservationTimeRepository.save(new ReservationTime(LocalTime.of(10, 0)));
-        Reservation saved = reservationRepository.save(new Reservation("이프", LocalDate.now(), time));
+        Reservation saved = reservationRepository.save(new Reservation("이프", LocalDate.now().plusDays(1), time));
 
         // when: 삭제 요청
         reservationService.cancelReservation(saved.getId());

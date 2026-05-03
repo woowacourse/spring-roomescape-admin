@@ -1,5 +1,6 @@
 package roomescape.dao;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -34,8 +35,13 @@ public class ReservationTimeDAO {
     }
 
     public ReservationTime findReservationTimeById(Long id) {
-        String sql = "SELECT id, start_at FROM reservation_time WHERE  id=?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        try {
+            String sql = "SELECT id, start_at FROM reservation_time WHERE  id=?";
+            return jdbcTemplate.queryForObject(sql, rowMapper, id);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+
     }
 
     public List<ReservationTime> findAllReservationTime() {

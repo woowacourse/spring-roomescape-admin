@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.exception.ReservationNotFoundException;
 import roomescape.reservation.ReservationQueryingDao;
 import roomescape.reservation.Reservation;
@@ -33,6 +34,7 @@ public class ReservationService {
                 .toList();
     }
 
+    @Transactional
     public Reservation create(ReservationRequest reservationReq) {
         Long generatedId = reservationUpdatingDao.insert(reservationReq);
         return reservationQueryingDao.findReservationById(generatedId);

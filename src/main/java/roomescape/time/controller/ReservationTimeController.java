@@ -17,14 +17,14 @@ public class ReservationTimeController {
         this.reservationTimeService = reservationTimeService;
     }
 
-    @PostMapping
-    public ReservationTime createTime(@RequestBody RequestReservationTime request) {
-        return reservationTimeService.createTime(request.startAt());
-    }
-
     @GetMapping
     public List<ReservationTime> getTimes() {
         return reservationTimeService.getTimes();
+    }
+
+    @PostMapping
+    public ReservationTime createTime(@RequestBody RequestReservationTime request) {
+        return reservationTimeService.createTime(request.startAt());
     }
 
     @DeleteMapping("/{id}")

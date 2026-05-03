@@ -1,6 +1,5 @@
 package roomescape.time.domain;
 
-
 import java.time.LocalTime;
 
 public class ReservationTime {

@@ -37,7 +37,7 @@ public class ReservationTimeRepository {
     }
 
     public ReservationTime save(LocalTime startAt) {
-        String sql = "INSERT INTO reservation_time (start_At) VALUES (?)";
+        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -56,7 +56,7 @@ public class ReservationTimeRepository {
     }
 
     private RowMapper<ReservationTime> reservationTimeRowsMapper() {
-        return (rs, rowNum) ->  new ReservationTime(
+        return (rs, rowNum) -> new ReservationTime(
                     rs.getLong("id"),
                     LocalTime.parse(rs.getString("start_at"))
         );

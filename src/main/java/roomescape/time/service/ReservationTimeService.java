@@ -2,16 +2,17 @@ package roomescape.time.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservation.repository.ReservationJdbcDao;
 import roomescape.time.domain.ReservationTime;
 import roomescape.time.repository.ReservationTimeJdbcDao;
 
 @Service
+@Transactional
 public class ReservationTimeService {
 
     private final ReservationJdbcDao reservationJdbcDao;
-
     private final ReservationTimeJdbcDao reservationTimeJdbcDao;
 
     public ReservationTimeService(ReservationJdbcDao reservationJdbcDao,
@@ -20,6 +21,7 @@ public class ReservationTimeService {
         this.reservationTimeJdbcDao = reservationTimeJdbcDao;
     }
 
+    @Transactional(readOnly = true)
     public List<ReservationTime> findAll() {
         return reservationTimeJdbcDao.findAll();
     }

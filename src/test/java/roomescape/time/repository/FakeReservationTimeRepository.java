@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
+import roomescape.common.exception.NotFoundException;
 import roomescape.time.domain.ReservationTime;
 
 public class FakeReservationTimeRepository implements ReservationTimeRepository {
@@ -35,7 +36,7 @@ public class FakeReservationTimeRepository implements ReservationTimeRepository 
     public void delete(Long id) {
         ReservationTime removed = store.remove(id);
         if (removed == null) {
-            throw new roomescape.common.exception.NotFoundException("예약 시간을 삭제할 수 없습니다.");
+            throw new NotFoundException("예약 시간을 삭제할 수 없습니다.");
         }
     }
 

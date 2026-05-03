@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import lombok.Getter;
+import roomescape.support.exception.ReservationTimeErrorCode;
 import roomescape.support.exception.RoomescapeErrorCode;
 import roomescape.support.exception.RoomescapeException;
 
@@ -41,7 +42,7 @@ public class ReservationTime {
         try {
             LocalTime.parse(startAt, DateTimeFormatter.ofPattern("HH:mm"));
         } catch (DateTimeParseException e) {
-            throw new RoomescapeException(RoomescapeErrorCode.INVALID_RESERVATION_TIME_FORMAT);
+            throw new RoomescapeException(ReservationTimeErrorCode.INVALID_RESERVATION_TIME_FORMAT);
         }
     }
 }

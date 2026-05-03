@@ -8,7 +8,7 @@ import roomescape.domain.reservation.ReservationRepository;
 import roomescape.domain.reservationtime.dto.CreateTimeRequest;
 import roomescape.domain.reservationtime.dto.CreateTimeResponse;
 import roomescape.domain.reservationtime.dto.ReservationTimeResponse;
-import roomescape.support.exception.RoomescapeErrorCode;
+import roomescape.support.exception.ReservationTimeErrorCode;
 import roomescape.support.exception.RoomescapeException;
 
 @Slf4j
@@ -32,7 +32,7 @@ public class ReservationTimeService {
 
     public void deleteReservationTime(Long id) {
         if (reservationRepository.countByTimeId(id) > 0) {
-            throw new RoomescapeException(RoomescapeErrorCode.RESERVATION_TIME_IN_USE);
+            throw new RoomescapeException(ReservationTimeErrorCode.RESERVATION_TIME_IN_USE);
         }
         int deletedCount = reservationTimeRepository.deleteById(id);
         if (deletedCount == 0) {

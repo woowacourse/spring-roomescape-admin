@@ -3,6 +3,8 @@ package roomescape.domain.reservation;
 import java.time.LocalDate;
 import lombok.Getter;
 import roomescape.domain.reservationtime.ReservationTime;
+import roomescape.support.exception.ReservationErrorCode;
+import roomescape.support.exception.ReservationTimeErrorCode;
 import roomescape.support.exception.RoomescapeErrorCode;
 import roomescape.support.exception.RoomescapeException;
 
@@ -42,13 +44,13 @@ public class Reservation {
 
     private static void validate(String name, LocalDate date, ReservationTime time) {
         if (name == null || name.isBlank()) {
-            throw new RoomescapeException(RoomescapeErrorCode.INVALID_RESERVATION_NAME);
+            throw new RoomescapeException(ReservationErrorCode.INVALID_RESERVATION_NAME);
         }
         if (date == null) {
-            throw new RoomescapeException(RoomescapeErrorCode.INVALID_RESERVATION_DATE);
+            throw new RoomescapeException(ReservationErrorCode.INVALID_RESERVATION_DATE);
         }
         if (time == null) {
-            throw new RoomescapeException(RoomescapeErrorCode.INVALID_RESERVATION_TIME);
+            throw new RoomescapeException(ReservationTimeErrorCode.INVALID_RESERVATION_TIME);
         }
     }
 }

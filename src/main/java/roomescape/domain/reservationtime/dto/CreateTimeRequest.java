@@ -1,7 +1,7 @@
 package roomescape.domain.reservationtime.dto;
 
 import roomescape.domain.reservationtime.ReservationTime;
-import roomescape.support.exception.RoomescapeErrorCode;
+import roomescape.support.exception.ReservationTimeErrorCode;
 import roomescape.support.exception.RoomescapeException;
 
 public record CreateTimeRequest(
@@ -10,7 +10,7 @@ public record CreateTimeRequest(
 
     public void validate() {
         if (startAt == null || startAt.isBlank()) {
-            throw new RoomescapeException(RoomescapeErrorCode.INVALID_RESERVATION_TIME);
+            throw new RoomescapeException(ReservationTimeErrorCode.INVALID_RESERVATION_TIME);
         }
     }
 

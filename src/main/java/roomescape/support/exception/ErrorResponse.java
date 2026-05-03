@@ -7,9 +7,9 @@ public record ErrorResponse(
     String message
 ) {
 
-    public static ResponseEntity<ErrorResponse> of(RoomescapeErrorCode errorCode) {
+    public static ResponseEntity<ErrorResponse> of(ErrorCode errorCode) {
         return ResponseEntity.status(errorCode.getHttpStatus()).
-            body(new ErrorResponse(errorCode.name(), errorCode.getMessage()));
+            body(new ErrorResponse(errorCode.getCode(), errorCode.getMessage()));
     }
 
 }

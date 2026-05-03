@@ -9,13 +9,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RoomescapeException.class)
     public ResponseEntity<ErrorResponse> handleRoomescapeException(RoomescapeException exception) {
-        final RoomescapeErrorCode errorCode = exception.getErrorCode();
+        final ErrorCode errorCode = exception.getErrorCode();
         return ErrorResponse.of(errorCode);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception exception) {
-        final RoomescapeErrorCode errorCode = RoomescapeErrorCode.INTERNAL_SERVER_ERROR;
+        final ErrorCode errorCode = RoomescapeErrorCode.INTERNAL_SERVER_ERROR;
         return ErrorResponse.of(errorCode);
     }
 }

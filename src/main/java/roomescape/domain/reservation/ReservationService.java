@@ -9,7 +9,7 @@ import roomescape.domain.reservation.dto.CreateReservationResponse;
 import roomescape.domain.reservation.dto.ReservationResponse;
 import roomescape.domain.reservationtime.ReservationTime;
 import roomescape.domain.reservationtime.ReservationTimeRepository;
-import roomescape.support.exception.RoomescapeErrorCode;
+import roomescape.support.exception.ReservationTimeErrorCode;
 import roomescape.support.exception.RoomescapeException;
 
 @Slf4j
@@ -22,7 +22,7 @@ public class ReservationService {
 
     public CreateReservationResponse createReservation(CreateReservationRequest request) {
         ReservationTime reservationTime = reservationTimeRepository.findById(request.timeId())
-            .orElseThrow(() -> new RoomescapeException(RoomescapeErrorCode.RESERVATION_TIME_NOT_EXIST));
+            .orElseThrow(() -> new RoomescapeException(ReservationTimeErrorCode.RESERVATION_TIME_NOT_EXIST));
         Reservation savedReservation = reservationRepository.save(request.toEntity(reservationTime));
         return CreateReservationResponse.from(savedReservation);
     }

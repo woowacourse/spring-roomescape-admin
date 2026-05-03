@@ -23,6 +23,10 @@ public class ReservationService {
     public ReservationResponse save(ReservationRequest request) {
         ReservationTime time = reservationDao.findTimeById(request.timeId());
 
+        if (time == null) {
+            throw new IllegalArgumentException("요청하신 시간 ID가 존재하지 않습니다.");
+        }
+
         Reservation reservation = new Reservation(
                 request.name(),
                 request.date(),

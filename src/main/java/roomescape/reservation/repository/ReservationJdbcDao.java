@@ -25,7 +25,7 @@ public class ReservationJdbcDao {
                     r.name,
                     r.date,
                     t.id as time_id,
-                    t.start_at as time_value
+                    t.start_at
                 FROM reservation as r
                 INNER JOIN reservation_time as t
                     ON r.time_id = t.id
@@ -35,11 +35,11 @@ public class ReservationJdbcDao {
                 sql,
                 (resultSet, rowNum) -> {
                     Reservation reservation = Reservation.create(
-                            resultSet.getLong("id"),
+                            resultSet.getLong("reservation_id"),
                             resultSet.getString("name"),
                             resultSet.getDate("date").toLocalDate(),
                             ReservationTime.create(
-                                    resultSet.getLong("id"),
+                                    resultSet.getLong("time_id"),
                                     resultSet.getTime("start_at").toLocalTime()
                             )
                     );

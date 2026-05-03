@@ -18,24 +18,6 @@ public class ReservationJdbcDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(Reservation reservation) {
-        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    sql,
-                    new String[]{"id"});
-            ps.setString(1, reservation.getName());
-            ps.setString(2, reservation.getDate().toString());
-            ps.setLong(3, reservation.getReservationTime().getId());
-            return ps;
-        }, keyHolder);
-
-        return keyHolder.getKey().longValue();
-    }
-
     public List<Reservation> findAll() {
         String sql = "SELECT\n"
                 + "    r.id as reservation_id,\n"
@@ -62,6 +44,24 @@ public class ReservationJdbcDao {
 
                     return reservation;
                 });
+    }
+
+    public Long save(Reservation reservation) {
+        String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    sql,
+                    new String[]{"id"});
+            ps.setString(1, reservation.getName());
+            ps.setString(2, reservation.getDate().toString());
+            ps.setLong(3, reservation.getReservationTime().getId());
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 
     public int deleteById(Long id) {

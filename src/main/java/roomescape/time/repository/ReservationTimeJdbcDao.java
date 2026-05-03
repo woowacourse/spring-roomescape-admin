@@ -17,20 +17,19 @@ public class ReservationTimeJdbcDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Long save(ReservationTime reservationTime) {
-        String sql = "insert into reservation_time (start_at) values (?)";
+    public ReservationTime findById(Long id) {
+        String sql = "select id, start_at from reservation_time where id = ?";
 
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        return jdbcTemplate.queryForObject(
+                sql,
+                (resultSet, rowNum) -> {
+                    ReservationTime reservationTime = ReservationTime.create(
+                            resultSet.getLong("id"),
+                            resultSet.getTime("start_at").toLocalTime()
+                    );
 
-        jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(
-                    sql,
-                    new String[]{"id"});
-            ps.setString(1, reservationTime.getStartAt().toString());
-            return ps;
-        }, keyHolder);
-
-        return keyHolder.getKey().longValue();
+                    return reservationTime;
+                }, id);
     }
 
     public List<ReservationTime> findAll() {
@@ -48,19 +47,20 @@ public class ReservationTimeJdbcDao {
                 });
     }
 
-    public ReservationTime findById(Long id) {
-        String sql = "select id, start_at from reservation_time where id = ?";
+    public Long save(ReservationTime reservationTime) {
+        String sql = "insert into reservation_time (start_at) values (?)";
 
-        return jdbcTemplate.queryForObject(
-                sql,
-                (resultSet, rowNum) -> {
-                    ReservationTime reservationTime = ReservationTime.create(
-                            resultSet.getLong("id"),
-                            resultSet.getTime("start_at").toLocalTime()
-                    );
+        KeyHolder keyHolder = new GeneratedKeyHolder();
 
-                    return reservationTime;
-                }, id);
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    sql,
+                    new String[]{"id"});
+            ps.setString(1, reservationTime.getStartAt().toString());
+            return ps;
+        }, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 
     public int deleteById(Long id) {

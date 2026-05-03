@@ -14,13 +14,13 @@ public class ReservationTimeService {
         this.jdbcDao = jdbcDao;
     }
 
+    public List<ReservationTime> findAll() {
+        return jdbcDao.findAll();
+    }
+
     public ReservationTime save(ReservationTime reservationTime) {
         Long savedId = jdbcDao.save(reservationTime);
         return ReservationTime.create(savedId, reservationTime.getStartAt());
-    }
-
-    public List<ReservationTime> findAll() {
-        return jdbcDao.findAll();
     }
 
     public void deleteById(Long id) {

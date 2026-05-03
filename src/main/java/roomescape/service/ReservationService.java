@@ -6,18 +6,16 @@ import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationRepository;
-import roomescape.repository.ReservationTimeRepository;
 
 @Service
 public class ReservationService {
-    public static final String TIME_SLOT_DOES_NOT_EXISTS = "조회된 타임 슬롯이 없습니다.";
     private final ReservationRepository reservationRepository;
-    private final ReservationTimeRepository reservationTimeRepository;
+    private final ReservationTimeService reservationTimeService;
 
     public ReservationService(ReservationRepository reservationRepository,
-                              ReservationTimeRepository reservationTimeRepository) {
+                              ReservationTimeService reservationTimeService) {
         this.reservationRepository = reservationRepository;
-        this.reservationTimeRepository = reservationTimeRepository;
+        this.reservationTimeService = reservationTimeService;
     }
 
     public List<Reservation> findAll() {
@@ -25,8 +23,7 @@ public class ReservationService {
     }
 
     public Reservation reserve(ReservationCreateRequest request) {
-        ReservationTime reservationTime = reservationTimeRepository.findById(request.getTimeId())
-                .orElseThrow(() -> new IllegalArgumentException(TIME_SLOT_DOES_NOT_EXISTS));
+        ReservationTime reservationTime = reservationTimeService.find(request.getTimeId());
 
         Reservation reservation = Reservation.of(request.getName(), request.getDate(), reservationTime);
 

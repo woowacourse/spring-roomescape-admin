@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import roomescape.common.exception.NotFoundException;
 import roomescape.time.domain.ReservationTime;
 
 @Repository
@@ -58,7 +59,7 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
         int deleteCount = jdbcTemplate.update(sql, params);
         if (deleteCount == 0) {
-            throw new IllegalStateException("예약 시간을 삭제할 수 없습니다.");
+            throw new NotFoundException("예약 시간을 삭제할 수 없습니다.");
         }
     }
 

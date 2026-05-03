@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import roomescape.common.exception.ConflictException;
+import roomescape.common.exception.NotFoundException;
 import roomescape.time.dto.CreateReservationTimeRequest;
 import roomescape.time.dto.ReservationTimeResponse;
 import roomescape.time.repository.JdbcTemplateReservationTimeRepository;
@@ -71,7 +73,7 @@ class ReservationTimeServiceTest {
     @DisplayName("존재하지 않는 예약 시간 삭제 시 예외가 발생한다.")
     void deleteNotExist() {
         assertThatThrownBy(() -> reservationTimeService.delete(999L))
-                .isInstanceOf(IllegalStateException.class)
+                .isInstanceOf(NotFoundException.class)
                 .hasMessage("존재하지 않는 예약 시간입니다.");
     }
 
@@ -79,7 +81,7 @@ class ReservationTimeServiceTest {
     @DisplayName("이미 존재하는 예약 시간 생성 시 예외가 발생한다.")
     void create_already_exist() {
         assertThatThrownBy(() -> reservationTimeService.create(new CreateReservationTimeRequest(LocalTime.of(15, 40))))
-                .isInstanceOf(IllegalStateException.class)
+                .isInstanceOf(ConflictException.class)
                 .hasMessage("이미 존재하는 예약 시간입니다.");
     }
 }

@@ -64,7 +64,7 @@ class ListReservationRepositoryTest {
     }
 
     @Test
-    @DisplayName("특정 ID를 가진 Reservation 데이터를 조회한다.")
+    @DisplayName("특정 ID를 가진 Reservation 데이터를 삭제한다.")
     public void delete() {
         // given
         ListReservationRepository repository = new ListReservationRepository();

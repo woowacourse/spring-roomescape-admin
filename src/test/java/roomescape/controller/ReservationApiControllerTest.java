@@ -24,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.context.WebApplicationContext;
+import roomescape.controller.api.ReservationApiController;
 import roomescape.controller.fixture.ReservationApiRequestFixture;
 import roomescape.service.ReservationService;
 import roomescape.service.command.ReservationCommand;

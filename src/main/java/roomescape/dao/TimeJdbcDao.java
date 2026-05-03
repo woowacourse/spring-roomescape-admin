@@ -11,11 +11,12 @@ import roomescape.domain.Time;
 
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Repository
-public class TimeDao {
+public class TimeJdbcDao implements TimeDao{
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<TimeRow> rowMapper = (resultSet, rowNum) -> {
         TimeRow row = new TimeRow(
@@ -26,10 +27,11 @@ public class TimeDao {
         return row;
     };
 
-    public TimeDao(JdbcTemplate jdbcTemplate) {
+    public TimeJdbcDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public Long insert(Time time) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = """
@@ -46,26 +48,27 @@ public class TimeDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
-    public Optional<TimeRow> findById(Long id) {
+    @Override
+    public Optional<Time> findById(Long id) {
         String sql = """
                 SELECT * FROM reservation_time
                 WHERE id = ?
                 """;
 
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, (resultSet, rowNum) ->
-                new TimeRow(
-                        resultSet.getLong("id"),
-                        LocalTime.parse(resultSet.getString("start_at"))
-                ), id));
+        return jdbcTemplate.query(sql, rowMapper, id).stream()
+                .findFirst()
+                .map(TimeRow::toTime);
     }
 
-    public TimeRows findAll() {
+    @Override
+    public List<Time> findAll() {
         String sql = """
                 SELECT * FROM reservation_time
                 """;
-        return new TimeRows(jdbcTemplate.query(sql, rowMapper));
+        return new TimeRows(jdbcTemplate.query(sql, rowMapper)).toTimes();
     }
 
+    @Override
     public int delete(Long id) {
         String sql = """
                 DELETE FROM reservation_time

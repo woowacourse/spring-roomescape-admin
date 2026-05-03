@@ -24,26 +24,23 @@ public class ReservationService {
 
     @Transactional(readOnly = true)
     public List<Reservation> findAll() {
-        ReservationRows reservationRows = reservationDao.findAll();
-        return reservationRows.toReservations();
+        return reservationDao.findAll();
     }
 
     public Reservation create(ReservationRequestDto reservationRequest) {
         Time timeById = timeDao.findById(reservationRequest.timeId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다.")).toTime();
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다."));
 
         Reservation reservation = new Reservation(reservationRequest.name(), reservationRequest.date(), timeById);
-        Long id = reservationDao.insert(reservation);
+        Long id = reservationDao.insert(reservation)s;
 
         return reservationDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."))
-                .toReservation();
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
     }
 
     public void delete(Long id) {
         Reservation reservation = reservationDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."))
-                .toReservation();
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
 
         reservationDao.delete(reservation.getId());
     }

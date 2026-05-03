@@ -12,11 +12,12 @@ import roomescape.domain.Reservation;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Repository
-public class ReservationDao {
+public class ReservationJdbcDao implements ReservationDao{
 
     private final JdbcTemplate jdbcTemplate;
     private final RowMapper<ReservationRow> rowMapper = (resultSet, rowNum) -> {
@@ -31,11 +32,12 @@ public class ReservationDao {
         return row;
     };
 
-    public ReservationDao(JdbcTemplate jdbcTemplate) {
+    public ReservationJdbcDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ReservationRows findAll() {
+    @Override
+    public List<Reservation> findAll() {
         String sql = """
                 SELECT 
                     r.id,
@@ -46,10 +48,11 @@ public class ReservationDao {
                     FROM reservation r
                 INNER JOIN reservation_time t ON r.time_id = t.id
                 """;
-        return new ReservationRows(jdbcTemplate.query(sql, rowMapper));
+        return new ReservationRows(jdbcTemplate.query(sql, rowMapper)).toReservations();
     }
 
-    public Optional<ReservationRow> findById(Long id) {
+    @Override
+    public Optional<Reservation> findById(Long id) {
         String sql = """
                 SELECT
                     r.id,
@@ -61,10 +64,12 @@ public class ReservationDao {
                 INNER JOIN reservation_time t ON r.time_id = t.id
                 WHERE r.id = ?
                 """;
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, rowMapper, id));
+        return jdbcTemplate.query(sql, rowMapper, id).stream()
+                .findFirst()
+                .map(ReservationRow::toReservation);
     }
 
-
+    @Override
     public Long insert(Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = """
@@ -83,6 +88,7 @@ public class ReservationDao {
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
     }
 
+    @Override
     public int delete(Long id) {
         String sql = """
                 DELETE FROM reservation

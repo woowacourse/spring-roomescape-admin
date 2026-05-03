@@ -20,7 +20,7 @@ public class TimeService {
 
     @Transactional(readOnly = true)
     public List<Time> findAll() {
-        return timeDao.findAll().toTimes();
+        return timeDao.findAll();
     }
 
     public Time create(TimeRequestDto timeRequest) {
@@ -28,14 +28,12 @@ public class TimeService {
         Long id = timeDao.insert(time);
 
         return timeDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다."))
-                .toTime();
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다."));
     }
 
     public void delete(Long id) {
         Time time = timeDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다."))
-                .toTime();
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 시간입니다."));
 
         timeDao.delete(time.getId());
     }

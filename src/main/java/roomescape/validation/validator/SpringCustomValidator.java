@@ -9,6 +9,7 @@ import java.util.List;
 public class SpringCustomValidator implements Validator {
 
     private final FieldBlankValidator blankValidator = new FieldBlankValidator();
+    private final NotNullValidator notNullValidator = new NotNullValidator();
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -20,6 +21,11 @@ public class SpringCustomValidator implements Validator {
         List<String> blankErrors = blankValidator.validate(target);
         if (!blankErrors.isEmpty()) {
             throw new RequestValidationException(blankErrors.getFirst());
+        }
+
+        List<String> notNullErrors = notNullValidator.validate(target);
+        if (!notNullErrors.isEmpty()) {
+            throw new RequestValidationException(notNullErrors.getFirst());
         }
     }
 

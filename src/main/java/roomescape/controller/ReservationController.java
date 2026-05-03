@@ -26,7 +26,7 @@ public class ReservationController {
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest request) {
         ReservationResponse response = reservationService.addReservation(request);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -38,6 +38,6 @@ public class ReservationController {
     @DeleteMapping("/{reservation-id}")
     public ResponseEntity<Void> deleteReservation(@PathVariable("reservation-id") Long reservationId) {
         reservationService.delete(reservationId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

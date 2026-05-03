@@ -26,7 +26,7 @@ public class ReservationTimeController {
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> addReservationTime(@RequestBody ReservationTimeRequest request) {
         ReservationTimeResponse response = reservationTimeService.addReservationTime(request);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -38,6 +38,6 @@ public class ReservationTimeController {
     @DeleteMapping("/{timesId}")
     public ResponseEntity<Void> deleteReservationTime(@PathVariable("timesId") Long reservationTimeId) {
         reservationTimeService.deleteReservationTime(reservationTimeId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

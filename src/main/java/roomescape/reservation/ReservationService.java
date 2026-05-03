@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import roomescape.reservationtime.ReservationTime;
 import roomescape.reservationtime.ReservationTimeNotFoundException;
 import roomescape.reservationtime.ReservationTimeRepository;
+import roomescape.reservationtime.ReservationTimeResponseDTO;
 
 @Service
 public class ReservationService {
@@ -29,7 +30,10 @@ public class ReservationService {
                 id,
                 reservation.getName(),
                 reservation.getDate(),
-                reservation.getReservationTime()
+                new ReservationTimeResponseDTO(
+                        reservation.getReservationTime().getId(),
+                        reservation.getReservationTime().getStartAt()
+                )
         );
     }
 
@@ -39,7 +43,10 @@ public class ReservationService {
                         reservation.getId(),
                         reservation.getName(),
                         reservation.getDate(),
-                        reservation.getReservationTime()
+                        new ReservationTimeResponseDTO(
+                                reservation.getReservationTime().getId(),
+                                reservation.getReservationTime().getStartAt()
+                        )
                 )).toList();
     }
 

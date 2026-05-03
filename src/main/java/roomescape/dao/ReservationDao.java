@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
-import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationJoinDto;
 
 @Repository
@@ -52,8 +51,8 @@ public class ReservationDao {
     public Long save(Reservation reservation) {
         SqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("name", reservation.getName())
-                .addValue("date", reservation.getDate().toString())
-                .addValue("time_id", reservation.getTime().id());
+                .addValue("date", reservation.getDate())
+                .addValue("time_id", reservation.getTime().getId());
 
         return simpleJdbcInsert.executeAndReturnKey(parameters).longValue();
     }

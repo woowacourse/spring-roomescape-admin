@@ -7,6 +7,6 @@ public record ReservationTimeResponse(
         String startAt
 ) {
     public static ReservationTimeResponse from(ReservationTime time) {
-        return new ReservationTimeResponse(time.id(), time.startAt().toString());
+        return new ReservationTimeResponse(time.getId(), time.getStartAt().toString());
     }
 }

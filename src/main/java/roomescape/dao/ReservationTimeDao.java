@@ -2,20 +2,21 @@ package roomescape.dao;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import javax.sql.DataSource;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.dao.entity.ReservationTimeEntity;
+import roomescape.domain.ReservationTime;
 
 @Repository
 public class ReservationTimeDao {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private final RowMapper<ReservationTimeEntity> rowMapper = (rs, rowNum) ->
-            new ReservationTimeEntity(
+    private final RowMapper<ReservationTime> rowMapper = (rs, rowNum) ->
+            ReservationTime.from(
                     rs.getLong("id"),
                     rs.getObject("start_at", LocalTime.class)
             );
@@ -27,14 +28,19 @@ public class ReservationTimeDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<ReservationTimeEntity> findAll() {
+    public List<ReservationTime> findAll() {
         String sql = "SELECT id, start_at FROM reservation_time";
-        return jdbcTemplate.getJdbcTemplate().query(sql, rowMapper);
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public ReservationTimeEntity findById(Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = :id";
-        return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("id", id), rowMapper);
+        List<ReservationTime> results = jdbcTemplate.query(
+                sql,
+                new MapSqlParameterSource("id", id),
+                rowMapper
+        );
+        return results.stream().findFirst();
     }
 
     public Long save(LocalTime startAt) {
@@ -43,7 +49,7 @@ public class ReservationTimeDao {
         ).longValue();
     }
 
-    public boolean existsByStartAt(java.time.LocalTime startAt) {
+    public boolean existsByStartAt(LocalTime startAt) {
         String sql = "SELECT count(1) FROM reservation_time WHERE start_at = :start_at";
         Integer count = jdbcTemplate.queryForObject(
                 sql,

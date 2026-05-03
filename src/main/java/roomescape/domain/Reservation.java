@@ -4,12 +4,12 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class Reservation {
-    private Long id;
+    private final Long id;
     private final String name;
     private final LocalDate date;
     private final ReservationTime time;
 
-    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
+    private Reservation(Long id, String name, LocalDate date, ReservationTime time) {
         validateName(name);
         validateDate(date);
         validateTime(time);
@@ -20,8 +20,19 @@ public class Reservation {
         this.time = time;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public static Reservation createNew(String name, LocalDate targetDate, ReservationTime time, LocalDate currentDate) {
+        validateFutureDate(targetDate, currentDate);
+        return new Reservation(null, name, targetDate, time);
+    }
+
+    public static Reservation from(Long id, String name, LocalDate date, ReservationTime time) {
+        return new Reservation(id, name, date, time);
+    }
+
+    private static void validateFutureDate(LocalDate targetDate, LocalDate currentDate) {
+        if (targetDate == null || targetDate.isBefore(currentDate)) {
+            throw new IllegalArgumentException("지나간 날짜는 예약할 수 없습니다.");
+        }
     }
 
     private void validateName(String name) {
@@ -42,10 +53,18 @@ public class Reservation {
         }
     }
 
-    public Long getId() { return id; }
-    public String getName() { return name; }
-    public LocalDate getDate() { return date; }
-    public ReservationTime getTime() { return time; }
+    public Long getId() {
+        return id;
+    }
+    public String getName() {
+        return name;
+    }
+    public LocalDate getDate() {
+        return date;
+    }
+    public ReservationTime getTime() {
+        return time;
+    }
 
     @Override
     public boolean equals(Object o) {

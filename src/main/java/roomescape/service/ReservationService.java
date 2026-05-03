@@ -3,12 +3,10 @@ package roomescape.service;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
-import roomescape.dao.entity.ReservationTimeEntity;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationJoinDto;
@@ -36,25 +34,20 @@ public class ReservationService {
 
     @Transactional
     public Reservation createReservation(ReservationCreateCommand command) {
-        validateReservationDate(command.date());
+        ReservationTime time = reservationTimeDao.findById(command.timeId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약 시간입니다."));
 
-        ReservationTimeEntity timeEntity;
-        try {
-            timeEntity = reservationTimeDao.findById(command.timeId());
-        } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("존재하지 않는 예약 시간입니다.");
-        }
-        ReservationTime time = toDomain(timeEntity);
-        Reservation reservation = new Reservation(
-                null,
+        LocalDate currentDate = LocalDate.now(clock);
+
+        Reservation reservation = Reservation.createNew(
                 command.name(),
                 command.date(),
-                time
+                time,
+                currentDate
         );
 
         Long generatedId = reservationDao.save(reservation);
-        reservation.setId(generatedId);
-        return reservation;
+        return Reservation.from(generatedId, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     @Transactional
@@ -66,23 +59,12 @@ public class ReservationService {
     }
 
     private Reservation toDomain(ReservationJoinDto dto) {
-        ReservationTime time = new ReservationTime(dto.timeId(), dto.startAt());
-        return new Reservation(
+        ReservationTime time = ReservationTime.from(dto.timeId(), dto.startAt());
+        return Reservation.from(
                 dto.reservationId(),
                 dto.name(),
                 dto.date(),
                 time
         );
-    }
-
-    private ReservationTime toDomain(ReservationTimeEntity entity) {
-        return new ReservationTime(entity.id(), entity.startAt());
-    }
-
-    private void validateReservationDate(LocalDate targetDate) {
-        LocalDate currentDate = LocalDate.now(clock);
-        if (targetDate.isBefore(currentDate)) {
-            throw new IllegalArgumentException("과거 날짜는 예약할 수 없습니다.");
-        }
     }
 }

@@ -1,8 +1,8 @@
-package integration;
+package integration.reservation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import integration.data.ReservationDataSource;
+import integration.BaseIntegrationTest;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.concurrent.CountDownLatch;

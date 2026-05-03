@@ -21,11 +21,6 @@ public class MemoryReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> findAll() {
-        return Collections.unmodifiableList(reservations);
-    }
-
-    @Override
     public void delete(long id) {
         reservations.removeIf(reservation -> reservation.getId().equals(id));
     }
@@ -35,5 +30,10 @@ public class MemoryReservationRepository implements ReservationRepository {
         return reservations.stream()
                 .anyMatch(reservation -> reservation.getDate().equals(date) &&
                         reservation.getTime().getId().equals(timeId));
+    }
+
+    @Override
+    public List<Reservation> findAll() {
+        return Collections.unmodifiableList(reservations);
     }
 }

@@ -1,4 +1,4 @@
-package integration.data;
+package integration.reservation;
 
 import java.time.LocalTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +27,10 @@ public class ReservationDataSource {
 
     public void insertReservationTime(LocalTime reservationTime) {
         jdbcTemplate.update("INSERT INTO reservation_time (start_at) VALUES (?)", reservationTime);
+    }
+
+    public boolean hasReservationById(Long id) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM reservation WHERE id = ?)";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, Boolean.class, id));
     }
 }

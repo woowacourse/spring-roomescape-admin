@@ -37,17 +37,6 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> findAll() {
-        String sql = """
-                SELECT r.id AS res_id, r.name AS res_name, r.date AS res_date,
-                       t.id AS time_id, t.start_at AS time_start
-                FROM reservation r
-                INNER JOIN reservation_time t ON r.time_id = t.id;
-            """;
-        return jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER);
-    }
-
-    @Override
     public void delete(long id) {
         jdbcTemplate.update("DELETE FROM reservation WHERE id = ?", id);
     }
@@ -57,5 +46,16 @@ public class JdbcReservationRepository implements ReservationRepository {
         String sql = "SELECT EXISTS (SELECT 1 FROM reservation WHERE date = ? AND time_id = ?)";
         Boolean result = jdbcTemplate.queryForObject(sql, Boolean.class, date, timeId);
         return Boolean.TRUE.equals(result);
+    }
+
+    @Override
+    public List<Reservation> findAll() {
+        String sql = """
+                SELECT r.id AS res_id, r.name AS res_name, r.date AS res_date,
+                       t.id AS time_id, t.start_at AS time_start
+                FROM reservation r
+                INNER JOIN reservation_time t ON r.time_id = t.id;
+            """;
+        return jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER);
     }
 }

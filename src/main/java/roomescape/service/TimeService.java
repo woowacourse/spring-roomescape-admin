@@ -1,16 +1,36 @@
 package roomescape.service;
 
+import org.springframework.stereotype.Service;
 import roomescape.domain.ReservationTime;
+import roomescape.repository.TimeRepository;
 
 import java.util.List;
 
-public interface TimeService {
+@Service
+public class TimeService {
+    private final TimeRepository timeRepository;
 
-    List<ReservationTime> findAllTimes();
+    public TimeService(TimeRepository timeRepository) {
+        this.timeRepository = timeRepository;
+    }
 
-    ReservationTime add(ReservationTime time);
 
-    ReservationTime findById(Long id);
+    public List<ReservationTime> findAllTimes() {
+        return timeRepository.findAllTimes();
+    }
 
-    void remove(Long id);
+
+    public ReservationTime add(ReservationTime time) {
+        return timeRepository.add(time);
+    }
+
+
+    public ReservationTime findById(Long id) {
+        return timeRepository.findById(id);
+    }
+
+
+    public void remove(Long id) {
+        timeRepository.remove(id);
+    }
 }

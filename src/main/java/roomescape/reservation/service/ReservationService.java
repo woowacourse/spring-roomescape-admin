@@ -22,11 +22,11 @@ public class ReservationService {
     }
 
     @Transactional
-    public Reservation save(String name, String date, Long timeId) {
-        ReservationTime time = reservationTimeRepository.findById(timeId);
-        Reservation reservation = Reservation.create(name, date, time);
+    public Reservation save(ReservationCommand command) {
+        ReservationTime time = reservationTimeRepository.findById(command.timeId());
+        Reservation reservation = Reservation.create(command.name(), command.date(), time);
 
-        if (reservationRepository.existsByDateAndTimeId(reservation.getDate(), timeId)) {
+        if (reservationRepository.existsByDateAndTimeId(reservation.getDate(), command.timeId())) {
             throw new IllegalStateException("이미 해당 날짜와 시간에 예약이 존재합니다.");
         }
 

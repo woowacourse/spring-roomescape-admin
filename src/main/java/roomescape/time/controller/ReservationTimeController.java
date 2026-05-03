@@ -32,8 +32,7 @@ public class ReservationTimeController {
 
     @PostMapping
     public ResponseEntity<ReservationTimeResponse> create(@RequestBody ReservationTimeRequest requestDto) {
-        ReservationTime reservationTime = reservationTimeService.save(requestDto.startAt());
-
+        ReservationTime reservationTime = reservationTimeService.save(requestDto.toCommand());
         ReservationTimeResponse response = ReservationTimeResponse.from(reservationTime);
         return ResponseEntity
                 .created(URI.create("/times/" + response.id()))

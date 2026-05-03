@@ -18,8 +18,8 @@ public class ReservationTimeService {
     }
 
     @Transactional
-    public ReservationTime save(String startAt) {
-        ReservationTime reservationTime = ReservationTime.create(startAt);
+    public ReservationTime save(ReservationTimeCommand command) {
+        ReservationTime reservationTime = ReservationTime.create(command.startAt());
         return reservationTimeRepository.save(reservationTime);
     }
 

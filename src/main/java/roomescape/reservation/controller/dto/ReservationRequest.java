@@ -1,5 +1,7 @@
 package roomescape.reservation.controller.dto;
 
+import roomescape.reservation.service.ReservationCommand;
+
 import java.util.regex.Pattern;
 
 public record ReservationRequest(String name, String date, Long timeId) {
@@ -9,6 +11,14 @@ public record ReservationRequest(String name, String date, Long timeId) {
     public ReservationRequest {
         validateEmptyName(name);
         validateDateFormat(date);
+    }
+
+    public ReservationCommand toCommand() {
+        return new ReservationCommand(
+                name,
+                date,
+                timeId
+        );
     }
 
     private void validateEmptyName(String name) {

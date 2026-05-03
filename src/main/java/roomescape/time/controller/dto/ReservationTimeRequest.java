@@ -1,5 +1,7 @@
 package roomescape.time.controller.dto;
 
+import roomescape.time.service.ReservationTimeCommand;
+
 import java.util.regex.Pattern;
 
 public record ReservationTimeRequest(String startAt) {
@@ -8,6 +10,10 @@ public record ReservationTimeRequest(String startAt) {
 
     public ReservationTimeRequest {
         validateTimeFormat(startAt);
+    }
+
+    public ReservationTimeCommand toCommand() {
+        return new ReservationTimeCommand(startAt);
     }
 
     private void validateTimeFormat(String startAt) {

@@ -56,11 +56,10 @@ public class ReservationDao {
         Map<String, Object> params = new HashMap<>();
         params.put("name", reservation.getName());
         params.put("date", reservation.getDate());
-        params.put("time_id", reservation.getTime().getId());
+        params.put("time_id", reservationTime.getId());
 
         Long id = jdbcInsert.executeAndReturnKey(params).longValue();
         return new Reservation(id, reservation.getName(), reservation.getDate(), reservationTime);
-
     }
 
     public void delete(Long id) {

@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationRequest;
+import roomescape.dto.ReservationResponse;
 
 @Service
 public class ReservationService {
@@ -18,9 +20,18 @@ public class ReservationService {
         return reservationDao.findAll();
     }
 
-    public Reservation save(Reservation reservation) {
-        ReservationTime time = reservationDao.findTimeById(reservation.getTime().getId());
-        return reservationDao.save(reservation, time);
+    public ReservationResponse save(ReservationRequest request) {
+        ReservationTime time = reservationDao.findTimeById(request.timeId());
+
+        Reservation reservation = new Reservation(
+                request.name(),
+                request.date(),
+                time
+        );
+
+        Reservation saved = reservationDao.save(reservation, time);
+
+        return ReservationResponse.from(saved);
     }
 
     public void delete(Long id) {

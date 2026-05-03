@@ -5,10 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.test.annotation.DirtiesContext;
 import roomescape.command.ReservationSaveCommand;
 import roomescape.domain.Reservation;
 
+import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -64,10 +67,17 @@ class ReservationServiceTest {
 
     @Test
     void id로_예약을_삭제한다() {
-        jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)",
-                "브라운", "2026-05-03", TIME_ID);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(conn -> {
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO reservation (name, date, time_id) " +
+                    "VALUES (?, ?, ?)", PreparedStatement.RETURN_GENERATED_KEYS);
+            ps.setString(1, "브라운");
+            ps.setString(2, "2026-05-03");
+            ps.setLong(3, TIME_ID);
+            return ps;
+        }, keyHolder);
 
-        reservationService.deleteById(1L);
+        reservationService.deleteById(keyHolder.getKey().longValue());
 
         Integer count = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM reservation", Integer.class);
         assertThat(count).isEqualTo(0);

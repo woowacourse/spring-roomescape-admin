@@ -12,7 +12,7 @@
   - `ReservationDao`에 `existsByTimeId(Long timeId)` 메서드 추가
   - `ReservationTimeService`에 `ReservationDao` 주입
   - `ReservationTimeService.delete()`에서 삭제 전 `existsByTimeId()` 확인 후 예외 처리
-- [ ] **4. `ReservationTime` 생성자에 도메인 검증 추가**
+- [x] **4. `ReservationTime` 생성자에 도메인 검증 추가**
   - `startAt`이 null이면 `IllegalArgumentException` 발생
 - [ ] **5. 패키지명 소문자로 수정**
   - `roomescape.reservationTime` → `roomescape.reservationtime`

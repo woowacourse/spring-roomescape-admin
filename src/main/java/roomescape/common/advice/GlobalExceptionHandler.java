@@ -6,6 +6,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import roomescape.common.exception.ErrorInformation;
+import roomescape.validation.exception.RequestValidationException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -20,6 +21,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorInformation> handleHttpMessageNotReadable(IllegalArgumentException e) {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        ErrorInformation errorInformation = ErrorInformation.of(httpStatus, e.getMessage());
+        return ResponseEntity.status(httpStatus)
+                .body(errorInformation);
+    }
+
+    @ExceptionHandler(RequestValidationException.class)
+    public ResponseEntity<ErrorInformation> handleRequestValidationException(RequestValidationException e) {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         ErrorInformation errorInformation = ErrorInformation.of(httpStatus, e.getMessage());
         return ResponseEntity.status(httpStatus)

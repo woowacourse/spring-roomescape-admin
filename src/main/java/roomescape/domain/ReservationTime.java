@@ -5,11 +5,8 @@ import java.util.Objects;
 
 public class ReservationTime {
 
-    private Long id;
-    private LocalTime startAt;
-
-    private ReservationTime() { // Jackson이 Json -> Reservation으로 변환하는 과정에서 필요.
-    }
+    private final Long id;
+    private final LocalTime startAt;
 
     public ReservationTime(Long id, LocalTime startAt) {
         this.id = id;

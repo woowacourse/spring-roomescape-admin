@@ -1,5 +1,6 @@
 package roomescape.console;
 
+import roomescape.controller.dto.response.ReservationTimeResponse;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
@@ -7,7 +8,7 @@ import java.util.List;
 
 public class ConsoleOutputView {
 
-    public static void printTime(ReservationTime reservationTime) {
+    public static void printTime(ReservationTimeResponse reservationTime) {
         System.out.println(reservationTime);
     }
 

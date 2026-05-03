@@ -6,6 +6,7 @@ import roomescape.controller.ReservationController;
 import roomescape.controller.ReservationTimeController;
 import roomescape.controller.dto.request.ReservationRequest;
 import roomescape.controller.dto.request.ReservationTimeRequest;
+import roomescape.controller.dto.response.ReservationTimeResponse;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 
@@ -41,7 +42,7 @@ public class ConsoleRunner {
 
     private void addTime() {
         ReservationTimeRequest request = readUntilValid(ConsoleInputView::readTimeRequest);
-        ResponseEntity<ReservationTime> response =
+        ResponseEntity<ReservationTimeResponse> response =
                 controllerExceptionHandler(() -> reservationTimeController.addReservationTime(request));
 
         if(response.getStatusCode().is2xxSuccessful()) {

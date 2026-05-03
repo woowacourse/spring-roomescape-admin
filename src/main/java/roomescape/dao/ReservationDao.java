@@ -29,7 +29,7 @@ public class ReservationDao {
                 (rs, rowNum) -> {
                     ReservationTime time = new ReservationTime(
                             rs.getLong("time_id"),
-                            rs.getDate("start_at").toLocalDate()
+                            rs.getTime("start_at").toLocalTime()
                     );
                     return new Reservation(
                             rs.getLong("id"),
@@ -46,7 +46,7 @@ public class ReservationDao {
                 "SELECT id, start_at FROM reservation_time WHERE id = ?",
                 (rs, rowNum) -> new ReservationTime(
                         rs.getLong("id"),
-                        rs.getDate("start_at").toLocalDate()
+                        rs.getTime("start_at").toLocalTime()
                 ),
                 timeId
         );

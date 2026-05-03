@@ -46,6 +46,26 @@ public class ReservationJdbcDao {
                 });
     }
 
+    public List<Reservation> findByTimeId(Long timeId) {
+        String sql = "SELECT id, name, date, time_id "
+                + "FROM reservation "
+                + "WHERE time_id = ?";
+
+        return jdbcTemplate.query(
+                sql,
+                (resultSet, rowNum) -> Reservation.create(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getDate("date").toLocalDate(),
+                        ReservationTime.create(
+                                resultSet.getLong("time_id"),
+                                null
+                        )
+                ),
+                timeId
+        );
+    }
+
     public Long save(Reservation reservation) {
         String sql = "insert into reservation (name, date, time_id) values (?, ?, ?)";
 

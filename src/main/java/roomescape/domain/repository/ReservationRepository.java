@@ -1,0 +1,90 @@
+package roomescape.domain.repository;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
+import roomescape.domain.entity.Reservation;
+import roomescape.domain.entity.ReservationTime;
+
+import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
+@Repository
+@RequiredArgsConstructor
+public class ReservationRepository {
+    private final JdbcTemplate jdbcTemplate;
+
+    private final RowMapper<Reservation> reservationRowMapper =
+            (resultSet, rowNumber) -> {
+                ReservationTime reservationTime = ReservationTime.create(
+                        resultSet.getLong("time_id"),
+                        LocalTime.parse(resultSet.getString("time_value"))
+                );
+
+                return Reservation.create(
+                        resultSet.getLong("reservation_id"),
+                        resultSet.getString("name"),
+                        LocalDate.parse(resultSet.getString("date")),
+                        reservationTime);
+            };
+
+    public Long save(Reservation reservation) {
+        String insertSql = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(insertSql, new String[]{"id"});
+
+            preparedStatement.setString(1, reservation.getName());
+            preparedStatement.setString(2, String.valueOf(reservation.getDate()));
+            preparedStatement.setLong(3, reservation.getTime().getId());
+
+            return preparedStatement;
+        }, keyHolder);
+
+        return keyHolder.getKeyAs(Long.class);
+    }
+
+    public List<Reservation> findAll() {
+        String selectAllSql = "SELECT r.id as reservation_id, r.name, r.date, " +
+                "t.id as time_id, t.start_at as time_value " +
+                "FROM reservation as r " +
+                "INNER JOIN reservation_time as t " +
+                "ON r.time_id = t.id";
+
+        return jdbcTemplate.query(selectAllSql, reservationRowMapper);
+    }
+
+    public void deleteAllByTimeId(Long timeId) {
+        String deleteSql = "DELETE FROM reservation WHERE time_id = ?";
+
+        jdbcTemplate.update(deleteSql, timeId);
+    }
+
+    public void deleteById(Long id) {
+        String deleteSql = "DELETE FROM reservation WHERE id = ?";
+
+        int executeCount = jdbcTemplate.update(deleteSql, id);
+        if (executeCount == 0) {
+            throw new IllegalArgumentException("존재하지 않는 예약입니다.");
+        }
+    }
+
+    public boolean existsByDateAndTime(LocalDate date, ReservationTime time) {
+        String sql = "SELECT EXISTS (" +
+                "SELECT 1 FROM reservation WHERE date = ? AND time_id = ?" +
+                ")";
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(
+                sql,
+                Boolean.class,
+                date.toString(),
+                time.getId()
+        ));
+    }
+}

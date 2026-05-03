@@ -8,8 +8,8 @@ import roomescape.domain.reservation.ReservationRepository;
 import roomescape.domain.reservationtime.dto.CreateTimeRequest;
 import roomescape.domain.reservationtime.dto.CreateTimeResponse;
 import roomescape.domain.reservationtime.dto.ReservationTimeResponse;
-import roomescape.support.RoomescapeErrorCode;
-import roomescape.support.RoomescapeException;
+import roomescape.support.exception.RoomescapeErrorCode;
+import roomescape.support.exception.RoomescapeException;
 
 @Slf4j
 @Service

@@ -3,8 +3,8 @@ package roomescape.domain.reservation.dto;
 import java.time.LocalDate;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservationtime.ReservationTime;
-import roomescape.support.RoomescapeErrorCode;
-import roomescape.support.RoomescapeException;
+import roomescape.support.exception.RoomescapeErrorCode;
+import roomescape.support.exception.RoomescapeException;
 
 public record CreateReservationRequest(
     String name,

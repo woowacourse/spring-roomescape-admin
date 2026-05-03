@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
-import roomescape.support.RoomescapeException;
+import roomescape.support.exception.RoomescapeException;
 
 class CreateReservationRequestTest {
 

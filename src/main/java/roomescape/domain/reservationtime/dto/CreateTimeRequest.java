@@ -1,8 +1,8 @@
 package roomescape.domain.reservationtime.dto;
 
 import roomescape.domain.reservationtime.ReservationTime;
-import roomescape.support.RoomescapeErrorCode;
-import roomescape.support.RoomescapeException;
+import roomescape.support.exception.RoomescapeErrorCode;
+import roomescape.support.exception.RoomescapeException;
 
 public record CreateTimeRequest(
     String startAt

@@ -9,8 +9,8 @@ import roomescape.domain.reservation.dto.CreateReservationResponse;
 import roomescape.domain.reservation.dto.ReservationResponse;
 import roomescape.domain.reservationtime.ReservationTime;
 import roomescape.domain.reservationtime.ReservationTimeRepository;
-import roomescape.support.RoomescapeErrorCode;
-import roomescape.support.RoomescapeException;
+import roomescape.support.exception.RoomescapeErrorCode;
+import roomescape.support.exception.RoomescapeException;
 
 @Slf4j
 @Service

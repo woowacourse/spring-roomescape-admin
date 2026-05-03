@@ -1,4 +1,4 @@
-package roomescape.support;
+package roomescape.support.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

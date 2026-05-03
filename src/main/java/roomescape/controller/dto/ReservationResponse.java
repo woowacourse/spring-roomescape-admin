@@ -2,23 +2,23 @@ package roomescape.controller.dto;
 
 import roomescape.domain.Reservation;
 
-public class ReservationResponseDto {
+public class ReservationResponse {
     private final long id;
     private final String name;
     private final String date;
-    private final ReservationTimeResponseDto time;
+    private final ReservationTimeResponse time;
 
-    public ReservationResponseDto(long id, String name, String date, ReservationTimeResponseDto time) {
+    public ReservationResponse(long id, String name, String date, ReservationTimeResponse time) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.time = time;
     }
 
-    public static ReservationResponseDto toDto(Reservation reservation) {
-        return new ReservationResponseDto(reservation.getId(), reservation.getName(),
+    public static ReservationResponse toDto(Reservation reservation) {
+        return new ReservationResponse(reservation.getId(), reservation.getName(),
                 reservation.getDate().getDate().toString(),
-                ReservationTimeResponseDto.toDto(reservation.getTime()));
+                ReservationTimeResponse.toDto(reservation.getTime()));
     }
 
     public long getId() {
@@ -33,7 +33,7 @@ public class ReservationResponseDto {
         return date;
     }
 
-    public ReservationTimeResponseDto getTime() {
+    public ReservationTimeResponse getTime() {
         return time;
     }
 }

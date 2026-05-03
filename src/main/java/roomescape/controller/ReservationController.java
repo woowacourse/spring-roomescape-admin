@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import roomescape.controller.dto.ReservationCreateRequestDto;
-import roomescape.controller.dto.ReservationResponseDto;
+import roomescape.controller.dto.ReservationCreateRequest;
+import roomescape.controller.dto.ReservationResponse;
 import roomescape.domain.Reservation;
 import roomescape.service.ReservationService;
 
@@ -23,19 +23,19 @@ public class ReservationController {
     }
 
     @GetMapping
-    public List<ReservationResponseDto> findAll() {
+    public List<ReservationResponse> findAll() {
         List<Reservation> reservations = reservationService.findAll();
 
         return reservations.stream()
-                .map(ReservationResponseDto::toDto)
+                .map(ReservationResponse::toDto)
                 .toList();
     }
 
     @PostMapping
-    public ReservationResponseDto create(@RequestBody ReservationCreateRequestDto dto) {
+    public ReservationResponse create(@RequestBody ReservationCreateRequest dto) {
         Reservation reservation = reservationService.save(dto);
 
-        return ReservationResponseDto.toDto(reservation);
+        return ReservationResponse.toDto(reservation);
     }
 
     @DeleteMapping("/{id}")

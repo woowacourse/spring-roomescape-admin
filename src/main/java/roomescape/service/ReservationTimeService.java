@@ -2,7 +2,7 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.controller.dto.ReservationTimeCreateRequestDto;
+import roomescape.controller.dto.ReservationTimeCreateRequest;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
@@ -14,7 +14,7 @@ public class ReservationTimeService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public ReservationTime save(ReservationTimeCreateRequestDto dto) {
+    public ReservationTime save(ReservationTimeCreateRequest dto) {
         ReservationTime reservationTime = ReservationTime.of(dto.getStartAt());
 
         return reservationTimeRepository.save(reservationTime);

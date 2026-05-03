@@ -2,7 +2,7 @@ package roomescape.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.controller.dto.ReservationCreateRequestDto;
+import roomescape.controller.dto.ReservationCreateRequest;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationRepository;
@@ -24,7 +24,7 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public Reservation save(ReservationCreateRequestDto dto) {
+    public Reservation save(ReservationCreateRequest dto) {
         ReservationTime reservationTime = reservationTimeRepository.findById(dto.getTimeId())
                 .orElseThrow(() -> new IllegalArgumentException(TIME_SLOT_DOES_NOT_EXISTS));
 

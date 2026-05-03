@@ -20,15 +20,17 @@ class QueryExperiment {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    //숫자가 커지면 subQuery가 더 적게 걸리는 경우가 있다.
+    // 캐싱? 옵티마이저에서 최적화? 연관관계가 적어서? 모르겠다.... ㅠ
     @ParameterizedTest
     @CsvSource({
-            "1000,1000"
+            "10,10"
     })
     void test(int reservationCountPerTime, int timeCount) {
         insertReservation(reservationCountPerTime, timeCount);
 
-        long subQuerySpendTime = spendTime(() -> selectWithSubQuery(1000));
-        long joinSpendTime = spendTime(() -> selectWithJoin(1000));
+        long subQuerySpendTime = spendTime(() -> selectWithSubQuery(10));
+        long joinSpendTime = spendTime(() -> selectWithJoin(10));
 
         System.out.println("joinSpendTime: " + joinSpendTime);
         System.out.println("subQuerySpendTime: " + subQuerySpendTime);

@@ -34,4 +34,15 @@ public record Reservation(Long id, String name, LocalDate date, ReservationTime 
     public long timeId() {
         return time.id();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Reservation that)) return false;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

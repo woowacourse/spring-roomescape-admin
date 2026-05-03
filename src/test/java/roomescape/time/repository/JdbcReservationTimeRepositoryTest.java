@@ -54,14 +54,16 @@ class JdbcReservationTimeRepositoryTest {
     @DisplayName("ID를 통해 저장된 시간 정보를 정확히 조회한다.")
     void findByIdTest() {
         // given
-        ReservationTime savedTime = reservationTimeRepository.save(new ReservationTime(null, LocalTime.of(11, 0)));
+        LocalTime targetTime = LocalTime.of(11, 0);
+        ReservationTime savedTime = reservationTimeRepository.save(new ReservationTime(null, targetTime));
 
         // when
-        ReservationTime foundTime = reservationTimeRepository.findById(savedTime.getId());
+        ReservationTime foundTime = reservationTimeRepository.findById(savedTime.getId())
+                .orElseThrow(() -> new AssertionError("조회된 결과가 없습니다. id: " + savedTime.getId()));
 
         // then
         assertThat(foundTime.getId()).isEqualTo(savedTime.getId());
-        assertThat(foundTime.getStartAt()).isEqualTo("11:00");
+        assertThat(foundTime.getStartAt()).isEqualTo(targetTime);
     }
 
     @Test

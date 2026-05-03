@@ -10,6 +10,7 @@ import roomescape.time.domain.ReservationTime;
 import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
@@ -46,9 +47,10 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTime findById(Long id) {
+    public Optional<ReservationTime> findById(Long id) {
         String sql = "select id, start_at from reservation_time where id = ?";
-        return jdbcTemplate.queryForObject(sql, reservationTimeRowMapper, id);
+        List<ReservationTime> results = jdbcTemplate.query(sql, reservationTimeRowMapper, id);
+        return results.stream().findFirst();
     }
 
     @Override

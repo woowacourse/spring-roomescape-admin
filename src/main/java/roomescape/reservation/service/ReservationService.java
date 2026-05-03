@@ -23,7 +23,9 @@ public class ReservationService {
 
     @Transactional
     public Reservation save(ReservationCommand command) {
-        ReservationTime time = reservationTimeRepository.findById(command.timeId());
+        ReservationTime time = reservationTimeRepository.findById(command.timeId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 예약 시간이 존재하지 않습니다."));
+
         Reservation reservation = Reservation.create(command.name(), command.date(), time);
 
         if (reservationRepository.existsByDateAndTimeId(reservation.getDate(), command.timeId())) {

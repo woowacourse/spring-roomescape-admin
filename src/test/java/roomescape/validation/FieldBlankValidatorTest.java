@@ -30,7 +30,7 @@ class FieldBlankValidatorTest {
         List<String> errors = validator.validate(nullNameDto);
 
         Assertions.assertThat(errors.getFirst())
-                .isEqualTo("Null 일 수 없습니다.");
+                .isEqualTo("name은 Null일 수 없습니다.");
     }
 
     @Test

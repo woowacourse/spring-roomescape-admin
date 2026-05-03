@@ -43,7 +43,7 @@ public class FieldBlankValidator {
         }
 
         if (value == null) {
-            errors.add("Null 일 수 없습니다.");
+            errors.add(field.getName() + "은 Null일 수 없습니다.");
             return;
         }
 

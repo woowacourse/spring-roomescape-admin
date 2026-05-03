@@ -1,6 +1,8 @@
 package roomescape.domain.time.controller;
 
 import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,17 +25,18 @@ public class TimeController {
     }
 
     @GetMapping
-    public List<TimeResponseDTO> getTimes() {
-        return timeService.getTimes();
+    public ResponseEntity<List<TimeResponseDTO>> getTimes() {
+        return ResponseEntity.ok(timeService.getTimes());
     }
 
     @PostMapping
-    public TimeResponseDTO saveTime(@RequestBody TimeCreateRequestDTO requestDTO) {
-        return timeService.saveTime(requestDTO);
+    public ResponseEntity<TimeResponseDTO> saveTime(@RequestBody TimeCreateRequestDTO requestDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(timeService.saveTime(requestDTO));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTime(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteTime(@PathVariable Long id) {
         timeService.deleteTimeById(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

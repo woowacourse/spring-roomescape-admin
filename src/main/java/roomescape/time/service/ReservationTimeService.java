@@ -29,12 +29,12 @@ public class ReservationTimeService {
         return ReservationTime.create(savedId, reservationTime.getStartAt());
     }
 
-    public void deleteById(Long id) {
+    public int deleteById(Long id) {
         List<Reservation> reservations = reservationJdbcDao.findByTimeId(id);
         if (!reservations.isEmpty()) {
             throw new IllegalArgumentException("[ERROR] 해당 시간에 예약이 존재하여 삭제할 수 없습니다.");
         }
 
-        reservationTimeJdbcDao.deleteById(id);
+        return reservationTimeJdbcDao.deleteById(id);
     }
 }

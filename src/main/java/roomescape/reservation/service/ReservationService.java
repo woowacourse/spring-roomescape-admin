@@ -37,7 +37,7 @@ public class ReservationService {
         return savedReservation;
     }
 
-    public void deleteById(Long id) {
-        reservationJdbcDao.deleteById(id);
+    public int deleteById(Long id) {
+        return reservationJdbcDao.deleteById(id);
     }
 }

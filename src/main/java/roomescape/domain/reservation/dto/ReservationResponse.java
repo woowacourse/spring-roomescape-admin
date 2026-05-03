@@ -1,6 +1,7 @@
 package roomescape.domain.reservation.dto;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import roomescape.domain.reservation.Reservation;
 import roomescape.domain.reservationtime.ReservationTime;
 
@@ -22,7 +23,7 @@ public record ReservationResponse(
 
     public record ReservationTimePayload(
         Long id,
-        String startAt
+        LocalTime startAt
     ) {
 
         public static ReservationTimePayload from(ReservationTime reservationTime) {

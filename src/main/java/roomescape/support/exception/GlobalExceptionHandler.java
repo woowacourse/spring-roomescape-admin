@@ -15,7 +15,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception exception) {
-        final ErrorCode errorCode = RoomescapeErrorCode.INTERNAL_SERVER_ERROR;
-        return ErrorResponse.of(errorCode);
+        return ErrorResponse.of(RoomescapeErrorCode.INTERNAL_SERVER_ERROR);
     }
 }

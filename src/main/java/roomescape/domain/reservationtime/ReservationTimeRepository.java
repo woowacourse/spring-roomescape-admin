@@ -2,6 +2,7 @@ package roomescape.domain.reservationtime;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -26,11 +27,14 @@ public class ReservationTimeRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, reservationTime.getStartAt());
+            ps.setString(1, reservationTime.getFormattedStartAt());
             return ps;
         }, keyHolder);
         long id = extractId(keyHolder);
-        return ReservationTime.createWithId(id, reservationTime);
+        return ReservationTime.of(
+            id,
+            reservationTime.getStartAt()
+        );
     }
 
     public List<ReservationTime> findAll() {
@@ -49,7 +53,7 @@ public class ReservationTimeRepository {
     private RowMapper<ReservationTime> reservationTimeRowMapper() {
         return (rs, rowNum) -> ReservationTime.of(
             rs.getLong("id"),
-            rs.getString("start_at")
+            LocalTime.parse(rs.getString("start_at"))
         );
     }
 

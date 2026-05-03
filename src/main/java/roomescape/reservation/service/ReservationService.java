@@ -18,7 +18,11 @@ public class ReservationService {
 
     @Transactional
     public Reservation save(ReservationRequest request) {
-        Long id = reservationRepository.save(request);
+        Long id = reservationRepository.save(
+                request.name(),
+                request.date(),
+                request.timeId()
+        );
         return reservationRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("예약 저장 후 조회에 실패했습니다. id=" + id));
     }

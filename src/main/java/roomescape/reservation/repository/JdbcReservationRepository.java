@@ -13,7 +13,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.entity.Reservation;
 import roomescape.reservation.entity.ReservationTime;
-import roomescape.reservation.payload.ReservationRequest;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {
@@ -47,15 +46,15 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Long save(ReservationRequest request) {
+    public Long save(String name, LocalDate date, Long timeId) {
         String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setString(1, request.name());
-            ps.setObject(2, request.date());
-            ps.setLong(3, request.timeId());
+            ps.setString(1, name);
+            ps.setObject(2, date);
+            ps.setLong(3, timeId);
             return ps;
         }, keyHolder);
 

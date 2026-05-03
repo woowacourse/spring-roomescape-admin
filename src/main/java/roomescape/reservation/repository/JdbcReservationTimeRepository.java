@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.entity.ReservationTime;
-import roomescape.reservation.payload.ReservationTimeRequest;
 
 @Repository
 public class JdbcReservationTimeRepository implements ReservationTimeRepository {
@@ -24,15 +23,15 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public Long save(ReservationTimeRequest request) {
+    public Long save(LocalTime startAt) {
         String sql = """
                 MERGE INTO reservation_time (start_at)
                 KEY(start_at)
                 VALUES (?)
                 """;
 
-        jdbcTemplate.update(sql, request.startAt());
-        return findIdByStartAt(request.startAt());
+        jdbcTemplate.update(sql, startAt);
+        return findIdByStartAt(startAt);
     }
 
     @Override

@@ -1,13 +1,13 @@
 package roomescape.reservation.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import roomescape.reservation.entity.Reservation;
-import roomescape.reservation.payload.ReservationRequest;
 
 public interface ReservationRepository {
 
-    Long save(ReservationRequest request);
+    Long save(String name, LocalDate date, Long timeId);
 
     Optional<Reservation> findById(Long id);
 

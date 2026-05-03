@@ -52,11 +52,6 @@ public class ReservationDAO {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public void insert(Reservation reservation) {
-        String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, reservation.getName(), reservation.getDate(), reservation.getTime().getId());
-    }
-
     public Long insertWithKeyHolder(Reservation reservation) {
         String sql = "INSERT INTO reservation (name, date, time_id) VALUES(?, ?, ?)";
 

@@ -49,11 +49,6 @@ public class ReservationTimeDAO {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public void insert(ReservationTime reservationTime) {
-        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
-        jdbcTemplate.update(sql, reservationTime.getStartAt());
-    }
-
     public Long insertWithKeyHolder(ReservationTime reservationTime) {
         String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
 

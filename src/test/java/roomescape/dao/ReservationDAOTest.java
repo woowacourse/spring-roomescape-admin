@@ -66,16 +66,6 @@ public class ReservationDAOTest {
     }
 
     @Test
-    void insert() {
-        ReservationTime time = reservationTimes.getFirst();
-        Reservation reservation = new Reservation("user4", LocalDate.of(2026, 5, 1), time);
-        reservationDAO.insert(reservation);
-        int count = reservationDAO.count();
-
-        assertThat(count).isEqualTo(4);
-    }
-
-    @Test
     void keyHolder() {
         ReservationTime time = reservationTimes.getFirst();
         Reservation reservation = new Reservation("user4", LocalDate.of(2026, 5, 1), time);

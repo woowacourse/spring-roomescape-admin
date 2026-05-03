@@ -53,15 +53,6 @@ public class ReservationTimeDAOTest {
     }
 
     @Test
-    void insert() {
-        ReservationTime reservationTime = new ReservationTime(LocalTime.of(15, 0));
-        reservationTimeDAO.insert(reservationTime);
-        int count = reservationTimeDAO.count();
-
-        assertThat(count).isEqualTo(4);
-    }
-
-    @Test
     void keyHolder() {
         ReservationTime reservationTime = new ReservationTime(LocalTime.of(15, 0));
         Long id = reservationTimeDAO.insertWithKeyHolder(reservationTime);

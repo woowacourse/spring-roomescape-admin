@@ -2,11 +2,11 @@ package roomescape.time.controller.dto;
 
 import java.util.regex.Pattern;
 
-public record ReservationTimeRequestDto(String startAt) {
+public record ReservationTimeRequest(String startAt) {
 
     private static final Pattern TIME_PATTERN = Pattern.compile("^\\d{2}:\\d{2}$");
 
-    public ReservationTimeRequestDto {
+    public ReservationTimeRequest {
         validateTimeFormat(startAt);
     }
 

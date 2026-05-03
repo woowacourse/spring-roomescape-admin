@@ -2,11 +2,11 @@ package roomescape.reservation.controller.dto;
 
 import java.util.regex.Pattern;
 
-public record ReservationRequestDto(String name, String date, Long timeId) {
+public record ReservationRequest(String name, String date, Long timeId) {
 
     private static final Pattern DATE_PATTERN = Pattern.compile("^\\d{4}-\\d{2}-\\d{2}$");
 
-    public ReservationRequestDto {
+    public ReservationRequest {
         validateEmptyName(name);
         validateDateFormat(date);
     }

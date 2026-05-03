@@ -1,6 +1,7 @@
 package roomescape.domain.reservation.domain;
 
 import java.time.LocalDate;
+import roomescape.domain.reservation.dto.response.ReservationResponseDTO;
 import roomescape.domain.time.domain.Time;
 
 public class Reservation {
@@ -42,5 +43,9 @@ public class Reservation {
 
     public Long getTimeId() {
         return time.getId();
+    }
+
+    public ReservationResponseDTO toResponseDTO() {
+        return new ReservationResponseDTO(id, name, date, time.toResponseDTO());
     }
 }

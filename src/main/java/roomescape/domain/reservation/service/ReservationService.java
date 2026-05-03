@@ -21,26 +21,19 @@ public class ReservationService {
     }
 
     public List<ReservationResponseDTO> getReservations() {
-
         List<Reservation> reservations = reservationRepository.findAllReservations();
         return convertReservationsToDTO(reservations);
     }
 
-    private ReservationResponseDTO convertReservationToDTO(Reservation reservation) {
-        return new ReservationResponseDTO(reservation.getId(), reservation.getName(), reservation.getDate(),
-            reservation.getTime());
-    }
-
     private List<ReservationResponseDTO> convertReservationsToDTO(List<Reservation> reservations) {
-
         return reservations.stream()
-            .map(this::convertReservationToDTO)
+            .map(Reservation::toResponseDTO)
             .toList();
     }
 
     public ReservationResponseDTO saveReservation(ReservationCreateRequestDTO requestDTO) {
         Reservation reservation = createReservation(requestDTO);
-        return convertReservationToDTO(reservationRepository.save(reservation));
+        return reservationRepository.save(reservation).toResponseDTO();
     }
 
     private Reservation createReservation(ReservationCreateRequestDTO requestDTO) {

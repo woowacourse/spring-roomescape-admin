@@ -19,20 +19,16 @@ public class TimeService {
     public List<TimeResponseDTO> getTimes() {
         return timeRepository.findAllTimes()
             .stream()
-            .map(this::convertTimeToDTO)
+            .map(Time::toResponseDTO)
             .toList();
     }
 
     public TimeResponseDTO saveTime(TimeCreateRequestDTO requestDTO) {
         Time time = new Time(requestDTO.startAt());
-        return convertTimeToDTO(timeRepository.save(time));
+        return timeRepository.save(time).toResponseDTO();
     }
 
     public void deleteTimeById(Long id) {
         timeRepository.deleteTimeById(id);
-    }
-
-    private TimeResponseDTO convertTimeToDTO(Time time) {
-        return new TimeResponseDTO(time.getId(), time.getStartAt());
     }
 }

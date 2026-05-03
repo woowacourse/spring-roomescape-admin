@@ -49,13 +49,15 @@ class ReservationServiceTest {
             // then
             assertAll(
                 () -> assertEquals(3, actual.size()),
-                () -> assertEquals(new ReservationResponseDTO(1L, "제이콥", date, time), actual.get(0)),
+                () -> assertEquals(new ReservationResponseDTO(1L, "제이콥", date, time.toResponseDTO()), actual.get(0)),
                 () -> assertEquals(
-                    new ReservationResponseDTO(2L, "라이", date.plusDays(1), new Time(2L, LocalTime.of(11, 0))),
+                    new ReservationResponseDTO(2L, "라이", date.plusDays(1),
+                        new Time(2L, LocalTime.of(11, 0)).toResponseDTO()),
                     actual.get(1)
                 ),
                 () -> assertEquals(
-                    new ReservationResponseDTO(3L, "티모", date.plusDays(2), new Time(3L, LocalTime.of(12, 0))),
+                    new ReservationResponseDTO(3L, "티모", date.plusDays(2),
+                        new Time(3L, LocalTime.of(12, 0)).toResponseDTO()),
                     actual.get(2)
                 )
             );
@@ -84,7 +86,7 @@ class ReservationServiceTest {
                 () -> assertEquals(1L, actual.id()),
                 () -> assertEquals("보예", actual.name()),
                 () -> assertEquals(LocalDate.of(2026, 5, 1), actual.date()),
-                () -> assertEquals(new Time(1L, LocalTime.of(15, 30)), actual.time()),
+                () -> assertEquals(new Time(1L, LocalTime.of(15, 30)).toResponseDTO(), actual.time()),
                 () -> assertEquals(List.of(actual), reservationService.getReservations())
             );
         }

@@ -151,17 +151,6 @@ public class RestExceptionHandlerTest {
     }
 
     @Test
-    void db_무결성_위반할_경우_409() {
-        // when & then
-        RestAssuredMockMvc.given().log().all()
-                .contentType(MediaType.APPLICATION_JSON)
-                .when().get("/dummy/dataIntegrity")
-                .then().log().all()
-                .status(HttpStatus.CONFLICT)
-                .body(containsString("요청 처리 중 데이터 충돌이 발생했습니다. 다시 시도 해주세요."));
-    }
-
-    @Test
     void 나머지_예외는_서버_예외() {
         // when & then
         RestAssuredMockMvc.given().log().all()

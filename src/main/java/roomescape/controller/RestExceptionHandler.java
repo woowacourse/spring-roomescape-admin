@@ -4,7 +4,6 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -36,12 +35,6 @@ public class RestExceptionHandler {
     public ResponseEntity<String> handleDuplicateEntityException(DuplicateEntityException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(ex.getMessage());
-    }
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<String> handleDataIntegrityViolationException() {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body("요청 처리 중 데이터 충돌이 발생했습니다. 다시 시도 해주세요.");
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

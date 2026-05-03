@@ -8,7 +8,7 @@ public record ReservationResponseDto(
         Long id,
         String name,
         LocalDate date,
-        ReservationTimeResponseDto reservationTimeResponseDto
+        ReservationTimeResponseDto time
 ) {
 
     public static ReservationResponseDto from(Reservation reservation) {

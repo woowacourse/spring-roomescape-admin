@@ -9,6 +9,7 @@ import roomescape.repository.ReservationRepository;
 
 @Service
 public class ReservationService {
+    public static final String INVALID_RESERVATION_ID = "요청한 예약을 찾을 수 없습니다.";
     private final ReservationRepository reservationRepository;
     private final ReservationTimeService reservationTimeService;
 
@@ -31,6 +32,8 @@ public class ReservationService {
     }
 
     public void cancel(long reservationId) {
+        reservationRepository.findById(reservationId).orElseThrow(() -> new IllegalArgumentException(
+                INVALID_RESERVATION_ID));
         reservationRepository.deleteById(reservationId);
     }
 }

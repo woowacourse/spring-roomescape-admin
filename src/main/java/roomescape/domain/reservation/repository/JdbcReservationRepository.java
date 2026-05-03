@@ -8,8 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.reservation.domain.Reservation;
-import roomescape.domain.time.domain.Time;
+import roomescape.domain.reservation.entity.Reservation;
+import roomescape.domain.time.entity.Time;
 
 @Repository
 public class JdbcReservationRepository implements ReservationRepository {

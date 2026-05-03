@@ -2,9 +2,9 @@ package roomescape.domain.time.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
-import roomescape.domain.time.domain.Time;
 import roomescape.domain.time.dto.request.TimeCreateRequestDTO;
 import roomescape.domain.time.dto.response.TimeResponseDTO;
+import roomescape.domain.time.entity.Time;
 import roomescape.domain.time.repository.TimeRepository;
 
 @Service

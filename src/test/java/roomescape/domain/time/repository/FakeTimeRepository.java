@@ -3,7 +3,7 @@ package roomescape.domain.time.repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import roomescape.domain.time.domain.Time;
+import roomescape.domain.time.entity.Time;
 
 public class FakeTimeRepository implements TimeRepository {
 

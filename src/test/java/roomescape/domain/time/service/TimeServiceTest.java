@@ -7,9 +7,9 @@ import java.time.LocalTime;
 import java.util.List;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import roomescape.domain.time.domain.Time;
 import roomescape.domain.time.dto.request.TimeCreateRequestDTO;
 import roomescape.domain.time.dto.response.TimeResponseDTO;
+import roomescape.domain.time.entity.Time;
 import roomescape.domain.time.repository.FakeTimeRepository;
 import roomescape.domain.time.repository.TimeRepository;
 

@@ -1,8 +1,8 @@
-package roomescape.domain.reservation.domain;
+package roomescape.domain.reservation.entity;
 
 import java.time.LocalDate;
 import roomescape.domain.reservation.dto.response.ReservationResponseDTO;
-import roomescape.domain.time.domain.Time;
+import roomescape.domain.time.entity.Time;
 
 public class Reservation {
 

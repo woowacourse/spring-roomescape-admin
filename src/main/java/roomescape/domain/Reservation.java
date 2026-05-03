@@ -1,0 +1,77 @@
+package roomescape.domain;
+
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.time.LocalDate;
+import java.util.Objects;
+
+public class Reservation {
+    private Long id;
+    private String name;
+    private LocalDate date;
+    private ReservationTime time;
+
+    private Reservation() { // Jackson이 Json -> Reservation으로 변환하는 과정에서 필요.
+    }
+
+    @JsonCreator
+    public Reservation(
+            @JsonProperty(value = "id") Long id,
+            @JsonProperty(value = "name") String name,
+            @JsonProperty(value = "date") LocalDate date,
+            @JsonProperty(value = "time") ReservationTime time
+    ) {
+        this.id = id;
+        this.name = name;
+        this.date = date;
+        this.time = time;
+    }
+
+    public Reservation(String name, LocalDate date, ReservationTime time) {
+        this(null, name, date, time);
+    }
+
+    public Reservation withId(Long id) {
+        return new Reservation(id, name, date, time);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public ReservationTime getTime() {
+        return time;
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", date=" + date +
+                ", time=" + time +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Reservation that)) return false;
+        return getId() != null && Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+}

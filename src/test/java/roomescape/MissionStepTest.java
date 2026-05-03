@@ -2,11 +2,11 @@ package roomescape;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.DirtiesContext;
 import roomescape.reservation.controller.ReservationController;
 import roomescape.reservation.domain.Reservation;
 
@@ -21,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
 
     @Autowired
@@ -29,6 +28,12 @@ public class MissionStepTest {
 
     @Autowired
     private ReservationController reservationController;
+
+    @BeforeEach
+    void setUp() {
+        jdbcTemplate.update("DELETE FROM reservation");
+        jdbcTemplate.update("DELETE FROM reservation_time");
+    }
 
     @Test
     void 예약이_없을_때_예약_목록을_조회하면_빈_목록을_반환한다() {
@@ -48,13 +53,16 @@ public class MissionStepTest {
         reservation.put("date", "2023-08-05");
         reservation.put("timeId", String.valueOf(timeId));
 
-        RestAssured.given().log().all()
+        Long reservationId = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(200)
-                .body("id", is(1));
+                .extract()
+                .jsonPath()
+                .getLong("id");
+        assertThat(reservationId).isPositive();
 
         RestAssured.given().log().all()
                 .when().get("/reservations")
@@ -63,7 +71,7 @@ public class MissionStepTest {
                 .body("size()", is(1));
 
         RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+                .when().delete("/reservations/" + reservationId)
                 .then().log().all()
                 .statusCode(200);
 
@@ -126,18 +134,21 @@ public class MissionStepTest {
         params.put("date", "2023-08-05");
         params.put("timeId", timeId);
 
-        RestAssured.given().log().all()
+        Long reservationId = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/reservations")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getLong("id");
 
         Integer count = jdbcTemplate.queryForObject("SELECT count(1) from reservation", Integer.class);
         assertThat(count).isEqualTo(1);
 
         RestAssured.given().log().all()
-                .when().delete("/reservations/1")
+                .when().delete("/reservations/" + reservationId)
                 .then().log().all()
                 .statusCode(200);
 
@@ -150,12 +161,15 @@ public class MissionStepTest {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
-        RestAssured.given().log().all()
+        Long timeId = RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
                 .when().post("/times")
                 .then().log().all()
-                .statusCode(200);
+                .statusCode(200)
+                .extract()
+                .jsonPath()
+                .getLong("id");
 
         RestAssured.given().log().all()
                 .when().get("/times")
@@ -164,7 +178,7 @@ public class MissionStepTest {
                 .body("size()", is(1));
 
         RestAssured.given().log().all()
-                .when().delete("/times/1")
+                .when().delete("/times/" + timeId)
                 .then().log().all()
                 .statusCode(200);
     }

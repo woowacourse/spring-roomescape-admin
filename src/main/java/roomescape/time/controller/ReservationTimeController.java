@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.time.domain.ReservationTime;
-import roomescape.time.dto.ReservationTimeRequestDto;
-import roomescape.time.dto.ReservationTimeResponseDto;
+import roomescape.time.dto.ReservationTimeRequest;
+import roomescape.time.dto.ReservationTimeResponse;
 import roomescape.time.service.ReservationTimeService;
 
 @RestController
@@ -26,22 +26,22 @@ public class ReservationTimeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTimeResponseDto>> getAll() {
-        List<ReservationTimeResponseDto> response = reservationTimeService.findAll().stream()
-                .map(ReservationTimeResponseDto::from)
+    public ResponseEntity<List<ReservationTimeResponse>> getAll() {
+        List<ReservationTimeResponse> response = reservationTimeService.findAll().stream()
+                .map(ReservationTimeResponse::from)
                 .toList();
 
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationTimeResponseDto> create(@RequestBody ReservationTimeRequestDto dto) {
+    public ResponseEntity<ReservationTimeResponse> create(@RequestBody ReservationTimeRequest dto) {
         ReservationTime reservationTime = ReservationTime.create(dto);
         ReservationTime savedReservationTime = reservationTimeService.save(reservationTime);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(ReservationTimeResponseDto.from(savedReservationTime));
+                .body(ReservationTimeResponse.from(savedReservationTime));
     }
 
     @DeleteMapping("/{id}")

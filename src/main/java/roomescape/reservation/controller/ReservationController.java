@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.reservation.domain.Reservation;
-import roomescape.reservation.dto.ReservationRequestDto;
-import roomescape.reservation.dto.ReservationResponseDto;
+import roomescape.reservation.dto.ReservationRequest;
+import roomescape.reservation.dto.ReservationResponse;
 import roomescape.reservation.service.ReservationService;
 
 @RestController
@@ -26,18 +26,18 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponseDto>> getAll() {
-        List<ReservationResponseDto> responseReservations = reservationService.findAll().stream()
-                .map(ReservationResponseDto::from)
+    public ResponseEntity<List<ReservationResponse>> getAll() {
+        List<ReservationResponse> responseReservations = reservationService.findAll().stream()
+                .map(ReservationResponse::from)
                 .toList();
 
         return ResponseEntity.ok(responseReservations);
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponseDto> create(@RequestBody ReservationRequestDto dto) {
+    public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest dto) {
         Reservation savedReservation = reservationService.save(dto);
-        ReservationResponseDto response = ReservationResponseDto.from(savedReservation);
+        ReservationResponse response = ReservationResponse.from(savedReservation);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)

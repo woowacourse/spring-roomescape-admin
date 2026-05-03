@@ -24,8 +24,8 @@ public class GlobalExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .orElse("유효하지 않은 요청입니다");
 
-        logger.warn("검증 오류 발생", e);
         ErrorResponse response = new ErrorResponse(message);
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(response);
@@ -33,7 +33,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ReservationException.class)
     public ResponseEntity<ErrorResponse> handleReservationException(ReservationException e) {
-        logger.warn("예약 오류 발생: {}", e.getMessage());
         ErrorResponse response = new ErrorResponse(e.getUserMessage());
         return ResponseEntity
                 .status(e.getStatus())
@@ -42,7 +41,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ReservationTimeException.class)
     public ResponseEntity<ErrorResponse> handleReservationTimeException(ReservationTimeException e) {
-        logger.warn("예약 시간 오류 발생: {}", e.getMessage());
         ErrorResponse response = new ErrorResponse(e.getUserMessage());
         return ResponseEntity
                 .status(e.getStatus())

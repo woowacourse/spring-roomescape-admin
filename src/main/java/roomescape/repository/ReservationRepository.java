@@ -8,7 +8,7 @@ import java.util.List;
 @Repository
 public interface ReservationRepository {
 
-    List<Reservation> findAllJoinedDto();
+    List<Reservation> findAll();
 
     Reservation findById(long id);
 

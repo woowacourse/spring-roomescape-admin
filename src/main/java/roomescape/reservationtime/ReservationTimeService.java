@@ -3,7 +3,6 @@ package roomescape.reservationtime;
 import java.time.LocalTime;
 import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.reservation.ReservationRepository;
@@ -28,7 +27,7 @@ public class ReservationTimeService {
         try {
             return reservationTimeRepository.save(startAt);
         } catch (DataIntegrityViolationException e) {
-            throw new ReservationTimeException(HttpStatus.BAD_REQUEST, "이미 존재하는 예약 시간입니다");
+            throw new DuplicateReservationTimeException("이미 존재하는 예약 시간입니다");
         }
     }
 
@@ -37,7 +36,7 @@ public class ReservationTimeService {
         int reservationCount = reservationRepository.countByTimeId(id);
 
         if (reservationCount > 0) {
-            throw new ReservationTimeException(HttpStatus.CONFLICT, "예약이 있어 삭제할 수 없습니다");
+            throw new ReservationTimeNotEmptyException("예약이 있어 삭제할 수 없습니다");
         }
 
         reservationTimeRepository.delete(id);

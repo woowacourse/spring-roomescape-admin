@@ -11,7 +11,6 @@ import java.time.LocalTime;
 import java.util.Properties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import roomescape.reservation.ReservationDao;
@@ -70,8 +69,8 @@ class ReservationTimeServiceTest {
         reservationTimeService.createReservationTime(LocalTime.of(16, 0));
 
         assertThatThrownBy(() -> reservationTimeService.createReservationTime(LocalTime.of(16, 0)))
-                .isInstanceOf(ReservationTimeException.class)
-                .extracting(e -> ((ReservationTimeException) e).getUserMessage())
+                .isInstanceOf(DuplicateReservationTimeException.class)
+                .extracting(Throwable::getMessage)
                 .isEqualTo("이미 존재하는 예약 시간입니다");
     }
 
@@ -98,9 +97,7 @@ class ReservationTimeServiceTest {
         insertReservation("kim", LocalDate.of(2026, 5, 1), saved.id());
 
         assertThatThrownBy(() -> reservationTimeService.deleteReservationTime(saved.id()))
-                .isInstanceOf(ReservationTimeException.class)
-                .extracting(e -> ((ReservationTimeException) e).getStatus())
-                .isEqualTo(HttpStatus.CONFLICT);
+                .isInstanceOf(ReservationTimeNotEmptyException.class);
     }
 
     @Test

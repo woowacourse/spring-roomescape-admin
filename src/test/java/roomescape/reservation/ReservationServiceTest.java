@@ -12,14 +12,14 @@ import java.util.List;
 import java.util.Properties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
+
+import roomescape.reservationtime.ReservationTimeNotFoundException;
+import roomescape.reservationtime.ReservationTimeService;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import roomescape.reservationtime.ReservationTime;
 import roomescape.reservationtime.ReservationTimeDao;
 import roomescape.reservationtime.ReservationTimeRepository;
-import roomescape.reservationtime.ReservationTimeService;
-import roomescape.reservationtime.ReservationTimeException;
 
 class ReservationServiceTest {
     private static final String TEST_PROPERTIES = "application-test.properties";
@@ -78,9 +78,7 @@ class ReservationServiceTest {
     @Test
     void 예약_시간_ID가_없으면_예외가_발생한다() {
         assertThatThrownBy(() -> reservationService.createReservation("브라운", LocalDate.of(2026, 5, 1), 999L))
-                .isInstanceOf(ReservationTimeException.class)
-                .extracting(e -> ((ReservationTimeException) e).getStatus())
-                .isEqualTo(HttpStatus.NOT_FOUND);
+                .isInstanceOf(ReservationTimeNotFoundException.class);
     }
 
     @Test
@@ -90,8 +88,8 @@ class ReservationServiceTest {
         reservationService.createReservation("브라운", LocalDate.of(2026, 5, 1), time.id());
 
         assertThatThrownBy(() -> reservationService.createReservation("코니", LocalDate.of(2026, 5, 1), time.id()))
-                .isInstanceOf(ReservationException.class)
-                .extracting(e -> ((ReservationException) e).getUserMessage())
+                .isInstanceOf(DuplicateReservationException.class)
+                .extracting(Throwable::getMessage)
                 .isEqualTo("해당 날짜의 해당 시간은 이미 예약되었습니다");
     }
 

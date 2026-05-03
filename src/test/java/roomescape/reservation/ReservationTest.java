@@ -39,7 +39,7 @@ class ReservationTest {
         Reservation second = new Reservation(null, "브라운", LocalDate.of(2026, 5, 1), time);
 
         assertThat(first).isNotEqualTo(second);
-        assertThat(first.hashCode()).isEqualTo(0);
+        assertThat(first.hashCode()).isNotEqualTo(second.hashCode());
     }
 }
 

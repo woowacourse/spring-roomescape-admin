@@ -37,9 +37,8 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public List<ReservationTime> findAll() {
-        String sql = "SELECT * FROM reservation_time";
-        return jdbcTemplate.query(sql, RESERVATION_TIME_MAPPER);
+    public void deleteById(long id) {
+        jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
     }
 
     @Override
@@ -57,14 +56,15 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public void deleteById(long id) {
-        jdbcTemplate.update("DELETE FROM reservation_time WHERE id = ?", id);
-    }
-
-    @Override
     public boolean existsByStartAt(LocalTime time) {
         String sql = "SELECT EXISTS (SELECT 1 FROM reservation_time WHERE start_at = ?)";
         Boolean result = jdbcTemplate.queryForObject(sql, Boolean.class, time);
         return Boolean.TRUE.equals(result);
+    }
+
+    @Override
+    public List<ReservationTime> findAll() {
+        String sql = "SELECT * FROM reservation_time";
+        return jdbcTemplate.query(sql, RESERVATION_TIME_MAPPER);
     }
 }

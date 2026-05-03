@@ -29,8 +29,8 @@ public class MemoryReservationTimeRepository implements ReservationTimeRepositor
     }
 
     @Override
-    public List<ReservationTime> findAll() {
-        return Collections.unmodifiableList(reservationTimes);
+    public void deleteById(long id) {
+        reservationTimes.removeIf(time -> time.getId().equals(id));
     }
 
     @Override
@@ -41,13 +41,13 @@ public class MemoryReservationTimeRepository implements ReservationTimeRepositor
     }
 
     @Override
-    public void deleteById(long id) {
-        reservationTimes.removeIf(time -> time.getId().equals(id));
-    }
-
-    @Override
     public boolean existsByStartAt(LocalTime time) {
         return reservationTimes.stream()
                 .anyMatch(reservationTime -> reservationTime.getStartAt().equals(time));
+    }
+
+    @Override
+    public List<ReservationTime> findAll() {
+        return Collections.unmodifiableList(reservationTimes);
     }
 }

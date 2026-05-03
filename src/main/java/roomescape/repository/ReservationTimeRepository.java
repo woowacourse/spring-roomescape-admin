@@ -9,11 +9,11 @@ public interface ReservationTimeRepository {
 
     ReservationTime save(ReservationTime reservationTime);
 
-    List<ReservationTime> findAll();
+    void deleteById(long id);
 
     Optional<ReservationTime> findById(long id);
 
-    void deleteById(long id);
-
     boolean existsByStartAt(LocalTime time);
+
+    List<ReservationTime> findAll();
 }

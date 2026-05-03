@@ -9,6 +9,9 @@ public class ReservationTime {
     private final LocalTime startAt;
 
     public ReservationTime(Long id, LocalTime startAt) {
+        if (startAt == null) {
+            throw new IllegalArgumentException("예약 시작 시간은 비어 있을 수 없습니다.");
+        }
         this.id = id;
         this.startAt = startAt;
     }

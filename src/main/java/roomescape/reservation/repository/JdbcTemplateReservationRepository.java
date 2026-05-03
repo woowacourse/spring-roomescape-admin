@@ -1,5 +1,7 @@
 package roomescape.reservation.repository;
 
+import static roomescape.time.repository.ReservationTimeRowMapper.RESERVATION_TIME_ROW_MAPPER;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +13,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
-import roomescape.time.domain.ReservationTime;
 
 @Repository
 public class JdbcTemplateReservationRepository implements ReservationRepository {
@@ -21,10 +22,7 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
             resultSet.getLong("id"),
             resultSet.getString("name"),
             resultSet.getDate("date").toLocalDate(),
-            ReservationTime.of(
-                    resultSet.getLong("time_id"),
-                    resultSet.getTime("start_at").toLocalTime()
-            )
+            RESERVATION_TIME_ROW_MAPPER.mapRow(resultSet, rowNumber)
     );
 
     public JdbcTemplateReservationRepository(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -37,23 +35,23 @@ public class JdbcTemplateReservationRepository implements ReservationRepository 
     @Override
     public List<Reservation> findAll() {
         String sql = """
-                SELECT r.id, r.name, r.date,
-                       rt.id AS time_id, rt.start_at
+                SELECT r.id AS reservation_id, r.name, r.date,
+                       rt.id, rt.start_at
                 FROM reservation r
                 INNER JOIN reservation_time rt ON r.time_id = rt.id
                 """;
 
-        return jdbcTemplate.query(
-                sql, new MapSqlParameterSource(),
-                reservationRowMapper);
+        return jdbcTemplate.query(sql, new MapSqlParameterSource(), reservationRowMapper);
     }
 
     @Override
     public Optional<Reservation> findById(Long id) {
         String sql = """
-                SELECT r.id, r.name, r.date,
-                       rt.id AS time_id, rt.start_at FROM reservation r
-                INNER JOIN reservation_time rt ON r.time_id = rt.id WHERE r.id = :id
+                SELECT r.id AS reservation_id, r.name, r.date,
+                       rt.id, rt.start_at
+                FROM reservation r
+                INNER JOIN reservation_time rt ON r.time_id = rt.id
+                WHERE r.id = :id
                 """;
 
         SqlParameterSource params = new MapSqlParameterSource("id", id);

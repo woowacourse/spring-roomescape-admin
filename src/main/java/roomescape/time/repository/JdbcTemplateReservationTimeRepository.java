@@ -1,10 +1,11 @@
 package roomescape.time.repository;
 
+import static roomescape.time.repository.ReservationTimeRowMapper.RESERVATION_TIME_ROW_MAPPER;
+
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -16,10 +17,6 @@ import roomescape.time.domain.ReservationTime;
 public class JdbcTemplateReservationTimeRepository implements ReservationTimeRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNumber) -> ReservationTime.of(
-            resultSet.getLong("id"),
-            resultSet.getTime("start_at").toLocalTime()
-    );
 
     public JdbcTemplateReservationTimeRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -32,7 +29,7 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
     public List<ReservationTime> findAll() {
         String sql = "SELECT * FROM reservation_time";
 
-        return jdbcTemplate.query(sql, new MapSqlParameterSource(), reservationTimeRowMapper);
+        return jdbcTemplate.query(sql, new MapSqlParameterSource(), RESERVATION_TIME_ROW_MAPPER);
     }
 
     @Override
@@ -43,7 +40,7 @@ public class JdbcTemplateReservationTimeRepository implements ReservationTimeRep
 
         try {
             return Optional.ofNullable(
-                    jdbcTemplate.queryForObject(sql, params, reservationTimeRowMapper));
+                    jdbcTemplate.queryForObject(sql, params, RESERVATION_TIME_ROW_MAPPER));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

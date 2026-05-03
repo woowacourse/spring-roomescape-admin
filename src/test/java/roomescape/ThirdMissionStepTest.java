@@ -68,7 +68,6 @@ public class ThirdMissionStepTest {
 
     @Test
     void 이름이_비어있으면_예약_생성_실패() {
-
         Map<String, Object> params = new HashMap<>();
         params.put("name", "");
         params.put("date", "2026-04-29");
@@ -84,7 +83,6 @@ public class ThirdMissionStepTest {
 
     @Test
     void 날짜가_없으면_예약_생성_실패() {
-
         Map<String, Object> params = new HashMap<>();
         params.put("name", "홍길동");
         params.put("timeId", 1L);
@@ -92,6 +90,61 @@ public class ThirdMissionStepTest {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    void 잘못된_시간_형식으로_시간_생성_실패() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "오전 10시");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    void 존재하지_않는_시간_ID로_예약_생성_실패() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 999);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    void 중복된_날짜와_시간으로_예약_생성_실패() {
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body("{\"startAt\": \"10:00\"}")
+                .when().post("/times")
+                .then().statusCode(201);
+
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().statusCode(201);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(400);

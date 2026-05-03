@@ -1,12 +1,12 @@
 package roomescape.repository;
 
-import java.time.LocalTime;
+import roomescape.domain.ReservationTime;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import roomescape.domain.ReservationTime;
 
-public class FakeReservationTimeDao implements ReservationTimeDao {
+public class FakeReservationTimeDao implements ReservationTimeRepository {
 
     private final Map<Long, ReservationTime> storage = new HashMap<>();
     private long sequence = 1L;
@@ -17,19 +17,20 @@ public class FakeReservationTimeDao implements ReservationTimeDao {
     }
 
     @Override
-    public long insert(LocalTime startAt) {
+    public ReservationTime findById(long id) {
+        return storage.get(id);
+    }
+
+    @Override
+    public ReservationTime save(ReservationTime reservationTime) {
         long id = sequence++;
-        storage.put(id, new ReservationTime(id, startAt));
-        return id;
+        ReservationTime savedTime = new ReservationTime(id, reservationTime.startAt());
+        storage.put(id, savedTime);
+        return savedTime;
     }
 
     @Override
-    public void deleteById(long timeId) {
-        storage.remove(timeId);
-    }
-
-    @Override
-    public ReservationTime findById(long timeId) {
-        return storage.get(timeId);
+    public void deleteById(long id) {
+        storage.remove(id);
     }
 }

@@ -1,49 +1,36 @@
 package roomescape.repository;
 
-import java.time.LocalTime;
+import roomescape.domain.Reservation;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import roomescape.domain.Reservation;
 
-public class FakeReservationDao implements ReservationDao {
+public class FakeReservationDao implements ReservationRepository {
 
     private final Map<Long, Reservation> storage = new HashMap<>();
     private long sequence = 1L;
 
     @Override
-    public List<ReservationJoinedDto> findAll() {
-        return storage.values().stream()
-                .map(this::toJoinedDto)
-                .toList();
+    public List<Reservation> findAll() {
+        return List.copyOf(storage.values());
     }
 
     @Override
-    public Reservation findById(long reservationId) {
-        return storage.get(reservationId);
+    public Reservation findById(long id) {
+        return storage.get(id);
     }
 
     @Override
-    public ReservationJoinedDto findJoinedDtoById(long reservationId) {
-        return toJoinedDto(storage.get(reservationId));
-    }
-
-    @Override
-    public long insert(Reservation reservation) {
+    public Reservation save(Reservation reservation) {
         long id = sequence++;
-        Reservation newReservation = new Reservation(id, reservation.name(), reservation.date(),
-                reservation.reservationTimeId());
-        storage.put(id, newReservation);
-        return id;
+        Reservation savedReservation = new Reservation(id, reservation.name(), reservation.date(), reservation.reservationTime());
+        storage.put(id, savedReservation);
+        return savedReservation;
     }
 
     @Override
-    public void deleteById(long reservationId) {
-        storage.remove(reservationId);
-    }
-
-    private ReservationJoinedDto toJoinedDto(Reservation reservation) {
-        return new ReservationJoinedDto(reservation.id(), reservation.name(), reservation.date(),
-                reservation.reservationTimeId(), LocalTime.of(10, 0));
+    public void deleteById(long id) {
+        storage.remove(id);
     }
 }

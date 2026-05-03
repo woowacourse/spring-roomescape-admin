@@ -27,7 +27,7 @@ public class ReservationRepository {
     }
 
     public Optional<Reservation> findById(long reservationId) {
-        String sql = "select r.id as reservation_id, r.name, r.date, rt.id as time_id, rt.start_at from reservation r inner join reservation_time rt on r.time_id = rt.id where id = ?";
+        String sql = "select r.id as reservation_id, r.name, r.date, rt.id as time_id, rt.start_at from reservation r inner join reservation_time rt on r.time_id = rt.id where r.id = ?";
         List<Reservation> result = jdbcTemplate.query(sql, RESERVATION_ROW_MAPPER, reservationId);
         return result.stream().findFirst();
     }

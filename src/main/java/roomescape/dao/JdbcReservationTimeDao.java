@@ -48,13 +48,20 @@ public class JdbcReservationTimeDao implements ReservationTimeDao {
         }, keyHolder);
 
         long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
-        return reservationTime.toEntity(id);
+        return toEntity(reservationTime, id);
     }
 
     public boolean delete(Long id) {
         String sql = "delete from reservation_time where id = ?";
         int deletedRow = jdbcTemplate.update(sql, id);
         return deletedRow > 0;
+    }
+
+    private ReservationTime toEntity(ReservationTime reservationTime, long id) {
+        return new ReservationTime(
+                id,
+                reservationTime.getStartAt()
+        );
     }
 
 }

@@ -25,16 +25,9 @@ public class ReservationTime {
         return startAt;
     }
 
-    public ReservationTime toEntity(Long id) {
-        return new ReservationTime(
-                id,
-                this.startAt
-        );
-    }
-
     private void validateTime(LocalTime startAt) {
         if (startAt == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("[ERROR] 예약시간은 Null일 수 없습니다.");
         }
     }
 

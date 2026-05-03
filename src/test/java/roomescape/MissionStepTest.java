@@ -31,7 +31,7 @@ public class MissionStepTest {
     private ReservationController reservationController;
 
     @Test
-    void 예약_조회() {
+    void 예약이_없을_때_예약_목록을_조회하면_빈_목록을_반환한다() {
         RestAssured.given().log().all()
                 .when().get("/reservations")
                 .then().log().all()
@@ -40,7 +40,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 예약_추가_및_삭제() {
+    void 예약을_생성한_뒤_삭제하면_예약_목록이_비어있다() {
         Long timeId = createTime("10:00");
 
         Map<String, String> reservation = new HashMap<>();
@@ -75,7 +75,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 존재하지_않는_시간으로_예약_생성() {
+    void 존재하지_않는_시간_id로_예약을_생성하면_400을_응답한다() {
         Map<String, Object> reservation = new HashMap<>();
         reservation.put("name", "브라운");
         reservation.put("date", "2023-08-05");
@@ -90,7 +90,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 데이터베이스_연동() {
+    void 애플리케이션이_H2_데이터베이스와_연결되고_예약_테이블이_생성된다() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
             assertThat(connection.getCatalog()).isEqualTo("DATABASE");
@@ -101,7 +101,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void DB_조회_API_전환() {
+    void DB에_저장된_예약을_API로_조회하면_DB_건수와_응답_건수가_같다() {
         Long timeId = createTime("10:00");
 
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", "2023-08-05", timeId);
@@ -118,7 +118,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void DB_추가_삭제_API_전환() {
+    void 예약_생성과_삭제_API를_호출하면_DB_예약_건수가_변경된다() {
         Long timeId = createTime("10:00");
 
         Map<String, Object> params = new HashMap<>();
@@ -146,7 +146,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 시간_관리_API() {
+    void 시간_생성_조회_삭제_API를_순서대로_호출하면_정상_응답한다() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -170,7 +170,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 예약과_시간_연결() {
+    void 시간_id로_예약을_생성하면_예약_목록에서_조회된다() {
         Long timeId = createTime("10:00");
 
         Map<String, Object> reservation = new HashMap<>();
@@ -193,7 +193,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 계층화_리팩터링() {
+    void 예약_컨트롤러는_JdbcTemplate에_직접_의존하지_않는다() {
         boolean isJdbcTemplateInjected = false;
 
         for (Field field : reservationController.getClass().getDeclaredFields()) {

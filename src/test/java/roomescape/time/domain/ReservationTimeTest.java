@@ -10,14 +10,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ReservationTimeTest {
 
     @Test
-    void 예약_시간을_생성한다() {
+    void 유효한_시작_시간으로_예약_시간을_생성하면_필드가_저장된다() {
         ReservationTime time = new ReservationTime(1L, LocalTime.of(10, 0));
 
         assertThat(time.getStartAt()).isEqualTo(LocalTime.of(10, 0));
     }
 
     @Test
-    void 예약_시작_시간은_null일_수_없다() {
+    void 시작_시간이_null이면_예외가_발생한다() {
         assertThatThrownBy(() -> new ReservationTime(1L, null))
                 .isInstanceOf(IllegalArgumentException.class);
     }

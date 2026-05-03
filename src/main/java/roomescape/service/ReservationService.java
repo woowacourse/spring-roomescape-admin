@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.dao.ReservationDao;
 import roomescape.domain.Reservation;
+import roomescape.exception.ReservationNotFoundException;
 
 @Service
 @Transactional(readOnly = true)
@@ -28,7 +29,10 @@ public class ReservationService {
     }
 
     @Transactional
-    public int deleteReservation(Long id) {
-        return reservationDao.delete(id);
+    public void deleteReservation(Long id) {
+        int deleteCount = reservationDao.delete(id);
+        if (deleteCount == 0) {
+            throw new ReservationNotFoundException();
+        }
     }
 }

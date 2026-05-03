@@ -1,10 +1,13 @@
 package roomescape.service;
 
 import java.util.List;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.dao.ReservationTimeDao;
 import roomescape.domain.ReservationTime;
+import roomescape.exception.ReservationTimeInUseException;
+import roomescape.exception.ReservationTimeNotFoundException;
 
 @Service
 @Transactional(readOnly = true)
@@ -27,7 +30,14 @@ public class ReservationTimeService {
     }
 
     @Transactional
-    public int deleteReservationTime(Long id) {
-        return reservationTimeDao.delete(id);
+    public void deleteReservationTime(Long id) {
+        try {
+            int deleteCount = reservationTimeDao.delete(id);
+            if (deleteCount == 0) {
+                throw new ReservationTimeNotFoundException();
+            }
+        } catch (DataIntegrityViolationException e) {
+            throw new ReservationTimeInUseException();
+        }
     }
 }

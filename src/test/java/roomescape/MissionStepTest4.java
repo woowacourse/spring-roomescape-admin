@@ -30,5 +30,4 @@ public class MissionStepTest4 {
 
         assertThat(isJdbcTemplateInjected).isFalse();
     }
-
 }

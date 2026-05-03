@@ -4,10 +4,10 @@ import java.time.LocalDate;
 import roomescape.reservationtime.ReservationTime;
 
 public class Reservation {
-    private Long id;
-    private String name;
-    private LocalDate date;
-    private ReservationTime reservationTime;
+    private final Long id;
+    private final String name;
+    private final LocalDate date;
+    private final ReservationTime reservationTime;
 
     public Reservation(String name, LocalDate date, ReservationTime reservationTime) {
         validate(name, date, reservationTime);

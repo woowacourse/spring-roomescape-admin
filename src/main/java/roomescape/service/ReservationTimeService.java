@@ -32,8 +32,7 @@ public class ReservationTimeService {
 
     @Transactional
     public void deleteReservationTime(long id) {
-        boolean hasTimeId = reservationRepository.getAllReservation().stream()
-                .anyMatch(reservation -> reservation.time().id() == id);
+        boolean hasTimeId = reservationRepository.existsByTimeId(id);
 
         if(hasTimeId) {
             throw new DataReferencedException(ErrorMessage.CANNOT_DELETE_RESERVATION_TIME_IN_USE);
@@ -42,7 +41,7 @@ public class ReservationTimeService {
         try {
             reservationTimeRepository.deleteReservationTime(id);
         }  catch(DataIntegrityViolationException e) {
-            throw new DataReferencedException(ErrorMessage.CANNOT_DELETE_RESERVATION_TIME_IN_USE);
+            throw new DataReferencedException(ErrorMessage.INTEGRITY_VIOLATION_ON_DELETE);
         }
     }
 }

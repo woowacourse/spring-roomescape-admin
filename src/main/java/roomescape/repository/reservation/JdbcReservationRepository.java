@@ -33,4 +33,9 @@ public class JdbcReservationRepository implements ReservationRepository {
     public void deleteReservation(long id) {
         reservationDao.deleteReservation(id);
     }
+
+    @Override
+    public boolean existsByTimeId(long timeId) {
+        return reservationDao.existsByTimeId(timeId);
+    }
 }

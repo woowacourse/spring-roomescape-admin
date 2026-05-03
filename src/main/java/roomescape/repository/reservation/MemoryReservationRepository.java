@@ -21,6 +21,7 @@ public class MemoryReservationRepository implements ReservationRepository {
     public List<Reservation> getAllReservation() {
         return Collections.unmodifiableList(reservations);
     }
+
     @Override
     public Reservation addReservation(ReservationCommand reservationCommand, ReservationTime reservationTime) {
         Reservation reservation = new Reservation(index.incrementAndGet(), reservationCommand.name(), reservationCommand.date(), reservationTime);
@@ -30,12 +31,19 @@ public class MemoryReservationRepository implements ReservationRepository {
 
     @Override
     public void deleteReservation(long id) {
-        Optional<Reservation> deletedReservation = reservations.stream().filter(reservation -> reservation.id() == id).findFirst();
+        Optional<Reservation> deletedReservation = reservations.stream()
+                .filter(reservation -> reservation.id() == id)
+                .findFirst();
 
         if(deletedReservation.isEmpty()) {
             return;
         }
 
         reservations.remove(deletedReservation.get());
+    }
+
+    @Override
+    public boolean existsByTimeId(long timeId) {
+        return reservations.stream().anyMatch(reservation -> reservation.time().id() == timeId);
     }
 }

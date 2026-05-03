@@ -34,6 +34,13 @@ public class ReservationDao {
     """;
     private static final String INSERT_SQL = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
     private static final String DELETE_SPECIFIC_ID_SQL = "DELETE FROM reservation WHERE id = ?";
+    private static final String EXIST_BY_TIME_ID_SQL = """
+            SELECT EXISTS (\s
+                SELECT 1 \s
+                    FROM reservation \s
+                    WHERE time_id = ?\s
+            )
+    """;
 
     private static final RowMapper<Reservation> MAPPER = (rs, rowNumber) -> new Reservation(
             rs.getLong(COLUMN_ID),
@@ -76,5 +83,9 @@ public class ReservationDao {
 
     public void deleteReservation(long id) {
         jdbcTemplate.update(DELETE_SPECIFIC_ID_SQL, id);
+    }
+
+    public boolean existsByTimeId(long timeId) {
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(EXIST_BY_TIME_ID_SQL, Boolean.class, timeId));
     }
 }

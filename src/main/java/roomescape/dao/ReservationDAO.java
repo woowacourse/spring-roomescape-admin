@@ -52,6 +52,12 @@ public class ReservationDAO {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    public boolean existsByTimeId(Long id) {
+        String sql = "SELECT COUNT(*) FROM reservation WHERE time_id=?";
+        int rowNum = jdbcTemplate.queryForObject(sql, Integer.class, id);
+        return rowNum > 0;
+    }
+
     public Long insertWithKeyHolder(Reservation reservation) {
         String sql = "INSERT INTO reservation (name, date, time_id) VALUES(?, ?, ?)";
 

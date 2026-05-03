@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class FakeReservationTimeService extends ReservationTimeService {
     public FakeReservationTimeService() {
-        super(null);
+        super(null, null);
     }
 
     @Override

@@ -7,6 +7,7 @@ import roomescape.dao.ReservationTimeDAO;
 import roomescape.domain.ReservationTime;
 import roomescape.dto.ReservationRequestDTO;
 import roomescape.exception.ReservationNotFoundException;
+import roomescape.exception.ReservationTimeNotFoundException;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class ReservationService {
     public Reservation createReservation(ReservationRequestDTO requestDTO) {
         ReservationTime time = reservationTimeDAO.findReservationTimeById(requestDTO.getTimeId());
         if (time == null) {
-            throw new ReservationNotFoundException("[ERROR] 존재하지 않는 예약 시간 ID입니다.");
+            throw new ReservationTimeNotFoundException("[ERROR] 존재하지 않는 예약 시간 ID입니다.");
         }
 
         Reservation reservation = new Reservation(requestDTO.getName(), requestDTO.getDate(), time);

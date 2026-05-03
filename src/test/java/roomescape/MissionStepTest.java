@@ -42,7 +42,7 @@ public class MissionStepTest {
         RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(timeParams)
-                .post("/times");
+                .post("/reservation-times");
 
         Map<String, Object> params = new HashMap<>();
         params.put("name", "브라운");
@@ -127,18 +127,18 @@ public class MissionStepTest {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(params)
-                .when().post("/times")
+                .when().post("/reservation-times")
                 .then().log().all()
                 .statusCode(200);
 
         RestAssured.given().log().all()
-                .when().get("/times")
+                .when().get("/reservation-times")
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
 
         RestAssured.given().log().all()
-                .when().delete("/times/1")
+                .when().delete("/reservation-times/1")
                 .then().log().all()
                 .statusCode(200);
     }
@@ -151,7 +151,7 @@ public class MissionStepTest {
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(timeParams)
-                .when().post("/times")
+                .when().post("/reservation-times")
                 .then().log().all()
                 .statusCode(200);
 

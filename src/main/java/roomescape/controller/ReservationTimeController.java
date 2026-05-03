@@ -9,7 +9,7 @@ import roomescape.dto.ReservationTimeResponse;
 import roomescape.service.ReservationTimeService;
 
 @RestController
-@RequestMapping("/times")
+@RequestMapping("/reservation-times")
 public class ReservationTimeController {
     private final ReservationTimeService reservationTimeService;
 

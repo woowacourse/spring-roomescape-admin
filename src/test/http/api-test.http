@@ -1,6 +1,6 @@
 ### 1. 예약 시간 추가 (POST)
 # @name createReservationTime
-POST http://localhost:8080/times
+POST http://localhost:8080/reservation-times
 Content-Type: application/json
 
 {
@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ### 2. 전체 예약 시간 조회 (GET)
 # @name getReservationTime
-GET http://localhost:8080/times
+GET http://localhost:8080/reservation-times
 
 
 ### 3. 예약 추가 (POST)
@@ -36,7 +36,7 @@ DELETE http://localhost:8080/reservations/1
 
 ### 6. 예약 시간 삭제 (DELETE)
 # id가 1인 예약 시간을 삭제합니다. (엮여있는 예약이 없어야 삭제 가능)
-DELETE http://localhost:8080/times/1
+DELETE http://localhost:8080/reservation-times/1
 
 ### 7. 과거 날짜 예약 생성 시도 (예외 발생)
 # @name createReservationWithPastDate

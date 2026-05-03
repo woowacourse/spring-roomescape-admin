@@ -20,7 +20,6 @@ import roomescape.reservation.presentation.dto.response.ReservationSaveResponse;
 
 @RestController
 @RequestMapping("/reservations")
-@Validated
 @RequiredArgsConstructor
 public class ReservationController {
     private final ReservationService reservationService;

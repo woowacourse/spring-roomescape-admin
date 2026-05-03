@@ -49,3 +49,14 @@ Content-Type: application/json
   "date": "2000-01-01",
   "timeId": 1
 }
+
+### 8. 잘못된 형식의 날짜로 예약 생성 시도 (예외 발생 확인용)
+# 400 Bad Request와 JSON 에러 메시지 응답을 기대합니다.
+POST http://localhost:8080/reservations
+Content-Type: application/json
+
+{
+  "name": "브라운",
+  "date": "2026-05-ㄱ",
+  "timeId": 1
+}

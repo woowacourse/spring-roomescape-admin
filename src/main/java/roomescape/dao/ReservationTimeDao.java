@@ -8,15 +8,14 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import roomescape.domain.ReservationTime;
+import roomescape.dao.entity.ReservationTimeEntity;
 
 @Repository
 public class ReservationTimeDao {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-
-    private final RowMapper<ReservationTime> rowMapper = (rs, rowNum) ->
-            new ReservationTime(
+    private final RowMapper<ReservationTimeEntity> rowMapper = (rs, rowNum) ->
+            new ReservationTimeEntity(
                     rs.getLong("id"),
                     rs.getObject("start_at", LocalTime.class)
             );
@@ -28,12 +27,12 @@ public class ReservationTimeDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<ReservationTime> findAll() {
+    public List<ReservationTimeEntity> findAll() {
         String sql = "SELECT id, start_at FROM reservation_time";
         return jdbcTemplate.getJdbcTemplate().query(sql, rowMapper);
     }
 
-    public ReservationTime findById(Long id) {
+    public ReservationTimeEntity findById(Long id) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = :id";
         return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("id", id), rowMapper);
     }

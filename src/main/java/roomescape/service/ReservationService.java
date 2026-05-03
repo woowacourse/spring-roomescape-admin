@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.dao.ReservationDao;
 import roomescape.dao.ReservationTimeDao;
+import roomescape.dao.entity.ReservationTimeEntity;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationJoinDto;
 import roomescape.service.dto.ReservationCreateCommand;
 
 @Service
@@ -26,20 +28,23 @@ public class ReservationService {
     }
 
     public List<Reservation> findAllReservations() {
-        return reservationDao.findAll();
+        List<ReservationJoinDto> dtos = reservationDao.findAll();
+        return dtos.stream()
+                .map(this::toDomain)
+                .toList();
     }
 
     @Transactional
     public Reservation createReservation(ReservationCreateCommand command) {
         validateReservationDate(command.date());
 
-        ReservationTime time;
+        ReservationTimeEntity timeEntity;
         try {
-            time = reservationTimeDao.findById(command.timeId());
+            timeEntity = reservationTimeDao.findById(command.timeId());
         } catch (EmptyResultDataAccessException e) {
             throw new IllegalArgumentException("존재하지 않는 예약 시간입니다.");
         }
-
+        ReservationTime time = toDomain(timeEntity);
         Reservation reservation = new Reservation(
                 null,
                 command.name(),
@@ -58,6 +63,20 @@ public class ReservationService {
         if (affectedRows == 0) {
             throw new IllegalArgumentException("이미 삭제되었거나 존재하지 않는 예약입니다.");
         }
+    }
+
+    private Reservation toDomain(ReservationJoinDto dto) {
+        ReservationTime time = new ReservationTime(dto.timeId(), dto.startAt());
+        return new Reservation(
+                dto.reservationId(),
+                dto.name(),
+                dto.date(),
+                time
+        );
+    }
+
+    private ReservationTime toDomain(ReservationTimeEntity entity) {
+        return new ReservationTime(entity.id(), entity.startAt());
     }
 
     private void validateReservationDate(LocalDate targetDate) {

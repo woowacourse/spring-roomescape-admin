@@ -12,23 +12,20 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
+import roomescape.dto.ReservationJoinDto;
 
 @Repository
 public class ReservationDao {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private final RowMapper<Reservation> rowMapper = (rs, rowNum) -> {
-        ReservationTime time = new ReservationTime(
-                rs.getLong("time_id"),
-                rs.getObject("start_at", LocalTime.class)
-        );
-        return new Reservation(
-                rs.getLong("reservation_id"),
-                rs.getString("name"),
-                rs.getObject("date", LocalDate.class),
-                time
-        );
-    };
+    private final RowMapper<ReservationJoinDto> rowMapper = (rs, rowNum) ->
+            new ReservationJoinDto(
+                    rs.getLong("reservation_id"),
+                    rs.getString("name"),
+                    rs.getObject("date", LocalDate.class),
+                    rs.getLong("time_id"),
+                    rs.getObject("start_at", LocalTime.class)
+            );
 
     public ReservationDao(DataSource dataSource) {
         this.jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
@@ -37,7 +34,7 @@ public class ReservationDao {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public List<Reservation> findAll() {
+    public List<ReservationJoinDto> findAll() {
         String sql = """
                 SELECT
                     r.id as reservation_id,

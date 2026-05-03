@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import roomescape.dao.ReservationTimeDao;
+import roomescape.dao.entity.ReservationTimeEntity;
 import roomescape.domain.ReservationTime;
 import roomescape.service.dto.ReservationTimeCreateCommand;
 
@@ -17,7 +18,9 @@ public class ReservationTimeService {
     }
 
     public List<ReservationTime> findAll() {
-        return reservationTimeDao.findAll();
+        return reservationTimeDao.findAll().stream()
+                .map(this::toDomain)
+                .toList();
     }
 
     @Transactional
@@ -35,5 +38,9 @@ public class ReservationTimeService {
         if (affectedRows == 0) {
             throw new IllegalArgumentException("이미 삭제되었거나 존재하지 않는 예약 시간입니다.");
         }
+    }
+
+    private ReservationTime toDomain(ReservationTimeEntity entity) {
+        return new ReservationTime(entity.id(), entity.startAt());
     }
 }

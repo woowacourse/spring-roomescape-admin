@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -62,7 +63,11 @@ public class ReservationDao {
 
     public void delete(long reservationId) {
         String sql = "DELETE FROM reservation WHERE id = ?";
-        jdbcTemplate.update(sql, reservationId);
+        int affected = jdbcTemplate.update(sql, reservationId);
+
+        if(affected == 0) {
+            throw new NoSuchElementException("[ERROR] 삭제할 id에 해당하는 예약이 존재하지 않습니다.");
+        }
     }
 
     public List<Reservation> findAllReservations() {

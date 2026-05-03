@@ -2,6 +2,7 @@ package roomescape.repository;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -40,7 +41,11 @@ public class ReservationTimeDao {
 
     public void deleteByTimeId(long timeId) {
         String sql = "DELETE FROM reservation_time WHERE id = ?";
-        jdbcTemplate.update(sql, timeId);
+        int affected = jdbcTemplate.update(sql, timeId);
+
+        if(affected == 0) {
+            throw new NoSuchElementException("[ERROR] 삭제할 id에 해당하는 시간이 존재하지 않습니다.");
+        }
     }
 
     public List<ReservationTime> findAllReservationTimes() {

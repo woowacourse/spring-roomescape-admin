@@ -12,6 +12,7 @@ import roomescape.exception.InfrastructureException;
 import roomescape.exception.DomainException;
 
 import java.sql.PreparedStatement;
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
@@ -40,7 +41,7 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     private final RowMapper<ReservationTime> reservationTimeRowMapper = (resultSet, rowNum) ->
             new ReservationTime(
                     resultSet.getLong("id"),
-                    resultSet.getString("start_at")
+                    LocalTime.parse(resultSet.getString("start_at"))
             );
 
     private final JdbcTemplate jdbcTemplate;
@@ -50,14 +51,14 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
     }
 
     @Override
-    public ReservationTime save(String startAt) {
+    public ReservationTime save(ReservationTime reservationTime) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        int rowCount = insert(startAt, keyHolder);
+        int rowCount = insert(reservationTime, keyHolder);
         validateCreatedRowCount(rowCount);
 
         Long id = getGeneratedId(keyHolder);
-        return new ReservationTime(id, startAt);
+        return reservationTime.withId(id);
     }
 
     @Override
@@ -83,13 +84,13 @@ public class JdbcReservationTimeRepository implements ReservationTimeRepository 
         }
     }
 
-    private int insert(String startAt, KeyHolder keyHolder) {
+    private int insert(ReservationTime reservationTime, KeyHolder keyHolder) {
         return jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     INSERT_SQL,
                     new String[]{"id"}
             );
-            preparedStatement.setString(1, startAt);
+            preparedStatement.setString(1, reservationTime.getStartAt().toString());
             return preparedStatement;
         }, keyHolder);
     }

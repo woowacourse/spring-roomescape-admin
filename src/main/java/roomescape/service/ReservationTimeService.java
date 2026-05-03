@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import roomescape.repository.ReservationTimeRepository;
 import roomescape.domain.ReservationTime;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -16,8 +17,10 @@ public class ReservationTimeService {
     }
 
     @Transactional
-    public ReservationTime create(String startAt) {
-        return reservationTimeRepository.save(startAt);
+    public ReservationTime create(LocalTime startAt) {
+        ReservationTime reservationTime = new ReservationTime(startAt);
+
+        return reservationTimeRepository.save(reservationTime);
     }
 
     @Transactional(readOnly = true)

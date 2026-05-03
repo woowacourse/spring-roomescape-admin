@@ -8,7 +8,7 @@ public record ReservationResponse(Long id, String name, String date, Reservation
         return new ReservationResponse(
                 reservation.getId(),
                 reservation.getName(),
-                reservation.getDate(),
+                reservation.getDate().toString(),
                 ReservationTimeResponse.from(reservation.getTime())
         );
     }

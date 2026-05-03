@@ -8,6 +8,7 @@ import roomescape.domain.ReservationTime;
 import roomescape.exception.DomainException;
 import roomescape.exception.ErrorCode;
 
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,27 +45,27 @@ class ReservationTimeRepositoryTest {
 
     @Test
     void 예약_시간을_저장하고_조회한다() {
-        ReservationTime reservationTime = reservationTimeRepository.save("10:00");
+        ReservationTime reservationTime = reservationTimeRepository.save(new ReservationTime(LocalTime.of(10, 0)));
 
         ReservationTime found = reservationTimeRepository.findById(reservationTime.getId());
 
         assertThat(found.getId()).isEqualTo(reservationTime.getId());
-        assertThat(found.getStartAt()).isEqualTo("10:00");
+        assertThat(found.getStartAt()).isEqualTo(LocalTime.of(10, 0));
     }
 
     @Test
     void 예약_시간_목록을_조회한다() {
-        reservationTimeRepository.save("10:00");
+        reservationTimeRepository.save(new ReservationTime(LocalTime.of(10, 0)));
 
         List<ReservationTime> reservationTimes = reservationTimeRepository.findAll();
 
         assertThat(reservationTimes).hasSize(1);
-        assertThat(reservationTimes.getFirst().getStartAt()).isEqualTo("10:00");
+        assertThat(reservationTimes.getFirst().getStartAt()).isEqualTo(LocalTime.of(10, 0));
     }
 
     @Test
     void 예약_시간을_삭제한다() {
-        ReservationTime reservationTime = reservationTimeRepository.save("10:00");
+        ReservationTime reservationTime = reservationTimeRepository.save(new ReservationTime(LocalTime.of(10, 0)));
 
         reservationTimeRepository.deleteById(reservationTime.getId());
 

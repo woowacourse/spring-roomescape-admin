@@ -12,6 +12,8 @@ import roomescape.exception.InfrastructureException;
 import roomescape.exception.DomainException;
 
 import java.sql.PreparedStatement;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Repository
@@ -41,13 +43,13 @@ public class JdbcReservationRepository implements ReservationRepository {
     private final RowMapper<Reservation> reservationRowMapper = (resultSet, rowNum) -> {
         ReservationTime reservationTime = new ReservationTime(
                 resultSet.getLong("time_id"),
-                resultSet.getString("start_at")
+                LocalTime.parse(resultSet.getString("start_at"))
         );
 
         return new Reservation(
                 resultSet.getLong("reservation_id"),
                 resultSet.getString("name"),
-                resultSet.getString("date"),
+                LocalDate.parse(resultSet.getString("date")),
                 reservationTime
         );
     };
@@ -64,14 +66,14 @@ public class JdbcReservationRepository implements ReservationRepository {
     }
 
     @Override
-    public Reservation save(String name, String date, ReservationTime time) {
+    public Reservation save(Reservation reservation) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        int rowCount = insert(name, date, time, keyHolder);
+        int rowCount = insert(reservation, keyHolder);
         validateCreatedRowCount(rowCount);
 
         Long id = getGeneratedId(keyHolder);
-        return new Reservation(id, name, date, time);
+        return reservation.withId(id);
     }
 
     @Override
@@ -83,15 +85,15 @@ public class JdbcReservationRepository implements ReservationRepository {
         }
     }
 
-    private int insert(String name, String date, ReservationTime time, KeyHolder keyHolder) {
+    private int insert(Reservation reservation, KeyHolder keyHolder) {
         return jdbcTemplate.update(connection -> {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     INSERT_SQL,
                     new String[]{"id"}
             );
-            preparedStatement.setString(1, name);
-            preparedStatement.setString(2, date);
-            preparedStatement.setLong(3, time.getId());
+            preparedStatement.setString(1, reservation.getName());
+            preparedStatement.setString(2, reservation.getDate().toString());
+            preparedStatement.setLong(3, reservation.getTime().getId());
             return preparedStatement;
         }, keyHolder);
     }

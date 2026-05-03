@@ -7,6 +7,7 @@ import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationTimeRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -25,9 +26,11 @@ public class ReservationService {
     }
 
     @Transactional
-    public Reservation create(String name, String date, Long timeId) {
+    public Reservation create(String name, LocalDate date, Long timeId) {
         ReservationTime time = reservationTimeRepository.findById(timeId);
-        return reservationRepository.save(name, date, time);
+
+        Reservation reservation = new Reservation(name, date, time);
+        return reservationRepository.save(reservation);
     }
 
     @Transactional

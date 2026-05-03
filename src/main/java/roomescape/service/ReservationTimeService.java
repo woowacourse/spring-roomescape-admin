@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import roomescape.exception.ReservationNotFoundException;
 import roomescape.reservationtime.ReservationTime;
 import roomescape.reservationtime.ReservationTimeQueryingDao;
+import roomescape.reservationtime.ReservationTimeRequest;
 import roomescape.reservationtime.ReservationTimeUpdatingDao;
 
 import java.util.List;
@@ -23,13 +24,13 @@ public class ReservationTimeService {
         return reservationTimeQueryingDao.findAllReservationTime();
     }
 
-    public ReservationTime create(ReservationTime reservationTime) {
-        Long generatedId = reservationTimeUpdatingDao.insert(reservationTime);
+    public ReservationTime create(ReservationTimeRequest reservationTimeReq) {
+        Long generatedId = reservationTimeUpdatingDao.insert(reservationTimeReq);
         return reservationTimeQueryingDao.findReservationTimeById(generatedId);
     }
 
-    public void update(ReservationTime newReservationTime, Long id) {
-        reservationTimeUpdatingDao.save(id, newReservationTime);
+    public void update(ReservationTimeRequest newReservationTimeReq, Long id) {
+        reservationTimeUpdatingDao.save(id, newReservationTimeReq);
     }
 
     public void delete(Long id) {

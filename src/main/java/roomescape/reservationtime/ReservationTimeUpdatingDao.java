@@ -15,9 +15,9 @@ public class ReservationTimeUpdatingDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void save(Long id, ReservationTime reservationTime) {
+    public void save(Long id, ReservationTimeRequest reservationTimeReq) {
         String sql = "update reservation_time SET start_at = ? where id = ?";
-        jdbcTemplate.update(sql, reservationTime.getStartAt(), id);
+        jdbcTemplate.update(sql, reservationTimeReq.getStartAt(), id);
     }
 
     public int delete(Long id) {
@@ -25,13 +25,13 @@ public class ReservationTimeUpdatingDao {
         return jdbcTemplate.update(sql, id);
     }
 
-    public Long insert(ReservationTime reservationTime) {
+    public Long insert(ReservationTimeRequest reservationTimeReq) {
         String sql = "insert into reservation_time(start_at) values (?)";
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-            ps.setObject(1, reservationTime.getStartAt().toString());
+            ps.setObject(1, reservationTimeReq.getStartAt().toString());
             return ps;
         }, keyHolder);
 

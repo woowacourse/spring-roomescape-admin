@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.reservationtime.ReservationTime;
+import roomescape.reservationtime.ReservationTimeRequest;
 import roomescape.service.ReservationTimeService;
 
 import java.net.URI;
@@ -24,21 +25,20 @@ public class ReservationTimeController {
     }
 
     @GetMapping("/times")
-    public ResponseEntity<List<ReservationTime>> read() {
-        List<ReservationTime> reservationTimes = reservationTimeService.read();
-        return ResponseEntity.ok().body(reservationTimes);
+    public List<ReservationTime> read() {
+        return reservationTimeService.read();
     }
 
     @PostMapping("/times")
-    public ResponseEntity<ReservationTime> create(@RequestBody ReservationTime reservationTime) {
-        ReservationTime newReservationTime = reservationTimeService.create(reservationTime);
+    public ResponseEntity<ReservationTime> create(@RequestBody ReservationTimeRequest reservationTimeReq) {
+        ReservationTime newReservationTime = reservationTimeService.create(reservationTimeReq);
         URI uri = URI.create("/times/" + newReservationTime.getId());
         return ResponseEntity.created(uri).body(newReservationTime);
     }
 
     @PutMapping("/times/{id}")
-    public ResponseEntity<Void> update(@RequestBody ReservationTime newReservationTime, @PathVariable Long id) {
-        reservationTimeService.update(newReservationTime, id);
+    public ResponseEntity<Void> update(@RequestBody ReservationTimeRequest newReservationTimeReq, @PathVariable Long id) {
+        reservationTimeService.update(newReservationTimeReq, id);
         return ResponseEntity.ok().build();
     }
 

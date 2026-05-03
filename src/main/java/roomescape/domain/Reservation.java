@@ -1,5 +1,8 @@
 package roomescape.domain;
 
+import roomescape.exception.DomainException;
+import roomescape.exception.ErrorCode;
+
 import java.time.LocalDate;
 
 public class Reservation {
@@ -24,7 +27,7 @@ public class Reservation {
         validateId(id);
 
         if (this.id != null) {
-            throw new IllegalStateException("이미 식별자가 존재하는 예약입니다.");
+            throw new DomainException(ErrorCode.RESERVATION_ALREADY_HAS_ID);
         }
 
         return new Reservation(id, name, date, time);
@@ -38,25 +41,25 @@ public class Reservation {
 
     private void validateId(Long id) {
         if (id == null) {
-            throw new IllegalArgumentException("예약 id는 비어 있을 수 없습니다.");
+            throw new DomainException(ErrorCode.INVALID_RESERVATION_ID);
         }
     }
 
     private void validateName(String name) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("예약자 이름은 비어 있을 수 없습니다.");
+            throw new DomainException(ErrorCode.INVALID_RESERVATION_NAME);
         }
     }
 
     private void validateDate(LocalDate date) {
         if (date == null) {
-            throw new IllegalArgumentException("예약 날짜는 비어 있을 수 없습니다.");
+            throw new DomainException(ErrorCode.INVALID_RESERVATION_DATE);
         }
     }
 
     private void validateTime(ReservationTime time) {
         if (time == null) {
-            throw new IllegalArgumentException("예약 시간은 비어 있을 수 없습니다.");
+            throw new DomainException(ErrorCode.INVALID_RESERVATION_TIME);
         }
     }
 

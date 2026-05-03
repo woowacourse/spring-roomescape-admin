@@ -1,5 +1,8 @@
 package roomescape.domain;
 
+import roomescape.exception.DomainException;
+import roomescape.exception.ErrorCode;
+
 import java.time.LocalTime;
 
 public class ReservationTime {
@@ -20,7 +23,7 @@ public class ReservationTime {
         validateId(id);
 
         if (this.id != null) {
-            throw new IllegalStateException("이미 id가 존재하는 예약 시간입니다.");
+            throw new DomainException(ErrorCode.RESERVATION_TIME_ALREADY_HAS_ID);
         }
 
         return new ReservationTime(id, startAt);
@@ -28,13 +31,13 @@ public class ReservationTime {
 
     private void validateStartAt(LocalTime startAt) {
         if (startAt == null) {
-            throw new IllegalArgumentException("예약 시간은 비어 있을 수 없습니다.");
+            throw new DomainException(ErrorCode.INVALID_RESERVATION_TIME);
         }
     }
 
     private void validateId(Long id){
         if (id == null) {
-            throw new IllegalArgumentException("예약 시간 id는 비어 있을 수 없습니다.");
+            throw new DomainException(ErrorCode.INVALID_RESERVATION_TIME_ID);
         }
     }
 

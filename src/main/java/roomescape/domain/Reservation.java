@@ -17,6 +17,14 @@ public class Reservation {
         return new Reservation(id, Name.from(name), ReservationDate.from(date), time);
     }
 
+    public static Reservation of(long id, String name, ReservationDate date, ReservationTime time) {
+        return new Reservation(id, Name.from(name), date, time);
+    }
+
+    public static Reservation of(String name, String date, ReservationTime time) {
+        return new Reservation(0L, Name.from(name), ReservationDate.from(date), time);
+    }
+
     public long getId() {
         return id;
     }

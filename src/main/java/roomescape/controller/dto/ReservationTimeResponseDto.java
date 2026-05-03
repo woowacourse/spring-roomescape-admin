@@ -1,6 +1,6 @@
 package roomescape.controller.dto;
 
-import roomescape.service.dto.ReservationTimeDto;
+import roomescape.domain.ReservationTime;
 
 public class ReservationTimeResponseDto {
     private final long id;
@@ -11,8 +11,8 @@ public class ReservationTimeResponseDto {
         this.startAt = startAt;
     }
 
-    public static ReservationTimeResponseDto toDto(ReservationTimeDto reservationTime) {
-        return new ReservationTimeResponseDto(reservationTime.getId(), reservationTime.getStartAt());
+    public static ReservationTimeResponseDto toDto(ReservationTime reservationTime) {
+        return new ReservationTimeResponseDto(reservationTime.getId(), reservationTime.getStartAt().toString());
     }
 
     public long getId() {

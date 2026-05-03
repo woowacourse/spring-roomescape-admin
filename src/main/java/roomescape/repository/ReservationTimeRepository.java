@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
-import roomescape.repository.dto.ReservationTimeSaveDto;
 
 @Repository
 public class ReservationTimeRepository {
@@ -25,7 +24,7 @@ public class ReservationTimeRepository {
                 .usingGeneratedKeyColumns("id");
     }
 
-    public ReservationTime save(ReservationTimeSaveDto time) {
+    public ReservationTime save(ReservationTime time) {
         Map<String, Object> params = Map.of(
                 "start_at", time.getStartAt()
         );
@@ -52,6 +51,4 @@ public class ReservationTimeRepository {
 
         jdbcTemplate.update(sql, id);
     }
-
-
 }

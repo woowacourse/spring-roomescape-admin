@@ -17,7 +17,17 @@ public class ReservationTime {
         return new ReservationTime(id, LocalTime.parse(startAt));
     }
 
-    private static void validateIsNull(String startAt) {
+    public static ReservationTime of(long id, LocalTime startAt) {
+        validateIsNull(startAt);
+        return new ReservationTime(id, startAt);
+    }
+
+    public static ReservationTime of(String startAt) {
+        validateIsNull(startAt);
+        return new ReservationTime(0L, LocalTime.parse(startAt));
+    }
+
+    private static void validateIsNull(Object startAt) {
         if (startAt == null) {
             throw new IllegalArgumentException(TIME_SHOULD_NOT_BE_NULL);
         }

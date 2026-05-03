@@ -26,7 +26,6 @@ public class ReservationDate {
         return date;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {

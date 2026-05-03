@@ -1,7 +1,6 @@
 package roomescape.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,9 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import roomescape.controller.dto.ReservationCreateRequestDto;
 import roomescape.controller.dto.ReservationResponseDto;
+import roomescape.domain.Reservation;
 import roomescape.service.ReservationService;
-import roomescape.service.dto.ReservationCreateDto;
-import roomescape.service.dto.ReservationDto;
 
 @RestController
 @RequestMapping("/reservations")
@@ -26,20 +24,18 @@ public class ReservationController {
 
     @GetMapping
     public List<ReservationResponseDto> findAll() {
-        List<ReservationDto> reservationList = reservationService.findAll();
+        List<Reservation> reservations = reservationService.findAll();
 
-        return reservationList.stream()
+        return reservations.stream()
                 .map(ReservationResponseDto::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @PostMapping
     public ReservationResponseDto create(@RequestBody ReservationCreateRequestDto dto) {
-        ReservationCreateDto serviceDto = ReservationCreateDto.toDto(dto);
+        Reservation reservation = reservationService.save(dto);
 
-        ReservationDto saved = reservationService.save(serviceDto);
-
-        return ReservationResponseDto.toDto(saved);
+        return ReservationResponseDto.toDto(reservation);
     }
 
     @DeleteMapping("/{id}")

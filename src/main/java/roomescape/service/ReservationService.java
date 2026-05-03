@@ -1,15 +1,12 @@
 package roomescape.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
+import roomescape.controller.dto.ReservationCreateRequestDto;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
-import roomescape.repository.dto.ReservationSaveDto;
-import roomescape.service.dto.ReservationCreateDto;
-import roomescape.service.dto.ReservationDto;
 
 @Service
 public class ReservationService {
@@ -23,22 +20,17 @@ public class ReservationService {
         this.reservationTimeRepository = reservationTimeRepository;
     }
 
-    public List<ReservationDto> findAll() {
-        List<Reservation> reservations = reservationRepository.findAll();
-
-        return reservations.stream()
-                .map(ReservationDto::toDto)
-                .collect(Collectors.toList());
+    public List<Reservation> findAll() {
+        return reservationRepository.findAll();
     }
 
-    public ReservationDto save(ReservationCreateDto dto) {
+    public Reservation save(ReservationCreateRequestDto dto) {
         ReservationTime reservationTime = reservationTimeRepository.findById(dto.getTimeId())
                 .orElseThrow(() -> new IllegalArgumentException(TIME_SLOT_DOES_NOT_EXISTS));
 
-        ReservationSaveDto repositoryDto = ReservationSaveDto.toDto(dto, reservationTime);
-        Reservation save = reservationRepository.save(repositoryDto);
+        Reservation reservation = Reservation.of(dto.getName(), dto.getDate(), reservationTime);
 
-        return ReservationDto.toDto(save);
+        return reservationRepository.save(reservation);
     }
 
     public void deleteById(long id) {

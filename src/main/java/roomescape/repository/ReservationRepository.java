@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import roomescape.domain.Reservation;
 import roomescape.domain.ReservationTime;
-import roomescape.repository.dto.ReservationSaveDto;
 
 @Repository
 public class ReservationRepository {
@@ -32,16 +31,16 @@ public class ReservationRepository {
                         ReservationTime.of(resultSet.getLong("time_id"), resultSet.getString("start_at"))));
     }
 
-    public Reservation save(ReservationSaveDto dto) {
+    public Reservation save(Reservation reservation) {
         Map<String, Object> params = Map.of(
-                "name", dto.getName(),
-                "date", dto.getDate(),
-                "time_id", dto.getReservationTime().getId()
+                "name", reservation.getName(),
+                "date", reservation.getDate().getDate(),
+                "time_id", reservation.getTime().getId()
         );
 
         long generatedKey = simpleJdbcInsert.executeAndReturnKey(params).longValue();
 
-        return Reservation.of(generatedKey, dto.getName(), dto.getDate(), dto.getReservationTime());
+        return Reservation.of(generatedKey, reservation.getName(), reservation.getDate(), reservation.getTime());
     }
 
     public void deleteById(Long id) {

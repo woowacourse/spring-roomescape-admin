@@ -77,4 +77,92 @@ public class MissionStepTest {
                 .statusCode(200)
                 .body("size()", is(1));
     }
+
+    @Test
+    void 존재하지_않는_예약을_삭제하면_400을_반환한다() {
+        RestAssured.given().log().all()
+                .when().delete("/reservations/999")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    void 존재하지_않는_시간을_삭제하면_400을_반환한다() {
+        RestAssured.given().log().all()
+                .when().delete("/times/999")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    void 존재하지_않는_시간으로_예약하면_400을_반환한다() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 999);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    void 이름이_빈_문자열이면_400을_반환한다() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);   // timeId같은 경우 어떤게 들어가도 테스트에 지장이 가지 않는다.
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    void 이름이_null이면_400을_반환한다() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("date", "2026-12-01");
+        reservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    void 잘못된_날짜_형식이면_400을_반환한다() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "이상한값");
+        reservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @Test
+    void 잘못된_시간_형식이면_400을_반환한다() {
+        Map<String, String> time= new HashMap<>();
+        time.put("startAt", "이상한값");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(time)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
 }

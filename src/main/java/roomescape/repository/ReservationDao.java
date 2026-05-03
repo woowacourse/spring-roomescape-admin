@@ -3,6 +3,7 @@ package roomescape.repository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -18,7 +19,7 @@ import roomescape.domain.ReservationTime;
 public class ReservationDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Reservation> reservationRowMapper = (rs, rowNum) -> {
+    private final RowMapper<Reservation> rowMapper = (rs, rowNum) -> {
         ReservationTime reservationTime = ReservationTime.create(
                 rs.getLong("time_id"),
                 rs.getObject("time_value", LocalTime.class)
@@ -35,7 +36,7 @@ public class ReservationDao {
     public Reservation save(Reservation reservation, long timeId) {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", reservation.username())
-                .addValue("date", reservation.date())
+                .addValue("date", reservation.reservationDate())
                 .addValue("time_id", timeId);
 
         SimpleJdbcInsert reservationInsertExecutor = new SimpleJdbcInsert(jdbcTemplate)
@@ -57,12 +58,16 @@ public class ReservationDao {
                 WHERE reservation.id = ?
                 """;
 
-        return jdbcTemplate.queryForObject(sql, reservationRowMapper, reservationId.longValue());
+        return jdbcTemplate.queryForObject(sql, rowMapper, reservationId.longValue());
     }
 
     public void delete(long reservationId) {
         String sql = "DELETE FROM reservation WHERE id = ?";
-        jdbcTemplate.update(sql, reservationId);
+        int affected = jdbcTemplate.update(sql, reservationId);
+
+        if(affected == 0) {
+            throw new NoSuchElementException("[ERROR] 삭제할 id에 해당하는 예약이 존재하지 않습니다.");
+        }
     }
 
     public List<Reservation> findAllReservations() {
@@ -78,6 +83,6 @@ public class ReservationDao {
                 ON reservation.time_id = time.id
                 """;
 
-        return jdbcTemplate.query(sql, reservationRowMapper);
+        return jdbcTemplate.query(sql, rowMapper);
     }
 }

@@ -17,8 +17,8 @@ public record ReservationResponse(
         return new ReservationResponse(
                 reservation.id(),
                 reservation.username(),
-                reservation.date(),
-                new ReservationTime(reservation.time().id(), reservation.time().startAt())
+                reservation.reservationDate(),
+                new ReservationTime(reservation.reservationTime().id(), reservation.reservationTime().startAt())
         );
     }
 

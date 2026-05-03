@@ -6,15 +6,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Reservation {
 
-    private static final long PENDING_RESERVATION_ID = -1L;
-
-    private final long id;
-    private final String name;
+    private final Long id;
+    private final String username;
     private final LocalDate reservationDate;
     private final ReservationTime reservationTime;
 
     public static Reservation pending(String username, LocalDate date) {
-        return new Reservation(PENDING_RESERVATION_ID, username, date, ReservationTime.none());
+        return new Reservation(null, username, date, null);
     }
 
     public static Reservation create(long id, String username, LocalDate date, ReservationTime time) {
@@ -22,14 +20,14 @@ public class Reservation {
     }
 
     public String username() {
-        return name;
+        return username;
     }
 
-    public LocalDate date() {
+    public LocalDate reservationDate() {
         return reservationDate;
     }
 
-    public ReservationTime time() {
+    public ReservationTime reservationTime() {
         return reservationTime;
     }
 

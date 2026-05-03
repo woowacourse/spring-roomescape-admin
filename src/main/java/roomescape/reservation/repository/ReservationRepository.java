@@ -2,7 +2,6 @@ package roomescape.reservation.repository;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -12,6 +11,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import roomescape.reservation.domain.Reservation;
 import roomescape.reservationtime.domain.ReservationTime;
+import roomescape.reservationtime.repository.ReservationTimeRepository;
 
 @Repository
 @AllArgsConstructor
@@ -24,10 +24,7 @@ public class ReservationRepository {
                 + "INNER JOIN reservation_time t ON r.time_id = t.id";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            ReservationTime reservationTime = ReservationTime.builder()
-                    .id(rs.getLong("time_id"))
-                    .startAt(LocalTime.parse(rs.getString("start_at")))
-                    .build();
+            ReservationTime reservationTime = ReservationTimeRepository.ROW_MAPPER.mapRow(rs, rowNum);
 
             return Reservation.builder()
                     .id(rs.getLong("id"))

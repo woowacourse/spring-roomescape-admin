@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
+import roomescape.exception.ReservationNotFoundException;
 import roomescape.reservation.ReservationQueryingDao;
 import roomescape.reservation.Reservation;
 import roomescape.reservation.ReservationRequest;
@@ -8,7 +9,6 @@ import roomescape.reservation.ReservationResponse;
 import roomescape.reservation.ReservationUpdatingDao;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ReservationService {
@@ -46,7 +46,7 @@ public class ReservationService {
         int count = reservationUpdatingDao.delete(id);
 
         if (count == 0) {
-            throw new RuntimeException("삭제하려는 예약을 찾을 수 없습니다.");
+            throw new ReservationNotFoundException(id);
         }
     }
 }

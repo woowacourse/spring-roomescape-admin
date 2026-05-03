@@ -1,6 +1,7 @@
 package roomescape.service;
 
 import org.springframework.stereotype.Service;
+import roomescape.exception.ReservationNotFoundException;
 import roomescape.reservationtime.ReservationTime;
 import roomescape.reservationtime.ReservationTimeQueryingDao;
 import roomescape.reservationtime.ReservationTimeUpdatingDao;
@@ -35,7 +36,7 @@ public class ReservationTimeService {
         int delete = reservationTimeUpdatingDao.delete(id);
 
         if (delete == 0) {
-            throw new RuntimeException("삭제하려는 예약 시간을 찾을 수 없습니다.");
+            throw new ReservationNotFoundException(id);
         }
     }
 }

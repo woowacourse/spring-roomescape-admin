@@ -5,7 +5,6 @@ import lombok.Getter;
 import roomescape.domain.reservationtime.ReservationTime;
 import roomescape.support.exception.ReservationErrorCode;
 import roomescape.support.exception.ReservationTimeErrorCode;
-import roomescape.support.exception.RoomescapeErrorCode;
 import roomescape.support.exception.RoomescapeException;
 
 @Getter

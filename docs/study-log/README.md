@@ -79,7 +79,7 @@ AI는 배운의 문턱을 낮춰주지만, 동시에 너무 의존적으로 학�
 이번 리뷰도 잘 부탁드립니다:)
 
 
-### [변경사항]
+### [변경사항 (20260502)]
 - [x] 도메인에 따른 Controller 분리
 - ReservationTime과 Reservation의 Controller 분리
 - [x] @Controller를 @RestController로 수정함에 따른 응답 형식 변경
@@ -107,3 +107,23 @@ https://github.com/woowacourse/spring-roomescape-admin/pull/451#discussion_r3176
 3. 반복 Mapper 분리
 아래의 커밋에 추가질문 적어두었습니다!
 https://github.com/woowacourse/spring-roomescape-admin/pull/451#discussion_r3176752064
+
+------
+
+안녕하세요 기론!    
+하나하나 생각해볼 만한 피드백 너무 감사합니다:)
+이번 리뷰도 잘 부탁드립니다:)
+
+### [변경사항 (20260504)]
+- [x] Validator 매직넘버 상수화 및 접근제어자 추가
+- [x] 도메인단위로 DAO를 분리
+- [x] 날짜/시간 검증과 파싱 책임 분리
+- [x] 날짜/시간의 DB 타입 변경에 따른 코드 수정
+
+### [추가 질문]
+1. 도메인 검증과 입력값 검증
+   아래의 커밋에 추가질문 적어두었습니다!
+   https://github.com/woowacourse/spring-roomescape-admin/pull/451#discussion_r3182770055
+2. 응답/요청에서의 LocalDate와 LocalTime
+   아래의 커밋에 추가질문 적어두었습니다!
+   https://github.com/woowacourse/spring-roomescape-admin/pull/451#discussion_r3182769159

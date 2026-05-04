@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import roomescape.domain.ReservationTime;
 
 @Repository
-@RequiredArgsConstructor
 public class ReservationTimeDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -23,6 +21,10 @@ public class ReservationTimeDao {
                     resultSet.getLong("id"),
                     resultSet.getObject("start_at", LocalTime.class)
             );
+
+    public ReservationTimeDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public List<ReservationTime> findAll() {
         String sql = "SELECT id, start_at FROM reservation_time";

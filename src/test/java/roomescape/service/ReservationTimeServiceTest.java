@@ -2,8 +2,6 @@ package roomescape.service;
 
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static roomescape.TestFixture.createReservation;
 import static roomescape.TestFixture.createTime;
 
@@ -13,15 +11,15 @@ import org.junit.jupiter.api.Test;
 import roomescape.domain.Reservation;
 import roomescape.repository.ReservationRepository;
 import roomescape.repository.ReservationTimeRepository;
+import roomescape.service.fake.InMemoryReservationRepository;
+import roomescape.service.fake.InMemoryReservationTimeRepository;
 
 class ReservationTimeServiceTest {
-    private final ReservationRepository reservationRepository = mock(ReservationRepository.class);
-    private final ReservationTimeRepository reservationTimeRepository = mock(ReservationTimeRepository.class);
-    private final ReservationTimeService timeService;
-
-    public ReservationTimeServiceTest() {
-        this.timeService = new ReservationTimeService(reservationRepository, reservationTimeRepository);
-    }
+    private final ReservationRepository reservationRepository = new InMemoryReservationRepository();
+    private final ReservationTimeRepository reservationTimeRepository = new InMemoryReservationTimeRepository();
+    private final ReservationTimeService timeService = new ReservationTimeService(
+            reservationRepository,
+            reservationTimeRepository);
 
     @Nested
     @DisplayName("delete(): ")
@@ -29,9 +27,6 @@ class ReservationTimeServiceTest {
         @Test
         @DisplayName("존재하는 예약이 없다면, 예약시간 삭제에 성공한다.")
         void delete() {
-            Reservation reservation = createReservation();
-            when(reservationRepository.isExistsByTimeId(reservation.getId())).thenReturn(false);
-
             assertThatNoException().isThrownBy(() -> timeService.delete(createTime().getId()));
         }
 
@@ -39,8 +34,8 @@ class ReservationTimeServiceTest {
         @DisplayName("존재하는 예약이 있다면, 예외를 반환한다.")
         void throwIllegalArgumentException_when_isExistsReservation() {
             Reservation reservation = createReservation();
-            Long timeId = createTime().getId();
-            when(reservationRepository.isExistsByTimeId(reservation.getId())).thenReturn(true);
+            Reservation saved = reservationRepository.save(reservation);
+            Long timeId = saved.getId();
 
             assertThatThrownBy(() -> timeService.delete(timeId))
                     .isInstanceOf(IllegalArgumentException.class);

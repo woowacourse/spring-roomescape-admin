@@ -14,31 +14,27 @@ import roomescape.domain.ReservationTime;
 import roomescape.dto.response.ReservationTimeCreateResponse;
 import roomescape.dto.response.ReservationTimeFindAllResponse;
 import roomescape.service.ReservationFacade;
-import roomescape.service.ReservationTimeService;
 
 @Controller
 public class ReservationTimeController {
 
     private final ReservationFacade reservationFacade;
-    private final ReservationTimeService reservationTimeService;
 
-    public ReservationTimeController(ReservationFacade reservationFacade,
-                                     ReservationTimeService reservationTimeService) {
+    public ReservationTimeController(ReservationFacade reservationFacade) {
         this.reservationFacade = reservationFacade;
-        this.reservationTimeService = reservationTimeService;
     }
 
     @ResponseBody
     @PostMapping("/times")
     public ResponseEntity<ReservationTimeCreateResponse> create(@RequestBody ReservationTime reservationTime) {
-        ReservationTimeCreateResponse saved = reservationTimeService.create(reservationTime);
+        ReservationTimeCreateResponse saved = reservationFacade.createReservationTime(reservationTime);
         return ResponseEntity.ok(saved);
     }
 
     @ResponseBody
     @GetMapping("/times")
     public ResponseEntity<List<ReservationTimeFindAllResponse>> findAll() {
-        return ResponseEntity.ok(reservationTimeService.findAll());
+        return ResponseEntity.ok(reservationFacade.findAllReservationTime());
     }
 
     @DeleteMapping("/times/{id}")

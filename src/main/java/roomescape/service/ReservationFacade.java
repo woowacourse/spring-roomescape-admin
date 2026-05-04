@@ -1,8 +1,13 @@
 package roomescape.service;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import roomescape.domain.Reservation;
+import roomescape.domain.ReservationTime;
 import roomescape.dto.request.ReservationRequest;
+import roomescape.dto.response.ReservationResponse;
+import roomescape.dto.response.ReservationTimeCreateResponse;
+import roomescape.dto.response.ReservationTimeFindAllResponse;
 
 @Service
 public class ReservationFacade {
@@ -26,5 +31,21 @@ public class ReservationFacade {
         }
 
         reservationTimeService.delete(id);
+    }
+
+    public ReservationTimeCreateResponse createReservationTime(ReservationTime reservationTime) {
+        return reservationTimeService.create(reservationTime);
+    }
+
+    public List<ReservationTimeFindAllResponse> findAllReservationTime() {
+        return reservationTimeService.findAll();
+    }
+
+    public List<ReservationResponse> findAllReservation() {
+        return reservationService.findAll();
+    }
+
+    public void deleteReservation(Long id) {
+        reservationService.delete(id);
     }
 }

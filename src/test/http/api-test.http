@@ -1,0 +1,62 @@
+### 1. 예약 시간 추가 (POST)
+# @name createReservationTime
+POST http://localhost:8080/reservation-times
+Content-Type: application/json
+
+{
+  "startAt": "10:00"
+}
+
+### 2. 전체 예약 시간 조회 (GET)
+# @name getReservationTime
+GET http://localhost:8080/reservation-times
+
+
+### 3. 예약 추가 (POST)
+# @name createReservation
+# 주의: timeId가 1인 예약 시간이 미리 존재해야 성공합니다 (200 OK).
+POST http://localhost:8080/reservations
+Content-Type: application/json
+
+{
+  "name": "브라운",
+  "date": "2023-08-05",
+  "timeId": 1
+}
+
+### 4. 전체 예약 조회 (GET)
+# @name getReservations
+# 응답에서 time 객체가 중첩(Nested)되어 반환되는지 확인합니다.
+GET http://localhost:8080/reservations
+
+
+### 5. 예약 삭제 (DELETE)
+# id가 1인 예약을 삭제합니다.
+DELETE http://localhost:8080/reservations/1
+
+### 6. 예약 시간 삭제 (DELETE)
+# id가 1인 예약 시간을 삭제합니다. (엮여있는 예약이 없어야 삭제 가능)
+DELETE http://localhost:8080/reservation-times/1
+
+### 7. 과거 날짜 예약 생성 시도 (예외 발생)
+# @name createReservationWithPastDate
+# 400 Bad Request와 JSON 에러 메시지 응답을 기대합니다.
+POST http://localhost:8080/reservations
+Content-Type: application/json
+
+{
+  "name": "브라운",
+  "date": "2000-01-01",
+  "timeId": 1
+}
+
+### 8. 잘못된 형식의 날짜로 예약 생성 시도 (예외 발생 확인용)
+# 400 Bad Request와 JSON 에러 메시지 응답을 기대합니다.
+POST http://localhost:8080/reservations
+Content-Type: application/json
+
+{
+  "name": "브라운",
+  "date": "2026-05-ㄱ",
+  "timeId": 1
+}

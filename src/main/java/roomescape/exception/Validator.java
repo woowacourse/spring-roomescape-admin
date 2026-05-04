@@ -7,7 +7,8 @@ public final class Validator {
     private static final int HOUR_LENGTH = 2;
     private static final int MINUTE_LENGTH = 2;
 
-    private Validator(){}
+    private Validator() {
+    }
 
     public static void validateDateFormat(String date) {
         if (!date.matches(String.format("\\d{%d}-\\d{%d}-\\d{%d}", YEAR_LENGTH, MONTH_LENGTH, DAY_LENGTH))) {

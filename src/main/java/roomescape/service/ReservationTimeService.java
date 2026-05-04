@@ -19,7 +19,7 @@ public class ReservationTimeService {
     public TimeCreateResponse createTime(String startAt) {
         ReservationTime reservationTime = new ReservationTime(startAt);
         Long id = reservationTimeDAO.insertWithKeyHolder(reservationTime);
-        return new TimeCreateResponse(id, startAt);
+        return new TimeCreateResponse(id, reservationTime.getStartAt());
     }
 
     public List<TimeCreateResponse> readAllTimes() {

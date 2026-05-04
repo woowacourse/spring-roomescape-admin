@@ -1,16 +1,21 @@
 package roomescape.domain;
 
-import roomescape.exception.Validator;
+import java.time.LocalTime;
+
+import roomescape.utils.Parser;
 
 public class ReservationTime {
-    private String startAt;
+    private final LocalTime startAt;
 
-    public ReservationTime(String startAt) {
-        Validator.validateTime(startAt);
+    public ReservationTime(LocalTime startAt) {
         this.startAt = startAt;
     }
 
-    public String getStartAt() {
+    public ReservationTime(String startAt) {
+        this.startAt = Parser.parseTime(startAt);
+    }
+
+    public LocalTime getStartAt() {
         return startAt;
     }
 }

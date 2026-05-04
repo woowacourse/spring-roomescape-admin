@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import roomescape.dto.TimeCreateRequest;
 import roomescape.dto.TimeCreateResponse;
+import roomescape.exception.Validator;
 import roomescape.service.ReservationTimeService;
 
 @RestController
@@ -26,6 +27,7 @@ public class TimeController {
     public TimeCreateResponse createTime(
             @RequestBody TimeCreateRequest request
     ) {
+        Validator.validateTimeFormat(request.startAt());
         return reservationTimeService.createTime(request.startAt());
     }
 

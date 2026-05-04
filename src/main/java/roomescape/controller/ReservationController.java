@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import roomescape.dto.ReservationCreateRequest;
 import roomescape.dto.ReservationCreateResponse;
+import roomescape.exception.Validator;
 import roomescape.service.ReservationService;
 
 @RestController
@@ -32,6 +33,7 @@ public class ReservationController {
     public ReservationCreateResponse createReservation(
             @RequestBody ReservationCreateRequest request
     ) {
+        Validator.validateDateFormat(request.date());
         return reservationService.createReservation(request);
     }
 

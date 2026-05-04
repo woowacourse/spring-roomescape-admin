@@ -1,6 +1,7 @@
 package roomescape.dao;
 
 import java.sql.PreparedStatement;
+import java.time.LocalTime;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -25,7 +26,7 @@ public class ReservationTimeDAO {
                 sql,
                 (resultSet, rowNum) -> new TimeCreateResponse(
                         resultSet.getLong("time_id"),
-                        resultSet.getString("time_value")
+                        resultSet.getObject("time_value", LocalTime.class)
                 ));
     }
 
@@ -36,7 +37,7 @@ public class ReservationTimeDAO {
             PreparedStatement ps = connection.prepareStatement(
                     "insert into reservation_time (start_at) values (?)",
                     new String[]{"id"});
-            ps.setString(1, reservationTime.getStartAt());
+            ps.setObject(1, reservationTime.getStartAt());
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();
@@ -47,7 +48,7 @@ public class ReservationTimeDAO {
         return jdbcTemplate.queryForObject(
                 sql,
                 (resultSet, rowNum) -> new ReservationTime(
-                        resultSet.getString("start_at")
+                        resultSet.getObject("start_at", LocalTime.class)
                 ),
                 timeId
         );
@@ -55,7 +56,7 @@ public class ReservationTimeDAO {
 
     public int deleteTime(Long id) {
         String sql = "delete from reservation_time where id = ?";
-        return jdbcTemplate.update(sql, Long.valueOf(id));
+        return jdbcTemplate.update(sql, id);
     }
 
 }

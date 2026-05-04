@@ -1,4 +1,11 @@
 package roomescape.dto;
 
-public record TimeCreateResponse(Long id, String startAt) {
+import java.time.LocalTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+public record TimeCreateResponse(
+        Long id,
+        @JsonFormat(pattern = "HH:mm")
+        LocalTime startAt) {
 }

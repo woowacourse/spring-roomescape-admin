@@ -1,17 +1,18 @@
 package roomescape.domain;
 
-import roomescape.exception.Validator;
+import java.time.LocalDate;
+
+import roomescape.utils.Parser;
 
 public class Reservation {
-    private String name;
-    private String date;
-    private ReservationTime time;
+    private final String name;
+    private final LocalDate date;
+    private final ReservationTime time;
 
     public Reservation(String name, String date, ReservationTime time) {
         validateName(name);
-        Validator.validateDate(date);
         this.name = name;
-        this.date = date;
+        this.date = Parser.parseDate(date);
         this.time = time;
     }
 
@@ -25,7 +26,7 @@ public class Reservation {
         return name;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 

@@ -1,0 +1,55 @@
+package roomescape.domain;
+
+import java.time.LocalDate;
+import java.util.Objects;
+
+public class Reservation {
+
+    private static final int MAX_NAME_LENGTH = 255;
+
+    private final Long id;
+    private final String name;
+    private final LocalDate date;
+    private final ReservationTime time;
+
+    public Reservation(Long id, String name, LocalDate date, ReservationTime time) {
+        validateName(name);
+        Objects.requireNonNull(date, "예약 날짜는 필수입니다.");
+        Objects.requireNonNull(time, "예약 시간은 필수입니다.");
+        this.id = id;
+        this.name = name;
+        this.date = date;
+        this.time = time;
+    }
+
+    public static Reservation ofNew(String name, LocalDate date, ReservationTime time) {
+        return new Reservation(null, name, date, time);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public ReservationTime getTime() {
+        return time;
+    }
+
+    private static void validateName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("예약자 이름은 필수입니다.");
+        }
+        if (name.length() > MAX_NAME_LENGTH) {
+            throw new IllegalArgumentException(
+                    "예약자 이름은 " + MAX_NAME_LENGTH + "자를 초과할 수 없습니다."
+            );
+        }
+    }
+}

@@ -36,7 +36,7 @@ public class ReservationService {
     public void deleteReservation(Long id) {
         int deletedCount = reservationRepository.deleteById(id);
         if (deletedCount == 0) {
-            log.info("이미 삭제된 예약 삭제 요청이 들어왔습니다. reservationId={}", id);
+            log.warn("이미 삭제된 예약 삭제 요청이 들어왔습니다. reservationId={}", id);
         }
     }
 }

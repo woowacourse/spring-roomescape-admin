@@ -36,7 +36,7 @@ public class ReservationTimeService {
         }
         int deletedCount = reservationTimeRepository.deleteById(id);
         if (deletedCount == 0) {
-            log.info("이미 삭제된 예약 시간 삭제 요청이 들어왔습니다. timeId={}", id);
+            log.warn("이미 삭제된 예약 시간 삭제 요청이 들어왔습니다. timeId={}", id);
         }
     }
 }

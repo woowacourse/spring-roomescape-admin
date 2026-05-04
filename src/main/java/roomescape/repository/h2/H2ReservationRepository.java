@@ -1,0 +1,95 @@
+package roomescape.repository.h2;
+
+import java.time.LocalDate;
+import java.util.List;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
+import roomescape.domain.Reservation;
+import roomescape.repository.ReservationRepository;
+
+@Repository
+public class H2ReservationRepository implements ReservationRepository {
+    private final NamedParameterJdbcTemplate jdbcTemplate;
+
+    public H2ReservationRepository(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public static RowMapper<Reservation> reservationRowMapper() {
+        return (resultSet, rowNum) ->
+                new Reservation(
+                        resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        LocalDate.parse(resultSet.getString("date")),
+                        H2ReservationTimeRepository.rowMapper().mapRow(resultSet, rowNum));
+    }
+
+    @Override
+    public List<Reservation> findAll() {
+        String sql = """
+                SELECT r.id, r.name, r.date, t.id as time_id, t.start_at
+                FROM reservation AS r
+                INNER JOIN reservation_time AS t
+                ON r.time_id = t.id
+                """;
+        return jdbcTemplate.query(sql, reservationRowMapper());
+    }
+
+    @Override
+    public Reservation findById(long id) {
+        String sql = """
+                SELECT r.id, r.name, r.date, t.id as time_id, t.start_at
+                FROM reservation AS r
+                INNER JOIN reservation_time AS t
+                ON r.time_id = t.id
+                WHERE r.id = :id
+                """;
+
+        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
+
+        return jdbcTemplate.queryForObject(sql, params, reservationRowMapper());
+    }
+
+    @Override
+    public Reservation save(Reservation reservation) {
+        SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbcTemplate.getJdbcTemplate())
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
+
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", reservation.getName())
+                .addValue("date", reservation.getDate())
+                .addValue("timeId", reservation.getTime().getId());
+
+        long id = insert.executeAndReturnKey(params).longValue();
+
+        return new Reservation(id, reservation.getName(), reservation.getDate(),
+                reservation.getTime());
+    }
+
+    @Override
+    public void delete(long id) {
+        String sql = "DELETE FROM reservation WHERE id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
+        jdbcTemplate.update(sql, params);
+    }
+
+    @Override
+    public boolean isExists(long id) {
+        String sql = "SELECT EXISTS(SELECT 1 FROM reservation WHERE id = :id)";
+        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, params, Boolean.class));
+    }
+
+    @Override
+    public boolean isExistsByTimeId(long timeId) {
+        String sql = "SELECT EXISTS(SELECT 1 FROM reservation WHERE time_id = :timeId)";
+        MapSqlParameterSource params = new MapSqlParameterSource("timeId", timeId);
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sql, params, Boolean.class));
+    }
+}

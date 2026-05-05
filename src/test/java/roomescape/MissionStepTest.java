@@ -1,15 +1,42 @@
 package roomescape;
 
-import io.restassured.RestAssured;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.is;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 
-import static org.hamcrest.Matchers.is;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import roomescape.controller.ReservationController;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class MissionStepTest {
+    @Autowired
+    private ReservationController reservationController;
+
+    @BeforeEach
+    void setUp() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("startAt", "10:00");
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", is(1));
+    }
 
     @Test
     void 예약_조회() {
@@ -20,4 +47,207 @@ public class MissionStepTest {
                 .body("size()", is(0)); // 아직 생성 요청이 없으니 0개
     }
 
+    @Test
+    void 예약_조회_응답_테스트() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("timeId", 1L);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", is(1));
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1))
+                .body("[0].name", is("브라운"))
+                .body("[0].date", is("2023-08-05"))
+                .body("[0].time.id", is(1))
+                .body("[0].time.startAt", is("10:00"));
+
+    }
+
+    @Test
+    void 시간_조회_응답_테스트() {
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1))
+                .body("[0].id", is(1))
+                .body("[0].startAt", is("10:00"));
+    }
+
+    @Test
+    void 예약_추가_및_삭제() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("timeId", 1L);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", is(1));
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(0));
+    }
+
+    @Test
+    void 예약_추가() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("timeId", 1L);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", is(1));
+    }
+
+    @Test
+    void 예약_삭제() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", "2023-08-05");
+        params.put("timeId", 1L);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", is(1));
+
+        RestAssured.given().log().all()
+                .when().delete("/reservations/1")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    void 시간_관리_API() {
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+
+        RestAssured.given().log().all()
+                .when().delete("/times/1")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    void 예약과_시간_연결() {
+        Map<String, Object> reservation = new HashMap<>();
+        reservation.put("name", "브라운");
+        reservation.put("date", "2023-08-05");
+        reservation.put("timeId", 1);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(reservation)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
+
+    @Test
+    void 계층화_리팩터링() {
+        boolean isJdbcTemplateInjected = false;
+
+        for (Field field : reservationController.getClass().getDeclaredFields()) {
+            if (field.getType().equals(JdbcTemplate.class)) {
+                isJdbcTemplateInjected = true;
+                break;
+            }
+        }
+
+        assertThat(isJdbcTemplateInjected).isFalse();
+    }
+
+    @DisplayName("이름은 255자 이하여야한다.")
+    @Test
+    void 이름_길이_API_예외테스트() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "rVwYd5kXoP9nZgM2uQjS8iTbLcF7eAvH1tNlRkXpM6wYzO4uE3vI9sZgU8qTj1dFcXvNm7wYbPpA6sWkU9uO3IvR2tZnXgL6qT5cM3lH2kPjQ4vDzA6sI8fNf5Oq1tZkUvA8vPwWc6tYzX1pX2uPZqG0qJcM3nLs6uE1sK0bDfU7f6r7pGkM4fVzP4L0sYkWtq1pP3iY7vsdkhfklasjdlkasjdlkasjdlkjasljdlasjdlkasjdljaslkdjlkasjdlkasjdJ2nMcF5");
+        params.put("date", "2023-08-05");
+        params.put("timeId", 1L);
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @DisplayName("시작 시간은 시간 형식에 맞아야한다.")
+    @Test
+    void 시작날짜_형식_API_예외테스트() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("startAt", "10:100");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(400);
+    }
+
+    @DisplayName("날짜는 날짜 형식에 맞아야한다.")
+    @Test
+    void 날짜_형식_API_예외테스트() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "rVwYd5kXoP9nZgM2uQjS8iTbLcF7eAvH1tNlRkXpM6wYzO4uE3vI9sZgU8qTj1dFcXvNm7wYbPpA6sWkU9uO3IvR2tZnXgL6qT5cM3lH2kPjQ4vDzA6sI8fNf5Oq1tZkUvA8vPwWc6tYzX1pX2uPZqG0qJcM3nLs6uE1sK0bDfU7f6r7pGkM4fVzP4L0sYkWtq1pP3iY7vsdkhfklasjdlkasjdlkasjdlkjasljdlasjdlkasjdljaslkdjlkasjdlkasjdJ2nMcF5");
+        params.put("date", "2023-108-05");
+        params.put("timeId", 1L);
+
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(400);
+    }
 }

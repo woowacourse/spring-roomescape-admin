@@ -28,12 +28,8 @@ public class ReservationController {
     @ResponseBody
     @PostMapping("/reservations")
     public ResponseEntity<Object> create(@RequestBody ReservationRequest request) {
-        try {
             Reservation reservation = reservationFacade.createReservation(request);
             return ResponseEntity.ok(ReservationCreateResponse.from(reservation));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
-        }
     }
 
     @ResponseBody
